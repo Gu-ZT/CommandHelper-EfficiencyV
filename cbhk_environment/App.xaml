@@ -1,0 +1,34 @@
+﻿<Application
+    x:Class="cbhk_environment.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/cbhk_environment;component/WindowDictionaries/TheCommonWindow.xaml" />
+                <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/IconTextButtons.xaml" />
+                <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/IconComboBoxs.xaml" />
+                <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/RadiusToggleButtons.xaml" />
+                <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/TextButtons.xaml" />
+                <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/IconTabItems.xaml" />
+                <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/TextCheckBoxs.xaml" />
+                <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/ColorCheckBoxs.xaml" />
+                <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/IconCheckBoxs.xaml" />
+                <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/RichCheckBoxs.xaml" />
+                <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/RichCheckBoxLists.xaml" />
+                <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/SimpaleScrollViewers.xaml" />
+                <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/ColorSliders.xaml" />
+                <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/ColorNumbericUpDowns.xaml" />
+                <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/ResizableTextBoxs.xaml" />
+                <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/TextToggleButtons.xaml" />
+                <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/TextComboBoxs.xaml" />
+                <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/RichTreeViewItems.xaml" />
+                <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/TextCheckBoxs.xaml" />
+                <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/TextMenuItems.xaml" />
+                <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/ColorToolBars.xaml" />
+                <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/CollapsableGrids.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

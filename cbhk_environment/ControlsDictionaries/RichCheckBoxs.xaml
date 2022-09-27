@@ -1,0 +1,163 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:CustomControls="clr-namespace:cbhk_environment.CustomControls">
+
+    <SolidColorBrush x:Key="OptionMark.Static.Background" Color="#FFFFFFFF" />
+    <SolidColorBrush x:Key="OptionMark.Static.Border" Color="#FF707070" />
+    <SolidColorBrush x:Key="OptionMark.Static.Glyph" Color="#FF212121" />
+    <SolidColorBrush x:Key="OptionMark.MouseOver.Background" Color="#FFF3F9FF" />
+    <SolidColorBrush x:Key="OptionMark.MouseOver.Border" Color="#FF5593FF" />
+    <SolidColorBrush x:Key="OptionMark.MouseOver.Glyph" Color="#FF212121" />
+    <SolidColorBrush x:Key="OptionMark.Pressed.Background" Color="#FFD9ECFF" />
+    <SolidColorBrush x:Key="OptionMark.Pressed.Border" Color="#FF3C77DD" />
+    <SolidColorBrush x:Key="OptionMark.Pressed.Glyph" Color="#FF212121" />
+    <SolidColorBrush x:Key="OptionMark.Disabled.Background" Color="#FFE6E6E6" />
+    <SolidColorBrush x:Key="OptionMark.Disabled.Border" Color="#FFBCBCBC" />
+    <SolidColorBrush x:Key="OptionMark.Disabled.Glyph" Color="Gray" />
+    <Style x:Key="RichCheckBox" TargetType="{x:Type CustomControls:RichCheckBoxs}">
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="{StaticResource OptionMark.Static.Background}" />
+        <Setter Property="BorderBrush" Value="{StaticResource OptionMark.Static.Border}" />
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type CustomControls:RichCheckBoxs}">
+                    <Grid
+                        x:Name="templateRoot"
+                        Width="{TemplateBinding Width}"
+                        Height="{TemplateBinding Height}"
+                        Background="Transparent"
+                        SnapsToDevicePixels="True">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border
+                            x:Name="checkBoxBorder"
+                            Grid.Column="0"
+                            Width="{TemplateBinding HeaderWidth}"
+                            Height="{TemplateBinding HeaderHeight}"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="5">
+                            <Viewbox HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                <Grid x:Name="markGrid">
+                                    <Path
+                                        x:Name="optionMark"
+                                        Margin="1"
+                                        Data="M136 138 c-13 -24 -33 -60 -43 -81 l-19 -38 -14 25 c-7 14 -20 26 -27 26 -9 0 -4 -12 14 -35 15 -19 30 -35 33 -35 3 0 17 26 32 58 14 31 36 72 48 90 12 17 17 32 11 32 -5 0 -21 -19 -35 -42z"
+                                        Fill="{StaticResource OptionMark.Static.Glyph}"
+                                        Opacity="0"
+                                        Stretch="None" />
+                                    <Ellipse
+                                        x:Name="indeterminateMark"
+                                        Width="5"
+                                        Height="5"
+                                        Margin="2"
+                                        Fill="{StaticResource OptionMark.Static.Glyph}"
+                                        Opacity="0" />
+                                </Grid>
+                            </Viewbox>
+                        </Border>
+                        <Image
+                            x:Name="ConentImage"
+                            Grid.Column="1"
+                            Grid.ColumnSpan="3"
+                            Width="{TemplateBinding ImageWidth}"
+                            Height="{TemplateBinding ImageHeight}"
+                            Margin="{TemplateBinding ImageMargin}"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Panel.ZIndex="0"
+                            Source="{TemplateBinding ContentImage}"
+                            Visibility="{TemplateBinding ImageVisibility}" />
+                        <Border
+                            x:Name="ContentColorBorder"
+                            Grid.Column="2"
+                            Grid.ColumnSpan="3"
+                            Width="15"
+                            Height="15"
+                            Margin="{TemplateBinding ColorMargin}"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Panel.ZIndex="1"
+                            Background="{TemplateBinding ContentColor}"
+                            BorderBrush="{x:Null}"
+                            BorderThickness="0"
+                            CornerRadius="5"
+                            Visibility="{TemplateBinding ColorVisibility}" />
+                        <TextBlock
+                            x:Name="ContentText"
+                            Grid.Column="3"
+                            Margin="{TemplateBinding TextMargin}"
+                            VerticalAlignment="Center"
+                            Panel.ZIndex="1"
+                            FontSize="{TemplateBinding FontSize}"
+                            Foreground="{TemplateBinding Foreground}"
+                            Text="{TemplateBinding HeaderText}"
+                            TextAlignment="Center"
+                            Visibility="{TemplateBinding TextVisibility}" />
+                        <ContentPresenter
+                            x:Name="contentPresenter"
+                            Grid.Column="1"
+                            Margin="{TemplateBinding Padding}"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Focusable="False"
+                            RecognizesAccessKey="True"
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="TextVisibility" Value="Visible">
+                            <Setter TargetName="ContentText" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="ColorVisibility" Value="Visible">
+                            <Setter TargetName="ContentColorBorder" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="ImageVisibility" Value="Visible">
+                            <Setter TargetName="ConentImage" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="HasContent" Value="true">
+                            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                            <Setter Property="Padding" Value="4,-1,0,0" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter TargetName="checkBoxBorder" Property="Background" Value="{StaticResource OptionMark.MouseOver.Background}" />
+                            <Setter TargetName="checkBoxBorder" Property="BorderBrush" Value="{StaticResource OptionMark.MouseOver.Border}" />
+                            <Setter TargetName="optionMark" Property="Fill" Value="{StaticResource OptionMark.MouseOver.Glyph}" />
+                            <Setter TargetName="indeterminateMark" Property="Fill" Value="{StaticResource OptionMark.MouseOver.Glyph}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter TargetName="checkBoxBorder" Property="Background" Value="{StaticResource OptionMark.Disabled.Background}" />
+                            <Setter TargetName="checkBoxBorder" Property="BorderBrush" Value="{StaticResource OptionMark.Disabled.Border}" />
+                            <Setter TargetName="optionMark" Property="Fill" Value="{StaticResource OptionMark.Disabled.Glyph}" />
+                            <Setter TargetName="indeterminateMark" Property="Fill" Value="{StaticResource OptionMark.Disabled.Glyph}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter TargetName="checkBoxBorder" Property="Background" Value="{StaticResource OptionMark.Pressed.Background}" />
+                            <Setter TargetName="checkBoxBorder" Property="BorderBrush" Value="{StaticResource OptionMark.Pressed.Border}" />
+                            <Setter TargetName="optionMark" Property="Fill" Value="{StaticResource OptionMark.Pressed.Glyph}" />
+                            <Setter TargetName="indeterminateMark" Property="Fill" Value="{StaticResource OptionMark.Pressed.Glyph}" />
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="true">
+                            <Setter TargetName="optionMark" Property="Opacity" Value="1" />
+                            <Setter TargetName="indeterminateMark" Property="Opacity" Value="0" />
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="{x:Null}">
+                            <Setter TargetName="optionMark" Property="Opacity" Value="0" />
+                            <Setter TargetName="indeterminateMark" Property="Opacity" Value="1" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

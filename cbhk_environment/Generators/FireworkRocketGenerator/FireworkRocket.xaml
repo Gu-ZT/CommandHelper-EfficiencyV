@@ -1,0 +1,494 @@
+﻿<local_window:CommonWindow
+    x:Class="cbhk_environment.Generators.FireworkRocketGenerator.FireworkRocket"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ColorPicker="clr-namespace:cbhk_environment.CustomControls.ColorPickers"
+    xmlns:CustomControls="clr-namespace:cbhk_environment.CustomControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:itn="http://schemas.microsoft.com/expression/2010/interactions"
+    xmlns:ity="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:local="clr-namespace:cbhk_environment.Generators.FireworkRocketGenerator"
+    xmlns:local_context="clr-namespace:cbhk_environment.Generators.FireworkRocketGenerator"
+    xmlns:local_window="clr-namespace:cbhk_environment.WindowDictionaries"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="烟花火箭生成器"
+    Width="600"
+    Height="300"
+    MinWidth="600"
+    MinHeight="300"
+    Background="#2F2F2F"
+    mc:Ignorable="d">
+
+    <Window.DataContext>
+        <local_context:firework_rocket_datacontext />
+    </Window.DataContext>
+
+    <Window.InputBindings>
+        <KeyBinding Key="F5" Command="{Binding RunCommand}" />
+        <KeyBinding
+            Key="Esc"
+            Command="{Binding ReturnCommand}"
+            CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local_window:CommonWindow}}" />
+    </Window.InputBindings>
+
+
+    <Grid ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="9*" />
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="0">
+            <CustomControls:IconTextButtons
+                Width="55"
+                Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DockPanel}, Path=ActualHeight}"
+                Margin="5,0"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center"
+                Background="Transparent"
+                BorderThickness="0"
+                Command="{Binding ReturnCommand}"
+                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local_window:CommonWindow}}"
+                ContentColor="White"
+                ContentData="ESC"
+                ContentHeight="20"
+                ContentWidth="30"
+                Cursor="Hand"
+                FontSize="15"
+                IconColor="White"
+                IconData="M268.8 480L633.6 149.333333c17.066667-14.933333 44.8-14.933333 59.733333 2.133334 6.4 8.533333 10.666667 19.2 10.666667 29.866666v661.333334c0 23.466667-19.2 42.666667-42.666667 42.666666-10.666667 0-21.333333-4.266667-27.733333-10.666666l-362.666667-330.666667c-17.066667-14.933333-19.2-42.666667-2.133333-59.733333-2.133333-2.133333 0-2.133333 0-4.266667z"
+                IconHeight="20"
+                IconWidth="20"
+                Style="{DynamicResource IconTextButton}"
+                ToolTip="返回主页"
+                ToolTipService.InitialShowDelay="0" />
+            <CustomControls:IconTextButtons
+                Width="50"
+                Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DockPanel}, Path=ActualHeight}"
+                Margin="5,0"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center"
+                Background="Transparent"
+                BorderThickness="0"
+                Command="{Binding RunCommand}"
+                ContentColor="White"
+                ContentData="F5"
+                ContentHeight="20"
+                ContentWidth="25"
+                Cursor="Hand"
+                FontSize="15"
+                IconColor="White"
+                IconData="M755.2 544L390.4 874.666667c-17.066667 14.933333-44.8 14.933333-59.733333-2.133334-6.4-8.533333-10.666667-19.2-10.666667-29.866666v-661.333334c0-23.466667 19.2-42.666667 42.666667-42.666666 10.666667 0 21.333333 4.266667 27.733333 10.666666l362.666667 330.666667c17.066667 14.933333 19.2 42.666667 2.133333 59.733333 2.133333 2.133333 0 2.133333 0 4.266667z"
+                IconHeight="20"
+                IconMargin="0,0,0,0"
+                IconWidth="20"
+                Style="{DynamicResource IconTextButton}"
+                ToolTip="运行"
+                ToolTipService.InitialShowDelay="0" />
+            <CustomControls:IconCheckBoxs
+                Width="90"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                VerticalContentAlignment="Center"
+                Content="生成覆盖"
+                Cursor="Hand"
+                FontSize="15"
+                Foreground="White"
+                HeaderHeight="20"
+                HeaderWidth="20"
+                IsChecked="{Binding OverLying, Mode=OneWayToSource}"
+                Style="{DynamicResource IconCheckBox}" />
+            <Menu Background="Transparent">
+                <MenuItem
+                    Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DockPanel}, Path=ActualHeight}"
+                    Padding="5,0,5,5"
+                    Background="#2F2F2F"
+                    BorderBrush="{x:Null}"
+                    BorderThickness="0"
+                    Cursor="Hand"
+                    FlowDirection="LeftToRight"
+                    Foreground="White"
+                    Style="{StaticResource TextMenuItem}"
+                    ToolTip="切换版本"
+                    ToolTipService.InitialShowDelay="0">
+                    <MenuItem.Header>
+                        <Viewbox
+                            Width="25"
+                            Height="25"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+                            <Path
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Fill="White">
+                                <Path.Data>
+                                    M234.666667 430.933333H128l85.333333-81.066666L345.6 213.333333l51.2 51.2-81.066667 81.066667H896V426.666667H234.666667v4.266666zM793.6 554.666667H896l-85.333333 81.066666-132.266667 132.266667-51.2-51.2 81.066667-81.066667H128V554.666667h665.6z
+                                </Path.Data>
+                            </Path>
+                        </Viewbox>
+                    </MenuItem.Header>
+                    <CustomControls:TextToggleButtons
+                        HorizontalAlignment="Stretch"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Content="1.12-"
+                        Cursor="Hand"
+                        FontSize="20"
+                        Foreground="White"
+                        IsChecked="{Binding Version1_12, Mode=TwoWay}"
+                        SelectedBackground="Gray"
+                        Style="{StaticResource TextToggleButtonsStyle}" />
+                    <CustomControls:TextToggleButtons
+                        HorizontalAlignment="Stretch"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Content="1.13+"
+                        Cursor="Hand"
+                        FontSize="20"
+                        Foreground="White"
+                        IsChecked="{Binding Version1_13, Mode=TwoWay}"
+                        SelectedBackground="Gray"
+                        Style="{StaticResource TextToggleButtonsStyle}" />
+                </MenuItem>
+            </Menu>
+            <CustomControls:TextToggleButtons
+                Width="100"
+                HorizontalAlignment="Left"
+                Background="#2F2F2F"
+                Content="召唤"
+                Cursor="Hand"
+                Foreground="White"
+                IsChecked="{Binding Summon, Mode=TwoWay}"
+                SelectedBackground="#FF00B3FF"
+                Style="{DynamicResource TextToggleButtonsStyle}" />
+            <CustomControls:TextToggleButtons
+                Width="100"
+                HorizontalAlignment="Left"
+                Background="#2F2F2F"
+                Content="给予"
+                Cursor="Hand"
+                Foreground="White"
+                IsChecked="{Binding Give, Mode=TwoWay}"
+                SelectedBackground="#FF00B3FF"
+                Style="{DynamicResource TextToggleButtonsStyle}" />
+            <CustomControls:TextToggleButtons
+                Width="100"
+                HorizontalAlignment="Left"
+                Background="#2F2F2F"
+                Content="按角度飞出"
+                Cursor="Hand"
+                Foreground="White"
+                IsChecked="{Binding FlyAngle, Mode=TwoWay}"
+                SelectedBackground="#FF00B3FF"
+                Style="{DynamicResource TextToggleButtonsStyle}" />
+        </DockPanel>
+        <DockPanel Grid.Row="1">
+            <ScrollViewer Style="{DynamicResource for_scrollviewer}">
+                <StackPanel
+                    Width="350"
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                    <CustomControls:CollapsableGrids
+                        Margin="2,0"
+                        Background="#FF00B3FF"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        ExpandDirection="Down"
+                        FontSize="15"
+                        Foreground="White"
+                        Header="颜色"
+                        IsExpanded="True"
+                        Style="{DynamicResource CollapsableGrid}">
+                        <StackPanel>
+                            <Border Background="#2F2F2F">
+                                <DockPanel>
+                                    <StackPanel Width="200" Height="100">
+                                        <Grid Width="200" Height="100">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*" />
+                                                <RowDefinition Height="2*" />
+                                            </Grid.RowDefinitions>
+                                            <TextBlock
+                                                Grid.Row="0"
+                                                Grid.Column="0"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Text="颜色库" />
+                                            <Button
+                                                Grid.Row="0"
+                                                Grid.Column="1"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Background="Transparent"
+                                                BorderThickness="0"
+                                                Command="{Binding ClearColors}"
+                                                Content="主要颜色"
+                                                Cursor="Hand"
+                                                Foreground="White"
+                                                ToolTip="点击清空"
+                                                ToolTipService.InitialShowDelay="0"
+                                                ToolTipService.ShowDuration="1000" />
+                                            <Button
+                                                Grid.Row="0"
+                                                Grid.Column="2"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Background="Transparent"
+                                                BorderThickness="0"
+                                                Command="{Binding ClearFadeColors}"
+                                                Content="备选颜色"
+                                                Cursor="Hand"
+                                                Foreground="White"
+                                                ToolTip="点击清空"
+                                                ToolTipService.InitialShowDelay="0"
+                                                ToolTipService.ShowDuration="1000" />
+                                            <ScrollViewer
+                                                Grid.Row="1"
+                                                Grid.Column="0"
+                                                Style="{DynamicResource for_scrollviewer}">
+                                                <StackPanel ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                                                    <CustomControls:ColorCheckBoxs
+                                                        ContentColor="Red"
+                                                        HeaderHeight="20"
+                                                        HeaderWidth="20"
+                                                        Style="{DynamicResource ColorCheckBox}" />
+                                                    <ity:Interaction.Triggers>
+                                                        <ity:EventTrigger EventName="Loaded">
+                                                            <itn:CallMethodAction MethodName="StructColorsLoaded" TargetObject="{Binding}" />
+                                                        </ity:EventTrigger>
+                                                    </ity:Interaction.Triggers>
+                                                </StackPanel>
+                                            </ScrollViewer>
+                                            <ScrollViewer
+                                                Grid.Row="1"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource for_scrollviewer}">
+                                                <StackPanel ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                                                    <ity:Interaction.Triggers>
+                                                        <ity:EventTrigger EventName="Loaded">
+                                                            <itn:CallMethodAction MethodName="ColorsPanelLoaded" TargetObject="{Binding}" />
+                                                        </ity:EventTrigger>
+                                                    </ity:Interaction.Triggers>
+                                                </StackPanel>
+                                            </ScrollViewer>
+                                            <ScrollViewer
+                                                Grid.Row="1"
+                                                Grid.Column="2"
+                                                Style="{DynamicResource for_scrollviewer}">
+                                                <StackPanel ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                                                    <ity:Interaction.Triggers>
+                                                        <ity:EventTrigger EventName="Loaded">
+                                                            <itn:CallMethodAction MethodName="FadeColorsPanelLoaded" TargetObject="{Binding}" />
+                                                        </ity:EventTrigger>
+                                                    </ity:Interaction.Triggers>
+                                                </StackPanel>
+                                            </ScrollViewer>
+                                        </Grid>
+                                    </StackPanel>
+                                    <StackPanel>
+                                        <CustomControls:TextToggleButtons
+                                            Margin="0,4,0,0"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Top"
+                                            Background="Transparent"
+                                            BorderBrush="Black"
+                                            Command="{Binding SelectAll}"
+                                            CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"
+                                            Content="全选"
+                                            Cursor="Hand"
+                                            Foreground="White"
+                                            SelectedBackground="#FF00B3FF"
+                                            Style="{DynamicResource TextToggleButtonsStyle}" />
+                                        <CustomControls:TextToggleButtons
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Top"
+                                            Background="Transparent"
+                                            BorderBrush="Black"
+                                            Command="{Binding ReverseAll}"
+                                            CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"
+                                            Content="反选"
+                                            Cursor="Hand"
+                                            Foreground="White"
+                                            SelectedBackground="#FF00B3FF"
+                                            Style="{DynamicResource TextToggleButtonsStyle}" />
+                                        <Button
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Top"
+                                            Background="Transparent"
+                                            BorderBrush="Black"
+                                            Command="{Binding AddToColors}"
+                                            CommandTarget="{Binding RelativeSource={RelativeSource Mode=Self}}"
+                                            Content="添加到颜色"
+                                            Cursor="Hand"
+                                            Foreground="White" />
+                                        <Button
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Top"
+                                            Background="Transparent"
+                                            BorderBrush="Black"
+                                            Command="{Binding AddToFadeColors}"
+                                            CommandTarget="{Binding RelativeSource={RelativeSource Mode=Self}}"
+                                            Content="添加到备用颜色"
+                                            Cursor="Hand"
+                                            Foreground="White" />
+                                        <DockPanel>
+                                            <TextBlock
+                                                Grid.Row="0"
+                                                Grid.Column="2"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Text="自定义颜色" />
+                                            <ColorPicker:ColorPickers SelectColor="Black">
+                                                <ity:Interaction.Triggers>
+                                                    <ity:EventTrigger EventName="Loaded">
+                                                        <itn:CallMethodAction MethodName="CustomColorSelectorLoaded" TargetObject="{Binding}" />
+                                                    </ity:EventTrigger>
+                                                </ity:Interaction.Triggers>
+                                            </ColorPicker:ColorPickers>
+                                        </DockPanel>
+                                    </StackPanel>
+                                </DockPanel>
+                            </Border>
+                        </StackPanel>
+                    </CustomControls:CollapsableGrids>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <CustomControls:CollapsableGrids
+                            Grid.Column="0"
+                            Margin="2,0,0,0"
+                            Background="#FF00B3FF"
+                            BorderThickness="0"
+                            Cursor="Hand"
+                            ExpandDirection="Down"
+                            FontSize="15"
+                            Foreground="White"
+                            Header="爆炸形状"
+                            IsExpanded="True"
+                            Style="{DynamicResource CollapsableGrid}">
+                            <ScrollViewer
+                                Height="45"
+                                Background="#2F2F2F"
+                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                Style="{DynamicResource for_scrollviewer}">
+                                <StackPanel ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                                    <ity:Interaction.Triggers>
+                                        <ity:EventTrigger EventName="Loaded">
+                                            <itn:CallMethodAction MethodName="ShapeStackPanelLoaded" TargetObject="{Binding}" />
+                                        </ity:EventTrigger>
+                                    </ity:Interaction.Triggers>
+                                    <CustomControls:TextToggleButtons
+                                        VerticalContentAlignment="Center"
+                                        Background="Transparent"
+                                        Content="球形"
+                                        Foreground="White"
+                                        SelectedBackground="#FF00B3FF"
+                                        Style="{DynamicResource TextToggleButtonsStyle}" />
+                                </StackPanel>
+                            </ScrollViewer>
+                        </CustomControls:CollapsableGrids>
+                        <CustomControls:CollapsableGrids
+                            Grid.Column="1"
+                            Margin="0,0,2,0"
+                            Background="#FF00B3FF"
+                            BorderThickness="0"
+                            Cursor="Hand"
+                            ExpandDirection="Down"
+                            FontSize="15"
+                            Foreground="White"
+                            Header="爆炸轨迹"
+                            IsExpanded="True"
+                            Style="{DynamicResource CollapsableGrid}">
+                            <ScrollViewer
+                                Height="45"
+                                Background="#2F2F2F"
+                                Style="{DynamicResource for_scrollviewer}">
+                                <StackPanel ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                                    <ity:Interaction.Triggers>
+                                        <ity:EventTrigger EventName="Loaded">
+                                            <itn:CallMethodAction MethodName="TrajectoriesStackPanelLoaded" TargetObject="{Binding}" />
+                                        </ity:EventTrigger>
+                                    </ity:Interaction.Triggers>
+                                    <CustomControls:TextToggleButtons
+                                        VerticalAlignment="Stretch"
+                                        Background="Transparent"
+                                        Content="闪烁"
+                                        Cursor="Hand"
+                                        Foreground="White"
+                                        SelectedBackground="#FF00B3FF"
+                                        Style="{DynamicResource TextToggleButtonsStyle}" />
+                                </StackPanel>
+                            </ScrollViewer>
+                        </CustomControls:CollapsableGrids>
+                    </Grid>
+                    <CustomControls:CollapsableGrids
+                        Grid.Column="0"
+                        Margin="2,0,0,0"
+                        Background="#FF00B3FF"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        ExpandDirection="Down"
+                        FontSize="15"
+                        Foreground="White"
+                        Header="飞行时长"
+                        IsExpanded="True"
+                        Style="{DynamicResource CollapsableGrid}">
+                        <Grid Height="25" Background="#2F2F2F">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <CustomControls:TextToggleButtons
+                                Grid.Column="0"
+                                Background="Transparent"
+                                Content="短"
+                                Cursor="Hand"
+                                Foreground="White"
+                                IsChecked="{Binding ShortDuration, Mode=TwoWay}"
+                                SelectedBackground="#FF00B3FF"
+                                Style="{DynamicResource TextToggleButtonsStyle}" />
+                            <CustomControls:TextToggleButtons
+                                Grid.Column="1"
+                                Background="Transparent"
+                                Content="中"
+                                Cursor="Hand"
+                                Foreground="White"
+                                IsChecked="{Binding MediumDuration, Mode=TwoWay}"
+                                SelectedBackground="#FF00B3FF"
+                                Style="{DynamicResource TextToggleButtonsStyle}" />
+                            <CustomControls:TextToggleButtons
+                                Grid.Column="2"
+                                Background="Transparent"
+                                Content="长"
+                                Cursor="Hand"
+                                Foreground="White"
+                                IsChecked="{Binding LongDuration, Mode=TwoWay}"
+                                SelectedBackground="#FF00B3FF"
+                                Style="{DynamicResource TextToggleButtonsStyle}" />
+                        </Grid>
+                    </CustomControls:CollapsableGrids>
+                </StackPanel>
+            </ScrollViewer>
+            <Canvas
+                Width="245"
+                Height="250"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Background="Transparent">
+                <ity:Interaction.Triggers>
+                    <ity:EventTrigger EventName="Loaded">
+                        <itn:CallMethodAction MethodName="EffectCanvasLoaded" TargetObject="{Binding}" />
+                    </ity:EventTrigger>
+                </ity:Interaction.Triggers>
+            </Canvas>
+        </DockPanel>
+    </Grid>
+</local_window:CommonWindow>

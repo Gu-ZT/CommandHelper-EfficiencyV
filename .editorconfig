@@ -1,0 +1,7 @@
+﻿[*.cs]
+
+# CS0006: 未能找到元数据文件“F:\C#_Untiy3D_C++_project\C#\cbhk\cbhk\tools\tool_classes\tool_classes\bin\Debug\tool_classes.exe”
+dotnet_diagnostic.CS0006.severity = suggestion
+
+# CS5001: 程序不包含适合于入口点的静态 "Main" 方法
+dotnet_diagnostic.CS5001.severity = suggestion

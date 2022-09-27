@@ -1,0 +1,162 @@
+﻿<UserControl
+    x:Class="cbhk_environment.Generators.WrittenBookGenerator.Components.TextEventsForm"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:CustomControls="clr-namespace:cbhk_environment.CustomControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:cbhk_environment.Generators.WrittenBookGenerator.Components"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+
+    <Grid Width="230" MaxHeight="360">
+        <StackPanel>
+            <DockPanel>
+                <StackPanel>
+                    <TextBlock
+                        FontSize="20"
+                        Foreground="White"
+                        Text="全部开启" />
+                    <CustomControls:RadiusToggleButtons
+                        x:Name="AllEnable"
+                        Height="30"
+                        HorizontalAlignment="Center"
+                        Foreground="White"
+                        SelectedToggleText=""
+                        Style="{DynamicResource RadiusToggleButton}"
+                        UnSelectedToggleText="" />
+                </StackPanel>
+                <StackPanel>
+                    <CustomControls:RadiusToggleButtons
+                        x:Name="EnableClickEvent"
+                        Height="30"
+                        HorizontalAlignment="Center"
+                        Foreground="White"
+                        SelectedToggleText="点击事件"
+                        Style="{DynamicResource RadiusToggleButton}"
+                        UnSelectedToggleText="点击事件" />
+                    <CustomControls:RadiusToggleButtons
+                        x:Name="EnableHoverEvent"
+                        Height="30"
+                        HorizontalAlignment="Center"
+                        Foreground="White"
+                        SelectedToggleText="悬浮事件"
+                        Style="{DynamicResource RadiusToggleButton}"
+                        UnSelectedToggleText="悬浮事件" />
+                    <CustomControls:RadiusToggleButtons
+                        x:Name="EnableInsertion"
+                        Height="30"
+                        HorizontalAlignment="Center"
+                        Foreground="White"
+                        SelectedToggleText="插入文本"
+                        Style="{DynamicResource RadiusToggleButton}"
+                        UnSelectedToggleText="插入文本" />
+                </StackPanel>
+            </DockPanel>
+            <StackPanel Margin="0,5" Visibility="Collapsed">
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    FontSize="20"
+                    Foreground="White"
+                    Text="点击事件" />
+                <DockPanel Margin="0,5,0,0">
+                    <TextBlock
+                        Margin="0,0,5,0"
+                        VerticalAlignment="Center"
+                        FontSize="20"
+                        Foreground="White"
+                        Text="action"
+                        ToolTip="该事件的行为"
+                        ToolTipService.InitialShowDelay="0"
+                        ToolTipService.ShowDuration="1000" />
+                    <CustomControls:TextComboBoxs
+                        Height="30"
+                        FontSize="20"
+                        Foreground="White"
+                        Loaded="ClickEventsLoaded"
+                        Style="{DynamicResource TextComboBox}" />
+                </DockPanel>
+                <DockPanel Margin="0,5,0,0">
+                    <TextBlock
+                        Margin="0,0,5,0"
+                        VerticalAlignment="Center"
+                        FontSize="20"
+                        Foreground="White"
+                        Text="value"
+                        ToolTip="该事件的值"
+                        ToolTipService.InitialShowDelay="0"
+                        ToolTipService.ShowDuration="1000" />
+                    <TextBox
+                        Background="Transparent"
+                        BorderBrush="Black"
+                        FontSize="20"
+                        Foreground="White" />
+                </DockPanel>
+            </StackPanel>
+            <StackPanel Margin="0,5" Visibility="Collapsed">
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    FontSize="20"
+                    Foreground="White"
+                    Text="悬浮事件" />
+                <DockPanel Margin="0,5,0,0">
+                    <TextBlock
+                        Margin="0,0,5,0"
+                        VerticalAlignment="Center"
+                        FontSize="20"
+                        Foreground="White"
+                        Text="action"
+                        ToolTip="该事件的行为"
+                        ToolTipService.InitialShowDelay="0"
+                        ToolTipService.ShowDuration="1000" />
+                    <CustomControls:TextComboBoxs
+                        Height="30"
+                        FontSize="20"
+                        Foreground="White"
+                        Loaded="HoverEventsLoaded"
+                        Style="{DynamicResource TextComboBox}" />
+                </DockPanel>
+                <DockPanel Margin="0,5,0,0">
+                    <TextBlock
+                        Margin="0,0,5,0"
+                        VerticalAlignment="Center"
+                        FontSize="20"
+                        Foreground="White"
+                        Text="value"
+                        ToolTip="该事件的值"
+                        ToolTipService.InitialShowDelay="0"
+                        ToolTipService.ShowDuration="1000" />
+                    <TextBox
+                        Background="Transparent"
+                        BorderBrush="Black"
+                        FontSize="20"
+                        Foreground="White" />
+                </DockPanel>
+            </StackPanel>
+            <StackPanel Margin="0,5" Visibility="Collapsed">
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    FontSize="20"
+                    Foreground="White"
+                    Text="插入" />
+                <DockPanel Margin="0,5,0,0">
+                    <TextBlock
+                        Margin="0,0,5,0"
+                        VerticalAlignment="Center"
+                        FontSize="20"
+                        Foreground="White"
+                        Text="value"
+                        ToolTip="该事件的值"
+                        ToolTipService.InitialShowDelay="0"
+                        ToolTipService.ShowDuration="1000" />
+                    <TextBox
+                        Background="Transparent"
+                        BorderBrush="Black"
+                        FontSize="20"
+                        Foreground="White" />
+                </DockPanel>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

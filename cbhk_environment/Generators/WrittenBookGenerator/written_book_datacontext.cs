@@ -11,15 +11,12 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Windows.Foundation.Metadata;
-using Windows.UI.Text.Core;
 
 namespace cbhk_environment.Generators.WrittenBookGenerator
 {
@@ -72,7 +69,17 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
         //混淆文本迭代链表
         List<char> obfuscates = new List<char> { };
 
+        ///// <summary>
+        ///// 迭代序列起始下标
+        ///// </summary>
+        //public int ObfuscateStart = -1;
+        ///// <summary>
+        ///// 迭代序列末尾下标
+        ///// </summary>
+        //public int ObfuscateEnd = -1;
+
         //流文档链表,每个成员代表成书中的一页
+
         List<FlowDocument> WrittenBookPages = new List<FlowDocument> { };
 
         //一页总行数
@@ -280,9 +287,9 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
             //找到光标尾所在段落
             Paragraph end_paragraph = end_run.Parent as Paragraph;
             //计算光标头距离当前行首所偏移的单位量
-            int start_pos = 0;
+            int start_pos;
             //计算光标尾距离当前行首所偏移的单位量
-            int end_pos = 0;
+            int end_pos;
 
             if (start_paragraph == end_paragraph)
             {
@@ -297,43 +304,100 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
                 int SelectionLength = 0;
                 //开启循环处理的标记
                 bool IsLoopHandle = false;
+                //当作插入时的前置对象
+                RichRun LastRun = new RichRun();
 
                 for (int i = 0; i < start_paragraph.Inlines.Count; i++)
                 {
-                    Inline CurrentInline = start_paragraph.Inlines.ElementAt(i);
-                    RichRun CurrentRun = CurrentInline as RichRun;
+                    RichRun CurrentRun = start_paragraph.Inlines.ElementAt(i) as RichRun;
+                    if(i > 0)
+                    LastRun = start_paragraph.Inlines.ElementAt(i-1) as RichRun;
                     SumRunLength += CurrentRun.Text.Length;
 
                     //表示选中的内容头部需要切割
-                    if(SumRunLength > start_pos && !IsLoopHandle)
+                    if (SumRunLength > start_pos && !IsLoopHandle)
                     {
                         IsLoopHandle = true;
-                        CurrentRun.UID = CurrentRun.Text;
-                        CurrentRun = new RichRun(obfuscates)
-                        {
-                            ObfuscateStart = start_pos
-                        };
+
+                        #region 计算当前的文本内容
+                        //所选片段的长度
+                        int selectedLength = SumRunLength - start_pos;
+                        //所选片段起始下标
+                        int selectedStart = CurrentRun.Text.Length - selectedLength;
+                        //所选片段的内容
+                        StringBuilder selectedContent = new StringBuilder();
+                        selectedContent.Append(CurrentRun.Text.Substring(selectedStart, selectedLength));
+                        #endregion
+
                         //代表所选内容头部和尾部在同一个RichRun对象中
                         if (SumRunLength >= end_pos)
                         {
-                            CurrentRun.ObfuscateEnd = end_pos;
-                            //开启迭代标记
-                            CurrentRun.IsObfuscated = true;
-                            //执行混淆效果
+                            StringBuilder start_content = new StringBuilder() { };
+                            StringBuilder end_content = new StringBuilder() { };
+                            selectedContent.Clear();
+                            char[] current_chars = CurrentRun.Text.ToCharArray();
+                            for (int j = 0; j < current_chars.Length; j++)
+                            {
+                                if (j < start_pos)
+                                    start_content.Append(current_chars[j]);
+                                if (j >= start_pos && j < end_pos)
+                                    selectedContent.Append(current_chars[j]);
+                                if (j >= end_pos)
+                                    end_content.Append(current_chars[j]);
+                            }
+                            MessageBox.Show(start_content.ToString()+"\r\n"+ selectedContent.ToString()+"\r\n"+ end_content.ToString());
+                            #region 对当前文本对象开启迭代标记,执行混淆效果
+                            start_paragraph.Inlines.Remove(CurrentRun);
+                            //前部分
+                            RichRun PreviewRun = new RichRun(obfuscates,start_content.ToString())
+                            {
+                                IsObfuscated = false
+                            };
+                            PreviewRun.ObfuscateTimer.Enabled = false;
+
+                            //选中部分
+                            CurrentRun = new RichRun(obfuscates, selectedContent.ToString())
+                            {
+                                IsObfuscated = true
+                            };
                             CurrentRun.ObfuscateTimer.Enabled = true;
+
+                            //后部分
+                            RichRun NextRun = new RichRun(obfuscates, end_content.ToString())
+                            {
+                                IsObfuscated = false
+                            };
+                            NextRun.ObfuscateTimer.Enabled = false;
+                            #endregion
+
+                            #region 更新当前段落成员
+                            if (start_paragraph.Inlines.Count > 1 && i > 0)
+                            {
+                                start_paragraph.Inlines.InsertAfter(LastRun, PreviewRun);
+                                start_paragraph.Inlines.InsertAfter(PreviewRun, CurrentRun);
+                                start_paragraph.Inlines.InsertAfter(CurrentRun, NextRun);
+                            }
+                            else
+                            {
+                                start_paragraph.Inlines.Add(PreviewRun);
+                                start_paragraph.Inlines.Add(CurrentRun);
+                                start_paragraph.Inlines.Add(NextRun);
+                            }
+                            #endregion
                             break;
                         }
 
-                        CurrentRun.ObfuscateEnd = -1;
-                        //开启迭代标记
-                        CurrentRun.IsObfuscated = true;
-                        //执行混淆效果
-                        CurrentRun.ObfuscateTimer.Enabled = true;
+                        //开启迭代标记,执行混淆效果
+                        //CurrentRun = new RichRun(obfuscates, selectedContent)
+                        //{
+                        //    IsObfuscated = true
+                        //};
+                        //CurrentRun.ObfuscateTimer.Enabled = true;
                         continue;
                     }
 
                     //表示选中的内容头部不需要切割
-                    if(SumRunLength == start_pos && !IsLoopHandle)
+                    if (SumRunLength == start_pos && !IsLoopHandle)
                     {
                         IsLoopHandle = true;
                         continue;
@@ -352,10 +416,33 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
                     }
 
                     //处理中间的RichRun对象
-                    if(IsLoopHandle)
+                    if (IsLoopHandle)
                     {
 
                     }
+
+                    ////有头有尾
+                    //if (ObfuscateStart != -1 && ObfuscateEnd != -1)
+                    //{
+                    //}
+
+                    ////有头没尾
+                    //if (ObfuscateStart != -1 && ObfuscateEnd == -1)
+                    //{
+                    //    return;
+                    //}
+
+                    ////没头没尾
+                    //if (ObfuscateStart == -1 && ObfuscateEnd == -1)
+                    //{
+                    //    return;
+                    //}
+
+                    ////没头有尾
+                    //if (ObfuscateStart == -1 && ObfuscateEnd != -1)
+                    //{
+                    //    return;
+                    //}
                 }
             }
             else

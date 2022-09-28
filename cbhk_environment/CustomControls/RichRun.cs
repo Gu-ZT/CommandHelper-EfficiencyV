@@ -22,15 +22,7 @@ namespace cbhk_environment.CustomControls
         /// <summary>
         /// 迭代结果
         /// </summary>
-        StringBuilder ObfuscatesResult = null;
-        /// <summary>
-        /// 迭代序列起始下标
-        /// </summary>
-        public int ObfuscateStart = -1;
-        /// <summary>
-        /// 迭代序列末尾下标
-        /// </summary>
-        public int ObfuscateEnd = -1;
+        StringBuilder ObfuscatesResult = new StringBuilder() { };
         /// <summary>
         /// 迭代序列长度
         /// </summary>
@@ -39,15 +31,6 @@ namespace cbhk_environment.CustomControls
         /// 迭代器
         /// </summary>
         Random random = new Random();
-
-        //public bool IsObfuscated
-        //{
-        //    get { return (bool)GetValue(IsObfuscatedProperty); }
-        //    set { SetValue(IsObfuscatedProperty, value); }
-        //}
-
-        //public static readonly DependencyProperty IsObfuscatedProperty =
-        //    DependencyProperty.Register("IsObfuscated", typeof(bool), typeof(RichRun), new PropertyMetadata(default(bool)));
 
         #region UID
         private string uid = "";
@@ -61,8 +44,12 @@ namespace cbhk_environment.CustomControls
         }
         #endregion
 
-        //计算当前混淆长度的载体
-        Run current_run = new Run();
+        string ObfuscatedContent;
+
+        /// <summary>
+        /// 当前混淆最长长度
+        /// </summary>
+        double MaxContentLength = 0;
 
         public FontStyle fontStyles = FontStyles.Normal;
         public FontWeight fontWeights = FontWeights.Normal;
@@ -81,9 +68,11 @@ namespace cbhk_environment.CustomControls
         /// <param name="Length">迭代长度</param>
         /// <param name="foreground">迭代字体颜色</param>
         /// <param name="run">迭代文本对象,用于传输删除线和下划线</param>
-        public RichRun(List<char> chars)
+        public RichRun(List<char> chars,string content)
         {
             Obfuscates = chars;
+            UID = content;
+            Text = content;
             ObfuscateTimer.Tick += ObfuscateTick;
             MouseEnter += ObfuscateTextMouseEnter;
             MouseLeave += ObfuscateTextMouseLeave;
@@ -155,51 +144,15 @@ namespace cbhk_environment.CustomControls
         /// <param name="e"></param>
         public void ObfuscateTick(object sender, EventArgs e)
         {
-            ObfuscateTimer.Enabled = false;
-            ObfuscatesResult = new StringBuilder();
-            string ObfuscatedContent;
-
-            //有头有尾
-            if (ObfuscateStart != -1 && ObfuscateEnd != -1)
+            MaxContentLength = GeneralTools.GetTextWidth.Get(new Run(UID));
+            ObfuscatesResult.Clear();
+            for (int i = 0; i < UID.Length; i++)
+                ObfuscatesResult.Append(Obfuscates[random.Next(0, Obfuscates.Count - 1)]);
+            while (GeneralTools.GetTextWidth.Get(new Run(ObfuscatesResult.ToString())) > MaxContentLength)
             {
-                ObfuscatedLength = ObfuscateEnd - ObfuscateStart;
-                ObfuscatedContent = Text.Substring(ObfuscateStart, ObfuscatedLength);
-                double MaxContentLength = GeneralTools.GetTextWidth.Get(new Run(ObfuscatedContent));
-                double ContentLength;
-                for (int i = 0; i < Obfuscates.Count; i++)
-                {
-                    ObfuscatesResult.Append(Obfuscates[random.Next(0, Obfuscates.Count - 1)]);
-                    ContentLength = GeneralTools.GetTextWidth.Get(new Run(ObfuscatesResult.ToString()));
-                    if(ContentLength > MaxContentLength)
-                    {
-                        ObfuscatesResult.Remove(ObfuscatesResult.Length-1,1);
-                        break;
-                    }
-                }
-                string start_part = Text.Substring(0, ObfuscateStart);
-                string end_part = Text.Substring(ObfuscateEnd,Text.Length - ObfuscateEnd);
-                Text = start_part + ObfuscatesResult.ToString() + end_part;
-                MessageBox.Show("?");
-                return;
+                ObfuscatesResult.Remove(ObfuscatesResult.Length-1,1);
             }
-
-            //有头没尾
-            if (ObfuscateStart != -1 && ObfuscateEnd == -1)
-            {
-                return;
-            }
-
-            //没头没尾
-            if (ObfuscateStart == -1 && ObfuscateEnd == -1)
-            {
-                return;
-            }
-
-            //没头有尾
-            if (ObfuscateStart == -1 && ObfuscateEnd != -1)
-            {
-                return;
-            }
+            Text = ObfuscatesResult.ToString();
         }
     }
 }

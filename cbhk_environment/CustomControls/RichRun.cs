@@ -16,7 +16,7 @@ namespace cbhk_environment.CustomControls
         /// <summary>
         /// 迭代内容序列
         /// </summary>
-        List<char> Obfuscates = new List<char> { };
+        public List<char> Obfuscates = new List<char> { };
         //开启混淆
         public bool IsObfuscated = false;
         /// <summary>
@@ -51,8 +51,8 @@ namespace cbhk_environment.CustomControls
         /// </summary>
         double MaxContentLength = 0;
 
-        public FontStyle fontStyles = FontStyles.Normal;
-        public FontWeight fontWeights = FontWeights.Normal;
+        //public FontStyle fontStyles = FontStyles.Normal;
+        //public FontWeight fontWeights = FontWeights.Normal;
 
         public System.Windows.Forms.Timer ObfuscateTimer = new System.Windows.Forms.Timer()
         {
@@ -68,11 +68,10 @@ namespace cbhk_environment.CustomControls
         /// <param name="Length">迭代长度</param>
         /// <param name="foreground">迭代字体颜色</param>
         /// <param name="run">迭代文本对象,用于传输删除线和下划线</param>
-        public RichRun(List<char> chars,string content)
+        public RichRun(List<char> chars)
         {
             Obfuscates = chars;
-            UID = content;
-            Text = content;
+            UID = Text;
             ObfuscateTimer.Tick += ObfuscateTick;
             MouseEnter += ObfuscateTextMouseEnter;
             MouseLeave += ObfuscateTextMouseLeave;

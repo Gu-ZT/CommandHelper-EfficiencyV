@@ -17,6 +17,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Windows.Services.Maps;
 
 namespace cbhk_environment.Generators.WrittenBookGenerator
 {
@@ -286,163 +287,60 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
             Paragraph start_paragraph = start_run.Parent as Paragraph;
             //找到光标尾所在段落
             Paragraph end_paragraph = end_run.Parent as Paragraph;
-            //计算光标头距离当前行首所偏移的单位量
-            int start_pos;
-            //计算光标尾距离当前行首所偏移的单位量
-            int end_pos;
 
             if (start_paragraph == end_paragraph)
             {
-                //计算光标头距离当前行首所偏移的单位量
-                start_pos = written_box.Selection.Start.GetOffsetToPosition(written_box.Selection.Start.GetLineStartPosition(0)) * (-1) - 1;
-                //计算光标尾距离当前行首所偏移的单位量
-                end_pos = start_pos + written_box.Selection.Text.Length;
+                //当前所选中的段落包含的文本对象
+                List<Inline> current_inlines = start_paragraph.Inlines.ToList();
+                //当作插入时的后置对象
+                RichRun NextRun = null;
+                //当作插入时得前置对象
+                RichRun PreviewRun = null;
+                //保存光标头所在Run对象起始部分的文本
+                TextRange startRunStartPart = null;
+                //保存光标头所在Run对象末尾部分的文本
+                TextRange startRunEndPart = null;
+                //保存光标尾所在Run对象起始部分的文本
+                TextRange endRunStartPart = null;
+                //保存光标尾所在Run对象末尾部分的文本
+                TextRange endRunEndPart = null;
+                //所选文本起始对象所在段落的下标
+                int SelectionStartIndex = current_inlines.IndexOf(start_run);
+                //所选文本末尾对象所在段落的下标
+                int SelectionEndIndex = current_inlines.IndexOf(end_run);
+                //需要全部混淆的RichRun对象列表
+                List<Inline> NeedObfuscatedRichRuns = new List<Inline> { };
 
-                //迭代的累计文本长度
-                int SumRunLength = 0;
-                //光标所选中文本的累计长度
-                int SelectionLength = 0;
-                //开启循环处理的标记
-                bool IsLoopHandle = false;
-                //当作插入时的前置对象
-                RichRun LastRun = new RichRun();
-
-                for (int i = 0; i < start_paragraph.Inlines.Count; i++)
+                if (current_inlines.Count > 1 && start_run != end_run)
                 {
-                    RichRun CurrentRun = start_paragraph.Inlines.ElementAt(i) as RichRun;
-                    if(i > 0)
-                    LastRun = start_paragraph.Inlines.ElementAt(i-1) as RichRun;
-                    SumRunLength += CurrentRun.Text.Length;
+                    int LastRunIndex = current_inlines.IndexOf(end_run) + 1;
+                    int PreviewRunIndex = current_inlines.IndexOf(start_run) - 1;
 
-                    //表示选中的内容头部需要切割
-                    if (SumRunLength > start_pos && !IsLoopHandle)
+                    if (LastRunIndex <= current_inlines.Count - 1 && written_box.Selection.End != end_run.ElementEnd)
+                        NextRun = current_inlines.ElementAt(LastRunIndex) as RichRun;
+                    else
+                        NextRun = end_run;
+
+                    if (PreviewRunIndex >= 0 && written_box.Selection.Start != start_run.ElementStart)
+                        PreviewRun = current_inlines.ElementAt(PreviewRunIndex) as RichRun;
+                    else
+                        PreviewRun = start_run;
+
+                    startRunStartPart = new TextRange(written_box.Selection.Start, start_run.ElementStart);
+                    startRunEndPart = new TextRange(written_box.Selection.Start, start_run.ElementEnd);
+
+                    endRunStartPart = new TextRange(written_box.Selection.End,end_run.ElementStart);
+                    endRunEndPart = new TextRange(written_box.Selection.End,end_run.ElementEnd);
+
+                    if(NextRun != null && PreviewRun != null)
                     {
-                        IsLoopHandle = true;
-
-                        #region 计算当前的文本内容
-                        //所选片段的长度
-                        int selectedLength = SumRunLength - start_pos;
-                        //所选片段起始下标
-                        int selectedStart = CurrentRun.Text.Length - selectedLength;
-                        //所选片段的内容
-                        StringBuilder selectedContent = new StringBuilder();
-                        selectedContent.Append(CurrentRun.Text.Substring(selectedStart, selectedLength));
-                        #endregion
-
-                        //代表所选内容头部和尾部在同一个RichRun对象中
-                        if (SumRunLength >= end_pos)
+                        NeedObfuscatedRichRuns = current_inlines.GetRange(SelectionStartIndex + 1, SelectionEndIndex - 1 - SelectionStartIndex);
+                        foreach (Inline obfuscated_item in NeedObfuscatedRichRuns)
                         {
-                            StringBuilder start_content = new StringBuilder() { };
-                            StringBuilder end_content = new StringBuilder() { };
-                            selectedContent.Clear();
-                            char[] current_chars = CurrentRun.Text.ToCharArray();
-                            for (int j = 0; j < current_chars.Length; j++)
-                            {
-                                if (j < start_pos)
-                                    start_content.Append(current_chars[j]);
-                                if (j >= start_pos && j < end_pos)
-                                    selectedContent.Append(current_chars[j]);
-                                if (j >= end_pos)
-                                    end_content.Append(current_chars[j]);
-                            }
-                            MessageBox.Show(start_content.ToString()+"\r\n"+ selectedContent.ToString()+"\r\n"+ end_content.ToString());
-                            #region 对当前文本对象开启迭代标记,执行混淆效果
-                            start_paragraph.Inlines.Remove(CurrentRun);
-                            //前部分
-                            RichRun PreviewRun = new RichRun(obfuscates,start_content.ToString())
-                            {
-                                IsObfuscated = false
-                            };
-                            PreviewRun.ObfuscateTimer.Enabled = false;
-
-                            //选中部分
-                            CurrentRun = new RichRun(obfuscates, selectedContent.ToString())
-                            {
-                                IsObfuscated = true
-                            };
-                            CurrentRun.ObfuscateTimer.Enabled = true;
-
-                            //后部分
-                            RichRun NextRun = new RichRun(obfuscates, end_content.ToString())
-                            {
-                                IsObfuscated = false
-                            };
-                            NextRun.ObfuscateTimer.Enabled = false;
-                            #endregion
-
-                            #region 更新当前段落成员
-                            if (start_paragraph.Inlines.Count > 1 && i > 0)
-                            {
-                                start_paragraph.Inlines.InsertAfter(LastRun, PreviewRun);
-                                start_paragraph.Inlines.InsertAfter(PreviewRun, CurrentRun);
-                                start_paragraph.Inlines.InsertAfter(CurrentRun, NextRun);
-                            }
-                            else
-                            {
-                                start_paragraph.Inlines.Add(PreviewRun);
-                                start_paragraph.Inlines.Add(CurrentRun);
-                                start_paragraph.Inlines.Add(NextRun);
-                            }
-                            #endregion
-                            break;
+                            RichRun richRun = obfuscated_item as RichRun;
+                            MessageBox.Show(richRun.Text);
                         }
-
-                        //开启迭代标记,执行混淆效果
-                        //CurrentRun = new RichRun(obfuscates, selectedContent)
-                        //{
-                        //    IsObfuscated = true
-                        //};
-                        //CurrentRun.ObfuscateTimer.Enabled = true;
-                        continue;
                     }
-
-                    //表示选中的内容头部不需要切割
-                    if (SumRunLength == start_pos && !IsLoopHandle)
-                    {
-                        IsLoopHandle = true;
-                        continue;
-                    }
-
-                    //表示选中的内容尾部需要切割
-                    if (SumRunLength > end_pos)
-                    {
-                        break;
-                    }
-
-                    //表示选中的内容尾部不需要切割
-                    if (SumRunLength == end_pos)
-                    {
-                        break;
-                    }
-
-                    //处理中间的RichRun对象
-                    if (IsLoopHandle)
-                    {
-
-                    }
-
-                    ////有头有尾
-                    //if (ObfuscateStart != -1 && ObfuscateEnd != -1)
-                    //{
-                    //}
-
-                    ////有头没尾
-                    //if (ObfuscateStart != -1 && ObfuscateEnd == -1)
-                    //{
-                    //    return;
-                    //}
-
-                    ////没头没尾
-                    //if (ObfuscateStart == -1 && ObfuscateEnd == -1)
-                    //{
-                    //    return;
-                    //}
-
-                    ////没头有尾
-                    //if (ObfuscateStart == -1 && ObfuscateEnd != -1)
-                    //{
-                    //    return;
-                    //}
                 }
             }
             else
@@ -594,7 +492,9 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
             //textRange.ApplyPropertyValue(TextElement.ForegroundProperty, new SolidColorBrush(Color.FromRgb(255, 0, 0)));
             ////获取当前光标所在的父级Run对象
             //MessageBox.Show(written_box.Selection.Start.Parent.GetType().ToString());
+
             //Paragraph paragraph = blocks[0] as Paragraph;
+            //MessageBox.Show(paragraph.Inlines.Count+"");
         }
 
         /// <summary>
@@ -794,6 +694,39 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
 
     public class TextEventProperties:ObservableObject
     {
+        private bool hasClickEvent = false;
+
+        public bool HasClickEvent
+        {
+            get { return hasClickEvent; }
+            set
+            {
+                hasClickEvent = value;
+            }
+        }
+
+        private bool hasHoverEvent = false;
+
+        public bool HasHoverEvent
+        {
+            get { return hasHoverEvent; }
+            set
+            {
+                hasHoverEvent = value;
+            }
+        }
+
+        private bool hasInsertion = false;
+
+        public bool HasInsertion
+        {
+            get { return hasInsertion; }
+            set
+            {
+                hasInsertion = value;
+            }
+        }
+
         private string clickEvent = "";
         public string ClickEvent { get { return clickEvent; } set { clickEvent = value;OnPropertyChanged(); } }
 

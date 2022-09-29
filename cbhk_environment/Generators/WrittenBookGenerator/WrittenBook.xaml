@@ -293,13 +293,16 @@
                         <ity:EventTrigger EventName="PreviewMouseRightButtonDown">
                             <itn:CallMethodAction MethodName="OpenEventForm" TargetObject="{Binding}" />
                         </ity:EventTrigger>
+                        <ity:EventTrigger EventName="PreviewTextInput">
+                            <itn:CallMethodAction MethodName="WrittenBoxPreviewTextInput" TargetObject="{Binding}" />
+                        </ity:EventTrigger>
                     </ity:Interaction.Triggers>
                     <CustomControls:EnabledFlowDocument
-                        FontFamily="Minecraft AE Pixel"
+                        FontFamily="Bitstream Vera Sans Mono"
                         FontSize="30"
                         LineHeight="10">
                         <Paragraph>
-                            <CustomControls:RichRun Text="abcdefghijklmnopqr" />
+                            <CustomControls:RichRun Text="abcdefghijklmnopqrstuvwxyz" />
                         </Paragraph>
                     </CustomControls:EnabledFlowDocument>
                 </RichTextBox>

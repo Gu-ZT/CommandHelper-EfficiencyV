@@ -314,7 +314,7 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
 
             #region 初始化事件设置窗体
             EventForm.Content = EventComponent;
-            EventForm.Closing += (o,e) => { e.Cancel = true;EventForm.Hide();};
+            EventForm.Closing += (o, e) => { e.Cancel = true; EventForm.Hide(); };
             EventForm.DataContext = this;
             EventComponent.DataContext = this;
             #endregion

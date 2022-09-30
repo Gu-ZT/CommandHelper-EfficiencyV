@@ -28,33 +28,39 @@
                         UnSelectedToggleText="" />
                 </StackPanel>
                 <StackPanel>
+                    <!--  IsChecked="{Binding EnableEditClickEvent, Mode=OneWayToSource}"  -->
                     <CustomControls:RadiusToggleButtons
                         x:Name="EnableClickEvent"
                         Height="30"
                         HorizontalAlignment="Center"
+                        Click="EnableClickEventClick"
                         Foreground="White"
                         SelectedToggleText="点击事件"
                         Style="{DynamicResource RadiusToggleButton}"
                         UnSelectedToggleText="点击事件" />
+                    <!--  IsChecked="{Binding EnableEditHoverEvent, Mode=OneWayToSource}"  -->
                     <CustomControls:RadiusToggleButtons
                         x:Name="EnableHoverEvent"
                         Height="30"
                         HorizontalAlignment="Center"
+                        Click="EnableHoverEventClick"
                         Foreground="White"
                         SelectedToggleText="悬浮事件"
                         Style="{DynamicResource RadiusToggleButton}"
                         UnSelectedToggleText="悬浮事件" />
+                    <!--  IsChecked="{Binding EnableEditInsertion, Mode=OneWayToSource}"  -->
                     <CustomControls:RadiusToggleButtons
                         x:Name="EnableInsertion"
                         Height="30"
                         HorizontalAlignment="Center"
+                        Click="EnableInsertionClick"
                         Foreground="White"
                         SelectedToggleText="插入文本"
                         Style="{DynamicResource RadiusToggleButton}"
                         UnSelectedToggleText="插入文本" />
                 </StackPanel>
             </DockPanel>
-            <StackPanel Margin="0,5" Visibility="Collapsed">
+            <StackPanel x:Name="ClickEventPanel" Margin="0,5">
                 <TextBlock
                     HorizontalAlignment="Center"
                     FontSize="20"
@@ -71,6 +77,7 @@
                         ToolTipService.InitialShowDelay="0"
                         ToolTipService.ShowDuration="1000" />
                     <CustomControls:TextComboBoxs
+                        x:Name="ClickEventActionBox"
                         Height="30"
                         FontSize="20"
                         Foreground="White"
@@ -88,13 +95,14 @@
                         ToolTipService.InitialShowDelay="0"
                         ToolTipService.ShowDuration="1000" />
                     <TextBox
+                        x:Name="ClickEventValueBox"
                         Background="Transparent"
                         BorderBrush="Black"
                         FontSize="20"
                         Foreground="White" />
                 </DockPanel>
             </StackPanel>
-            <StackPanel Margin="0,5" Visibility="Collapsed">
+            <StackPanel x:Name="HoverEventPanel" Margin="0,5">
                 <TextBlock
                     HorizontalAlignment="Center"
                     FontSize="20"
@@ -111,6 +119,7 @@
                         ToolTipService.InitialShowDelay="0"
                         ToolTipService.ShowDuration="1000" />
                     <CustomControls:TextComboBoxs
+                        x:Name="HoverEventActionBox"
                         Height="30"
                         FontSize="20"
                         Foreground="White"
@@ -128,13 +137,14 @@
                         ToolTipService.InitialShowDelay="0"
                         ToolTipService.ShowDuration="1000" />
                     <TextBox
+                        x:Name="HoverEventValueBox"
                         Background="Transparent"
                         BorderBrush="Black"
                         FontSize="20"
                         Foreground="White" />
                 </DockPanel>
             </StackPanel>
-            <StackPanel Margin="0,5" Visibility="Collapsed">
+            <StackPanel x:Name="InsertionPanel" Margin="0,5">
                 <TextBlock
                     HorizontalAlignment="Center"
                     FontSize="20"
@@ -151,6 +161,7 @@
                         ToolTipService.InitialShowDelay="0"
                         ToolTipService.ShowDuration="1000" />
                     <TextBox
+                        x:Name="InsertionValueBox"
                         Background="Transparent"
                         BorderBrush="Black"
                         FontSize="20"

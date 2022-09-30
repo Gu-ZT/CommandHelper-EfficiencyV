@@ -296,13 +296,16 @@
                         <ity:EventTrigger EventName="PreviewTextInput">
                             <itn:CallMethodAction MethodName="WrittenBoxPreviewTextInput" TargetObject="{Binding}" />
                         </ity:EventTrigger>
+                        <ity:EventTrigger EventName="TextChanged">
+                            <itn:CallMethodAction MethodName="WrittenBoxTextChanged" TargetObject="{Binding}" />
+                        </ity:EventTrigger>
                     </ity:Interaction.Triggers>
                     <CustomControls:EnabledFlowDocument
                         FontFamily="Bitstream Vera Sans Mono"
                         FontSize="30"
                         LineHeight="10">
                         <Paragraph>
-                            <CustomControls:RichRun Text="abcdefghijklmnopqrstuvwxyz" />
+                            <CustomControls:RichRun Text="abcdefghijklmn " />
                         </Paragraph>
                     </CustomControls:EnabledFlowDocument>
                 </RichTextBox>

@@ -1,6 +1,8 @@
-﻿using cbhk_environment.Generators.WrittenBookGenerator;
+﻿using cbhk_environment.ControlsDataContexts;
+using cbhk_environment.Generators.WrittenBookGenerator;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -46,6 +48,105 @@ namespace cbhk_environment.CustomControls
             Interval = 10,
             Enabled = false
         };
+
+        #region 保存事件数据
+        private bool hasClickEvent = false;
+
+        public bool HasClickEvent
+        {
+            get { return hasClickEvent; }
+            set
+            {
+                hasClickEvent = value;
+            }
+        }
+
+        private bool hasHoverEvent = false;
+
+        public bool HasHoverEvent
+        {
+            get { return hasHoverEvent; }
+            set
+            {
+                hasHoverEvent = value;
+            }
+        }
+
+        private bool hasInsertion = false;
+
+        public bool HasInsertion
+        {
+            get { return hasInsertion; }
+            set
+            {
+                hasInsertion = value;
+            }
+        }
+
+        private TextSource clickEventActionItem = new TextSource() { ItemText = "运行命令" };
+        public TextSource ClickEventActionItem
+        {
+            get { return clickEventActionItem; }
+            set
+            {
+                clickEventActionItem = value;
+            }
+        }
+        private string clickEventValue = "";
+        public string ClickEventValue
+        {
+            get { return clickEventValue; }
+            set
+            {
+                clickEventValue = value;
+            }
+        }
+        private TextSource hoverEventActionItem = new TextSource() { ItemText = "显示文本" };
+        public TextSource HoverEventActionItem
+        {
+            get { return hoverEventActionItem; }
+            set
+            {
+                hoverEventActionItem = value;
+            }
+        }
+        private string hoverEventValue = "";
+        public string HoverEventValue
+        {
+            get { return hoverEventValue; }
+            set
+            {
+                hoverEventValue = value;
+            }
+        }
+
+        private string insertionValue = "";
+        public string InsertionValue
+        {
+            get { return insertionValue; }
+            set
+            {
+                insertionValue = value;
+            }
+        }
+
+        #region 最终事件数据
+        public string EventData
+        {
+            get
+            {
+                string result = "";
+                string ClickEventString = HasClickEvent? ",\"clickEvent\":{\"action\":\""+(written_book_datacontext.EventDataBase.Where(item => item.Value == ClickEventActionItem.ItemText.Trim()).First().Key)+"\"value\":\""+ClickEventValue+"\"}":"";
+
+                string HoverEventString = HasHoverEvent ? ",\"hoverEvent\":{\"action\":\"" + (written_book_datacontext.EventDataBase.Where(item => item.Value == HoverEventActionItem.ItemText.Trim()).First().Key) + "\"value\":\"" + HoverEventValue + "\"}" : "";
+                string InsertionString = HasInsertion ? ",\"insertion\":{\"action\":\"" + (written_book_datacontext.EventDataBase.Where(item => item.Value == HoverEventActionItem.ItemText.Trim()).First().Key) + "\"value\":\"" + HoverEventValue + "\"}" : "";
+                result = ClickEventString + HoverEventString + InsertionString;
+                return result;
+            }
+        }
+        #endregion
+
+        #endregion
 
         /// <summary>
         /// 混淆文字控件
@@ -123,10 +224,6 @@ namespace cbhk_environment.CustomControls
             ObfuscatesResult.Clear();
             for (int i = 0; i < UID.Length; i++)
                 ObfuscatesResult.Append(Obfuscates[random.Next(0, Obfuscates.Count - 1)]);
-            //while (GeneralTools.GetTextWidth.Get(new Run(ObfuscatesResult.ToString())) > MaxContentLength && ObfuscatesResult.Length > 1)
-            //{
-            //    ObfuscatesResult.Remove(ObfuscatesResult.Length-1,1);
-            //}
             Text = ObfuscatesResult.ToString();
         }
     }

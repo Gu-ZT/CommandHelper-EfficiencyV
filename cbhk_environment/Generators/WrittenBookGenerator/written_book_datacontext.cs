@@ -10,16 +10,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Management.Instrumentation;
-using System.Security.Cryptography;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Windows.Services.Maps;
 
 namespace cbhk_environment.Generators.WrittenBookGenerator
 {
@@ -75,32 +72,66 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
         //混淆文本迭代链表
         public static List<char> obfuscates = new List<char> { };
 
-        ///// <summary>
-        ///// 迭代序列起始下标
-        ///// </summary>
-        //public int ObfuscateStart = -1;
-        ///// <summary>
-        ///// 迭代序列末尾下标
-        ///// </summary>
-        //public int ObfuscateEnd = -1;
-
         //流文档链表,每个成员代表成书中的一页
 
-        List<FlowDocument> WrittenBookPages = new List<FlowDocument> { };
+        List<EnabledFlowDocument> WrittenBookPages = new List<EnabledFlowDocument> { };
 
-        //一页总字符数
+        /// <summary>
+        /// 一页总字符数
+        /// </summary>
         int PageMaxCharCount = 377;
 
-        // 总页数
-        int MaxPage = 1;
+        #region 总页数
+        int maxPage = 1;
+        int MaxPage
+        {
+            get { return maxPage; }
+            set
+            {
+                maxPage = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion
 
-        // 当前页码
-        int CurrentPage = 1;
+        #region 当前页码下标
+        int currentPageIndex = 0;
+        int CurrentPageIndex
+        {
+            get 
+            { 
+                MaxPage = WrittenBookPages.Count; 
+                PageData = "页面 ：" + (currentPageIndex + 1).ToString() + "/" + MaxPage.ToString(); 
+                return currentPageIndex;
+            }
+            set
+            {
+                currentPageIndex = value;
+                PageData = "页面 ：" + (CurrentPageIndex + 1).ToString() + "/" + MaxPage.ToString();
+                if (CurrentPageIndex > 0)
+                    DisplayLeftArrow = Visibility.Visible;
+                else
+                    DisplayLeftArrow = Visibility.Collapsed;
+            }
+        }
+        #endregion
 
-        //一个段落包含最多的字符数
-        //int MaxLineCharCount = 450;
+        #region 当前光标所在的文本对象引用
+        private RichRun currentRichRun = null;
+        public RichRun CurrentRichRun
+        {
+            get { return currentRichRun; }
+            set
+            {
+                currentRichRun = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion
 
-        //事件设置窗体
+        /// <summary>
+        /// 事件设置窗体
+        /// </summary>
         public static Window EventForm = new Window()
         {
             Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#2F2F2F")),
@@ -109,6 +140,14 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
             WindowStyle = WindowStyle.None,
             WindowStartupLocation = WindowStartupLocation.CenterScreen
         };
+
+        /// <summary>
+        /// 事件设置控件
+        /// </summary>
+        TextEventsForm EventComponent = new TextEventsForm();
+
+        //控制事件窗体的显示
+        bool DisplayEventForm = false;
 
         #region 设置选定文本样式指令
         /// <summary>
@@ -145,6 +184,7 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
             set
             {
                 enableClickEvent = value;
+                OnPropertyChanged();
             }
         }
         #endregion
@@ -157,6 +197,7 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
             set
             {
                 enableHoverEvent = value;
+                OnPropertyChanged();
             }
         }
         #endregion
@@ -169,6 +210,7 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
             set
             {
                 enableInsertion = value;
+                OnPropertyChanged();
             }
         }
         #endregion
@@ -192,9 +234,11 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
         #endregion
 
         #region 当前页码与总页数数据
+        string pageData = "页面 ：1/1";
         public string PageData
         {
-            get { return "页面 ："+ CurrentPage.ToString() + "/" + MaxPage.ToString(); }
+            get { return pageData; }
+            set { pageData = value; OnPropertyChanged(); }
         }
         #endregion
 
@@ -210,6 +254,9 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
             }
         }
         #endregion
+
+        //当前光标选中的文本对象链表
+        List<RichRun> CurrentSelectedRichRunList = new List<RichRun> { };
 
         public written_book_datacontext()
         {
@@ -259,10 +306,17 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
             #endregion
 
             #region 读取混淆文本配置
-            if(File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\WrittenBook\\data\\obfuscateChars.ini"))
+            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\WrittenBook\\data\\obfuscateChars.ini"))
             {
                 obfuscates = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\WrittenBook\\data\\obfuscateChars.ini").ToCharArray().ToList();
             }
+            #endregion
+
+            #region 初始化事件设置窗体
+            EventForm.Content = EventComponent;
+            EventForm.Closing += (o,e) => { e.Cancel = true;EventForm.Hide();};
+            EventForm.DataContext = this;
+            EventComponent.DataContext = this;
             #endregion
         }
 
@@ -271,7 +325,19 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
         /// </summary>
         private void resetTextCommand()
         {
-
+            RichRun start_run = written_box.Selection.Start.Parent as RichRun;
+            RichRun end_run = written_box.Selection.End.Parent as RichRun;
+            if(start_run == end_run)
+            {
+                start_run.FontWeight = FontWeights.Normal;
+                start_run.FontStyle = FontStyles.Normal;
+                start_run.TextDecorations = new TextDecorationCollection();
+                start_run.Foreground = new SolidColorBrush(Color.FromRgb(0, 0, 0));
+                start_run.IsObfuscated = false;
+                start_run.ObfuscateTimer.Enabled = false;
+                if (start_run.UID.Trim() != "")
+                    start_run.Text = start_run.UID;
+            }
         }
 
         /// <summary>
@@ -284,14 +350,19 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
 
             //获取当前段落所在的文档对象
             EnabledFlowDocument enabledFlowDocument = written_box.Document as EnabledFlowDocument;
+            //获取当前文档中所有的段落
+            List<Paragraph> CurrentParagraphList = enabledFlowDocument.Blocks.ToList().ConvertAll(item=>item as Paragraph);
             //找到光标头所在Run对象
             RichRun start_run = written_box.Selection.Start.Parent as RichRun;
             //找到光标尾所在的Run对象
             RichRun end_run = written_box.Selection.End.Parent as RichRun;
+
             //找到光标头所在段落
             Paragraph start_paragraph = start_run.Parent as Paragraph;
             //找到光标尾所在段落
             Paragraph end_paragraph = end_run.Parent as Paragraph;
+            //保存光标首尾包含的所有段落
+            List<Paragraph> SelectedParagraphList = new List<Paragraph> { };
             //当前所操作的段落包含的文本对象
             List<Inline> current_inlines = start_paragraph.Inlines.ToList();
             //保存光标头所在Run对象起始部分的文本
@@ -318,66 +389,172 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
             //处理同一行的混淆
             if (SelectionEndIndex - SelectionStartIndex > 1 && start_paragraph == end_paragraph)
                 NeedObfuscatedRichRuns = current_inlines.GetRange((SelectionStartIndex + 1) < (current_inlines.Count - 1) ? SelectionStartIndex + 1 : SelectionStartIndex, (SelectionEndIndex - 1) > 0 ? SelectionEndIndex - 1 : SelectionEndIndex);
-            else
-            if (start_paragraph != end_paragraph)
-            {
 
+            #region 如果光标的首尾分别与文本对象的首尾对应,则关闭混淆效果,还原原文
+            TextRange SelectedStart = new TextRange(start_run.ElementStart, written_box.Selection.Start);
+            TextRange SelectedEnd = new TextRange(end_run.ElementEnd, written_box.Selection.End);
+            //计算光标所包含的所有中间段落,不包括头和尾所在的段落
+            int start_paragraph_index = CurrentParagraphList.IndexOf(start_paragraph);
+            int end_paragraph_index = CurrentParagraphList.IndexOf(end_paragraph);
+            if (SelectedStart.Text.Trim() == "" && SelectedEnd.Text.Trim() == "" && start_run.IsObfuscated && end_run.IsObfuscated)
+            {
+                List<Inline> ObfuscatedRuns = NeedObfuscatedRichRuns.Where(item =>
+                {
+                    RichRun CurrentRichRun = item as RichRun;
+                    return CurrentRichRun.IsObfuscated;
+                }).ToList();
+
+                int differenceCount = NeedObfuscatedRichRuns.Count - ObfuscatedRuns.Count;
+                if (differenceCount > (-2) || differenceCount < 2)
+                {
+                    #region 还原光标首尾处的文本对象
+                    start_run.IsObfuscated = false;
+                    start_run.ObfuscateTimer.Enabled = false;
+                    start_run.Text = start_run.UID;
+                    end_run.IsObfuscated = false;
+                    end_run.ObfuscateTimer.Enabled = false;
+                    end_run.Text = end_run.UID;
+                    #endregion
+
+                    //处理不同行的混淆还原
+                    if (start_paragraph != end_paragraph)
+                    {
+                        if(end_paragraph_index - start_paragraph_index > 1)
+                        {
+                            SelectedParagraphList = CurrentParagraphList.GetRange(start_paragraph_index + 1, end_paragraph_index - 1 - start_paragraph_index);
+                            int SelectedMiddleRichRunCount = 0;
+                            foreach (Paragraph item in SelectedParagraphList)
+                                SelectedMiddleRichRunCount += item.Inlines.Count;
+                            int SelectedObfuscatedRichRunCount = SelectedParagraphList.Where(item =>
+                            {
+                                foreach (var run in item.Inlines)
+                                {
+                                    if (run is RichRun)
+                                    {
+                                        RichRun richRun = run as RichRun;
+                                        //MessageBox.Show("uid:"+richRun.UID+"\r\ntext:"+richRun.Text);
+                                        if (richRun.IsObfuscated)
+                                        return richRun.IsObfuscated;
+                                    }
+                                    else
+                                        return false;
+                                }
+                                return false;
+                            }).Count();
+                            if(SelectedMiddleRichRunCount == SelectedObfuscatedRichRunCount)
+                            {
+                                SelectedParagraphList.All(item =>
+                                {
+                                    ObfuscatedRuns.AddRange(item.Inlines.ToList().ConvertAll(line=>line as RichRun));
+                                    return true;
+                                });
+                                //ObfuscatedRuns.Remove(ObfuscatedRuns.Last());
+                            }
+                        }
+                    }
+                    else//处理同一行的混淆还原
+                    {
+                        ObfuscatedRuns = NeedObfuscatedRichRuns;
+                    }
+
+                    foreach (var item in ObfuscatedRuns)
+                    {
+                        if (item is RichRun)
+                        {
+                            RichRun richRun = item as RichRun;
+                            richRun.IsObfuscated = false;
+                            richRun.ObfuscateTimer.Enabled = false;
+                            richRun.Text = richRun.UID;
+                        }
+                    }
+                    return;
+                }
+            }
+            #endregion
+
+            if (start_paragraph != end_paragraph)//如果选择了多行,那么计算分别起始段落右侧和末尾段落左侧的所有文本对象
+            {
+                //判断光标首末所在段落是否有剩余文本对象
+                if (SelectionStartIndex <= (current_inlines.Count - 1))
+                {
+                    //保存光标起始段落文本右侧所有文本对象
+                    List<Inline> right_side_runs = current_inlines.GetRange(SelectionStartIndex, current_inlines.Count - SelectionStartIndex);
+                    List<Inline> end_run_inlines = end_paragraph.Inlines.ToList();
+                    SelectionEndIndex = end_run_inlines.IndexOf(end_run);
+                    //保存光标末尾段落文本左侧所有文本对象
+                    List<Inline> left_side_runs = end_run_inlines.GetRange(0, SelectionEndIndex);
+
+                    NeedObfuscatedRichRuns.AddRange(right_side_runs);
+                    NeedObfuscatedRichRuns.AddRange(left_side_runs);
+                }
+
+                //判断光标首末是否包含其他段落
+                if (end_paragraph_index - start_paragraph_index > 1)
+                {
+                    SelectedParagraphList = CurrentParagraphList.GetRange(start_paragraph_index + 1, end_paragraph_index - 1 - start_paragraph_index);
+                    SelectedParagraphList.All(item => { NeedObfuscatedRichRuns.AddRange(item.Inlines.ToList().ConvertAll(line => line as RichRun)); return true; });
+                }
             }
 
             #region 分割光标首尾所选部分的文本对象
 
             #region 首
-            startRunStartPart = new TextRange(start_run.ElementStart, written_box.Selection.Start);
-            startRunEndPart = new TextRange(start_run.ElementEnd, written_box.Selection.Start);
-
-            RichRun newStartRunStartPart = new RichRun()
+            if(!start_run.IsObfuscated)
             {
-                Foreground = start_run.Foreground,
-                FontStyle = start_run.FontStyle,
-                FontWeight = start_run.FontWeight,
-                TextDecorations = start_run.TextDecorations,
-                Tag = start_run.Tag
-            };
-            newStartRunStartPart.Text = startRunStartPart.Text;
+                startRunStartPart = new TextRange(start_run.ElementStart, written_box.Selection.Start);
+                startRunEndPart = new TextRange(start_run.ElementEnd, written_box.Selection.Start);
 
-            if (newStartRunStartPart.Text.Trim() != "" /*&& !SelectOnlyOne*/)
-            //    start_paragraph.Inlines.InsertBefore(InsertPreviewRun, newStartRunStartPart);
-            //else
-                start_paragraph.Inlines.InsertBefore(start_run,newStartRunStartPart);
+                RichRun newStartRunStartPart = new RichRun()
+                {
+                    Foreground = start_run.Foreground,
+                    FontStyle = start_run.FontStyle,
+                    FontWeight = start_run.FontWeight,
+                    TextDecorations = start_run.TextDecorations,
+                    Tag = start_run.Tag
+                };
+                newStartRunStartPart.Text = startRunStartPart.Text;
 
-            if (start_run != end_run)
-            {
-                start_run.Text = startRunEndPart.Text;
-                start_run.UID = startRunEndPart.Text;
-                start_run.IsObfuscated = true;
-                start_run.ObfuscateTimer.Enabled = true;
+                if (newStartRunStartPart.Text.Trim() != "")
+                    start_paragraph.Inlines.InsertBefore(start_run, newStartRunStartPart);
+
+                if (start_run != end_run)
+                {
+                    start_run.Text = startRunEndPart.Text;
+                    start_run.UID = startRunEndPart.Text;
+                    start_run.IsObfuscated = true;
+                    start_run.ObfuscateTimer.Enabled = true;
+                }
             }
             #endregion
 
             #region 尾
-            endRunStartPart = new TextRange(end_run.ElementStart, written_box.Selection.End);
-            endRunEndPart = new TextRange(end_run.ElementEnd, written_box.Selection.End);
-
-            RichRun newEndRunEndPart = new RichRun()
+            if(!end_run.IsObfuscated)
             {
-                FontStyle = end_run.FontStyle,
-                FontWeight = end_run.FontWeight,
-                TextDecorations = end_run.TextDecorations,
-                Tag = end_run.Tag
-            };
-            newEndRunEndPart.Text = endRunEndPart.Text;
+                endRunStartPart = new TextRange(end_run.ElementStart, written_box.Selection.End);
+                endRunEndPart = new TextRange(end_run.ElementEnd, written_box.Selection.End);
 
-            if (newEndRunEndPart.Text.Trim() != "" /*&& !SelectOnlyOne*/)
-            //    start_paragraph.Inlines.InsertAfter(InsertNextRun, newEndRunEndPart);
-            //else
-                start_paragraph.Inlines.InsertAfter(end_run,newEndRunEndPart);
+                RichRun newEndRunEndPart = new RichRun()
+                {
+                    FontStyle = end_run.FontStyle,
+                    FontWeight = end_run.FontWeight,
+                    TextDecorations = end_run.TextDecorations,
+                    Tag = end_run.Tag
+                };
+                newEndRunEndPart.Text = endRunEndPart.Text;
 
-            if (end_run != start_run)
-            {
-                end_run.Text = endRunStartPart.Text;
-                end_run.UID = endRunStartPart.Text;
-                end_run.IsObfuscated = true;
-                end_run.ObfuscateTimer.Enabled = true;
+                if (newEndRunEndPart.Text.Trim() != "" && start_paragraph == end_paragraph)
+                    start_paragraph.Inlines.InsertAfter(end_run, newEndRunEndPart);
+                else
+                if (newEndRunEndPart.Text.Trim() != "")
+                    end_paragraph.Inlines.InsertAfter(end_run, newEndRunEndPart);
+
+                if (end_run != start_run)
+                {
+                    end_run.Text = endRunStartPart.Text;
+                    end_run.UID = endRunStartPart.Text;
+                    end_run.IsObfuscated = true;
+                    end_run.ObfuscateTimer.Enabled = true;
+                }
             }
             #endregion
 
@@ -544,11 +721,8 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
             //MessageBox.Show(written_box.Selection.Start.Parent.GetType().ToString());
 
             //Paragraph paragraph = blocks[0] as Paragraph;
-            foreach (Paragraph item in blocks)
-            {
-                MessageBox.Show(item.Inlines.Count+"");
-            }
             //MessageBox.Show(paragraph.Inlines.Count+"");
+            //written_box.Selection.Start.Parent as RichRun
         }
 
         /// <summary>
@@ -558,10 +732,106 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
         /// <param name="e"></param>
         public void OpenEventForm(object sender, MouseButtonEventArgs e)
         {
-            TextEventsForm EventComponent = new TextEventsForm();
-            //设置事件设置窗体内容
-            EventForm.Content = EventComponent;
+            //CurrentSelectedRichRunList
+            //EventComponent
+            DisplayEventForm = !DisplayEventForm;
+            if (!DisplayEventForm) return;
+            RichRun start_run = written_box.Selection.Start.Parent as RichRun;
+            RichRun end_run = written_box.Selection.End.Parent as RichRun;
+            Paragraph start_paragraph = start_run.Parent as Paragraph;
+            Paragraph end_paragraph = end_run.Parent as Paragraph;
+            bool SameRun = Equals(start_run,end_run);
+            if(SameRun)
+            {
+                #region 同步数据
+                CurrentRichRun = start_run;
+                #region 事件的开关
+                Binding HaveClickEventBinder = new Binding()
+                {
+                    Path = new PropertyPath("CurrentRichRun.HasClickEvent"),
+                    Mode = BindingMode.TwoWay,
+                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                };
+                Binding HaveHoverEventBinder = new Binding()
+                {
+                    Path = new PropertyPath("CurrentRichRun.HasHoverEvent"),
+                    Mode = BindingMode.TwoWay,
+                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                };
+                Binding HaveInsertionBinder = new Binding()
+                {
+                    Path = new PropertyPath("CurrentRichRun.HasInsertion"),
+                    Mode = BindingMode.TwoWay,
+                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                };
+                #endregion
+
+                #region 事件的类型和值
+                Binding ClickEventActionBinder = new Binding()
+                {
+                    Path = new PropertyPath("CurrentRichRun.ClickEventActionItem"),
+                    Mode = BindingMode.TwoWay,
+                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                };
+                Binding HoverEventActionBinder = new Binding()
+                {
+                    Path = new PropertyPath("CurrentRichRun.HoverEventActionItem"),
+                    Mode = BindingMode.TwoWay,
+                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                };
+
+                Binding ClickEventValueBinder = new Binding()
+                {
+                    Path = new PropertyPath("CurrentRichRun.ClickEventValue"),
+                    Mode = BindingMode.TwoWay,
+                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                };
+                Binding HoverEventValueBinder = new Binding()
+                {
+                    Path = new PropertyPath("CurrentRichRun.HoverEventValue"),
+                    Mode = BindingMode.TwoWay,
+                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                };
+                Binding InsertionValueBinder = new Binding()
+                {
+                    Path = new PropertyPath("CurrentRichRun.InsertionValue"),
+                    Mode = BindingMode.TwoWay,
+                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                };
+                #endregion
+
+                BindingOperations.SetBinding(EventComponent.EnableClickEvent, RadiusToggleButtons.IsCheckedProperty, HaveClickEventBinder);
+                BindingOperations.SetBinding(EventComponent.EnableHoverEvent, RadiusToggleButtons.IsCheckedProperty, HaveHoverEventBinder);
+                BindingOperations.SetBinding(EventComponent.EnableInsertion, RadiusToggleButtons.IsCheckedProperty, HaveInsertionBinder);
+
+                EventComponent.ClickEventPanel.Visibility = CurrentRichRun.HasClickEvent ? Visibility.Visible : Visibility.Collapsed;
+                EventComponent.HoverEventPanel.Visibility = CurrentRichRun.HasHoverEvent ? Visibility.Visible : Visibility.Collapsed;
+                EventComponent.InsertionPanel.Visibility = CurrentRichRun.HasInsertion ? Visibility.Visible : Visibility.Collapsed;
+
+                BindingOperations.SetBinding(EventComponent.ClickEventActionBox,TextComboBoxs.SelectedItemProperty, ClickEventActionBinder);
+                BindingOperations.SetBinding(EventComponent.HoverEventActionBox, TextComboBoxs.SelectedItemProperty, HoverEventActionBinder);
+
+                #region 在视觉上更新事件类型
+                EventComponent.ClickEventActionBox.ApplyTemplate();
+                EventComponent.HoverEventActionBox.ApplyTemplate();
+                TextBox clickEventActionBox = EventComponent.ClickEventActionBox.Template.FindName("EditableTextBox", EventComponent.ClickEventActionBox) as TextBox;
+                clickEventActionBox.Text = CurrentRichRun.ClickEventActionItem.ItemText;
+
+                TextBox hoverEventActionBox = EventComponent.HoverEventActionBox.Template.FindName("EditableTextBox", EventComponent.HoverEventActionBox) as TextBox;
+                hoverEventActionBox.Text = CurrentRichRun.HoverEventActionItem.ItemText;
+                #endregion
+
+                BindingOperations.SetBinding(EventComponent.ClickEventValueBox, TextBox.TextProperty, ClickEventValueBinder);
+                BindingOperations.SetBinding(EventComponent.HoverEventValueBox, TextBox.TextProperty, HoverEventValueBinder);
+                BindingOperations.SetBinding(EventComponent.InsertionValueBox, TextBox.TextProperty, InsertionValueBinder);
+                #endregion
+            }
+            else
+            {
+
+            }
             EventForm.Show();
+            EventForm.Topmost = true;
         }
 
         /// <summary>
@@ -591,6 +861,22 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
         }
 
         /// <summary>
+        /// 处理空文档内容
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void WrittenBoxTextChanged(object sender, TextChangedEventArgs e)
+        {
+            EnabledFlowDocument enabledFlowDocument = written_box.Document as EnabledFlowDocument;
+            if (enabledFlowDocument.Blocks.Count == 0)
+            {
+                Paragraph paragraph = new Paragraph();
+                paragraph.Inlines.Add(new RichRun());
+                enabledFlowDocument.Blocks.Add(paragraph);
+            }
+        }
+
+        /// <summary>
         /// 判断当前编辑的对象类型是否为Run
         /// </summary>
         /// <param name="sender"></param>
@@ -600,8 +886,12 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
             object current_obj = written_box.Selection.Start.Parent;
             if (current_obj != null && (current_obj is Run))
             {
-                Run run = current_obj as Run;
-                run = new RichRun();
+                //string text = (current_obj as Run).Text;
+                current_obj = new RichRun();
+                //Run run = current_obj as Run;
+                //RichRun richRun = new RichRun();
+                //richRun.Text = run.Text;
+                //current_obj = richRun;
             }
         }
 
@@ -629,6 +919,8 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
         public void WrittenBoxLoaded(object sender, RoutedEventArgs e)
         {
             written_box = sender as RichTextBox;
+            //初始化文档链表
+            WrittenBookPages.Add(written_box.Document as EnabledFlowDocument);
         }
 
         /// <summary>
@@ -750,7 +1042,11 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
         /// <param name="e"></param>
         public void LeftArrowMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-
+            CurrentPageIndex--;
+            //获取当前文档对象
+            EnabledFlowDocument currentFlowDocument = written_box.Document as EnabledFlowDocument;
+            WrittenBookPages[CurrentPageIndex + 1] = currentFlowDocument;
+            written_box.Document = WrittenBookPages[CurrentPageIndex];
         }
 
         /// <summary>
@@ -760,6 +1056,14 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
         /// <param name="e"></param>
         public void RightArrowMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            CurrentPageIndex++;
+            //获取当前文档对象
+            EnabledFlowDocument currentFlowDocument = written_box.Document as EnabledFlowDocument;
+            while (WrittenBookPages.Count < (CurrentPageIndex + 1))
+                WrittenBookPages.Add(new EnabledFlowDocument() { FontFamily = new FontFamily("Bitstream Vera Sans Mono"),FontSize = 30, LineHeight = 10 });
+            MaxPage = WrittenBookPages.Count;
+            WrittenBookPages[CurrentPageIndex - 1] = currentFlowDocument;
+            written_box.Document = WrittenBookPages[CurrentPageIndex];
         }
 
         /// <summary>
@@ -771,50 +1075,5 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
         {
 
         }
-    }
-
-    public class TextEventProperties:ObservableObject
-    {
-        private bool hasClickEvent = false;
-
-        public bool HasClickEvent
-        {
-            get { return hasClickEvent; }
-            set
-            {
-                hasClickEvent = value;
-            }
-        }
-
-        private bool hasHoverEvent = false;
-
-        public bool HasHoverEvent
-        {
-            get { return hasHoverEvent; }
-            set
-            {
-                hasHoverEvent = value;
-            }
-        }
-
-        private bool hasInsertion = false;
-
-        public bool HasInsertion
-        {
-            get { return hasInsertion; }
-            set
-            {
-                hasInsertion = value;
-            }
-        }
-
-        private string clickEvent = "";
-        public string ClickEvent { get { return clickEvent; } set { clickEvent = value;OnPropertyChanged(); } }
-
-        private string hoverEvent = "";
-        public string HoverEvent { get { return hoverEvent; } set { hoverEvent = value; OnPropertyChanged(); } }
-
-        private string insertion = "";
-        public string Insertion { get { return insertion; } set { insertion = value; OnPropertyChanged(); } }
     }
 }

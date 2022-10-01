@@ -144,10 +144,10 @@ namespace cbhk_environment.CustomControls
             get
             {
                 string result = "";
-                string ClickEventString = HasClickEvent? ",\"clickEvent\":{\"action\":\""+(written_book_datacontext.EventDataBase.Where(item => item.Value == ClickEventActionItem.ItemText.Trim()).First().Key)+"\"value\":\""+ClickEventValue+"\"}":"";
+                string ClickEventString = HasClickEvent? ",\"clickEvent\":{\"action\":\""+(written_book_datacontext.EventDataBase.Where(item => item.Value == ClickEventActionItem.ItemText.Trim()).First().Key)+"\",\"value\":\""+ClickEventValue+"\"}":"";
 
-                string HoverEventString = HasHoverEvent ? ",\"hoverEvent\":{\"action\":\"" + (written_book_datacontext.EventDataBase.Where(item => item.Value == HoverEventActionItem.ItemText.Trim()).First().Key) + "\"value\":\"" + HoverEventValue + "\"}" : "";
-                string InsertionString = HasInsertion ? ",\"insertion\":{\"action\":\"" + (written_book_datacontext.EventDataBase.Where(item => item.Value == HoverEventActionItem.ItemText.Trim()).First().Key) + "\"value\":\"" + HoverEventValue + "\"}" : "";
+                string HoverEventString = HasHoverEvent ? ",\"hoverEvent\":{\"action\":\"" + (written_book_datacontext.EventDataBase.Where(item => item.Value == HoverEventActionItem.ItemText.Trim()).First().Key) + "\",\"value\":\"" + HoverEventValue + "\"}" : "";
+                string InsertionString = HasInsertion ? ",\"insertion\":{\"action\":\"" + (written_book_datacontext.EventDataBase.Where(item => item.Value == HoverEventActionItem.ItemText.Trim()).First().Key) + "\",\"value\":\"" + HoverEventValue + "\"}" : "";
                 result = ClickEventString + HoverEventString + InsertionString;
                 return result;
             }

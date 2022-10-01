@@ -396,6 +396,7 @@
                             <CustomControls:IconComboBoxs
                                 Width="200"
                                 HorizontalAlignment="Left"
+                                Foreground="White"
                                 SelectedItem="{Binding SelectItemIdSource}"
                                 Style="{DynamicResource ComboBoxWithIcon}">
                                 <ity:Interaction.Triggers>

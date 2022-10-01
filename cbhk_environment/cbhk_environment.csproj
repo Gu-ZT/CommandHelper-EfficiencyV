@@ -713,14 +713,5 @@
   <ItemGroup>
     <Resource Include="resources\common\images\arrow.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Resource Include="resources\cbhk_form\images\written_book_background.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="resources\cbhk_form\images\enter_left_arrow.png" />
-    <Resource Include="resources\cbhk_form\images\enter_right_arrow.png" />
-    <Resource Include="resources\cbhk_form\images\left_arrow.png" />
-    <Resource Include="resources\cbhk_form\images\right_arrow.png" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

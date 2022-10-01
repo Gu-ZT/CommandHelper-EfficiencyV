@@ -97,6 +97,7 @@ namespace cbhk_environment.GenerateResultDisplayer
                 TextBox result_box = new TextBox()
                 {
                     Text = spawn_result[i],
+                    FontFamily = new FontFamily("Minecraft AE Pixel"),
                     Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255)),
                     Background = null,
                     FontSize = 15,

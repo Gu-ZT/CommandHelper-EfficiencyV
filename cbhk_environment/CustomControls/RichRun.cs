@@ -4,8 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Media;
+using Windows.Media.Core;
 
 namespace cbhk_environment.CustomControls
 {
@@ -37,6 +40,11 @@ namespace cbhk_environment.CustomControls
             }
         }
         #endregion
+
+        //用于判断的下划线
+        TextDecoration underlined_style = System.Windows.TextDecorations.Baseline.First();
+        //用于判断的删除线
+        TextDecoration strikethrough_style = System.Windows.TextDecorations.Strikethrough.First();
 
         /// <summary>
         /// 当前混淆最长长度
@@ -141,6 +149,24 @@ namespace cbhk_environment.CustomControls
                 string HoverEventString = HasHoverEvent ? ",\"hoverEvent\":{\"action\":\"" + (written_book_datacontext.EventDataBase.Where(item => item.Value == HoverEventActionItem.ItemText.Trim()).First().Key) + "\"value\":\"" + HoverEventValue + "\"}" : "";
                 string InsertionString = HasInsertion ? ",\"insertion\":{\"action\":\"" + (written_book_datacontext.EventDataBase.Where(item => item.Value == HoverEventActionItem.ItemText.Trim()).First().Key) + "\"value\":\"" + HoverEventValue + "\"}" : "";
                 result = ClickEventString + HoverEventString + InsertionString;
+                return result;
+            }
+        }
+        #endregion
+
+        #region 当前文本数据
+        public string Result
+        {
+            get
+            {
+                string result;
+                Paragraph paragraph = Parent as Paragraph;
+                EnabledFlowDocument currentDocument = paragraph.Parent as EnabledFlowDocument;
+                int currentIndex = currentDocument.Blocks.ToList().IndexOf(paragraph);
+                string colorString = Foreground.ToString().Remove(1,2);
+                string textString = UID.Trim() != "" ?UID:Text;
+
+                result = "{\"text\":\"" + (currentIndex > 0 ? "\\r\\n" : "") + textString + "\"" + (colorString!="#000000"?",\"color\":\""+colorString+"\"":"") + (FontStyle == FontStyles.Italic ? ",\"italic\":true" : "") + (FontWeight == FontWeights.Bold ? ",\"bold\":true" : "") + (TextDecorations.Contains(underlined_style) ? ",\"underlined\":true" : "") + (TextDecorations.Contains(strikethrough_style) ? ",\"strikethrough\":true" : "") + (IsObfuscated && ObfuscateTimer.Enabled? ",\"obfuscated\":true" : "") + EventData + "},";
                 return result;
             }
         }

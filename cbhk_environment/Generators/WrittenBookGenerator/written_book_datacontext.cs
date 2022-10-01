@@ -42,9 +42,6 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
         }
         #endregion
 
-        //表示正在更改文本对象类型
-        bool TextTypeChanging = false;
-
         //成书编辑框引用
         RichTextBox written_box = null;
 

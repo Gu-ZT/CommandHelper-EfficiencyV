@@ -180,6 +180,12 @@
     <Compile Include="CommandClasses\ClassicAndNew.xaml.cs">
       <DependentUpon>ClassicAndNew.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Generators\DataPackGenerator\Components\PathParser.cs" />
+    <Compile Include="Generators\DataPackGenerator\Components\TextColorManager.cs" />
+    <Compile Include="Generators\DataPackGenerator\DataPack.xaml.cs">
+      <DependentUpon>DataPack.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Generators\DataPackGenerator\datapack_datacontext.cs" />
     <Compile Include="Generators\VillagerGenerator\Components\GossipsItems.xaml.cs">
       <DependentUpon>GossipsItems.xaml</DependentUpon>
     </Compile>
@@ -411,6 +417,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="CommandClasses\ClassicAndNew.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Generators\DataPackGenerator\DataPack.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

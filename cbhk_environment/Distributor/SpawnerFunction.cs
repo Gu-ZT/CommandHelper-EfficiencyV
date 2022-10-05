@@ -60,6 +60,8 @@ namespace cbhk_environment.Distributor
             StartVillagersGenerator = new RelayCommand(StartVillagersGeneratorCommand);
             //成书
             StartWrittenBooksGenerator = new RelayCommand(StartWrittenBooksGeneratorCommand);
+            //数据包
+            StartDatapacksGenerator = new RelayCommand(StartDatapacksGeneratorCommand);
             #endregion
 
             //为外界提供索引形式的访问渠道
@@ -164,6 +166,18 @@ namespace cbhk_environment.Distributor
             writtenBook.Topmost = true;
             writtenBook.Show();
             writtenBook.Topmost = false;
+        }
+
+        /// <summary>
+        /// 启动数据包生成器
+        /// </summary>
+        private void StartDatapacksGeneratorCommand()
+        {
+            Generators.DataPackGenerator.DataPack dataPack = new Generators.DataPackGenerator.DataPack(cbhk);
+            SetCBHKState();
+            dataPack.Topmost = true;
+            dataPack.Show();
+            dataPack.Topmost = false;
         }
 
         /// <summary>

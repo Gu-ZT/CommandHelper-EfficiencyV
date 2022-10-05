@@ -18,6 +18,7 @@ using System.Collections.ObjectModel;
 using MSScriptControl;
 using System.Drawing;
 using Image = System.Windows.Controls.Image;
+using System.Text.RegularExpressions;
 
 namespace cbhk_environment
 {
@@ -188,6 +189,21 @@ namespace cbhk_environment
         //标签生成器的过滤类型数据源
         public static TextComboBoxItemSource TypeItemSource = new TextComboBoxItemSource();
         public static ObservableCollection<TextSource> TagTypeCollection = new ObservableCollection<TextSource>();
+
+        //粒子列表数据源
+        public static ObservableCollection<string> particle_database = new ObservableCollection<string> { };
+
+        //音效列表数据源
+        public static ObservableCollection<string> sound_database = new ObservableCollection<string> { };
+
+        //音效列表id名称字典
+        public static Dictionary<string,string> soundIdNameSource = new Dictionary<string,string> { };
+
+        //记分板判据类型数据源
+        public static ObservableCollection<string> scoreboardType_database = new ObservableCollection<string> { };
+
+        //队伍颜色列表
+        public static ObservableCollection<string> teamColor_database = new ObservableCollection<string> { };
         #endregion
 
         //异步执行数据读取逻辑
@@ -419,39 +435,6 @@ namespace cbhk_environment
             }
             #endregion
 
-            #region 获取所有药水效果和描述
-            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\mob_effects.json") &&
-                File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js") && mob_effect_database.Count == 0)
-            {
-                string potion_json = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\mob_effects.json");
-                string js_file = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js");
-
-                JsonScript(js_file);
-
-                string potion_id = "";
-                string potion_name = "";
-                string potion_num = "";
-                ObservableCollection<ItemDataGroup> itemDataGroups = new ObservableCollection<ItemDataGroup>();
-
-                JsonScript("parseJSON(" + potion_json + ");");
-
-                int effect_count = int.Parse(JsonScript("getLength();").ToString());
-                for (int i = 0; i < effect_count; i++)
-                {
-                    potion_id = JsonScript("getJSON('[" + i + "].id');").ToString();
-                    potion_name = JsonScript("getJSON('[" + i + "].name');").ToString();
-                    potion_num = JsonScript("getJSON('[" + i + "].num');").ToString();
-
-                    mob_effect_database.Add(potion_id, potion_name + potion_num);
-                    if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\mob_effects_images\\" + potion_id + ".png"))
-                    {
-                        itemDataGroups.Add(new ItemDataGroup() { ItemImagePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\mob_effects_images\\" + potion_id + ".png", ItemText = potion_name, ItemImage = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\mob_effects_images\\" + potion_id + ".png", UriKind.Absolute)) });
-                    }
-                }
-                MobEffectIdSource.ItemDataSource = itemDataGroups;
-            }
-            #endregion
-
             #region 获取所有实体的id和对应的中文
             if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\entities.json") &&
                File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js") && entity_database.Count == 0)
@@ -494,6 +477,106 @@ namespace cbhk_environment
             }
             #endregion
 
+            #region 获取所有粒子id
+            if(File.Exists(AppDomain.CurrentDomain.BaseDirectory+ "resources\\data_sources\\particles.json") && File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js") && particle_database.Count == 0)
+            {
+                string particle_json = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\particles.json");
+                string js_file = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js");
+
+                JsonScript(js_file);
+                string particle_id = "";
+                JsonScript("parseJSON(" + particle_json + ");");
+                int item_count = int.Parse(JsonScript("getLength();").ToString());
+                for (int i = 0; i < item_count; i++)
+                {
+                    particle_id = JsonScript("getJSON('[" + i + "]');").ToString();
+                    particle_database.Add(particle_id);
+                }
+            }
+            #endregion
+
+            #region 获取所有音效id
+            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\sounds.json") && File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js") && sound_database.Count == 0)
+            {
+                string sound_json = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\sounds.json");
+                string js_file = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js");
+
+                JsonScript(js_file);
+                string sound_id = "";
+                string sound_name = "";
+                JsonScript("parseJSON(" + sound_json + ");");
+                int item_count = int.Parse(JsonScript("getLength();").ToString());
+                for (int i = 0; i < item_count; i++)
+                {
+                    sound_id = JsonScript("getJSON('[" + i + "].id');").ToString();
+                    sound_name = JsonScript("getJSON('[" + i + "].name');").ToString();
+
+                    soundIdNameSource.Add(sound_id, sound_name);
+                    sound_database.Add(sound_id);
+                }
+            }
+            #endregion
+
+            #region 获取所有队伍颜色
+            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\teamColor.ini"))
+            {
+                string[] team_colors = File.ReadAllLines(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\teamColor.ini");
+                for (int i = 0; i < team_colors.Length; i++)
+                {
+                    teamColor_database.Add(team_colors[i]);
+                }
+            }
+            #endregion
+
+            #region 获取所有记分板判据类型
+            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\scoreboardType.json") && File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js") && scoreboardType_database.Count == 0)
+            {
+                string scoreboardType_json = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\scoreboardType.json");
+                string js_file = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js");
+
+                JsonScript(js_file);
+                string scoreboard_type;
+                JsonScript("parseJSON(" + scoreboardType_json + ");");
+                int item_count = int.Parse(JsonScript("getLength();").ToString());
+                //按正则提取记分板的类型分支成员
+                Regex GetTypeItems = new Regex(@"(?<=\{)[^}]*(?=\})");
+                for (int i = 0; i < item_count; i++)
+                {
+                    scoreboard_type = JsonScript("getJSON('[" + i + "]');").ToString();
+                    if(scoreboard_type.Contains("{"))
+                    {
+                        string item = GetTypeItems.Match(scoreboard_type).ToString();
+                        string type_head = GetTypeItems.Replace(scoreboard_type, "").Replace("{", "").Replace("}", "");
+                        switch (item)
+                        {
+                            case "teamColor":
+                                foreach (var color in teamColor_database)
+                                {
+                                    scoreboardType_database.Add(type_head + color);
+                                }
+                                break;
+                            case "itemName":
+                                foreach (var an_item in item_database)
+                                {
+                                    string item_key = an_item.Key.Split('.')[0];
+                                    scoreboardType_database.Add(type_head + item_key);
+                                }
+                                break;
+                            case "entityName":
+                                foreach (var an_entity in entity_database)
+                                {
+                                    string item_key = an_entity.Key.Split('.')[0];
+                                    scoreboardType_database.Add(type_head + item_key);
+                                }
+                                break;
+                        }
+                    }
+                    else
+                    scoreboardType_database.Add(scoreboard_type);
+                }
+            }
+            #endregion
+
             #region 加载过滤类型
             if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\Tag\\TypeFilter.ini"))
             {
@@ -506,18 +589,6 @@ namespace cbhk_environment
             }
             #endregion
         }
-
-        /// <summary>
-        /// 所有数据读取并解析完毕
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        //private void DataSourceLoadCompleted(object sender, RunWorkerCompletedEventArgs e)
-        //{
-        //    SkeletonGrid.Visibility = Visibility.Collapsed;
-        //    GeneratorTable.Visibility = Visibility.Visible;
-        //    DataSourceReader.Dispose();
-        //}
 
         /// <summary>
         /// 初始化界面数据

@@ -449,6 +449,7 @@
                                     Width="220"
                                     Height="30"
                                     HorizontalAlignment="Left"
+                                    Foreground="White"
                                     SelectedItem="{Binding EntityId, Mode=TwoWay}"
                                     Style="{DynamicResource ComboBoxWithIcon}">
                                     <ity:Interaction.Triggers>

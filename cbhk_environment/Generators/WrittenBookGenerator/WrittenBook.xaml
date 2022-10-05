@@ -288,6 +288,27 @@
                         </ity:EventTrigger>
                     </ity:Interaction.Triggers>
                 </Image>
+                <DockPanel
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Margin="60,70,0,0"
+                    HorizontalAlignment="Left"
+                    Visibility="{Binding DisplayExceedsCount, Mode=OneWay}">
+                    <TextBlock
+                        FontSize="20"
+                        Foreground="Black"
+                        Text="查看超出的字符数:">
+                        <ity:Interaction.Triggers>
+                            <ity:EventTrigger EventName="Loaded">
+                                <itn:CallMethodAction MethodName="ExceedsTextBlockLoaded" TargetObject="{Binding}" />
+                            </ity:EventTrigger>
+                        </ity:Interaction.Triggers>
+                    </TextBlock>
+                    <TextBlock
+                        FontSize="20"
+                        Foreground="Red"
+                        Text="{Binding ExceedsCount, Mode=OneWay}" />
+                </DockPanel>
                 <TextBox
                     Grid.Row="0"
                     Grid.Column="1"
@@ -323,7 +344,6 @@
                     Margin="10,0,0,140"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Bottom"
-                    Source="/cbhk_environment;component/resources/cbhk_form/images/setting_signature.png"
                     Visibility="{Binding DisplaySignatureButton, Mode=OneWay}">
                     <ity:Interaction.Triggers>
                         <ity:EventTrigger EventName="MouseLeftButtonDown">
@@ -350,7 +370,6 @@
                     Margin="290,0,0,140"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Bottom"
-                    Source="/cbhk_environment;component/resources/cbhk_form/images/cancel_signature.png"
                     Visibility="{Binding DisplayCancelSignatureButton, Mode=OneWay}">
                     <ity:Interaction.Triggers>
                         <ity:EventTrigger EventName="MouseLeftButtonDown">
@@ -398,7 +417,7 @@
                     ContextMenu="{x:Null}"
                     Foreground="Black"
                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                    ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                    ScrollViewer.VerticalScrollBarVisibility="Auto"
                     SelectionBrush="{StaticResource SelectionColor}"
                     Visibility="{Binding DisplayWrittenBox, Mode=OneWay}">
                     <ity:Interaction.Triggers>
@@ -433,7 +452,6 @@
                     Width="74"
                     Height="41"
                     Margin="300,375,0,0"
-                    Source="/cbhk_environment;component/resources/cbhk_form/images/right_arrow.png"
                     Visibility="{Binding DisplayRightArrow, Mode=OneWay}">
                     <ity:Interaction.Triggers>
                         <ity:EventTrigger EventName="Loaded">
@@ -456,7 +474,6 @@
                     Width="74"
                     Height="41"
                     Margin="0,375,300,0"
-                    Source="/cbhk_environment;component/resources/cbhk_form/images/left_arrow.png"
                     Visibility="{Binding DisplayLeftArrow, Mode=OneWay}">
                     <ity:Interaction.Triggers>
                         <ity:EventTrigger EventName="Loaded">

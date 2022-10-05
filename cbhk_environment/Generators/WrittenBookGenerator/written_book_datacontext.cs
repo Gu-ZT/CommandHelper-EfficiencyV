@@ -97,6 +97,35 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
         /// </summary>
         int PageMaxCharCount = 377;
 
+        //字符数量超出提示
+        TextBlock ExceedsBlock = null;
+
+        #region 字符超出数量
+        string exceedsCount = "0";
+        public string ExceedsCount
+        {
+            get { return exceedsCount; }
+            set
+            {
+                exceedsCount = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion
+
+        #region 显示字符超出数量
+        private Visibility displayExceedsCount = Visibility.Collapsed;
+        public Visibility DisplayExceedsCount
+        {
+            get { return displayExceedsCount; }
+            set
+            {
+                displayExceedsCount = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion
+
         #region 总页数
         int maxPage = 1;
         int MaxPage
@@ -901,7 +930,7 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
             //遍历所有文档
             foreach (EnabledFlowDocument page in WrittenBookPages)
             {
-                List<Paragraph> page_content = page.Blocks.ToList().ConvertAll(item=>item as Paragraph);
+                List<Paragraph> page_content = page.Blocks.ToList().ConvertAll(item => item as Paragraph);
                 page_string += "'[\"\",";
                 for (int i = 0; i < page_content.Count; i++)
                 {
@@ -913,7 +942,7 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
                 page_string = page_string.TrimEnd(',') + "]',";
             }
             pages_string += page_string.TrimEnd(',') + "]";
-            pages_string = pages_string.Trim() == "pages:['[\"\"]']" || pages_string.Trim() == "pages:['[\"\",{\"text\":\"\"}]']" ? "":pages_string;
+            pages_string = pages_string.Trim() == "pages:['[\"\"]']" || pages_string.Trim() == "pages:['[\"\",{\"text\":\"\"}]']" ? "" : pages_string;
             string NBTData = "";
             NBTData += TitleString + AuthorString + pages_string;
             NBTData = "{" + NBTData.TrimEnd(',') + "}";
@@ -1051,12 +1080,12 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
                 e.Handled = true;
             }
 
-            TextRange textRange = new TextRange(written_box.Document.ContentStart, written_box.Document.ContentEnd);
+            //TextRange textRange = new TextRange(written_box.Document.ContentStart, written_box.Document.ContentEnd);
 
-            if (textRange.Text.Length > PageMaxCharCount)
-            {
-                textRange.Text = textRange.Text.Substring(0, PageMaxCharCount);
-            }
+            //if (textRange.Text.Length > PageMaxCharCount)
+            //{
+            //    textRange.Text = textRange.Text.Substring(0, PageMaxCharCount);
+            //}
         }
 
         /// <summary>
@@ -1073,6 +1102,30 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
                 paragraph.Inlines.Add(new RichRun());
                 enabledFlowDocument.Blocks.Add(paragraph);
             }
+
+            #region 更新超出的字符数量
+            TextRange AllRange = new TextRange(written_box.Document.ContentStart, written_box.Document.ContentEnd);
+            int exceedCount = AllRange.Text.Length - PageMaxCharCount;
+            if (exceedCount > 0)
+            {
+                ExceedsBlock.ToolTip = "当前超出" + exceedCount.ToString() + "个字符(仅作参考)";
+                ToolTipService.SetInitialShowDelay(ExceedsBlock, 0);
+                ToolTipService.SetShowDuration(ExceedsBlock, 5000);
+                if (exceedCount > 100)
+                {
+                    ExceedsCount = "";
+                    ExceedsBlock.Text = "查看超出的字符数";
+                }
+                else
+                {
+                    ExceedsBlock.Text = "查看超出的字符数:";
+                    ExceedsCount = exceedCount.ToString();
+                }
+                DisplayExceedsCount = Visibility.Visible;
+            }
+            else
+                DisplayExceedsCount = Visibility.Collapsed;
+            #endregion
         }
 
         /// <summary>
@@ -1120,6 +1173,16 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
             written_box = sender as RichTextBox;
             //初始化文档链表
             WrittenBookPages.Add(written_box.Document as EnabledFlowDocument);
+        }
+
+        /// <summary>
+        /// 获取超出文本块的引用
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void ExceedsTextBlockLoaded(object sender, RoutedEventArgs e)
+        {
+            ExceedsBlock = sender as TextBlock;
         }
 
         /// <summary>

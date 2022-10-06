@@ -391,6 +391,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="ControlsDictionaries\TreeViewWithScrollBars.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="CustomControls\ColorPickers\ColorPickers.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

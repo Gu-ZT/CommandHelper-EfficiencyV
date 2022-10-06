@@ -4,9 +4,11 @@ using MSScriptControl;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data.Common;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace cbhk_environment.Generators.DataPackGenerator
 {
@@ -128,20 +130,23 @@ namespace cbhk_environment.Generators.DataPackGenerator
             if (Directory.Exists(recentContentsFolderPath))
             {
                 string[] recent_contents = Directory.GetFiles(recentContentsFolderPath);
+
+                TreeViewItem today = recentContentView.Items[0] as TreeViewItem;
+
                 foreach (string a_file in recent_contents)
                 {
                     //新建一个TreeViewItem
-                    TreeViewItem richTreeViewItems = recentContentView.Items[0] as TreeViewItem;
                     RecentItems recentItems = new RecentItems(AppDomain.CurrentDomain.BaseDirectory+ "resources\\configs\\DataPack\\images\\icon.png", a_file);
-
-                    richTreeViewItems.Items.Add(recentItems);
-
-                    richTreeViewItems.ToolTip = "打开本地数据包\r\n" + a_file;
-                    ToolTipService.SetInitialShowDelay(richTreeViewItems, 0);
-                    ToolTipService.SetShowDuration(richTreeViewItems, 0);
+                    recentItems.MouseLeftButtonUp += OpenContentClick;
+                    today.Items.Add(recentItems);
                 }
             }
             #endregion
+        }
+
+        private void OpenContentClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            RecentItems item = sender as RecentItems;
         }
 
         public void RichTextBox_TextChanged(object sender, TextChangedEventArgs e)

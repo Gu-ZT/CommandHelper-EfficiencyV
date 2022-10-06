@@ -87,28 +87,26 @@
                         </Style>
                     </TextBox.Style>
                 </TextBox>
-                <ScrollViewer
+                <TreeView
                     MaxHeight="420"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    FontSize="20"
                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                     ScrollViewer.VerticalScrollBarVisibility="Auto"
-                    Style="{DynamicResource for_scrollviewer}">
-                    <TreeView
-                        Background="Transparent"
-                        BorderThickness="0"
-                        FontSize="20"
-                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                        ScrollViewer.VerticalScrollBarVisibility="Disabled">
-                        <ity:Interaction.Triggers>
-                            <ity:EventTrigger EventName="Loaded">
-                                <itn:CallMethodAction MethodName="RecentFilesViewLoaded" TargetObject="{Binding}" />
-                            </ity:EventTrigger>
-                        </ity:Interaction.Triggers>
-                        <CustomControl:RichTreeViewItems
-                            Foreground="White"
-                            Header="今天"
-                            IsExpanded="True" />
-                    </TreeView>
-                </ScrollViewer>
+                    Style="{DynamicResource TreeViewWithScrollBar}"
+                    VirtualizingStackPanel.IsVirtualizing="True"
+                    VirtualizingStackPanel.VirtualizationMode="Recycling">
+                    <ity:Interaction.Triggers>
+                        <ity:EventTrigger EventName="Loaded">
+                            <itn:CallMethodAction MethodName="RecentFilesViewLoaded" TargetObject="{Binding}" />
+                        </ity:EventTrigger>
+                    </ity:Interaction.Triggers>
+                    <CustomControl:RichTreeViewItems
+                        Foreground="White"
+                        Header="今天"
+                        IsExpanded="True" />
+                </TreeView>
             </StackPanel>
             <StackPanel
                 Width="550"

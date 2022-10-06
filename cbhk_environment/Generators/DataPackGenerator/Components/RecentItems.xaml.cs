@@ -43,10 +43,13 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                 //设置该文件名
                 FileName.Text = Path.GetFileNameWithoutExtension(filePath);
                 FileName.FontWeight = FontWeights.Bold;
+
+                Cursor = Cursors.Hand;
+                ToolTip = "打开本地数据包\r\n" + filePath;
+                ToolTipService.SetInitialShowDelay(this, 0);
+                ToolTipService.SetShowDuration(this, 1000);
             }
             #endregion
-
-            Cursor = Cursors.Hand;
         }
     }
 }

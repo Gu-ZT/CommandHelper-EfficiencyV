@@ -29,6 +29,7 @@
                 <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/TextMenuItems.xaml" />
                 <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/ColorToolBars.xaml" />
                 <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/CollapsableGrids.xaml" />
+                <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/TreeViewWithScrollBars.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <ContextMenu
                 x:Key="SysTrayMenu"

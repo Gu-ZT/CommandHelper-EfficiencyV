@@ -1,12 +1,10 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using cbhk_environment.Generators.DataPackGenerator.Components;
+using CommunityToolkit.Mvvm.ComponentModel;
 using MSScriptControl;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -36,6 +34,38 @@ namespace cbhk_environment.Generators.DataPackGenerator
         //语法树文件路径
         string grammaticalFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\DataPack\\data\\grammatical_structure.json";
 
+        //近期内容文件列表路径
+        string recentContentsFolderPath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\DataPack\\data\\recent_contents";
+
+        //获取近期内容视图引用
+        TreeView recentContentView = null;
+
+        #region 函数文本框可见性
+        Visibility functionEditorZoneVisibility = Visibility.Collapsed;
+        public Visibility FunctionEditorZoneVisibility
+        {
+            get { return functionEditorZoneVisibility; }
+            set
+            {
+                functionEditorZoneVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion
+
+        #region 初始化页面可见性
+        Visibility initPageVisibility = Visibility.Visible;
+        public Visibility InitPageVisibility
+        {
+            get { return initPageVisibility; }
+            set
+            {
+                initPageVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion
+
         #region js脚本执行者
         private static string language = "javascript";
         public static ScriptControlClass json_parser = new ScriptControlClass()
@@ -59,7 +89,7 @@ namespace cbhk_environment.Generators.DataPackGenerator
 
         public datapack_datacontext()
         {
-            #region 读取语法树所需数据
+            #region 读取语法树所需数据并解析每个指令的数据
             if(File.Exists(grammaticalFilePath))
             {
                 string grammaticalJson = File.ReadAllText(grammaticalFilePath);
@@ -78,7 +108,37 @@ namespace cbhk_environment.Generators.DataPackGenerator
                         string radicalString = JsonScript("getJSON('[" + i + "].radical');").ToString();
                         //存储指令部首
                         grammaticalRadical.Add(radicalString,i);
+                        //获取第一个子级的原串数据
                     }
+                }
+            }
+            #endregion
+        }
+
+        /// <summary>
+        /// 获取近期内容视图引用
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void RecentFilesViewLoaded(object sender, RoutedEventArgs e)
+        {
+            recentContentView = sender as TreeView;
+
+            #region 读取近期使用的内容
+            if (Directory.Exists(recentContentsFolderPath))
+            {
+                string[] recent_contents = Directory.GetFiles(recentContentsFolderPath);
+                foreach (string a_file in recent_contents)
+                {
+                    //新建一个TreeViewItem
+                    TreeViewItem richTreeViewItems = recentContentView.Items[0] as TreeViewItem;
+                    RecentItems recentItems = new RecentItems(AppDomain.CurrentDomain.BaseDirectory+ "resources\\configs\\DataPack\\images\\icon.png", a_file);
+
+                    richTreeViewItems.Items.Add(recentItems);
+
+                    richTreeViewItems.ToolTip = "打开本地数据包\r\n" + a_file;
+                    ToolTipService.SetInitialShowDelay(richTreeViewItems, 0);
+                    ToolTipService.SetShowDuration(richTreeViewItems, 0);
                 }
             }
             #endregion

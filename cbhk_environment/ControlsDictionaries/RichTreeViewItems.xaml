@@ -116,7 +116,7 @@
                             BorderThickness="{TemplateBinding BorderThickness}"
                         -->
                         <DockPanel
-                            Name="Bd"
+                            Name="controlsContainer"
                             Grid.Column="1"
                             SnapsToDevicePixels="True">
                             <ContentPresenter
@@ -161,7 +161,7 @@
                             <Setter TargetName="PART_Header" Property="MinHeight" Value="19" />
                         </MultiTrigger>
                         <Trigger Property="IsSelected" Value="true">
-                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                            <Setter TargetName="controlsContainer" Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
                             <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
                         </Trigger>
                         <MultiTrigger>
@@ -169,7 +169,7 @@
                                 <Condition Property="IsSelected" Value="true" />
                                 <Condition Property="IsSelectionActive" Value="false" />
                             </MultiTrigger.Conditions>
-                            <Setter TargetName="Bd" Property="Background" Value="Green" />
+                            <Setter TargetName="controlsContainer" Property="Background" Value="Green" />
                             <Setter Property="Foreground" Value="White" />
                         </MultiTrigger>
                         <Trigger Property="IsEnabled" Value="false">

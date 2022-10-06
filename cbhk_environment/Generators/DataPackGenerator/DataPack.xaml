@@ -11,9 +11,11 @@
     xmlns:local_window="clr-namespace:cbhk_environment.WindowDictionaries"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="数据包生成器"
-    Width="800"
-    Height="450"
-    Background="#2F2F2F"
+    Width="1080"
+    Height="630"
+    MinWidth="1080"
+    MinHeight="630"
+    Background="#242424"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
 
@@ -21,17 +23,163 @@
         <local_datacontext:datapack_datacontext />
     </Window.DataContext>
 
-    <RichTextBox
-        Background="Transparent"
-        BorderBrush="Black"
-        CaretBrush="White"
-        FontSize="25"
-        Foreground="#A8A8A8">
-        <ity:Interaction.Triggers>
-            <ity:EventTrigger EventName="TextChanged">
-                <itn:CallMethodAction MethodName="RichTextBox_TextChanged" TargetObject="{Binding}" />
-            </ity:EventTrigger>
-        </ity:Interaction.Triggers>
-        <CustomControl:EnabledFlowDocument FontFamily="Minecraft" LineHeight="10" />
-    </RichTextBox>
+    <Grid>
+        <RichTextBox
+            Background="Transparent"
+            BorderBrush="Black"
+            CaretBrush="White"
+            FontSize="25"
+            Foreground="#A8A8A8"
+            Visibility="{Binding FunctionEditorZoneVisibility, Mode=OneWay}">
+            <ity:Interaction.Triggers>
+                <ity:EventTrigger EventName="TextChanged">
+                    <itn:CallMethodAction MethodName="RichTextBox_TextChanged" TargetObject="{Binding}" />
+                </ity:EventTrigger>
+            </ity:Interaction.Triggers>
+            <CustomControl:EnabledFlowDocument FontFamily="Minecraft" LineHeight="10" />
+        </RichTextBox>
+        <DockPanel Visibility="{Binding InitPageVisibility, Mode=OneWay}">
+            <StackPanel
+                Width="420"
+                MinWidth="420"
+                Margin="40,30,0,0"
+                HorizontalAlignment="Left">
+                <TextBlock
+                    FontSize="30"
+                    Foreground="White"
+                    Text="打开近期使用的内容" />
+                <TextBox
+                    Width="322"
+                    Height="35"
+                    Margin="0,30,0,30"
+                    Padding="0,2,0,0"
+                    HorizontalAlignment="Left"
+                    BorderBrush="#424242"
+                    CaretBrush="White"
+                    FontSize="25"
+                    Foreground="White">
+                    <TextBox.Resources>
+                        <VisualBrush
+                            x:Key="BackgroundBrush"
+                            AlignmentX="Left"
+                            Stretch="None"
+                            TileMode="Tile">
+                            <VisualBrush.Visual>
+                                <TextBlock
+                                    Margin="10,0,0,0"
+                                    Background="Transparent"
+                                    Foreground="#D6D6D6"
+                                    Text="搜索最近使用的数据包" />
+                            </VisualBrush.Visual>
+                        </VisualBrush>
+                    </TextBox.Resources>
+                    <TextBox.Style>
+                        <Style TargetType="TextBox">
+                            <Setter Property="Background" Value="Transparent" />
+                            <Style.Triggers>
+                                <Trigger Property="Text" Value="{x:Null}">
+                                    <Setter Property="Background" Value="{StaticResource BackgroundBrush}" />
+                                </Trigger>
+                                <Trigger Property="Text" Value="">
+                                    <Setter Property="Background" Value="{StaticResource BackgroundBrush}" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+                <ScrollViewer
+                    MaxHeight="420"
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                    Style="{DynamicResource for_scrollviewer}">
+                    <TreeView
+                        Background="Transparent"
+                        BorderThickness="0"
+                        FontSize="20"
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                        ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                        <ity:Interaction.Triggers>
+                            <ity:EventTrigger EventName="Loaded">
+                                <itn:CallMethodAction MethodName="RecentFilesViewLoaded" TargetObject="{Binding}" />
+                            </ity:EventTrigger>
+                        </ity:Interaction.Triggers>
+                        <CustomControl:RichTreeViewItems
+                            Foreground="White"
+                            Header="今天"
+                            IsExpanded="True" />
+                    </TreeView>
+                </ScrollViewer>
+            </StackPanel>
+            <StackPanel
+                Width="550"
+                MaxWidth="550"
+                Margin="50,30,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top">
+                <TextBlock
+                    Margin="25,0,0,10"
+                    FontSize="30"
+                    Foreground="White"
+                    Text="开始使用" />
+                <StackPanel Width="500" Margin="0,0,0,10">
+                    <CustomControl:IconTextButtons
+                        Height="100"
+                        Panel.ZIndex="0"
+                        Background="#383838"
+                        ContentColor="White"
+                        ContentData="打开本地项目"
+                        ContentHeight="100"
+                        ContentMargin="-100 10 30 0"
+                        ContentWidth="600"
+                        FontSize="40"
+                        Style="{DynamicResource IconTextButton}" />
+                    <TextBlock
+                        Margin="80,-40,0,0"
+                        Panel.ZIndex="1"
+                        Cursor="Hand"
+                        FontSize="20"
+                        Foreground="White"
+                        Text="打开本地.datapack文件" />
+                </StackPanel>
+                <StackPanel Width="500" Margin="0,0,0,10">
+                    <CustomControl:IconTextButtons
+                        Height="100"
+                        Panel.ZIndex="0"
+                        Background="#383838"
+                        ContentColor="White"
+                        ContentData="打开本地文件夹"
+                        ContentHeight="100"
+                        ContentMargin="-80 10 30 0"
+                        ContentWidth="600"
+                        FontSize="40"
+                        Style="{DynamicResource IconTextButton}" />
+                    <TextBlock
+                        Margin="80,-40,0,0"
+                        Panel.ZIndex="1"
+                        FontSize="20"
+                        Foreground="White"
+                        Text="导航和编辑mc相关文件夹中的数据包文件" />
+                </StackPanel>
+                <StackPanel Width="500" Margin="0,0,0,10">
+                    <CustomControl:IconTextButtons
+                        Height="100"
+                        Panel.ZIndex="0"
+                        Background="#383838"
+                        ContentColor="White"
+                        ContentData="创建新的数据包"
+                        ContentHeight="100"
+                        ContentMargin="-80 10 30 0"
+                        ContentWidth="600"
+                        FontSize="40"
+                        Style="{DynamicResource IconTextButton}" />
+                    <TextBlock
+                        Margin="80,-40,0,0"
+                        Panel.ZIndex="1"
+                        FontSize="20"
+                        Foreground="White"
+                        Text="选择具有代码基架的数据包模板以开始" />
+                </StackPanel>
+            </StackPanel>
+        </DockPanel>
+    </Grid>
 </local_window:CommonWindow>

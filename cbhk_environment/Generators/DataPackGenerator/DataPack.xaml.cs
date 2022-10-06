@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Windows.Media.Core;
 
 namespace cbhk_environment.Generators.DataPackGenerator
 {

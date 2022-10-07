@@ -192,7 +192,9 @@
                             x:Name="DropDownScrollViewer"
                             Margin="0"
                             Padding="0"
-                            Style="{DynamicResource for_scrollviewer}">
+                            Style="{DynamicResource for_scrollviewer}"
+                            VirtualizingStackPanel.IsVirtualizing="True"
+                            VirtualizingStackPanel.VirtualizationMode="Recycling">
                             <Grid
                                 x:Name="grid"
                                 Margin="0"

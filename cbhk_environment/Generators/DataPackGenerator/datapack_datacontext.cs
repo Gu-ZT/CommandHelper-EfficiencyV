@@ -1,11 +1,14 @@
-﻿using cbhk_environment.Generators.DataPackGenerator.Components;
+﻿using cbhk_environment.CustomControls;
+using cbhk_environment.Generators.DataPackGenerator.Components;
+using cbhk_environment.WindowDictionaries;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using MSScriptControl;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data.Common;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -37,10 +40,30 @@ namespace cbhk_environment.Generators.DataPackGenerator
         string grammaticalFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\DataPack\\data\\grammatical_structure.json";
 
         //近期内容文件列表路径
-        string recentContentsFolderPath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\DataPack\\data\\recent_contents";
+        public static string recentContentsFolderPath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\DataPack\\data\\recent_contents";
 
         //获取近期内容视图引用
         TreeView recentContentView = null;
+
+        //获取内容视图引用
+        TreeView ContentView = null;
+
+        //近期内容前景色
+        SolidColorBrush RecentContentForeground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+
+        #region 近期内容父级日期节点
+        List<RichTreeViewItems> recentContentList = new List<RichTreeViewItems>()
+                {
+                    new RichTreeViewItems() { Header = "今天",Tag = "ToDay",IsExpanded = true},
+                    new RichTreeViewItems() { Header = "昨天",Tag = "Yesterday",IsExpanded = true },
+                    new RichTreeViewItems() { Header = "本周",Tag = "ThisWeek",IsExpanded = true },
+                    new RichTreeViewItems() { Header = "上周",Tag = "LastWeek",IsExpanded = true },
+                    new RichTreeViewItems() { Header = "本月",Tag = "ThisMonth",IsExpanded = true },
+                    new RichTreeViewItems() { Header = "上月",Tag = "LastMonth",IsExpanded = true },
+                    new RichTreeViewItems() { Header = "今年",Tag = "ThisYear",IsExpanded = true },
+                    new RichTreeViewItems() { Header = "去年",Tag = "LastYear",IsExpanded = true }
+                };
+        #endregion
 
         #region 函数文本框可见性
         Visibility functionEditorZoneVisibility = Visibility.Collapsed;
@@ -69,8 +92,8 @@ namespace cbhk_environment.Generators.DataPackGenerator
         #endregion
 
         #region js脚本执行者
-        private static string language = "javascript";
-        public static ScriptControlClass json_parser = new ScriptControlClass()
+        static string language = "javascript";
+        static ScriptControlClass json_parser = new ScriptControlClass()
         {
             Language = language
         };
@@ -89,10 +112,34 @@ namespace cbhk_environment.Generators.DataPackGenerator
         }
         #endregion
 
+        #region 生成与返回
+        public RelayCommand RunCommand { get; set; }
+
+        public RelayCommand<CommonWindow> ReturnCommand { get; set; }
+        #endregion
+
+        #region 覆盖生成
+        private bool overLying;
+        public bool OverLying
+        {
+            get { return overLying; }
+            set
+            {
+                overLying = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion
+
         public datapack_datacontext()
         {
+            #region 链接指令
+            RunCommand = new RelayCommand(run_command);
+            ReturnCommand = new RelayCommand<CommonWindow>(return_command);
+            #endregion
+
             #region 读取语法树所需数据并解析每个指令的数据
-            if(File.Exists(grammaticalFilePath))
+            if (File.Exists(grammaticalFilePath))
             {
                 string grammaticalJson = File.ReadAllText(grammaticalFilePath);
 
@@ -118,6 +165,37 @@ namespace cbhk_environment.Generators.DataPackGenerator
         }
 
         /// <summary>
+        /// 返回主页
+        /// </summary>
+        /// <param name="win"></param>
+        private void return_command(CommonWindow win)
+        {
+            DataPack.cbhk.Topmost = true;
+            DataPack.cbhk.WindowState = WindowState.Normal;
+            DataPack.cbhk.Show();
+            DataPack.cbhk.Topmost = false;
+            DataPack.cbhk.ShowInTaskbar = true;
+            win.Close();
+        }
+
+        /// <summary>
+        /// 执行生成
+        /// </summary>
+        private void run_command()
+        {
+        }
+
+        /// <summary>
+        /// 获取内容树视图引用
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void ContentViewLoaded(object sender, RoutedEventArgs e)
+        {
+            ContentView = sender as TreeView;
+        }
+
+        /// <summary>
         /// 获取近期内容视图引用
         /// </summary>
         /// <param name="sender"></param>
@@ -131,14 +209,22 @@ namespace cbhk_environment.Generators.DataPackGenerator
             {
                 string[] recent_contents = Directory.GetFiles(recentContentsFolderPath);
 
-                TreeViewItem today = recentContentView.Items[0] as TreeViewItem;
-
+                //判断日期并添加成员
                 foreach (string a_file in recent_contents)
                 {
-                    //新建一个TreeViewItem
                     RecentItems recentItems = new RecentItems(AppDomain.CurrentDomain.BaseDirectory+ "resources\\configs\\DataPack\\images\\icon.png", a_file);
                     recentItems.MouseLeftButtonUp += OpenContentClick;
-                    today.Items.Add(recentItems);
+                    string dateData = recentItems.CalculationDateInterval();
+                    RichTreeViewItems currentDateNode = recentContentList.Where(item=> item.Tag.ToString() == dateData).First();
+                    currentDateNode.Foreground = RecentContentForeground;
+                    currentDateNode.Items.Add(recentItems);
+                }
+
+                //添加日期
+                foreach (RichTreeViewItems item in recentContentList)
+                {
+                    if (item.Items.Count > 0)
+                        recentContentView.Items.Add(item);
                 }
             }
             #endregion
@@ -147,6 +233,10 @@ namespace cbhk_environment.Generators.DataPackGenerator
         private void OpenContentClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             RecentItems item = sender as RecentItems;
+            if(File.Exists(item.FilePath.Text))
+            {
+                
+            }
         }
 
         public void RichTextBox_TextChanged(object sender, TextChangedEventArgs e)

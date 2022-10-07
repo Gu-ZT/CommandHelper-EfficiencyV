@@ -216,7 +216,7 @@ namespace cbhk_environment.Generators.ItemGenerator
             set
             {
                 select_item_id_source = value;
-                OnPropertyChanged();
+                //OnPropertyChanged();
             }
         }
         private string ItemId
@@ -440,6 +440,7 @@ namespace cbhk_environment.Generators.ItemGenerator
             iconComboBoxs.ItemsSource = MainWindow.ItemIdSource.ItemDataSource;
 
             iconComboBoxs.SelectedIndex = 0;
+            iconComboBoxs.ApplyTemplate();
             TextBox box = iconComboBoxs.Template.FindName("EditableTextBox", iconComboBoxs) as TextBox;
             ItemDataGroup first = iconComboBoxs.Items[0] as ItemDataGroup;
             box.Text = first.ItemText;

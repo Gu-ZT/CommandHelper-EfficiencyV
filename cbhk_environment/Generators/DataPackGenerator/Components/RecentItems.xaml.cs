@@ -15,6 +15,9 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
     {
         //日期前景色
         SolidColorBrush DateTimeForeground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+
+        DateTime CurrentTime = new DateTime();
+
         public RecentItems(string fileIconPath,string filePath)
         {
             InitializeComponent();
@@ -29,6 +32,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                 #region 获取该文件最后一次编辑时间戳
                 FileInfo fileInfo = new FileInfo(filePath);
                 DateTime dateTime = fileInfo.LastWriteTime;
+                CurrentTime = dateTime;
                 string fileModifyTime = dateTime.ToString("g");
                 FileModifyDateTime.Text = fileModifyTime;
                 FileModifyDateTime.Foreground = DateTimeForeground;
@@ -50,6 +54,48 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                 ToolTipService.SetShowDuration(this, 1000);
             }
             #endregion
+        }
+
+        /// <summary>
+        /// 计算时间间隔
+        /// </summary>
+        /// <returns></returns>
+        public string CalculationDateInterval()
+        {
+            int year_data = DateTime.Now.Year;
+            int month_data = DateTime.Now.Month;
+            int day_data = DateTime.Now.Day;
+
+            int day_interval = day_data - CurrentTime.Day;
+            int month_interval = CurrentTime.Month - month_data;
+            int year_interval = CurrentTime.Year - year_data;
+
+            //去年
+            if (year_interval == 1)
+                return "LastYear";
+            //上月
+            if (month_interval == 1 && year_interval == 0)
+                return "LastMonth";
+            //昨天
+            if (day_interval == 1 && month_interval == 0 && year_interval == 0)
+                return "Yesterday";
+            //今年
+            if (year_interval == 0 && month_interval > 1)
+                return "ThisYear";
+            //本月
+            if (month_interval == 0 && day_interval > 7)
+                return "ThisMonth";
+            //本周
+            if (day_interval > 1 && day_interval < 7)
+                return "ThisWeek";
+            //上周
+            if (day_interval > 7 && month_interval == 0)
+                return "LastWeek";
+            //今天
+            if (day_interval == 0 && month_interval == 0 && year_interval == 0)
+                return "ToDay";
+
+            return "";
         }
     }
 }

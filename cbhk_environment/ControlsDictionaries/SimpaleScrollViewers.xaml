@@ -147,6 +147,8 @@
 
     <Style x:Key="for_scrollviewer" TargetType="{x:Type ScrollViewer}">
         <Setter Property="BorderBrush" Value="LightGray" />
+        <Setter Property="VirtualizingStackPanel.VirtualizationMode" Value="Recycling" />
+        <Setter Property="VirtualizingPanel.IsVirtualizing" Value="True" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Template">
             <Setter.Value>

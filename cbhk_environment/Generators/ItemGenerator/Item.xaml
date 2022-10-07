@@ -397,7 +397,7 @@
                                 Width="200"
                                 HorizontalAlignment="Left"
                                 Foreground="White"
-                                SelectedItem="{Binding SelectItemIdSource}"
+                                SelectedItem="{Binding SelectItemIdSource, Mode=TwoWay}"
                                 Style="{DynamicResource ComboBoxWithIcon}">
                                 <ity:Interaction.Triggers>
                                     <ity:EventTrigger EventName="Loaded">

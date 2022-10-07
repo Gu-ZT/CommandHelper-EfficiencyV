@@ -39,6 +39,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                 #endregion
 
                 //设置该文件路径
+                FilePath.Tag = filePath;
                 if (filePath.Length > 50)
                 FilePath.Text = filePath.Substring(0,47)+"...";
                 else

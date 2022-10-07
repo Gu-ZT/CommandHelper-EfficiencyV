@@ -155,7 +155,10 @@
                 Grid.Column="2"
                 MinWidth="200"
                 Background="#1F1F1F"
-                BorderBrush="#3D3D3D">
+                BorderBrush="#3D3D3D"
+                ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                Style="{DynamicResource TreeViewWithScrollBar}">
                 <ity:Interaction.Triggers>
                     <ity:EventTrigger EventName="Loaded">
                         <itn:CallMethodAction MethodName="ContentViewLoaded" TargetObject="{Binding}" />
@@ -196,7 +199,7 @@
                                     Background="Transparent"
                                     FontSize="15"
                                     Foreground="#D6D6D6"
-                                    Text="搜索最近使用的数据包" />
+                                    Text="搜索最近使用的内容" />
                             </VisualBrush.Visual>
                         </VisualBrush>
                     </TextBox.Resources>

@@ -180,6 +180,7 @@
     <Compile Include="CommandClasses\ClassicAndNew.xaml.cs">
       <DependentUpon>ClassicAndNew.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Generators\DataPackGenerator\Components\ContentReader.cs" />
     <Compile Include="Generators\DataPackGenerator\Components\ContentSaver.cs" />
     <Compile Include="Generators\DataPackGenerator\Components\PathParser.cs" />
     <Compile Include="Generators\DataPackGenerator\Components\RecentItems.xaml.cs">

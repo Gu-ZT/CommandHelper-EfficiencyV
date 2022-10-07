@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace cbhk_environment.Generators.DataPackGenerator
@@ -92,6 +93,7 @@ namespace cbhk_environment.Generators.DataPackGenerator
         #endregion
 
         #region js脚本执行者
+        string js_file = AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js";
         static string language = "javascript";
         static ScriptControlClass json_parser = new ScriptControlClass()
         {
@@ -230,12 +232,70 @@ namespace cbhk_environment.Generators.DataPackGenerator
             #endregion
         }
 
-        private void OpenContentClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        /// <summary>
+        /// 打开指定内容
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OpenContentClick(object sender, MouseButtonEventArgs e)
         {
             RecentItems item = sender as RecentItems;
-            if(File.Exists(item.FilePath.Text))
+            string CurrentContentFilePath = item.FilePath.Tag.ToString();
+
+            if (File.Exists(CurrentContentFilePath) && File.Exists(js_file))
             {
-                
+                //解析内容文件
+                string js_content = File.ReadAllText(js_file);
+                JsonScript(js_content);
+
+                string content = File.ReadAllText(CurrentContentFilePath);
+                JsonScript("parseJSON("+content+");");
+                string FileType = JsonScript("getJSON('FileType');").ToString();
+                string FilePath = JsonScript("getJSON('.FilePath');").ToString();
+
+                if (Directory.Exists(FilePath))
+                {
+                    #region 判断目标为普通文件夹还是数据包
+                    string[] datapackFiles = Directory.GetDirectories(FilePath);
+                    //拥有data文件夹
+                    bool HadDataFolder = false;
+                    //拥有pack.mcmeta文件
+                    bool HadMcmetaFile = false;
+                    foreach (string file in datapackFiles)
+                    {
+                        if (Directory.Exists(file) && Path.GetDirectoryName(file) == "data")
+                        {
+                            HadDataFolder = true;
+                            continue;
+                        }
+
+                        if(File.Exists(file) && Path.GetFileName(file) == "pack.mcmeta")
+                        {
+                            HadMcmetaFile = true;
+                            continue;
+                        }
+
+                        if (HadDataFolder && HadMcmetaFile)
+                            break;
+                    }
+
+                    //证实确实是数据包文件夹
+                    if(HadDataFolder && HadMcmetaFile)
+                    {
+
+                    }
+                    #endregion
+
+                    InitPageVisibility = Visibility.Collapsed;
+                    FunctionEditorZoneVisibility = Visibility.Visible;
+                    return;
+                }
+
+                if (File.Exists(FilePath))
+                {
+                    InitPageVisibility = Visibility.Collapsed;
+                    FunctionEditorZoneVisibility = Visibility.Visible;
+                }
             }
         }
 

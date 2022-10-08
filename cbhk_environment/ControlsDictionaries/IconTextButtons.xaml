@@ -11,6 +11,7 @@
         <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}" />
         <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
         <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="RenderTransformOrigin" Value="0.5 0.5" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Padding" Value="1" />
@@ -31,6 +32,7 @@
                             SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                         <StackPanel Orientation="Horizontal">
                             <Viewbox
+                                x:Name="IconBox"
                                 Width="{TemplateBinding IconWidth}"
                                 Height="{TemplateBinding IconHeight}"
                                 Margin="{TemplateBinding IconMargin}"
@@ -40,6 +42,12 @@
                                     Data="{TemplateBinding IconData}"
                                     Fill="{TemplateBinding IconColor}"
                                     Stretch="Uniform" />
+                                <Viewbox.RenderTransform>
+                                    <ScaleTransform />
+                                </Viewbox.RenderTransform>
+                                <Viewbox.RenderTransformOrigin>
+                                    <Point X="0.5" Y="0.5" />
+                                </Viewbox.RenderTransformOrigin>
                             </Viewbox>
                             <TextBlock
                                 Width="{TemplateBinding ContentWidth}"
@@ -57,9 +65,43 @@
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Margin" Value="5,0,0,0" />
                             <Setter Property="Cursor" Value="Hand" />
                         </Trigger>
+                        <EventTrigger RoutedEvent="MouseEnter">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <!--  鼠标移入放大  -->
+                                    <DoubleAnimation
+                                        Storyboard.TargetName="IconBox"
+                                        Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleX)"
+                                        To="1.3"
+                                        Duration="0:0:0.1" />
+                                    <DoubleAnimation
+                                        Storyboard.TargetName="IconBox"
+                                        Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleY)"
+                                        To="1.3"
+                                        Duration="0:0:0.1" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <!--  鼠标移出  -->
+                        <EventTrigger RoutedEvent="MouseLeave">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <!--  鼠标移出还原  -->
+                                    <DoubleAnimation
+                                        Storyboard.TargetName="IconBox"
+                                        Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleX)"
+                                        To="1"
+                                        Duration="0:0:0.1" />
+                                    <DoubleAnimation
+                                        Storyboard.TargetName="IconBox"
+                                        Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleY)"
+                                        To="1"
+                                        Duration="0:0:0.1" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

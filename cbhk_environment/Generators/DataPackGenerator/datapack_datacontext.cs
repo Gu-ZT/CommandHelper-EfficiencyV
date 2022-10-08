@@ -52,6 +52,15 @@ namespace cbhk_environment.Generators.DataPackGenerator
         //近期内容前景色
         SolidColorBrush RecentContentForeground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
 
+        //树视图样式引用
+        Style RichTreeViewItemStyle = null;
+
+        #region 初始化页面右侧按钮的指令列表
+        public RelayCommand OpenLocalProject { get; set; }
+        public RelayCommand OpenLocalFolder { get; set; }
+        public RelayCommand CreateLocalDataPack { get; set; }
+        #endregion
+
         #region 近期内容父级日期节点
         List<RichTreeViewItems> recentContentList = new List<RichTreeViewItems>()
                 {
@@ -138,6 +147,9 @@ namespace cbhk_environment.Generators.DataPackGenerator
             #region 链接指令
             RunCommand = new RelayCommand(run_command);
             ReturnCommand = new RelayCommand<CommonWindow>(return_command);
+            OpenLocalProject = new RelayCommand(OpenLocalProjectCommand);
+            OpenLocalFolder = new RelayCommand(OpenLocalFolderCommand);
+            CreateLocalDataPack = new RelayCommand(CreateLocalDataPackCommand);
             #endregion
 
             #region 读取语法树所需数据并解析每个指令的数据
@@ -167,6 +179,32 @@ namespace cbhk_environment.Generators.DataPackGenerator
         }
 
         /// <summary>
+        /// 打开本地数据包
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
+        private void CreateLocalDataPackCommand()
+        {
+
+        }
+
+        /// <summary>
+        /// 打开本地文件夹
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
+        private void OpenLocalFolderCommand()
+        {
+
+        }
+
+        /// <summary>
+        /// 打开本地项目
+        /// </summary>
+        private void OpenLocalProjectCommand()
+        {
+
+        }
+
+        /// <summary>
         /// 返回主页
         /// </summary>
         /// <param name="win"></param>
@@ -185,6 +223,16 @@ namespace cbhk_environment.Generators.DataPackGenerator
         /// </summary>
         private void run_command()
         {
+        }
+
+        /// <summary>
+        /// 获取树视图样式引用
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void RichTreeViewItemStyleLoaded(object sender, RoutedEventArgs e)
+        {
+            RichTreeViewItemStyle = (sender as RichTreeViewItems).Style;
         }
 
         /// <summary>
@@ -250,7 +298,6 @@ namespace cbhk_environment.Generators.DataPackGenerator
 
                 string content = File.ReadAllText(CurrentContentFilePath);
                 JsonScript("parseJSON("+content+");");
-                string FileType = JsonScript("getJSON('FileType');").ToString();
                 string FilePath = JsonScript("getJSON('.FilePath');").ToString();
 
                 if (Directory.Exists(FilePath))
@@ -282,7 +329,8 @@ namespace cbhk_environment.Generators.DataPackGenerator
                     //证实确实是数据包文件夹
                     if(HadDataFolder && HadMcmetaFile)
                     {
-
+                        RichTreeViewItems contentItem = ContentReader.ReadTargetContent(FilePath+"\\data");
+                        ContentView.Items.Add(contentItem);
                     }
                     #endregion
 
@@ -290,11 +338,35 @@ namespace cbhk_environment.Generators.DataPackGenerator
                     FunctionEditorZoneVisibility = Visibility.Visible;
                     return;
                 }
-
+                else
                 if (File.Exists(FilePath))
                 {
+                    RichTreeViewItems contentItem = new RichTreeViewItems() 
+                    { 
+                        Style = RichTreeViewItemStyle,
+                        HorizontalAlignment = HorizontalAlignment.Left 
+                    };
+
+                    contentItem.ApplyTemplate();
+                    Grid controlsContainer = contentItem.Template.FindName("controlsContainer", contentItem) as Grid;
+                    FileItems fileItems = new FileItems() { Uid = FilePath };
+                    fileItems.FileName.Text = Path.GetFileNameWithoutExtension(FilePath);
+                    controlsContainer.Children.Add(fileItems);
+                    ContentView.Items.Add(contentItem);
+
                     InitPageVisibility = Visibility.Collapsed;
                     FunctionEditorZoneVisibility = Visibility.Visible;
+                }
+                else
+                {
+                    if(MessageBox.Show("当前所选内容不存在,是否删除引用?","警告",MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                    {
+                        RichTreeViewItems dateItem = item.Parent as RichTreeViewItems;
+                        dateItem.Items.Remove(item);
+                        if (dateItem.Items.Count == 0)
+                            recentContentView.Items.Remove(dateItem);
+                        File.Delete(CurrentContentFilePath);
+                    }
                 }
             }
         }

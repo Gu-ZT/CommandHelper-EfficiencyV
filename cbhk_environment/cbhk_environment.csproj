@@ -182,6 +182,12 @@
     </Compile>
     <Compile Include="Generators\DataPackGenerator\Components\ContentReader.cs" />
     <Compile Include="Generators\DataPackGenerator\Components\ContentSaver.cs" />
+    <Compile Include="Generators\DataPackGenerator\Components\FileItems.xaml.cs">
+      <DependentUpon>FileItems.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Generators\DataPackGenerator\Components\FolderItems.xaml.cs">
+      <DependentUpon>FolderItems.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Generators\DataPackGenerator\Components\PathParser.cs" />
     <Compile Include="Generators\DataPackGenerator\Components\RecentItems.xaml.cs">
       <DependentUpon>RecentItems.xaml</DependentUpon>
@@ -426,6 +432,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="CommandClasses\ClassicAndNew.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Generators\DataPackGenerator\Components\FileItems.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Generators\DataPackGenerator\Components\FolderItems.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

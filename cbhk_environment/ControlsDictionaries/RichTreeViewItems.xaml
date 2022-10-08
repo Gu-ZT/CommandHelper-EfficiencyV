@@ -56,8 +56,9 @@
     </Style>
 
     <!--  TreeViewItem  -->
-    <Style x:Key="{x:Type CustomControls:RichTreeViewItems}" TargetType="{x:Type CustomControls:RichTreeViewItems}">
+    <Style x:Key="RichTreeViewItem" TargetType="{x:Type CustomControls:RichTreeViewItems}">
         <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Width" Value="Auto" />
         <Setter Property="Foreground" Value="Transparent" />
         <Setter Property="Padding" Value="1,0,0,0" />
         <Setter Property="Template">
@@ -65,9 +66,9 @@
                 <ControlTemplate TargetType="{x:Type CustomControls:RichTreeViewItems}">
                     <Grid x:Name="grid">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" MinWidth="19" />
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -115,16 +116,16 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                         -->
-                        <DockPanel
-                            Name="controlsContainer"
+                        <Grid
+                            x:Name="controlsContainer"
                             Grid.Column="1"
-                            SnapsToDevicePixels="True">
+                            Width="Auto">
                             <ContentPresenter
                                 x:Name="PART_Header"
-                                MinWidth="20"
+                                Width="Auto"
                                 HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                 ContentSource="Header" />
-                        </DockPanel>
+                        </Grid>
                         <ItemsPresenter
                             x:Name="ItemsHost"
                             Grid.Row="1"

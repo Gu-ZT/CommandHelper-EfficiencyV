@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -58,21 +59,64 @@ namespace cbhk_environment.Generators.DataPackGenerator
         #region 初始化页面右侧按钮的指令列表
         public RelayCommand OpenLocalProject { get; set; }
         public RelayCommand OpenLocalFolder { get; set; }
+        public RelayCommand OpenLocalFile { get; set; }
         public RelayCommand CreateLocalDataPack { get; set; }
         #endregion
 
         #region 近期内容父级日期节点
-        List<RichTreeViewItems> recentContentList = new List<RichTreeViewItems>()
+        public static List<RichTreeViewItems> recentContentList = new List<RichTreeViewItems>()
                 {
+                    new RichTreeViewItems() { Header = "已固定",Tag = "Fixed",IsExpanded = true,Visibility = Visibility.Collapsed},
                     new RichTreeViewItems() { Header = "今天",Tag = "ToDay",IsExpanded = true},
                     new RichTreeViewItems() { Header = "昨天",Tag = "Yesterday",IsExpanded = true },
-                    new RichTreeViewItems() { Header = "本周",Tag = "ThisWeek",IsExpanded = true },
-                    new RichTreeViewItems() { Header = "上周",Tag = "LastWeek",IsExpanded = true },
-                    new RichTreeViewItems() { Header = "本月",Tag = "ThisMonth",IsExpanded = true },
-                    new RichTreeViewItems() { Header = "上月",Tag = "LastMonth",IsExpanded = true },
+                    new RichTreeViewItems() { Header = "一周内",Tag = "ThisWeek",IsExpanded = true },
+                    new RichTreeViewItems() { Header = "超过一周",Tag = "LastWeek",IsExpanded = true },
+                    new RichTreeViewItems() { Header = "一月内",Tag = "ThisMonth",IsExpanded = true },
+                    new RichTreeViewItems() { Header = "超过一月",Tag = "LastMonth",IsExpanded = true },
                     new RichTreeViewItems() { Header = "今年",Tag = "ThisYear",IsExpanded = true },
-                    new RichTreeViewItems() { Header = "去年",Tag = "LastYear",IsExpanded = true }
+                    new RichTreeViewItems() { Header = "超过一年",Tag = "LastYear",IsExpanded = true }
                 };
+        #endregion
+
+        //获取近期内容搜索框引用
+        TextBox RecentItemTextBox = null;
+
+        //未搜索到结果文本的前景色
+        SolidColorBrush searchResultIsNullBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+
+        #region 近期内容的所有交互对象(用于搜索)
+        public static List<RecentItems> RecentItemList = new List<RecentItems> { };
+        #endregion
+
+        #region 绑定近期内容的搜索结果
+        public ObservableCollection<RecentItems> RecentItemSearchResults { get; set; } = new ObservableCollection<RecentItems> { };
+        ItemsControl RecentItemSearchPanel = null;
+        #endregion
+
+        #region 近期内容树视图可见性
+        Visibility recentItemTreeViewVisibility = Visibility.Visible;
+        public Visibility RecentItemTreeViewVisibility
+        {
+            get { return recentItemTreeViewVisibility; }
+            set
+            {
+                recentItemTreeViewVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion
+
+        #region 近期内容搜索视图可见性
+        Visibility recentItemSearchPanelVisibility = Visibility.Visible;
+        public Visibility RecentItemSearchPanelVisibility
+        {
+            get { return recentItemSearchPanelVisibility; }
+            set
+            {
+                recentItemSearchPanelVisibility = value;
+                OnPropertyChanged();
+            }
+        }
         #endregion
 
         #region 函数文本框可见性
@@ -150,6 +194,7 @@ namespace cbhk_environment.Generators.DataPackGenerator
             OpenLocalProject = new RelayCommand(OpenLocalProjectCommand);
             OpenLocalFolder = new RelayCommand(OpenLocalFolderCommand);
             CreateLocalDataPack = new RelayCommand(CreateLocalDataPackCommand);
+            OpenLocalFile = new RelayCommand(OpenLocalFileCommand);
             #endregion
 
             #region 读取语法树所需数据并解析每个指令的数据
@@ -179,6 +224,13 @@ namespace cbhk_environment.Generators.DataPackGenerator
         }
 
         /// <summary>
+        /// 打开本地文件
+        /// </summary>
+        private void OpenLocalFileCommand()
+        {
+        }
+
+        /// <summary>
         /// 打开本地数据包
         /// </summary>
         /// <exception cref="NotImplementedException"></exception>
@@ -201,7 +253,7 @@ namespace cbhk_environment.Generators.DataPackGenerator
         /// </summary>
         private void OpenLocalProjectCommand()
         {
-
+            MessageBox.Show("?");
         }
 
         /// <summary>
@@ -223,6 +275,17 @@ namespace cbhk_environment.Generators.DataPackGenerator
         /// </summary>
         private void run_command()
         {
+
+        }
+
+        /// <summary>
+        /// 获取搜索结果面板引用
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void RecentItemSearchPanelLoaded(object sender, RoutedEventArgs e)
+        {
+            RecentItemSearchPanel = sender as ItemsControl;
         }
 
         /// <summary>
@@ -246,6 +309,53 @@ namespace cbhk_environment.Generators.DataPackGenerator
         }
 
         /// <summary>
+        /// 开始搜索近期内容
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void RecentItemSearchBoxTextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (RecentItemTextBox == null)
+                RecentItemTextBox = sender as TextBox;
+
+            RecentItemSearchPanel.ItemsSource = null;
+            RecentItemSearchPanel.Items.Clear();
+
+            //为空则返回
+            if (RecentItemTextBox.Text == "")
+            {
+                RecentItemSearchPanelVisibility = Visibility.Collapsed;
+                RecentItemTreeViewVisibility = Visibility.Visible;
+                return;
+            }
+
+            RecentItemSearchResults.Clear();
+
+            //设置显示数据源
+            RecentItemList.All(item =>
+            {
+                if (item.FileName.Text.Contains(RecentItemTextBox.Text))
+                {
+                    RecentItemSearchResults.Add(item);
+                    return true;
+                }
+                return true;
+            });
+
+            //如果没找到内容则显示"为搜索到...相关的结果"
+            if(RecentItemSearchResults.Count == 0)
+            {
+                RecentItemSearchPanel.Items.Add(new TextBlock() { Text = "未找到\"" + RecentItemTextBox.Text + "\"的结果", Foreground = searchResultIsNullBrush, FontSize = 12 });
+            }
+            else
+                RecentItemSearchPanel.ItemsSource = RecentItemSearchResults;
+
+            //切换近期内容视图和搜索面板可见性
+            RecentItemSearchPanelVisibility = Visibility.Visible;
+            RecentItemTreeViewVisibility = Visibility.Collapsed;
+        }
+
+        /// <summary>
         /// 获取近期内容视图引用
         /// </summary>
         /// <param name="sender"></param>
@@ -254,28 +364,47 @@ namespace cbhk_environment.Generators.DataPackGenerator
         {
             recentContentView = sender as TreeView;
 
+
             #region 读取近期使用的内容
             if (Directory.Exists(recentContentsFolderPath))
             {
                 string[] recent_contents = Directory.GetFiles(recentContentsFolderPath);
 
+                //设置已固定节点的前景色
+                recentContentList.First().Foreground = RecentContentForeground;
+
                 //判断日期并添加成员
                 foreach (string a_file in recent_contents)
                 {
-                    RecentItems recentItems = new RecentItems(AppDomain.CurrentDomain.BaseDirectory+ "resources\\configs\\DataPack\\images\\icon.png", a_file);
+                    RecentItems recentItems = new RecentItems(AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\DataPack\\images\\icon.png", a_file);
                     recentItems.MouseLeftButtonUp += OpenContentClick;
                     string dateData = recentItems.CalculationDateInterval();
+
+                    //加入内容列表
+                    RecentItemList.Add(recentItems);
+
                     RichTreeViewItems currentDateNode = recentContentList.Where(item=> item.Tag.ToString() == dateData).First();
+                    int CurrentDateNodeIndex = recentContentList.IndexOf(currentDateNode);
+                    recentItems.Tag = CurrentDateNodeIndex;
+
                     currentDateNode.Foreground = RecentContentForeground;
-                    currentDateNode.Items.Add(recentItems);
+                    RichTreeViewItems contentItem = new RichTreeViewItems
+                    {
+                        Header = recentItems,
+                        Margin = new Thickness(0,0,0,10)
+                    };
+                    currentDateNode.Items.Add(contentItem);
                 }
 
-                //添加日期
+                #region 添加日期
+                //添加固定节点
+                recentContentView.Items.Add(recentContentList.First());
                 foreach (RichTreeViewItems item in recentContentList)
                 {
                     if (item.Items.Count > 0)
                         recentContentView.Items.Add(item);
                 }
+                #endregion
             }
             #endregion
         }
@@ -288,6 +417,10 @@ namespace cbhk_environment.Generators.DataPackGenerator
         private void OpenContentClick(object sender, MouseButtonEventArgs e)
         {
             RecentItems item = sender as RecentItems;
+
+            //如果在使用锚点则返回
+            if (item.UsingThumbTack) return;
+
             string CurrentContentFilePath = item.FilePath.Tag.ToString();
 
             if (File.Exists(CurrentContentFilePath) && File.Exists(js_file))
@@ -344,14 +477,12 @@ namespace cbhk_environment.Generators.DataPackGenerator
                     RichTreeViewItems contentItem = new RichTreeViewItems() 
                     { 
                         Style = RichTreeViewItemStyle,
-                        HorizontalAlignment = HorizontalAlignment.Left 
+                        HorizontalAlignment = HorizontalAlignment.Left
                     };
 
-                    contentItem.ApplyTemplate();
-                    Grid controlsContainer = contentItem.Template.FindName("controlsContainer", contentItem) as Grid;
                     FileItems fileItems = new FileItems() { Uid = FilePath };
                     fileItems.FileName.Text = Path.GetFileNameWithoutExtension(FilePath);
-                    controlsContainer.Children.Add(fileItems);
+                    contentItem.Header = fileItems;
                     ContentView.Items.Add(contentItem);
 
                     InitPageVisibility = Visibility.Collapsed;
@@ -371,7 +502,12 @@ namespace cbhk_environment.Generators.DataPackGenerator
             }
         }
 
-        public void RichTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        /// <summary>
+        /// 函数编辑框文本更新
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void FunctionBoxTextChanged(object sender, TextChangedEventArgs e)
         {
 
         }

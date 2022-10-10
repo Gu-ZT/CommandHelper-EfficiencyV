@@ -145,7 +145,7 @@
                 Visibility="Visible">
                 <ity:Interaction.Triggers>
                     <ity:EventTrigger EventName="TextChanged">
-                        <itn:CallMethodAction MethodName="RichTextBox_TextChanged" TargetObject="{Binding}" />
+                        <itn:CallMethodAction MethodName="FunctionBoxTextChanged" TargetObject="{Binding}" />
                     </ity:EventTrigger>
                 </ity:Interaction.Triggers>
                 <CustomControls:EnabledFlowDocument FontFamily="Minecraft" LineHeight="5" />
@@ -172,12 +172,15 @@
             </TreeView>
         </Grid>
         <!--  {Binding InitPageVisibility, Mode=OneWay}  -->
-        <DockPanel Panel.ZIndex="1" Visibility="{Binding InitPageVisibility, Mode=OneWay}">
+        <Grid Panel.ZIndex="1" Visibility="{Binding InitPageVisibility, Mode=OneWay}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="550" />
+            </Grid.ColumnDefinitions>
             <StackPanel
-                Width="420"
+                Grid.Column="0"
                 MinWidth="420"
-                Margin="40,30,0,0"
-                HorizontalAlignment="Left">
+                Margin="25,30,0,0">
                 <TextBlock
                     FontSize="30"
                     Foreground="White"
@@ -192,19 +195,28 @@
                     CaretBrush="White"
                     FontSize="25"
                     Foreground="White">
+                    <ity:Interaction.Triggers>
+                        <ity:EventTrigger EventName="TextChanged">
+                            <itn:CallMethodAction MethodName="RecentItemSearchBoxTextChanged" TargetObject="{Binding}" />
+                        </ity:EventTrigger>
+                    </ity:Interaction.Triggers>
                     <TextBox.Resources>
                         <VisualBrush
                             x:Key="BackgroundBrush"
                             AlignmentX="Left"
-                            AlignmentY="Center"
-                            Stretch="None"
-                            TileMode="Tile">
+                            Stretch="Uniform">
                             <VisualBrush.Visual>
-                                <TextBlock
-                                    Background="Transparent"
-                                    FontSize="15"
-                                    Foreground="#D6D6D6"
-                                    Text="搜索最近使用的内容" />
+                                <Grid
+                                    Width="322"
+                                    Height="33"
+                                    Background="#383838">
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        Background="Transparent"
+                                        FontSize="12"
+                                        Foreground="#D6D6D6"
+                                        Text=" 搜索最近使用的内容" />
+                                </Grid>
                             </VisualBrush.Visual>
                         </VisualBrush>
                     </TextBox.Resources>
@@ -232,22 +244,49 @@
                     ScrollViewer.VerticalScrollBarVisibility="Auto"
                     Style="{DynamicResource TreeViewWithScrollBar}"
                     VirtualizingStackPanel.IsVirtualizing="True"
-                    VirtualizingStackPanel.VirtualizationMode="Recycling">
+                    VirtualizingStackPanel.VirtualizationMode="Recycling"
+                    Visibility="{Binding RecentItemTreeViewVisibility, Mode=OneWay}">
                     <ity:Interaction.Triggers>
                         <ity:EventTrigger EventName="Loaded">
                             <itn:CallMethodAction MethodName="RecentFilesViewLoaded" TargetObject="{Binding}" />
                         </ity:EventTrigger>
                     </ity:Interaction.Triggers>
                 </TreeView>
+                <ScrollViewer
+                    MaxHeight="420"
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                    Style="{DynamicResource for_scrollviewer}"
+                    Visibility="{Binding RecentItemSearchPanelVisibility, Mode=OneWay}">
+                    <ItemsControl
+                        MaxHeight="420"
+                        Background="Transparent"
+                        ItemsSource="{Binding RecentItemSearchResults, Mode=OneWay}"
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                        ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                        <ity:Interaction.Triggers>
+                            <ity:EventTrigger EventName="Loaded">
+                                <itn:CallMethodAction MethodName="RecentItemSearchPanelLoaded" TargetObject="{Binding}" />
+                            </ity:EventTrigger>
+                        </ity:Interaction.Triggers>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel ScrollViewer.VerticalScrollBarVisibility="Disabled" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </ScrollViewer>
+
             </StackPanel>
             <StackPanel
-                Width="550"
-                MaxWidth="550"
-                Margin="50,30,0,0"
+                Grid.Column="1"
+                Width="525"
+                MaxWidth="525"
+                Margin="0,30,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top">
                 <TextBlock
-                    Margin="25,0,0,10"
+                    Margin="12,0,0,30"
                     FontSize="30"
                     Foreground="White"
                     Text="开始使用" />
@@ -257,11 +296,12 @@
                         Height="100"
                         Panel.ZIndex="0"
                         Background="#383838"
+                        BorderThickness="1"
                         Command="{Binding OpenLocalProject}"
                         ContentColor="White"
                         ContentData="打开本地项目"
                         ContentHeight="100"
-                        ContentMargin="-165 10 30 0"
+                        ContentMargin="-170 10 30 0"
                         ContentWidth="600"
                         FontSize="40"
                         IconColor="White"
@@ -270,13 +310,21 @@
                         IconMargin="15 0 0 0"
                         IconWidth="50"
                         Style="{DynamicResource IconTextButton}" />
-                    <TextBlock
+                    <CustomControls:IconTextButtons
                         Margin="80,-40,0,0"
+                        HorizontalContentAlignment="Left"
                         Panel.ZIndex="1"
-                        Cursor="Hand"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Command="{Binding OpenLocalProject}"
+                        ContentColor="White"
+                        ContentData="打开本地datapack文件"
+                        ContentHeight="30"
+                        ContentMargin="-100 0 0 0"
+                        ContentWidth="400"
                         FontSize="20"
                         Foreground="White"
-                        Text="打开本地.datapack文件" />
+                        Style="{DynamicResource IconTextButton}" />
                 </StackPanel>
                 <StackPanel Width="500" Margin="0,0,0,10">
                     <CustomControls:IconTextButtons
@@ -292,17 +340,26 @@
                         ContentWidth="600"
                         FontSize="40"
                         IconColor="White"
-                        IconData="M447.1 96h-172.1L226.7 50.75C214.7 38.74 198.5 32 181.5 32H63.1c-35.35 0-64 28.66-64 64v320c0 35.34 28.65 64 64 64h384c35.35 0 64-28.66 64-64V160C511.1 124.7 483.3 96 447.1 96zM463.1 416c0 8.824-7.178 16-16 16h-384c-8.822 0-16-7.176-16-16V96c0-8.824 7.178-16 16-16h117.5c4.273 0 8.293 1.664 11.31 4.688L255.1 144h192c8.822 0 16 7.176 16 16V416z"
+                        IconData="M64 480H448c35.3 0 64-28.7 64-64V160c0-35.3-28.7-64-64-64H298.5c-17 0-33.3-6.7-45.3-18.7L226.7 50.7c-12-12-28.3-18.7-45.3-18.7H64C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64z"
                         IconHeight="50"
                         IconMargin="15 0 0 0"
                         IconWidth="50"
                         Style="{DynamicResource IconTextButton}" />
-                    <TextBlock
+                    <CustomControls:IconTextButtons
                         Margin="80,-40,0,0"
+                        HorizontalContentAlignment="Left"
                         Panel.ZIndex="1"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Command="{Binding OpenLocalFolder}"
+                        ContentColor="White"
+                        ContentData="导航和编辑mc相关的文件夹"
+                        ContentHeight="30"
+                        ContentMargin="-80 0 0 0"
+                        ContentWidth="400"
                         FontSize="20"
                         Foreground="White"
-                        Text="导航和编辑mc相关文件夹中的数据包文件" />
+                        Style="{DynamicResource IconTextButton}" />
                 </StackPanel>
                 <StackPanel Width="500" Margin="0,0,0,10">
                     <CustomControls:IconTextButtons
@@ -310,7 +367,42 @@
                         Height="100"
                         Panel.ZIndex="0"
                         Background="#383838"
-                        Command="{Binding OpenLocalDataPack}"
+                        Command="{Binding OpenLocalFile}"
+                        ContentColor="White"
+                        ContentData="打开本地文件"
+                        ContentHeight="100"
+                        ContentMargin="-170 10 30 0"
+                        ContentWidth="600"
+                        FontSize="40"
+                        IconColor="White"
+                        IconData="M0 64C0 28.65 28.65 0 64 0H229.5C246.5 0 262.7 6.743 274.7 18.75L365.3 109.3C377.3 121.3 384 137.5 384 154.5V448C384 483.3 355.3 512 320 512H64C28.65 512 0 483.3 0 448V64zM336 448V160H256C238.3 160 224 145.7 224 128V48H64C55.16 48 48 55.16 48 64V448C48 456.8 55.16 464 64 464H320C328.8 464 336 456.8 336 448z"
+                        IconHeight="50"
+                        IconMargin="17 0 0 0"
+                        IconWidth="50"
+                        Style="{DynamicResource IconTextButton}" />
+                    <CustomControls:IconTextButtons
+                        Margin="80,-40,0,0"
+                        HorizontalContentAlignment="Left"
+                        Panel.ZIndex="1"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Command="{Binding OpenLocalFile}"
+                        ContentColor="White"
+                        ContentData="导航和编辑mc相关的数据包文件"
+                        ContentHeight="30"
+                        ContentMargin="-60 0 0 0"
+                        ContentWidth="400"
+                        FontSize="20"
+                        Foreground="White"
+                        Style="{DynamicResource IconTextButton}" />
+                </StackPanel>
+                <StackPanel Width="500" Margin="0,0,0,10">
+                    <CustomControls:IconTextButtons
+                        Width="500"
+                        Height="100"
+                        Panel.ZIndex="0"
+                        Background="#383838"
+                        Command="{Binding CreateLocalDataPack}"
                         ContentColor="White"
                         ContentData="创建新的数据包"
                         ContentHeight="100"
@@ -323,14 +415,23 @@
                         IconMargin="15 0 0 0"
                         IconWidth="50"
                         Style="{DynamicResource IconTextButton}" />
-                    <TextBlock
+                    <CustomControls:IconTextButtons
                         Margin="80,-40,0,0"
+                        HorizontalContentAlignment="Left"
                         Panel.ZIndex="1"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Command="{Binding CreateLocalDataPack}"
+                        ContentColor="White"
+                        ContentData="导航和编辑mc相关的数据包文件"
+                        ContentHeight="30"
+                        ContentMargin="-60 0 0 0"
+                        ContentWidth="400"
                         FontSize="20"
                         Foreground="White"
-                        Text="选择具有代码基架的数据包模板以开始" />
+                        Style="{DynamicResource IconTextButton}" />
                 </StackPanel>
             </StackPanel>
-        </DockPanel>
+        </Grid>
     </Grid>
 </local_window:CommonWindow>

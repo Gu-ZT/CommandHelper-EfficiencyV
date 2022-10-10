@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using cbhk_environment.CustomControls;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -47,6 +48,27 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                 if (File.Exists(pathName + "\\" + originalName + extensionName))
                     File.Move(pathName + "\\" + originalName + extensionName, pathName + "\\" + FileName.Text + extensionName);
                 FileName.IsReadOnly = true;
+            }
+        }
+
+        /// <summary>
+        /// 删除该文件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DeleteClick(object sender, RoutedEventArgs e)
+        {
+            RichTreeViewItems parent = Parent as RichTreeViewItems;
+            if(parent.Parent is RichTreeViewItems)
+            {
+                RichTreeViewItems grand_parent = parent.Parent as RichTreeViewItems;
+                grand_parent.Items.Remove(parent);
+            }
+            else
+                if(parent.Parent is TreeView)
+            {
+                TreeView grand_parent = parent.Parent as TreeView;
+                grand_parent.Items.Remove(parent);
             }
         }
     }

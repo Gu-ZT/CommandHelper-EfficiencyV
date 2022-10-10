@@ -1,5 +1,8 @@
-﻿using System;
+﻿using cbhk_environment.CustomControls;
+using cbhk_environment.GeneralTools.ScrollViewerHelper;
+using System;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -15,8 +18,10 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
     {
         //日期前景色
         SolidColorBrush DateTimeForeground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
-
+        //当前日期
         DateTime CurrentTime = new DateTime();
+        //表示正在使用锚点
+        public bool UsingThumbTack = false;
 
         public RecentItems(string fileIconPath,string filePath)
         {
@@ -40,10 +45,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
 
                 //设置该文件路径
                 FilePath.Tag = filePath;
-                if (filePath.Length > 50)
-                FilePath.Text = filePath.Substring(0,47)+"...";
-                else
-                    FilePath.Text = filePath;
+                FilePath.Text = filePath;
 
                 //设置该文件名
                 FileName.Text = Path.GetFileNameWithoutExtension(filePath);
@@ -97,6 +99,85 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                 return "ToDay";
 
             return "";
+        }
+
+        /// <summary>
+        /// 执行锚点
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AnchoringMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            Border current = sender as Border;
+            RecentItems currentItem = current.FindParent<RecentItems>();
+            RichTreeViewItems parent = currentItem.Parent as RichTreeViewItems;
+            RichTreeViewItems GrandParent = parent.Parent as RichTreeViewItems;
+
+            int CurrentIndex = datapack_datacontext.recentContentList.IndexOf(GrandParent);
+            int ItemIndex = int.Parse(currentItem.Tag.ToString());
+
+            datapack_datacontext.recentContentList.First().Visibility = Visibility.Visible;
+
+            thumbtack.Visibility = Visibility.Collapsed;
+
+            if (CurrentIndex != -1 && CurrentIndex != ItemIndex)
+            {
+                datapack_datacontext.recentContentList.First().Items.Remove(parent);
+                datapack_datacontext.recentContentList[ItemIndex].Items.Add(parent);
+                RotateTransform nintyRotate = new RotateTransform(90);
+                thumbtack.RenderTransform = nintyRotate;
+            }
+            else
+            if (CurrentIndex != -1 && CurrentIndex == ItemIndex)
+            {
+                datapack_datacontext.recentContentList[ItemIndex].Items.Remove(parent);
+                datapack_datacontext.recentContentList.First().Items.Add(parent);
+                RotateTransform zeroRotate = new RotateTransform(0);
+                thumbtack.RenderTransform = zeroRotate;
+            }
+
+            if (datapack_datacontext.recentContentList.First().Items.Count == 0)
+                datapack_datacontext.recentContentList.First().Visibility = Visibility.Collapsed;
+        }
+
+        /// <summary>
+        /// 显示图钉
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DisplayThumbTack(object sender, MouseEventArgs e)
+        {
+            thumbtack.Visibility = Visibility.Visible;
+        }
+
+        /// <summary>
+        /// 隐藏图钉
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HideThumbTack(object sender, MouseEventArgs e)
+        {
+            thumbtack.Visibility = Visibility.Collapsed;
+        }
+
+        /// <summary>
+        /// 进入图钉响应区
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ThumbTackMouseEnter(object sender, MouseEventArgs e)
+        {
+            UsingThumbTack = true;
+        }
+
+        /// <summary>
+        /// 离开图钉响应区
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ThumbTackMouseLeave(object sender, MouseEventArgs e)
+        {
+            UsingThumbTack = false;
         }
     }
 }

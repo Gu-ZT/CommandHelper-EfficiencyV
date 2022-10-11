@@ -163,7 +163,9 @@
                 BorderBrush="#3D3D3D"
                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
                 ScrollViewer.VerticalScrollBarVisibility="Auto"
-                Style="{DynamicResource TreeViewWithScrollBar}">
+                Style="{DynamicResource TreeViewWithScrollBar}"
+                VirtualizingStackPanel.IsVirtualizing="True"
+                VirtualizingStackPanel.VirtualizationMode="Recycling">
                 <ity:Interaction.Triggers>
                     <ity:EventTrigger EventName="Loaded">
                         <itn:CallMethodAction MethodName="ContentViewLoaded" TargetObject="{Binding}" />
@@ -318,9 +320,9 @@
                         BorderThickness="0"
                         Command="{Binding OpenLocalProject}"
                         ContentColor="White"
-                        ContentData="打开本地datapack文件"
+                        ContentData="打开本地datapack文件夹"
                         ContentHeight="30"
-                        ContentMargin="-100 0 0 0"
+                        ContentMargin="-90 0 0 0"
                         ContentWidth="400"
                         FontSize="20"
                         Foreground="White"
@@ -375,7 +377,7 @@
                         ContentWidth="600"
                         FontSize="40"
                         IconColor="White"
-                        IconData="M0 64C0 28.65 28.65 0 64 0H229.5C246.5 0 262.7 6.743 274.7 18.75L365.3 109.3C377.3 121.3 384 137.5 384 154.5V448C384 483.3 355.3 512 320 512H64C28.65 512 0 483.3 0 448V64zM336 448V160H256C238.3 160 224 145.7 224 128V48H64C55.16 48 48 55.16 48 64V448C48 456.8 55.16 464 64 464H320C328.8 464 336 456.8 336 448z"
+                        IconData="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128z"
                         IconHeight="50"
                         IconMargin="17 0 0 0"
                         IconWidth="50"

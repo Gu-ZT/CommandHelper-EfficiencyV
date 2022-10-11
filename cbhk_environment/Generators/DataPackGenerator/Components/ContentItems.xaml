@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="cbhk_environment.Generators.DataPackGenerator.Components.FileItems"
+    x:Class="cbhk_environment.Generators.DataPackGenerator.Components.ContentItems"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:CustomControls="clr-namespace:cbhk_environment.CustomControls"
@@ -10,30 +10,6 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-
-    <UserControl.Resources>
-        <DrawingImage x:Key="FileState">
-            <DrawingImage.Drawing>
-                <DrawingGroup>
-                    <GeometryDrawing Brush="#52A2F2" Geometry="M144 144v48H304V144c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192V144C80 64.5 144.5 0 224 0s144 64.5 144 144v48h16c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V256c0-35.3 28.7-64 64-64H80z" />
-                </DrawingGroup>
-            </DrawingImage.Drawing>
-        </DrawingImage>
-        <DrawingImage x:Key="McfunctionFile">
-            <DrawingImage.Drawing>
-                <DrawingGroup>
-                    <GeometryDrawing Brush="White" Geometry="M64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V160H256c-17.7 0-32-14.3-32-32V0H64zM256 0V128H384L256 0zM153 289l-31 31 31 31c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0L71 337c-9.4-9.4-9.4-24.6 0-33.9l48-48c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9zM265 255l48 48c9.4 9.4 9.4 24.6 0 33.9l-48 48c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l31-31-31-31c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0z" />
-                </DrawingGroup>
-            </DrawingImage.Drawing>
-        </DrawingImage>
-        <DrawingImage x:Key="JSONFile">
-            <DrawingImage.Drawing>
-                <DrawingGroup>
-                    <GeometryDrawing Brush="White" Geometry="M365.3 93.38l-74.63-74.64C278.6 6.742 262.3 0 245.4 0L64-.0001c-35.35 0-64 28.65-64 64l.0065 384c0 35.34 28.65 64 64 64H320c35.2 0 64-28.8 64-64V138.6C384 121.7 377.3 105.4 365.3 93.38zM336 448c0 8.836-7.164 16-16 16H64.02c-8.838 0-16-7.164-16-16L48 64.13c0-8.836 7.164-16 16-16h160L224 128c0 17.67 14.33 32 32 32h79.1V448zM96 280C96 293.3 106.8 304 120 304h144C277.3 304 288 293.3 288 280S277.3 256 264 256h-144C106.8 256 96 266.8 96 280zM264 352h-144C106.8 352 96 362.8 96 376s10.75 24 24 24h144c13.25 0 24-10.75 24-24S277.3 352 264 352z" />
-                </DrawingGroup>
-            </DrawingImage.Drawing>
-        </DrawingImage>
-    </UserControl.Resources>
 
     <Grid Height="30" HorizontalAlignment="Left">
         <Grid.ColumnDefinitions>
@@ -50,7 +26,10 @@
             Height="15"
             Margin="0,0,5,0"
             HorizontalAlignment="Left"
-            Source="{StaticResource FileState}" />
+            Source="{DynamicResource CheckedIn}"
+            ToolTip="已签入"
+            ToolTipService.InitialShowDelay="0"
+            ToolTipService.ShowDuration="1000" />
         <Image
             x:Name="FileTypeIcon"
             Grid.Column="1"
@@ -58,7 +37,7 @@
             Height="15"
             Margin="0,0,5,0"
             HorizontalAlignment="Left"
-            Source="{StaticResource McfunctionFile}" />
+            Source="{DynamicResource McfunctionFile}" />
         <TextBox
             x:Name="FileName"
             Grid.Column="2"

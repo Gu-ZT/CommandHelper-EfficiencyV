@@ -7,11 +7,11 @@ using System.Windows.Input;
 namespace cbhk_environment.Generators.DataPackGenerator.Components
 {
     /// <summary>
-    /// FileItems.xaml 的交互逻辑
+    /// ContentItems.xaml 的交互逻辑
     /// </summary>
-    public partial class FileItems : UserControl
+    public partial class ContentItems : UserControl
     {
-        public FileItems()
+        public ContentItems()
         {
             InitializeComponent();
         }

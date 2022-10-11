@@ -182,8 +182,8 @@
     </Compile>
     <Compile Include="Generators\DataPackGenerator\Components\ContentReader.cs" />
     <Compile Include="Generators\DataPackGenerator\Components\ContentSaver.cs" />
-    <Compile Include="Generators\DataPackGenerator\Components\FileItems.xaml.cs">
-      <DependentUpon>FileItems.xaml</DependentUpon>
+    <Compile Include="Generators\DataPackGenerator\Components\ContentItems.xaml.cs">
+      <DependentUpon>ContentItems.xaml</DependentUpon>
     </Compile>
     <Compile Include="Generators\DataPackGenerator\Components\FolderItems.xaml.cs">
       <DependentUpon>FolderItems.xaml</DependentUpon>
@@ -435,7 +435,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Generators\DataPackGenerator\Components\FileItems.xaml">
+    <Page Include="Generators\DataPackGenerator\Components\ContentItems.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

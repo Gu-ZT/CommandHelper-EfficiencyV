@@ -19,20 +19,26 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
         //日期前景色
         SolidColorBrush DateTimeForeground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
         //当前日期
-        DateTime CurrentTime = new DateTime();
+        public DateTime CurrentTime = new DateTime();
+        //保存当前图标直接路径
+        public string CurrentFileIconPath = "";
         //表示正在使用锚点
         public bool UsingThumbTack = false;
 
-        public RecentItems(string fileIconPath,string filePath)
+        public RecentItems(string fileIconPath = "",string filePath = "")
         {
             InitializeComponent();
 
             #region 显示图像
-            FileIcon.Source = new BitmapImage(new Uri(fileIconPath,UriKind.Absolute));
+            if(fileIconPath.Trim() != "")
+            {
+                CurrentFileIconPath = fileIconPath;
+                FileIcon.Source = new BitmapImage(new Uri(fileIconPath, UriKind.Absolute));
+            }
             #endregion
 
             #region 获取文件路径，文件名，文件最后修改日期
-            if(File.Exists(filePath))
+            if (File.Exists(filePath))
             {
                 #region 获取该文件最后一次编辑时间戳
                 FileInfo fileInfo = new FileInfo(filePath);
@@ -108,13 +114,11 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
         /// <param name="e"></param>
         private void AnchoringMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            Border current = sender as Border;
-            RecentItems currentItem = current.FindParent<RecentItems>();
-            RichTreeViewItems parent = currentItem.Parent as RichTreeViewItems;
+            RichTreeViewItems parent = Parent as RichTreeViewItems;
             RichTreeViewItems GrandParent = parent.Parent as RichTreeViewItems;
 
             int CurrentIndex = datapack_datacontext.recentContentList.IndexOf(GrandParent);
-            int ItemIndex = int.Parse(currentItem.Tag.ToString());
+            int ItemIndex = int.Parse(Tag.ToString());
 
             datapack_datacontext.recentContentList.First().Visibility = Visibility.Visible;
 

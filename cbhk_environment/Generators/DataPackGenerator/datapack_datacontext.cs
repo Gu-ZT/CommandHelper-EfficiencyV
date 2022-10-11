@@ -14,6 +14,9 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using Windows.Graphics.Printing.PrintTicket;
+using WK.Libraries.BetterFolderBrowserNS;
 
 namespace cbhk_environment.Generators.DataPackGenerator
 {
@@ -211,12 +214,12 @@ namespace cbhk_environment.Generators.DataPackGenerator
 
                     JsonScript("parseJSON(" + grammaticalJson + ");");
                     int item_count = int.Parse(JsonScript("getLength();").ToString());
+
                     for (int i = 0; i < item_count; i++)
                     {
                         string radicalString = JsonScript("getJSON('[" + i + "].radical');").ToString();
-                        //存储指令部首
+                        //存储指令部首和对应的索引
                         grammaticalRadical.Add(radicalString,i);
-                        //获取第一个子级的原串数据
                     }
                 }
             }
@@ -231,12 +234,11 @@ namespace cbhk_environment.Generators.DataPackGenerator
         }
 
         /// <summary>
-        /// 打开本地数据包
+        /// 创造本地数据包
         /// </summary>
         /// <exception cref="NotImplementedException"></exception>
         private void CreateLocalDataPackCommand()
         {
-
         }
 
         /// <summary>
@@ -251,9 +253,75 @@ namespace cbhk_environment.Generators.DataPackGenerator
         /// <summary>
         /// 打开本地项目
         /// </summary>
+        /// <param name="FilePath">目标路径</param>
+        private void OpenLocalProjectCommand(string FilePath)
+        {
+            #region 判断目标为普通文件夹还是数据包
+            //拥有pack.mcmeta文件和data文件夹,证实确实是数据包文件夹
+            if (Directory.Exists(FilePath + "\\data") && File.Exists(FilePath + "\\pack.mcmeta"))
+            {
+                RichTreeViewItems contentItem = ContentReader.ReadTargetContent(FilePath + "\\data");
+                contentItem.MouseDoubleClick += OpenSubContentMouseDoubleClick;
+                ContentView.Items.Add(contentItem);
+            }
+            #endregion
+        }
+
+        /// <summary>
+        /// 打开本地项目
+        /// </summary>
         private void OpenLocalProjectCommand()
         {
-            MessageBox.Show("?");
+            #region 判断目标为普通文件夹还是数据包
+            BetterFolderBrowser betterFolderBrowser = new BetterFolderBrowser()
+            {
+                Multiselect = true,
+                RootFolder = @"C:",
+                Title = "请选择要编辑的项目路径"
+            };
+
+            if (betterFolderBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                foreach (string FilePath in betterFolderBrowser.SelectedPaths)
+                {
+                    string[] datapackFiles = Directory.GetDirectories(FilePath);
+
+                    //拥有pack.mcmeta文件和data文件夹,证实确实是数据包文件夹
+                    if (Directory.Exists(FilePath + "\\data") && File.Exists(FilePath + "\\pack.mcmeta"))
+                    {
+                        RichTreeViewItems contentNodes = ContentReader.ReadTargetContent(FilePath + "\\data");
+                        ContentItems contentItems = new ContentItems();
+                        contentItems.FileName.Text = contentItems.Uid = contentNodes.Tag.ToString();
+                        contentNodes.Header = contentItems;
+                        contentNodes.MouseDoubleClick += OpenSubContentMouseDoubleClick;
+                        ContentView.Items.Add(contentNodes);
+                    }
+                }
+            #endregion
+        }
+
+        /// <summary>
+        /// 点击后打开该节点的子级内容
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OpenSubContentMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            RichTreeViewItems CurrentItem = sender as RichTreeViewItems;
+
+            if(CurrentItem.Tag != null)
+            {
+                string CurrentPath = CurrentItem.Tag.ToString();
+                if(Directory.Exists(CurrentPath))
+                {
+                    string[] subContent = Directory.GetDirectories(CurrentPath);
+                    foreach (string item in subContent)
+                    {
+
+                    }
+                }
+            }
+
+            CurrentItem.MouseDoubleClick += OpenSubContentMouseDoubleClick;
         }
 
         /// <summary>
@@ -318,17 +386,35 @@ namespace cbhk_environment.Generators.DataPackGenerator
             if (RecentItemTextBox == null)
                 RecentItemTextBox = sender as TextBox;
 
-            RecentItemSearchPanel.ItemsSource = null;
-            RecentItemSearchPanel.Items.Clear();
-
             //为空则返回
             if (RecentItemTextBox.Text == "")
             {
+                foreach (RichTreeViewItems dateItem in recentContentList)
+                {
+                    foreach (RichTreeViewItems item in dateItem.Items)
+                    {
+                        RecentItems contentItem = item.Header as RecentItems;
+                        if(RecentItemSearchPanel.Items.Contains(contentItem))
+                        {
+                            RecentItems newItem = new RecentItems() { Cursor = Cursors.Hand };
+                            newItem.MouseLeftButtonUp += OpenContentClick;
+                            newItem.Tag = contentItem.Tag;
+                            newItem.FileIcon.Source = new BitmapImage(new Uri(contentItem.CurrentFileIconPath, UriKind.Absolute));
+                            newItem.FileName.Text = contentItem.FileName.Text;
+                            newItem.FilePath.Text = contentItem.FilePath.Text;
+                            newItem.FileModifyDateTime.Text = contentItem.FileModifyDateTime.Text;
+                            newItem.CurrentTime = contentItem.CurrentTime;
+                            item.Header = newItem;
+                        }
+                    }
+                }
+
                 RecentItemSearchPanelVisibility = Visibility.Collapsed;
                 RecentItemTreeViewVisibility = Visibility.Visible;
                 return;
             }
 
+            RecentItemSearchPanel.ItemsSource = null;
             RecentItemSearchResults.Clear();
 
             //设置显示数据源
@@ -337,6 +423,7 @@ namespace cbhk_environment.Generators.DataPackGenerator
                 if (item.FileName.Text.Contains(RecentItemTextBox.Text))
                 {
                     RecentItemSearchResults.Add(item);
+                    if (RecentItemList.Contains(item))
                     return true;
                 }
                 return true;
@@ -425,53 +512,18 @@ namespace cbhk_environment.Generators.DataPackGenerator
 
             if (File.Exists(CurrentContentFilePath) && File.Exists(js_file))
             {
-                //解析内容文件
-                string js_content = File.ReadAllText(js_file);
-                JsonScript(js_content);
-
-                string content = File.ReadAllText(CurrentContentFilePath);
-                JsonScript("parseJSON("+content+");");
-                string FilePath = JsonScript("getJSON('.FilePath');").ToString();
+                //读取内容文件
+                string FilePath = File.ReadAllText(CurrentContentFilePath);
 
                 if (Directory.Exists(FilePath))
                 {
-                    #region 判断目标为普通文件夹还是数据包
-                    string[] datapackFiles = Directory.GetDirectories(FilePath);
-                    //拥有data文件夹
-                    bool HadDataFolder = false;
-                    //拥有pack.mcmeta文件
-                    bool HadMcmetaFile = false;
-                    foreach (string file in datapackFiles)
-                    {
-                        if (Directory.Exists(file) && Path.GetDirectoryName(file) == "data")
-                        {
-                            HadDataFolder = true;
-                            continue;
-                        }
-
-                        if(File.Exists(file) && Path.GetFileName(file) == "pack.mcmeta")
-                        {
-                            HadMcmetaFile = true;
-                            continue;
-                        }
-
-                        if (HadDataFolder && HadMcmetaFile)
-                            break;
-                    }
-
-                    //证实确实是数据包文件夹
-                    if(HadDataFolder && HadMcmetaFile)
-                    {
-                        RichTreeViewItems contentItem = ContentReader.ReadTargetContent(FilePath+"\\data");
-                        ContentView.Items.Add(contentItem);
-                    }
-                    #endregion
 
                     InitPageVisibility = Visibility.Collapsed;
                     FunctionEditorZoneVisibility = Visibility.Visible;
                     return;
                 }
-                else
+
+
                 if (File.Exists(FilePath))
                 {
                     RichTreeViewItems contentItem = new RichTreeViewItems() 
@@ -480,7 +532,7 @@ namespace cbhk_environment.Generators.DataPackGenerator
                         HorizontalAlignment = HorizontalAlignment.Left
                     };
 
-                    FileItems fileItems = new FileItems() { Uid = FilePath };
+                    ContentItems fileItems = new ContentItems() { Uid = FilePath };
                     fileItems.FileName.Text = Path.GetFileNameWithoutExtension(FilePath);
                     contentItem.Header = fileItems;
                     ContentView.Items.Add(contentItem);

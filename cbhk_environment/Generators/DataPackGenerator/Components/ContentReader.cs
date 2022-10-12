@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
+using System.Windows;
 
 namespace cbhk_environment.Generators.DataPackGenerator.Components
 {
@@ -23,12 +23,9 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
         /// </summary>
         /// <param name="folderPath"></param>
         /// <returns></returns>
-        public static List<RichTreeViewItems> ReadTargetContent(string folderPath)
+        public static List<RichTreeViewItems> ReadTargetContent(string folderPath,bool IsNameSpace = true)
         {
             List<RichTreeViewItems> result = new List<RichTreeViewItems> { };
-
-            //存储相对路径下标
-            int RelativePathStringIndex = folderPath.Length + 1;
 
             //初始化配置文件
             if (File.Exists(TargetFolderNameListFilePath) && TargetFolderNameList.Count == 0)
@@ -40,7 +37,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
             //如果路径不为空且目标命名空间和读取配置列表均不为空则继续执行
             if (folderPath != null && TargetFolderNameList.Count > 0 && ReadableFileExtensionList.Count > 0)
             {
-                if (Directory.Exists(folderPath))
+                if (Directory.Exists(folderPath) && IsNameSpace)
                 {
                     string[] subContent = Directory.GetDirectories(folderPath);
                     string folderName = "";
@@ -52,72 +49,46 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                         if (folderName != "minecraft")
                         {
                             //只要当前迭代目录名称与目标目录列表中的元素匹配一个就确认是数据包的主目录
-                            List<string> matchDirectory = TargetFolderNameList.Where(target_item => Directory.Exists(item + "\\" + target_item)).ToList();
-
-                            //没有任何子级内容的命名空间
-                            List<string> nullDirectory = new List<string> { };
-
-                            nullDirectory = TargetFolderNameList.Except(matchDirectory).ToList();
-
-                            //已确认当前为该包主目录
-                            if (matchDirectory.Count > 0)
+                            foreach (string target_item in TargetFolderNameList)
                             {
                                 //遍历该包
-                                foreach (string matchNameSpace in matchDirectory)
+                                string currentNameSpace = item + "\\" + target_item;
+                                //实例化一个文件夹节点
+                                ContentItems contentItems = new ContentItems(currentNameSpace,false,true);
+                                RichTreeViewItems CurrentNode = new RichTreeViewItems
                                 {
-                                    string currentNameSpace = item + "\\" + matchNameSpace;
-                                    //获取所有子级文件夹和文件
-                                    string[] ScannedDataPackEntries = Directory.GetDirectories(currentNameSpace,"*",SearchOption.AllDirectories);
-                                    for (int i = 0; i < ScannedDataPackEntries.Length; i++)
-                                    {
-                                        string[] currentDirectoryFiles = Directory.GetFiles(ScannedDataPackEntries[i]);
-                                        for (int j = 0; j < currentDirectoryFiles.Length; j++)
-                                        {
-                                            //扫描到
-                                            if (ReadableFileExtensionList.Contains(Path.GetFileNameWithoutExtension(currentDirectoryFiles[j])))
-                                            {
-
-                                            }
-                                        }
-                                    }
-                                }
-
-                                //创建空命名空间
-                                foreach (string nullNameSpace in nullDirectory)
-                                {
-
-                                }
-                                break;
+                                    Tag = currentNameSpace,
+                                    Header = contentItems
+                                };
+                                CurrentNode.Expanded += datapack_datacontext.OpenSubContentClick;
+                                CurrentNode.Items.Add("");
+                                result.Add(CurrentNode);
                             }
+                            break;
                         }
                     }
                 }
+                else
+                    if(!IsNameSpace)
+                {
+                    string[] subContent = Directory.GetFiles(folderPath);
+
+                    foreach (string item in subContent)
+                    {
+                        //实例化一个文件节点
+                        ContentItems contentItems = new ContentItems(item, false, false);
+                        RichTreeViewItems CurrentNode = new RichTreeViewItems
+                        {
+                            Tag = item,
+                            Header = contentItems
+                        };
+                        CurrentNode.Expanded += datapack_datacontext.OpenSubContentClick;
+                        CurrentNode.Items.Add("");
+                        result.Add(CurrentNode);
+                        break;
+                    }
+                }
             }
-
-            //#region 读取函数标签文件夹，读取初始化和主函数
-            //#endregion
-
-            //#region 读取函数文件
-            //#endregion
-
-            //#region 读取进度文件
-            //#endregion
-
-            //#region 读取战利品表文件
-            //#endregion
-
-            //#region 读取配方文件
-            //#endregion
-
-            //#region 读取标签文件
-            //#endregion
-
-            //#region 读取维度文件
-            //#endregion
-
-            //#region 读取生物群系文件
-            //#endregion
-
             return result;
         }
     }

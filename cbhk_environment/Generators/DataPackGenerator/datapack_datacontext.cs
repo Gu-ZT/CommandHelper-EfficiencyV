@@ -4,7 +4,6 @@ using cbhk_environment.WindowDictionaries;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MSScriptControl;
-using Newtonsoft.Json.Bson;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,11 +11,9 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Windows.Graphics.Printing.PrintTicket;
 using WK.Libraries.BetterFolderBrowserNS;
 
 namespace cbhk_environment.Generators.DataPackGenerator
@@ -322,9 +319,18 @@ namespace cbhk_environment.Generators.DataPackGenerator
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OpenSubContentClick(object sender, RoutedEventArgs e)
+        public static void OpenSubContentClick(object sender, RoutedEventArgs e)
         {
             RichTreeViewItems CurrentItem = sender as RichTreeViewItems;
+
+            bool IsNameSpace = false;
+            RichTreeViewItems parent = null;
+            if (CurrentItem.Parent is TreeView)
+                IsNameSpace = true;
+            else
+                parent = CurrentItem.Parent as RichTreeViewItems;
+            if(parent != null)
+            IsNameSpace = !(parent.Parent is TreeView);
 
             //若已处理完子节点则直接退出
             if (CurrentItem.Items.Count > 0 && !(CurrentItem.Items[0] is string)) return;
@@ -336,7 +342,7 @@ namespace cbhk_environment.Generators.DataPackGenerator
             //如果标签不为空，则读取子级数据
             if (CurrentItem.Tag != null)
             {
-                SubItems = ContentReader.ReadTargetContent(CurrentItem.Tag.ToString());
+                SubItems = ContentReader.ReadTargetContent(CurrentItem.Tag.ToString(), IsNameSpace);
                 foreach (RichTreeViewItems content in SubItems)
                 {
                     content.Expanded += OpenSubContentClick;

@@ -13,11 +13,22 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
     /// </summary>
     public partial class ContentItems : UserControl
     {
-        public ContentItems(string FilePath = "")
+        //当前为数据包
+        public bool IsDataPack = true;
+        //当前为根目录
+        public bool IsRootDirectory = false;
+        //当前为命名空间
+        public bool IsNameSpace = false;
+
+        /// <summary>
+        /// 保存文件原来的名字
+        /// </summary>
+        string originalName = "";
+
+        public ContentItems(string FilePath = "",bool IsDatapack = true,bool IsNameSpace = false)
         {
             InitializeComponent();
 
-            FileName.Text = Path.GetFileName(FilePath);
             Uid = FilePath;
 
             if (FilePath != null && File.Exists(FilePath))
@@ -35,17 +46,22 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                 }
             }
             else
-            if (FilePath != null && Directory.Exists(FilePath))
+            if ((FilePath != null && Directory.Exists(FilePath)) || IsNameSpace)
             {
-                string extension = "folder_closed";
-                DirectoryInfo datapackPath = new DirectoryInfo(FilePath);
-                FilePath = datapackPath.Parent.FullName;
+                string iconKey = "folder_closed";
+                if(IsDatapack)
+                {
+                    DirectoryInfo datapackPath = new DirectoryInfo(FilePath);
+                    FilePath = datapackPath.Parent.FullName;
+                }
+                FileName.Text = Path.GetFileNameWithoutExtension(FilePath);
+
                 if (File.Exists(FilePath + "\\pack.mcmeta"))
-                    extension = "datapack";
+                    iconKey = "datapack";
                 var keys = datapack_datacontext.IconDictionary.Keys;
                 foreach (var key in keys)
                 {
-                    if (key != null && key.ToString() == extension && extension != "")
+                    if (key != null && key.ToString() == iconKey && iconKey != "")
                     {
                         if (Application.Current.TryFindResource(key) is DrawingImage icon)
                             FileTypeIcon.Source = icon;
@@ -55,11 +71,6 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                 }
             }
         }
-
-        /// <summary>
-        /// 保存文件原来的名字
-        /// </summary>
-        string originalName = "";
 
         /// <summary>
         /// 开始编辑文件名

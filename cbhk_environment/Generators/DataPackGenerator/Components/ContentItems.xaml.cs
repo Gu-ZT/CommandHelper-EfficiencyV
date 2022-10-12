@@ -1,8 +1,10 @@
 ﻿using cbhk_environment.CustomControls;
+using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace cbhk_environment.Generators.DataPackGenerator.Components
 {
@@ -11,9 +13,47 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
     /// </summary>
     public partial class ContentItems : UserControl
     {
-        public ContentItems()
+        public ContentItems(string FilePath = "")
         {
             InitializeComponent();
+
+            FileName.Text = Path.GetFileName(FilePath);
+            Uid = FilePath;
+
+            if (FilePath != null && File.Exists(FilePath))
+            {
+                string extension = Path.GetExtension(FilePath);
+                var keys = datapack_datacontext.IconDictionary.Keys;
+                foreach (var key in keys)
+                {
+                    if (key != null && key.ToString() == extension)
+                    {
+                        if (Application.Current.TryFindResource(key) is DrawingImage icon)
+                            FileTypeIcon.Source = icon;
+                        break;
+                    }
+                }
+            }
+            else
+            if (FilePath != null && Directory.Exists(FilePath))
+            {
+                string extension = "folder_closed";
+                DirectoryInfo datapackPath = new DirectoryInfo(FilePath);
+                FilePath = datapackPath.Parent.FullName;
+                if (File.Exists(FilePath + "\\pack.mcmeta"))
+                    extension = "datapack";
+                var keys = datapack_datacontext.IconDictionary.Keys;
+                foreach (var key in keys)
+                {
+                    if (key != null && key.ToString() == extension && extension != "")
+                    {
+                        if (Application.Current.TryFindResource(key) is DrawingImage icon)
+                            FileTypeIcon.Source = icon;
+                        break;
+                    }
+
+                }
+            }
         }
 
         /// <summary>
@@ -22,7 +62,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
         string originalName = "";
 
         /// <summary>
-        /// 编辑改文件名
+        /// 开始编辑文件名
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -41,12 +81,23 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
         /// <param name="e"></param>
         private void ModifyCompletedKeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.Enter)
+            if(e.Key == Key.Enter && originalName != FileName.Text)
             {
-                string extensionName = Path.GetExtension(Uid);
-                string pathName = Path.GetDirectoryName(Uid);
-                if (File.Exists(pathName + "\\" + originalName + extensionName))
+                if (File.Exists(Uid))
+                {
+                    string extensionName = Path.GetExtension(Uid);
+                    string pathName = Path.GetDirectoryName(Uid);
                     File.Move(pathName + "\\" + originalName + extensionName, pathName + "\\" + FileName.Text + extensionName);
+                }
+                else
+                    if (Directory.Exists(Uid))
+                {
+                    DirectoryInfo folderNameInfo = new DirectoryInfo(Uid);
+                    string folderName = folderNameInfo.Parent.Parent.FullName;
+                    Directory.Move(Uid, folderName + "\\" + FileName.Text);
+                }
+                else
+                    FileName.Text = originalName;
                 FileName.IsReadOnly = true;
             }
         }

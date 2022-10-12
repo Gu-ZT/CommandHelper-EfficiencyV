@@ -38,7 +38,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
             #endregion
 
             #region 获取文件路径，文件名，文件最后修改日期
-            if (File.Exists(filePath))
+            if (File.Exists(filePath) || Directory.Exists(filePath))
             {
                 #region 获取该文件最后一次编辑时间戳
                 FileInfo fileInfo = new FileInfo(filePath);

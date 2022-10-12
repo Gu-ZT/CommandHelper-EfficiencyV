@@ -451,6 +451,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Generators\DataPackGenerator\Dictionaries\Icons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Generators\VillagerGenerator\Components\GossipsItems.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

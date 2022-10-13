@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows;
 
 namespace cbhk_environment.Generators.DataPackGenerator.Components
 {
@@ -23,7 +22,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
         /// </summary>
         /// <param name="folderPath"></param>
         /// <returns></returns>
-        public static List<RichTreeViewItems> ReadTargetContent(string folderPath,bool IsNameSpace = true)
+        public static List<RichTreeViewItems> ReadTargetContent(string folderPath,ContentType type)
         {
             List<RichTreeViewItems> result = new List<RichTreeViewItems> { };
 
@@ -37,59 +36,135 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
             //如果路径不为空且目标命名空间和读取配置列表均不为空则继续执行
             if (folderPath != null && TargetFolderNameList.Count > 0 && ReadableFileExtensionList.Count > 0)
             {
-                if (Directory.Exists(folderPath) && IsNameSpace)
+                switch (type)
                 {
-                    string[] subContent = Directory.GetDirectories(folderPath);
-                    string folderName = "";
-
-                    //读取除minecraft以外的所有目录
-                    foreach (string item in subContent)
-                    {
-                        folderName = Path.GetFileNameWithoutExtension(item).Trim();
-                        if (folderName != "minecraft")
+                    case ContentType.DataPack:
+                        if (Directory.Exists(folderPath))
                         {
-                            //只要当前迭代目录名称与目标目录列表中的元素匹配一个就确认是数据包的主目录
-                            foreach (string target_item in TargetFolderNameList)
+                            string[] subContent = Directory.GetDirectories(folderPath);
+                            string folderName = "";
+
+                            //读取除minecraft以外的所有目录
+                            foreach (string item in subContent)
                             {
-                                //遍历该包
-                                string currentNameSpace = item + "\\" + target_item;
-                                //实例化一个文件夹节点
-                                ContentItems contentItems = new ContentItems(currentNameSpace,false,true);
+                                folderName = Path.GetFileNameWithoutExtension(item).Trim();
+                                //拥有pack.mcmeta文件和data文件夹,证实确实是数据包文件夹
+                                if (Directory.Exists(folderName + "\\data") && File.Exists(folderName + "\\pack.mcmeta"))
+                                {
+                                    ContentItems contentItems = new ContentItems(folderName + "\\data", type);
+                                    RichTreeViewItems contentNodes = new RichTreeViewItems() 
+                                    { 
+                                        Uid = folderName + "\\data", 
+                                        Tag = type ,
+                                        Header = contentItems
+                                    };
+                                    contentNodes.Expanded += (a, b) => { ReadTargetContent(folderPath, type); };
+                                    contentNodes.Items.Add("");
+
+                                }
+                            }
+                        }
+                        break;
+                    case ContentType.NameSpace:
+                        if (Directory.Exists(folderPath))
+                        {
+                            string[] subContent = Directory.GetDirectories(folderPath);
+                            string folderName = "";
+
+                            //读取除minecraft以外的所有目录
+                            foreach (string item in subContent)
+                            {
+                                folderName = Path.GetFileNameWithoutExtension(item).Trim();
+                                if (folderName != "minecraft")
+                                {
+                                    //只要当前迭代目录名称与目标目录列表中的元素匹配一个就确认是数据包的主目录
+                                    foreach (string target_item in TargetFolderNameList)
+                                    {
+                                        //遍历该包
+                                        string currentNameSpace = item + "\\" + target_item;
+                                        //实例化一个文件夹节点
+                                        ContentItems contentItems = new ContentItems(currentNameSpace, type);
+                                        RichTreeViewItems CurrentNode = new RichTreeViewItems
+                                        {
+                                            Uid = folderName + "\\data",
+                                            Tag = type,
+                                            Header = contentItems,
+                                        };
+                                        CurrentNode.Expanded += (a, b) => { ReadTargetContent(folderPath, type); };
+                                        CurrentNode.Items.Add("");
+                                        result.Add(CurrentNode);
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                    case ContentType.Folder:
+                        if (Directory.Exists(folderPath))
+                        {
+                            string[] subContent = Directory.GetDirectories(folderPath);
+
+                            //读取除minecraft以外的所有目录
+                            foreach (string item in subContent)
+                            {
+                                //只要当前迭代目录名称与目标目录列表中的元素匹配一个就确认是数据包的主目录
+                                foreach (string target_item in TargetFolderNameList)
+                                {
+                                    //遍历该包
+                                    string currentNameSpace = item + "\\" + target_item;
+                                    //实例化一个文件夹节点
+                                    ContentItems contentItems = new ContentItems(currentNameSpace, type);
+                                    RichTreeViewItems CurrentNode = new RichTreeViewItems
+                                    {
+                                        Uid = folderPath + "\\data",
+                                        Tag = type,
+                                        Header = contentItems
+                                    };
+                                    CurrentNode.Expanded += (a,b) => { ReadTargetContent(folderPath, type); };
+                                    CurrentNode.Items.Add("");
+                                    result.Add(CurrentNode);
+                                }
+                                break;
+                            }
+                        }
+                        break;
+                    case ContentType.File:
+                        if (File.Exists(folderPath))
+                        {
+                            string[] subContent = Directory.GetFiles(folderPath);
+
+                            foreach (string item in subContent)
+                            {
+                                //实例化一个文件节点
+                                ContentItems contentItems = new ContentItems(item, type);
                                 RichTreeViewItems CurrentNode = new RichTreeViewItems
                                 {
-                                    Tag = currentNameSpace,
-                                    Header = contentItems
+                                    Uid = folderPath + "\\data",
+                                    Tag = type,
+                                    Header = contentItems,
                                 };
-                                CurrentNode.Expanded += datapack_datacontext.OpenSubContentClick;
+                                CurrentNode.Expanded += (a, b) => { ReadTargetContent(folderPath, type); };
                                 CurrentNode.Items.Add("");
                                 result.Add(CurrentNode);
+                                break;
                             }
-                            break;
                         }
-                    }
-                }
-                else
-                    if(!IsNameSpace)
-                {
-                    string[] subContent = Directory.GetFiles(folderPath);
-
-                    foreach (string item in subContent)
-                    {
-                        //实例化一个文件节点
-                        ContentItems contentItems = new ContentItems(item, false, false);
-                        RichTreeViewItems CurrentNode = new RichTreeViewItems
-                        {
-                            Tag = item,
-                            Header = contentItems
-                        };
-                        CurrentNode.Expanded += datapack_datacontext.OpenSubContentClick;
-                        CurrentNode.Items.Add("");
-                        result.Add(CurrentNode);
                         break;
-                    }
                 }
             }
             return result;
+        }
+
+        /// <summary>
+        /// 用于区分需要新建内容的类型
+        /// </summary>
+        public enum ContentType
+        {
+            DataPack,
+            NameSpace,
+            Folder,
+            File,
+            UnKnown
         }
     }
 }

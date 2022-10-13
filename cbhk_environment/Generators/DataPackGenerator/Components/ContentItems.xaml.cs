@@ -1,5 +1,4 @@
 ﻿using cbhk_environment.CustomControls;
-using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,19 +12,12 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
     /// </summary>
     public partial class ContentItems : UserControl
     {
-        //当前为数据包
-        public bool IsDataPack = true;
-        //当前为根目录
-        public bool IsRootDirectory = false;
-        //当前为命名空间
-        public bool IsNameSpace = false;
-
         /// <summary>
         /// 保存文件原来的名字
         /// </summary>
         string originalName = "";
 
-        public ContentItems(string FilePath = "",bool IsDatapack = true,bool IsNameSpace = false)
+        public ContentItems(string FilePath,ContentReader.ContentType type)
         {
             InitializeComponent();
 
@@ -46,10 +38,10 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                 }
             }
             else
-            if ((FilePath != null && Directory.Exists(FilePath)) || IsNameSpace)
+            if ((FilePath != null && Directory.Exists(FilePath)))
             {
                 string iconKey = "folder_closed";
-                if(IsDatapack)
+                if(type == ContentReader.ContentType.DataPack)
                 {
                     DirectoryInfo datapackPath = new DirectoryInfo(FilePath);
                     FilePath = datapackPath.Parent.FullName;

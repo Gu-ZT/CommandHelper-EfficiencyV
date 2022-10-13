@@ -82,6 +82,9 @@ namespace cbhk_environment.Generators.DataPackGenerator
                 };
         #endregion
 
+        //指定新建内容成员的类型
+        static ContentReader.ContentType contentType = ContentReader.ContentType.DataPack;
+
         //获取近期内容搜索框引用
         TextBox RecentItemTextBox = null;
 
@@ -258,21 +261,18 @@ namespace cbhk_environment.Generators.DataPackGenerator
         }
 
         /// <summary>
-        /// 打开本地项目
+        /// 通过近期内容成员打开本地项目
         /// </summary>
         /// <param name="FilePath">目标路径</param>
         private void OpenLocalProjectCommand(string FilePath)
         {
-            #region 判断目标为普通文件夹还是数据包
-            //拥有pack.mcmeta文件和data文件夹,证实确实是数据包文件夹
-            if (Directory.Exists(FilePath + "\\data") && File.Exists(FilePath + "\\pack.mcmeta"))
+            #region 打开目标内容
+            contentType = ContentReader.ContentType.UnKnown;
+            List<RichTreeViewItems> contentNodes = ContentReader.ReadTargetContent(FilePath, contentType);
+            foreach (RichTreeViewItems item in contentNodes)
             {
-                RichTreeViewItems contentNodes = new RichTreeViewItems() { Tag = FilePath + "\\data" };
-                ContentItems contentItems = new ContentItems(FilePath + "\\data");
-                contentItems.FileName.Text = Path.GetFileName(FilePath);
-                contentNodes.Header = contentItems;
-                contentNodes.Expanded += OpenSubContentClick;
-                ContentView.Items.Add(contentNodes);
+                item.Expanded += (a, b) => { ContentReader.ReadTargetContent(item.Uid,(ContentReader.ContentType)item.Tag); };
+                ContentView.Items.Add(item);
             }
             #endregion
         }
@@ -282,7 +282,7 @@ namespace cbhk_environment.Generators.DataPackGenerator
         /// </summary>
         private void OpenLocalProjectCommand()
         {
-            #region 判断目标为普通文件夹还是数据包
+            #region 打开数据包
             BetterFolderBrowser betterFolderBrowser = new BetterFolderBrowser()
             {
                 Multiselect = true,
@@ -293,62 +293,18 @@ namespace cbhk_environment.Generators.DataPackGenerator
             if (betterFolderBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 foreach (string FilePath in betterFolderBrowser.SelectedPaths)
                 {
-                    //拥有pack.mcmeta文件和data文件夹,证实确实是数据包文件夹
-                    if (Directory.Exists(FilePath + "\\data") && File.Exists(FilePath + "\\pack.mcmeta"))
-                    {
-                        RichTreeViewItems contentNodes = new RichTreeViewItems() { Tag = FilePath + "\\data" };
-                        ContentItems contentItems = new ContentItems(FilePath + "\\data");
-                        contentNodes.Header = contentItems;
-                        contentNodes.Expanded += OpenSubContentClick;
-                        contentNodes.Items.Add("");
-                        ContentView.Items.Add(contentNodes);
+                    List<RichTreeViewItems> contentNodes = ContentReader.ReadTargetContent(FilePath,contentType);
+                    foreach (RichTreeViewItems item in contentNodes)
+                             ContentView.Items.Add(item);
 
-                        InitPageVisibility = Visibility.Collapsed;
-                        FunctionEditorZoneVisibility = Visibility.Visible;
+                    InitPageVisibility = Visibility.Collapsed;
+                    FunctionEditorZoneVisibility = Visibility.Visible;
 
-                        //添加进近期使用内容链表
-                        string folderName = Path.GetFileNameWithoutExtension(FilePath);
-                        File.WriteAllText(recentContentsFolderPath+"\\"+folderName+".content",FilePath);
-                    }
+                    //添加进近期使用内容链表
+                    string folderName = Path.GetFileNameWithoutExtension(FilePath);
+                    File.WriteAllText(recentContentsFolderPath + "\\" + folderName + ".content", FilePath);
                 }
             #endregion
-        }
-
-        /// <summary>
-        /// 点击后打开该节点的子级内容
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public static void OpenSubContentClick(object sender, RoutedEventArgs e)
-        {
-            RichTreeViewItems CurrentItem = sender as RichTreeViewItems;
-
-            bool IsNameSpace = false;
-            RichTreeViewItems parent = null;
-            if (CurrentItem.Parent is TreeView)
-                IsNameSpace = true;
-            else
-                parent = CurrentItem.Parent as RichTreeViewItems;
-            if(parent != null)
-            IsNameSpace = !(parent.Parent is TreeView);
-
-            //若已处理完子节点则直接退出
-            if (CurrentItem.Items.Count > 0 && !(CurrentItem.Items[0] is string)) return;
-            //清除初始化标记
-            CurrentItem.Items.Clear();
-
-            List<RichTreeViewItems> SubItems = null;
-
-            //如果标签不为空，则读取子级数据
-            if (CurrentItem.Tag != null)
-            {
-                SubItems = ContentReader.ReadTargetContent(CurrentItem.Tag.ToString(), IsNameSpace);
-                foreach (RichTreeViewItems content in SubItems)
-                {
-                    content.Expanded += OpenSubContentClick;
-                    CurrentItem.Items.Add(content);
-                }
-            }
         }
 
         /// <summary>
@@ -424,7 +380,7 @@ namespace cbhk_environment.Generators.DataPackGenerator
                         if(RecentItemSearchPanel.Items.Contains(contentItem))
                         {
                             RecentItems newItem = new RecentItems() { Cursor = Cursors.Hand };
-                            newItem.MouseLeftButtonUp += OpenContentClick;
+                            newItem.MouseLeftButtonUp += AnalysisRecentItemData;
                             newItem.Tag = contentItem.Tag;
                             newItem.FileIcon.Source = new BitmapImage(new Uri(contentItem.CurrentFileIconPath, UriKind.Absolute));
                             newItem.FileName.Text = contentItem.FileName.Text;
@@ -510,7 +466,7 @@ namespace cbhk_environment.Generators.DataPackGenerator
             foreach (string a_file in recent_contents)
             {
                 RecentItems recentItems = new RecentItems(AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\DataPack\\images\\icon.png", a_file);
-                recentItems.MouseLeftButtonUp += OpenContentClick;
+                recentItems.MouseLeftButtonUp += AnalysisRecentItemData;
                 string dateData = recentItems.CalculationDateInterval();
 
                 //加入内容列表
@@ -531,11 +487,11 @@ namespace cbhk_environment.Generators.DataPackGenerator
         }
 
         /// <summary>
-        /// 打开指定内容
+        /// 解析近期内容数据并打开
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OpenContentClick(object sender, MouseButtonEventArgs e)
+        private void AnalysisRecentItemData(object sender, MouseButtonEventArgs e)
         {
             RecentItems item = sender as RecentItems;
 
@@ -549,32 +505,20 @@ namespace cbhk_environment.Generators.DataPackGenerator
                 //读取内容文件
                 string FilePath = File.ReadAllText(CurrentContentFilePath);
 
-                if (Directory.Exists(FilePath))
-                {
-                    OpenLocalProjectCommand(FilePath);
-                    InitPageVisibility = Visibility.Collapsed;
-                    FunctionEditorZoneVisibility = Visibility.Visible;
-                    return;
-                }
-                else
-                if (File.Exists(FilePath))
-                {
-                    RichTreeViewItems contentItem = new RichTreeViewItems() 
-                    { 
-                        Style = RichTreeViewItemStyle,
-                        HorizontalAlignment = HorizontalAlignment.Left
-                    };
+                //近期内容类型为未知
+                contentType = ContentReader.ContentType.UnKnown;
+                List<RichTreeViewItems> contentItems = ContentReader.ReadTargetContent(FilePath,contentType);
 
-                    ContentItems fileItems = new ContentItems(FilePath);
-                    contentItem.Header = fileItems;
-                    ContentView.Items.Add(contentItem);
+                if(contentItems.Count > 0)
+                {
+                    foreach (RichTreeViewItems contentItem in contentItems)
+                        ContentView.Items.Add(contentItem);
 
                     InitPageVisibility = Visibility.Collapsed;
                     FunctionEditorZoneVisibility = Visibility.Visible;
                 }
                 else
-                {
-                    if(MessageBox.Show("当前所选内容不存在,是否删除引用?","警告",MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                if (MessageBox.Show("当前所选内容不存在,是否删除引用?","警告",MessageBoxButton.OKCancel) == MessageBoxResult.OK)
                     {
                         RichTreeViewItems dateItem = item.Parent as RichTreeViewItems;
                         dateItem.Items.Remove(item);
@@ -582,7 +526,6 @@ namespace cbhk_environment.Generators.DataPackGenerator
                             recentContentView.Items.Remove(dateItem);
                         File.Delete(CurrentContentFilePath);
                     }
-                }
             }
         }
 

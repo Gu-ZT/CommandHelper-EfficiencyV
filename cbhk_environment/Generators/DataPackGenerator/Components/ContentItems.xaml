@@ -22,8 +22,8 @@
         <Image
             x:Name="StateIcon"
             Grid.Column="0"
-            Width="15"
-            Height="15"
+            Width="8"
+            Height="8"
             Margin="0,1,5,0"
             HorizontalAlignment="Left"
             Source="{DynamicResource CheckedIn}"

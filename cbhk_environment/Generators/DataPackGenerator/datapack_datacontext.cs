@@ -261,23 +261,6 @@ namespace cbhk_environment.Generators.DataPackGenerator
         }
 
         /// <summary>
-        /// 通过近期内容成员打开本地项目
-        /// </summary>
-        /// <param name="FilePath">目标路径</param>
-        private void OpenLocalProjectCommand(string FilePath)
-        {
-            #region 打开目标内容
-            contentType = ContentReader.ContentType.UnKnown;
-            List<RichTreeViewItems> contentNodes = ContentReader.ReadTargetContent(FilePath, contentType);
-            foreach (RichTreeViewItems item in contentNodes)
-            {
-                item.Expanded += (a, b) => { ContentReader.ReadTargetContent(item.Uid,(ContentReader.ContentType)item.Tag); };
-                ContentView.Items.Add(item);
-            }
-            #endregion
-        }
-
-        /// <summary>
         /// 打开本地项目
         /// </summary>
         private void OpenLocalProjectCommand()
@@ -293,16 +276,19 @@ namespace cbhk_environment.Generators.DataPackGenerator
             if (betterFolderBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 foreach (string FilePath in betterFolderBrowser.SelectedPaths)
                 {
-                    List<RichTreeViewItems> contentNodes = ContentReader.ReadTargetContent(FilePath,contentType);
-                    foreach (RichTreeViewItems item in contentNodes)
-                             ContentView.Items.Add(item);
+                    contentType = ContentReader.ContentType.DataPack;
+                    RichTreeViewItems contentNodes = ContentReader.ReadTargetContent(FilePath,contentType);
 
-                    InitPageVisibility = Visibility.Collapsed;
-                    FunctionEditorZoneVisibility = Visibility.Visible;
+                    if (contentNodes != null)
+                    {
+                        ContentView.Items.Add(contentNodes);
+                        InitPageVisibility = Visibility.Collapsed;
+                        FunctionEditorZoneVisibility = Visibility.Visible;
 
-                    //添加进近期使用内容链表
-                    string folderName = Path.GetFileNameWithoutExtension(FilePath);
-                    File.WriteAllText(recentContentsFolderPath + "\\" + folderName + ".content", FilePath);
+                        //添加进近期使用内容链表
+                        string folderName = Path.GetFileNameWithoutExtension(FilePath);
+                        File.WriteAllText(recentContentsFolderPath + "\\" + folderName + ".content", FilePath);
+                    }
                 }
             #endregion
         }
@@ -507,13 +493,11 @@ namespace cbhk_environment.Generators.DataPackGenerator
 
                 //近期内容类型为未知
                 contentType = ContentReader.ContentType.UnKnown;
-                List<RichTreeViewItems> contentItems = ContentReader.ReadTargetContent(FilePath,contentType);
+                RichTreeViewItems contentItem = ContentReader.ReadTargetContent(FilePath,contentType);
 
-                if(contentItems.Count > 0)
+                if(contentItem != null)
                 {
-                    foreach (RichTreeViewItems contentItem in contentItems)
-                        ContentView.Items.Add(contentItem);
-
+                    ContentView.Items.Add(contentItem);
                     InitPageVisibility = Visibility.Collapsed;
                     FunctionEditorZoneVisibility = Visibility.Visible;
                 }

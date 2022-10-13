@@ -22,6 +22,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
             InitializeComponent();
 
             Uid = FilePath;
+            FileName.Text = Path.GetFileName(FilePath);
 
             if (FilePath != null && File.Exists(FilePath))
             {
@@ -38,18 +39,12 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                 }
             }
             else
-            if ((FilePath != null && Directory.Exists(FilePath)))
+            if (FilePath != null && Directory.Exists(FilePath))
             {
                 string iconKey = "folder_closed";
                 if(type == ContentReader.ContentType.DataPack)
-                {
-                    DirectoryInfo datapackPath = new DirectoryInfo(FilePath);
-                    FilePath = datapackPath.Parent.FullName;
-                }
-                FileName.Text = Path.GetFileNameWithoutExtension(FilePath);
-
-                if (File.Exists(FilePath + "\\pack.mcmeta"))
                     iconKey = "datapack";
+
                 var keys = datapack_datacontext.IconDictionary.Keys;
                 foreach (var key in keys)
                 {
@@ -96,7 +91,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                     if (Directory.Exists(Uid))
                 {
                     DirectoryInfo folderNameInfo = new DirectoryInfo(Uid);
-                    string folderName = folderNameInfo.Parent.Parent.FullName;
+                    string folderName = folderNameInfo.Parent.FullName;
                     Directory.Move(Uid, folderName + "\\" + FileName.Text);
                 }
                 else

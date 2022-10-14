@@ -8,7 +8,7 @@
                 <ControlTemplate TargetType="{x:Type Thumb}">
                     <Grid>
                         <!--  滚动条颜色  -->
-                        <Border Background="#646465" CornerRadius="3" />
+                        <Border Background="#646465" CornerRadius="4" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -75,8 +75,6 @@
         <Setter Property="Stylus.IsFlicksEnabled" Value="false" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Margin" Value="0,1,1,6" />
-        <Setter Property="Width" Value="10" />
-        <Setter Property="MinWidth" Value="5" />
         <Setter Property="Opacity" Value="0.2" />
         <Setter Property="Template">
             <Setter.Value>
@@ -115,12 +113,80 @@
             </Setter.Value>
         </Setter>
         <Style.Triggers>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsMouseOver" Value="False" />
+                    <Condition Property="Orientation" Value="Horizontal" />
+                </MultiTrigger.Conditions>
+                <!--<MultiTrigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetProperty="(Height)"
+                                To="0.25"
+                                Duration="0:0:0.5" />
+                            <DoubleAnimation
+                                Storyboard.TargetProperty="(Height)"
+                                To="0.25"
+                                Duration="0:0:0.5" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </MultiTrigger.EnterActions>
+                <MultiTrigger.ExitActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetProperty="(Height)"
+                                To="1"
+                                Duration="0:0:0.5" />
+                            <DoubleAnimation
+                                Storyboard.TargetProperty="(Height)"
+                                To="1"
+                                Duration="0:0:0.5" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </MultiTrigger.ExitActions>-->
+                <Setter Property="Height" Value="2" />
+            </MultiTrigger>
+
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsMouseOver" Value="False" />
+                    <Condition Property="Orientation" Value="Vertical" />
+                </MultiTrigger.Conditions>
+                <!--<MultiTrigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetProperty="(Width)"
+                                To="0.25"
+                                Duration="0:0:0.5" />
+                            <DoubleAnimation
+                                Storyboard.TargetProperty="(Width)"
+                                To="0.25"
+                                Duration="0:0:0.5" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </MultiTrigger.EnterActions>
+                <MultiTrigger.ExitActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetProperty="(Width)"
+                                To="1"
+                                Duration="0:0:0.5" />
+                            <DoubleAnimation
+                                Storyboard.TargetProperty="(Width)"
+                                To="1"
+                                Duration="0:0:0.5" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </MultiTrigger.ExitActions>-->
+                <Setter Property="Width" Value="2" />
+            </MultiTrigger>
             <Trigger Property="Orientation" Value="Horizontal">
                 <Setter Property="Background" Value="Transparent" />
                 <Setter Property="Margin" Value="1,0,6,1" />
-                <Setter Property="Height" Value="5" />
-                <Setter Property="MinHeight" Value="5" />
-                <Setter Property="Width" Value="Auto" />
                 <Setter Property="Opacity" Value="0.2" />
                 <Setter Property="Template">
                     <Setter.Value>
@@ -164,6 +230,8 @@
                                 Cursor="{TemplateBinding Cursor}" />
                             <ScrollBar
                                 x:Name="PART_VerticalScrollBar"
+                                MinWidth="6"
+                                MaxWidth="12"
                                 HorizontalAlignment="Right"
                                 Maximum="{TemplateBinding ScrollableHeight}"
                                 Orientation="Vertical"
@@ -173,6 +241,8 @@
                                 Value="{TemplateBinding VerticalOffset}" />
                             <ScrollBar
                                 x:Name="PART_HorizontalScrollBar"
+                                MinHeight="6"
+                                MaxHeight="12"
                                 VerticalAlignment="Bottom"
                                 Maximum="{TemplateBinding ScrollableWidth}"
                                 Orientation="Horizontal"

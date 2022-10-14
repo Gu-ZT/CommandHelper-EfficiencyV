@@ -29,6 +29,7 @@
                 <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/ColorToolBars.xaml" />
                 <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/CollapsableGrids.xaml" />
                 <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/TreeViewWithScrollBars.xaml" />
+                <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/RichTabItems.xaml" />
                 <ResourceDictionary Source="/cbhk_environment;component/Generators/DataPackGenerator/Dictionaries/Icons.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

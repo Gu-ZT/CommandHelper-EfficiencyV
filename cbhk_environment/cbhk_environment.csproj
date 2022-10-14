@@ -140,6 +140,7 @@
     <Compile Include="CustomControls\RadiusToggleButtons.cs" />
     <Compile Include="CustomControls\RichCheckBoxs.cs" />
     <Compile Include="CustomControls\RichRun.cs" />
+    <Compile Include="CustomControls\RichTabItems.cs" />
     <Compile Include="CustomControls\RichTreeViewItems.cs" />
     <Compile Include="CustomControls\SkeletonScreen\Blocks.xaml.cs">
       <DependentUpon>Blocks.xaml</DependentUpon>
@@ -185,8 +186,13 @@
     <Compile Include="Generators\DataPackGenerator\Components\ContentItems.xaml.cs">
       <DependentUpon>ContentItems.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Generators\DataPackGenerator\Components\DescriptionData.cs" />
     <Compile Include="Generators\DataPackGenerator\Components\FolderItems.xaml.cs">
       <DependentUpon>FolderItems.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Generators\DataPackGenerator\Components\PackFilter.cs" />
+    <Compile Include="Generators\DataPackGenerator\Components\PackMcmeta.xaml.cs">
+      <DependentUpon>PackMcmeta.xaml</DependentUpon>
     </Compile>
     <Compile Include="Generators\DataPackGenerator\Components\PathParser.cs" />
     <Compile Include="Generators\DataPackGenerator\Components\RecentItems.xaml.cs">
@@ -371,6 +377,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="ControlsDictionaries\RichTabItems.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="ControlsDictionaries\RichTreeViewItems.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -440,6 +450,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Generators\DataPackGenerator\Components\FolderItems.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Generators\DataPackGenerator\Components\PackMcmeta.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

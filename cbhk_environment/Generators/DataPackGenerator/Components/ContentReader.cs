@@ -5,6 +5,7 @@ using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Input;
 
 namespace cbhk_environment.Generators.DataPackGenerator.Components
 {
@@ -55,6 +56,26 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                             if (Directory.Exists(folderPath + "\\data") && File.Exists(folderPath + "\\pack.mcmeta"))
                             {
                                 ContentItems contentItems = new ContentItems(folderPath, type);
+
+                                #region 解析pack.mcmeta文件
+                                if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js") &&
+                                    contentItems.Tag == null)
+                                {
+                                    string js_file = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js");
+                                    datapack_datacontext.JsonScript(js_file);
+                                    string content = File.ReadAllText(folderPath + "\\pack.mcmeta");
+                                    datapack_datacontext.JsonScript("parseJSON(" + content + ");");
+                                    int.TryParse(datapack_datacontext.JsonScript("getJSON('.pack.pack_format');").ToString(),out int packFormat);
+
+                                    object descriptionObject = DescriptionParser();
+
+                                    string nameSpace = "";
+                                    string path = "";
+                                    int FilterBlockLength = 0;
+                                    
+                                }
+                                #endregion
+
                                 RichTreeViewItems CurrentNode = new RichTreeViewItems()
                                 {
                                     Uid = folderPath,
@@ -138,6 +159,57 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
         }
 
         /// <summary>
+        /// 解析简介内容,生成数据
+        /// </summary>
+        private static object DescriptionParser()
+        {
+            //"enjoy undertale in Minecraft!(Make by honghuangtaichu)"
+            object result = null;
+            object descriptionType = null;
+            bool descriptionIsArray;
+            int descriptionCount = -1;
+
+            #region 判断该包是否有简介和过滤器
+            bool HasDescription = bool.Parse(datapack_datacontext.JsonScript("hasPath('.pack.description');").ToString());
+            bool HasFilter = bool.Parse(datapack_datacontext.JsonScript("hasPath('.filter');").ToString());
+            bool HasBlock = bool.Parse(datapack_datacontext.JsonScript("hasPath('.filter.block');").ToString());
+            #endregion
+
+            //检查简介内容
+            if (HasDescription)
+            {
+                descriptionType = datapack_datacontext.JsonScript("getPathObjType('.pack.description');");
+                descriptionIsArray = bool.Parse(datapack_datacontext.JsonScript("CurrentIsArray('.pack.description');").ToString());
+                if (descriptionIsArray)
+                    descriptionCount = int.Parse(datapack_datacontext.JsonScript("getCurrentObjectLength('.pack.description');").ToString());
+            }
+
+            int itemCount = -1;
+            //检查过滤器是否有成员
+            if (HasFilter && HasBlock)
+                int.TryParse(datapack_datacontext.JsonScript("getCurrentObjectLength('.filter.block');").ToString(), out itemCount);
+
+            //已确定简介为数组且有成员
+            if (descriptionCount > 0 || descriptionType.ToString() == "object")
+            {
+
+                return result;
+            }
+
+            if(HasDescription)
+            switch (descriptionType.ToString())
+            {
+                case "string":
+                    break;
+                case "number":
+                    break;
+                case "boolean":
+                    break;
+            }
+            return result;
+        }
+
+        /// <summary>
         /// 获取当前节点的子级内容
         /// </summary>
         /// <param name="sender"></param>
@@ -157,7 +229,6 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
             {
                 //当前内容节点类型为数据包
                 case ContentType.DataPack:
-
                     //获取命名空间上级目录
                     string NameSpaceParentPath = CurrentNode.Uid + "\\data";
                     //遍历能够执行逻辑的命名空间
@@ -166,16 +237,9 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                     {
                         string folderName = Path.GetFileNameWithoutExtension(suspectedTargetNameSpace);
                         List<string> matchDirectries = TargetFolderNameList.Where(TargetFolderName => Directory.Exists(suspectedTargetNameSpace + "\\" + TargetFolderName)).ToList();
-                        //List<string> matchOriginalDirectries = OriginalTargetFolderNameList.Where(TargetFolderName => Directory.Exists(suspectedTargetNameSpace + "\\" + TargetFolderName)).ToList();
-
-                        ////检测原版命名空间是否存在
-                        //if (folderName.Trim() == "minecraft" && Directory.Exists(suspectedTargetNameSpace))
-                        //{
-
-                        //}
 
                         //检测到当前文件夹为命名空间
-                        if(matchDirectries.Count > 0 /*&& folderName.Trim() != "minecraft"*/)
+                        if(matchDirectries.Count > 0)
                         {
                             #region 新建内容节点
                             ContentType newType = ContentType.FolderOrFile;
@@ -229,16 +293,32 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                             SubNode.Items.Add("");
                         }
                     }
-
                     ContentType fileType = ContentType.File;
                     foreach (string SubFile in SubFiles)
                     {
                         ContentItems contentItems = new ContentItems(SubFile, fileType);
-                        CurrentNode.Items.Add(contentItems);
+                        RichTreeViewItems subItem = new RichTreeViewItems()
+                        {
+                            Header = contentItems,
+                            Tag = fileType,
+                            Uid = SubFile
+                        };
+                        subItem.MouseDoubleClick += ClickToModifyTheFile;
+                        CurrentNode.Items.Add(subItem);
                     }
                     #endregion
                     break;
             }
+        }
+
+        /// <summary>
+        /// 双击分析文件后进行编辑
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void ClickToModifyTheFile(object sender, MouseButtonEventArgs e)
+        {
+            RichTreeViewItems currentItem = sender as RichTreeViewItems;
         }
 
         /// <summary>

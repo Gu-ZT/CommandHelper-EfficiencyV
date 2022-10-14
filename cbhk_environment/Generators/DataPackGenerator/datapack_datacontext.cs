@@ -45,6 +45,9 @@ namespace cbhk_environment.Generators.DataPackGenerator
         //近期内容文件列表路径
         public static string recentContentsFolderPath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\DataPack\\data\\recent_contents";
 
+        //存储包过滤器的成员
+        public static List<PackFilter> packFilterList = new List<PackFilter> { };
+
         //保存所使用的所有图标引用
         public static ResourceDictionary IconDictionary = null;
 
@@ -59,6 +62,18 @@ namespace cbhk_environment.Generators.DataPackGenerator
 
         //树视图样式引用
         Style RichTreeViewItemStyle = null;
+
+        //指定新建内容成员的类型
+        static ContentReader.ContentType contentType = ContentReader.ContentType.DataPack;
+
+        //获取近期内容搜索框引用
+        TextBox RecentItemTextBox = null;
+
+        //未搜索到结果文本的前景色
+        SolidColorBrush searchResultIsNullBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+
+        //获取文本编辑区的引用
+        TabControl FileModifyZone = null;
 
         #region 初始化页面右侧按钮的指令列表
         public RelayCommand OpenLocalProject { get; set; }
@@ -81,15 +96,6 @@ namespace cbhk_environment.Generators.DataPackGenerator
                     new RichTreeViewItems() { Header = "超过一年",Tag = "LastYear",IsExpanded = true }
                 };
         #endregion
-
-        //指定新建内容成员的类型
-        static ContentReader.ContentType contentType = ContentReader.ContentType.DataPack;
-
-        //获取近期内容搜索框引用
-        TextBox RecentItemTextBox = null;
-
-        //未搜索到结果文本的前景色
-        SolidColorBrush searchResultIsNullBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
 
         #region 近期内容的所有交互对象(用于搜索)
         public static List<RecentItems> RecentItemList = new List<RecentItems> { };
@@ -155,7 +161,7 @@ namespace cbhk_environment.Generators.DataPackGenerator
         #region js脚本执行者
         string js_file = AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js";
         static string language = "javascript";
-        static ScriptControlClass json_parser = new ScriptControlClass()
+        public static ScriptControlClass json_parser = new ScriptControlClass()
         {
             Language = language
         };
@@ -237,6 +243,28 @@ namespace cbhk_environment.Generators.DataPackGenerator
         }
 
         /// <summary>
+        /// 返回主页
+        /// </summary>
+        /// <param name="win"></param>
+        private void return_command(CommonWindow win)
+        {
+            DataPack.cbhk.Topmost = true;
+            DataPack.cbhk.WindowState = WindowState.Normal;
+            DataPack.cbhk.Show();
+            DataPack.cbhk.Topmost = false;
+            DataPack.cbhk.ShowInTaskbar = true;
+            win.Close();
+        }
+
+        /// <summary>
+        /// 执行生成
+        /// </summary>
+        private void run_command()
+        {
+
+        }
+
+        /// <summary>
         /// 打开本地文件
         /// </summary>
         private void OpenLocalFileCommand()
@@ -294,25 +322,13 @@ namespace cbhk_environment.Generators.DataPackGenerator
         }
 
         /// <summary>
-        /// 返回主页
+        /// 获取文本编辑区的引用
         /// </summary>
-        /// <param name="win"></param>
-        private void return_command(CommonWindow win)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void FileModifyZoneLoaded(object sender, RoutedEventArgs e)
         {
-            DataPack.cbhk.Topmost = true;
-            DataPack.cbhk.WindowState = WindowState.Normal;
-            DataPack.cbhk.Show();
-            DataPack.cbhk.Topmost = false;
-            DataPack.cbhk.ShowInTaskbar = true;
-            win.Close();
-        }
-
-        /// <summary>
-        /// 执行生成
-        /// </summary>
-        private void run_command()
-        {
-
+            FileModifyZone = sender as TabControl;
         }
 
         /// <summary>
@@ -427,7 +443,11 @@ namespace cbhk_environment.Generators.DataPackGenerator
 
                 #region 添加日期
                 //添加固定节点
-                recentContentView.Items.Add(recentContentList.First());
+                RichTreeViewItems fixNode = recentContentList.First();
+                if (!recentContentView.Items.Contains(fixNode))
+                recentContentView.Items.Add(fixNode);
+
+                if(recentContentView.Items.Count == 1)
                 foreach (RichTreeViewItems item in recentContentList)
                 {
                     if (item.Items.Count > 0)

@@ -679,18 +679,21 @@ namespace cbhk_environment
 
             //读取本地现有轮播图数据
             string current_value = "";
-            foreach (string data in Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory + "resources\\link_data"))
+            if(Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\link_data"))
             {
-                if (Path.GetExtension(data) == ".png")
+                foreach (string data in Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory + "resources\\link_data"))
                 {
-                    current_value = Path.GetFileNameWithoutExtension(data);
-                    current_value = Path.GetDirectoryName(data) + "\\" + current_value + ".txt";
-                    current_value = File.Exists(current_value) ? current_value : "";
-                    CircularBanner.Add(data, current_value);
+                    if (Path.GetExtension(data) == ".png")
+                    {
+                        current_value = Path.GetFileNameWithoutExtension(data);
+                        current_value = Path.GetDirectoryName(data) + "\\" + current_value + ".txt";
+                        current_value = File.Exists(current_value) ? current_value : "";
+                        CircularBanner.Add(data, current_value);
+                    }
                 }
+                CircularBannerLoader(false);
+                LinkButtonAnimator.Tick += AnimatorBehavior;
             }
-            CircularBannerLoader(false);
-            LinkButtonAnimator.Tick += AnimatorBehavior;
             #endregion
 
             #region 初始化生成器按钮
@@ -698,9 +701,13 @@ namespace cbhk_environment
             #region 生成器背景图列表
             List<BitmapImage> spawner_background = new List<BitmapImage> { };
             //获取生成器图片列表
-            string[] spawn_background_list = Directory.GetFiles(spawner_image_path);
+            string[] spawn_background_list = null;
+            
+            if(Directory.Exists(spawner_image_path))
+            spawn_background_list = Directory.GetFiles(spawner_image_path);
             List<FileNameString> spawnerBgPathSorter = new List<FileNameString> { };
             //分配值给比较器
+            if(spawn_background_list != null && spawn_background_list.Length > 0)
             for (int i = 0; i < spawn_background_list.Length; i++)
             {
                 string current_path = Path.GetFileNameWithoutExtension(spawn_background_list[i]);
@@ -1102,12 +1109,15 @@ namespace cbhk_environment
             //else
             //    File.Delete("C:\\Users\\" + Environment.UserName + "\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\命令管家.lnk");
 
-            List<string> data = new List<string> { };
-            data.Add("CBHKVisibility:"+cbhk_visibility.ToString());
-            //data.Add("AutoStart:"+MainWindowProperties.AutoStart);
-            data.Add("CloseToTray:"+MainWindowProperties.CloseToTray);
-            data.Add("LinkAnimationDelay:" + MainWindowProperties.LinkAnimationDelay);
-            File.WriteAllLines(AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\cbhk.ini",data.ToArray());
+            if(Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\configs"))
+            {
+                List<string> data = new List<string> { };
+                data.Add("CBHKVisibility:" + cbhk_visibility.ToString());
+                //data.Add("AutoStart:"+MainWindowProperties.AutoStart);
+                data.Add("CloseToTray:" + MainWindowProperties.CloseToTray);
+                data.Add("LinkAnimationDelay:" + MainWindowProperties.LinkAnimationDelay);
+                File.WriteAllLines(AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\cbhk.ini", data.ToArray());
+            }
         }
 
         /// <summary>

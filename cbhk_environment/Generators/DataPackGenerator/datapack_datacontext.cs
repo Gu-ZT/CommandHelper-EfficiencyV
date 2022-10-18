@@ -285,7 +285,31 @@ namespace cbhk_environment.Generators.DataPackGenerator
         /// <exception cref="NotImplementedException"></exception>
         private void OpenLocalFolderCommand()
         {
+            #region 打开文件夹
+            BetterFolderBrowser betterFolderBrowser = new BetterFolderBrowser()
+            {
+                Multiselect = true,
+                RootFolder = @"C:",
+                Title = "请选择要编辑的Minecraft相关文件夹"
+            };
+            if(betterFolderBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                foreach (string FilePath in betterFolderBrowser.SelectedPaths)
+                {
+                    contentType = ContentReader.ContentType.DataPack;
+                    RichTreeViewItems contentNodes = ContentReader.ReadTargetContent(FilePath, contentType);
 
+                    if (contentNodes != null)
+                    {
+                        ContentView.Items.Add(contentNodes);
+                        InitPageVisibility = Visibility.Collapsed;
+                        FunctionEditorZoneVisibility = Visibility.Visible;
+
+                        //添加进近期使用内容链表
+                        string folderName = Path.GetFileNameWithoutExtension(FilePath);
+                        File.WriteAllText(recentContentsFolderPath + "\\" + folderName + ".content", FilePath);
+                    }
+                }
+            #endregion
         }
 
         /// <summary>

@@ -105,10 +105,11 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                             {
                                 //实例化一个文件夹节点
                                 ContentItems contentItems = new ContentItems(item, type);
+                                ContentType folderOrFile = ContentType.FolderOrFile;
                                 RichTreeViewItems CurrentNode = new RichTreeViewItems
                                 {
                                     Uid = item,
-                                    Tag = type,
+                                    Tag = folderOrFile,
                                     Header = contentItems
                                 };
 

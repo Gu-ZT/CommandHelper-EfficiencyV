@@ -285,7 +285,6 @@ namespace cbhk_environment.Generators.DataPackGenerator
         /// <exception cref="NotImplementedException"></exception>
         private void OpenLocalFolderCommand()
         {
-            #region 打开文件夹
             BetterFolderBrowser betterFolderBrowser = new BetterFolderBrowser()
             {
                 Multiselect = true,
@@ -293,6 +292,37 @@ namespace cbhk_environment.Generators.DataPackGenerator
                 Title = "请选择要编辑的Minecraft相关文件夹"
             };
             if(betterFolderBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                foreach (string FilePath in betterFolderBrowser.SelectedPaths)
+                {
+                    contentType = ContentReader.ContentType.Folder;
+                    RichTreeViewItems contentNodes = ContentReader.ReadTargetContent(FilePath, contentType);
+
+                    if (contentNodes != null)
+                    {
+                        ContentView.Items.Add(contentNodes);
+                        InitPageVisibility = Visibility.Collapsed;
+                        FunctionEditorZoneVisibility = Visibility.Visible;
+
+                        //添加进近期使用内容链表
+                        string folderName = Path.GetFileNameWithoutExtension(FilePath);
+                        File.WriteAllText(recentContentsFolderPath + "\\" + folderName + ".content", FilePath);
+                    }
+                }
+        }
+
+        /// <summary>
+        /// 打开本地项目
+        /// </summary>
+        private void OpenLocalProjectCommand()
+        {
+            BetterFolderBrowser betterFolderBrowser = new BetterFolderBrowser()
+            {
+                Multiselect = true,
+                RootFolder = @"C:",
+                Title = "请选择要编辑的项目路径"
+            };
+
+            if (betterFolderBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 foreach (string FilePath in betterFolderBrowser.SelectedPaths)
                 {
                     contentType = ContentReader.ContentType.DataPack;
@@ -309,40 +339,6 @@ namespace cbhk_environment.Generators.DataPackGenerator
                         File.WriteAllText(recentContentsFolderPath + "\\" + folderName + ".content", FilePath);
                     }
                 }
-            #endregion
-        }
-
-        /// <summary>
-        /// 打开本地项目
-        /// </summary>
-        private void OpenLocalProjectCommand()
-        {
-            #region 打开数据包
-            BetterFolderBrowser betterFolderBrowser = new BetterFolderBrowser()
-            {
-                Multiselect = true,
-                RootFolder = @"C:",
-                Title = "请选择要编辑的项目路径"
-            };
-
-            if (betterFolderBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                foreach (string FilePath in betterFolderBrowser.SelectedPaths)
-                {
-                    contentType = ContentReader.ContentType.DataPack;
-                    RichTreeViewItems contentNodes = ContentReader.ReadTargetContent(FilePath,contentType);
-
-                    if (contentNodes != null)
-                    {
-                        ContentView.Items.Add(contentNodes);
-                        InitPageVisibility = Visibility.Collapsed;
-                        FunctionEditorZoneVisibility = Visibility.Visible;
-
-                        //添加进近期使用内容链表
-                        string folderName = Path.GetFileNameWithoutExtension(FilePath);
-                        File.WriteAllText(recentContentsFolderPath + "\\" + folderName + ".content", FilePath);
-                    }
-                }
-            #endregion
         }
 
         /// <summary>
@@ -460,26 +456,35 @@ namespace cbhk_environment.Generators.DataPackGenerator
         {
             recentContentView = sender as TreeView;
 
-            #region 读取近期使用的内容
+            //读取近期使用的内容
             if (Directory.Exists(recentContentsFolderPath))
             {
                 UpdateRecentFileList();
-
+                recentContentView.Items.Clear();
+                foreach (RichTreeViewItems item in recentContentList)
+                {
+                    if (!Equals(item.Parent, null))
+                    {
+                        TreeView last_parent = item.Parent as TreeView;
+                        last_parent.Items.Clear();
+                    }
+                }
                 #region 添加日期
                 //添加固定节点
                 RichTreeViewItems fixNode = recentContentList.First();
-                if (!recentContentView.Items.Contains(fixNode))
-                recentContentView.Items.Add(fixNode);
+                if (fixNode.Parent == null && fixNode.Items.Count > 0)
+                    recentContentView.Items.Add(fixNode);
 
-                if(recentContentView.Items.Count == 1)
-                foreach (RichTreeViewItems item in recentContentList)
-                {
-                    if (item.Items.Count > 0)
-                        recentContentView.Items.Add(item);
-                }
+                if (recentContentView.Items.Count < 2)
+                    foreach (RichTreeViewItems item in recentContentList)
+                    {
+                        if (item.Items.Count > 0 && item.Parent == null)
+                        {
+                            recentContentView.Items.Add(item);
+                        }
+                    }
                 #endregion
             }
-            #endregion
         }
 
         /// <summary>
@@ -500,19 +505,33 @@ namespace cbhk_environment.Generators.DataPackGenerator
                 string dateData = recentItems.CalculationDateInterval();
 
                 //加入内容列表
-                RecentItemList.Add(recentItems);
-
-                RichTreeViewItems currentDateNode = recentContentList.Where(item => item.Tag.ToString() == dateData).First();
-                int CurrentDateNodeIndex = recentContentList.IndexOf(currentDateNode);
-                recentItems.Tag = CurrentDateNodeIndex;
-
-                currentDateNode.Foreground = RecentContentForeground;
-                RichTreeViewItems contentItem = new RichTreeViewItems
+                bool HadContent = false;
+                foreach (RecentItems content in RecentItemList)
                 {
-                    Header = recentItems,
-                    Margin = new Thickness(0, 0, 0, 10)
-                };
-                currentDateNode.Items.Add(contentItem);
+                    if(content.FilePath.Text == recentItems.FilePath.Text)
+                    {
+                        HadContent = true;
+                        break;
+                    }
+                }
+
+                //去重
+                if(!HadContent)
+                {
+                    RecentItemList.Add(recentItems);
+
+                    RichTreeViewItems currentDateNode = recentContentList.Where(item => item.Tag.ToString() == dateData).First();
+                    int CurrentDateNodeIndex = recentContentList.IndexOf(currentDateNode);
+                    recentItems.Tag = CurrentDateNodeIndex;
+
+                    currentDateNode.Foreground = RecentContentForeground;
+                    RichTreeViewItems contentItem = new RichTreeViewItems
+                    {
+                        Header = recentItems,
+                        Margin = new Thickness(0, 0, 0, 10)
+                    };
+                    currentDateNode.Items.Add(contentItem);
+                }
             }
         }
 

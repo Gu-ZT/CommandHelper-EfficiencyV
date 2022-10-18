@@ -40,7 +40,7 @@
             </ity:Interaction.Triggers>
         </CustomControls:RichTreeViewItems>
         <!--  {Binding FunctionEditorZoneVisibility, Mode=OneWay}  -->
-        <Grid Visibility="{Binding FunctionEditorZoneVisibility, Mode=OneWay}">
+        <Grid Panel.ZIndex="0" Visibility="{Binding FunctionEditorZoneVisibility, Mode=OneWay}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="15*" />
@@ -144,26 +144,26 @@
                     ToolTipService.InitialShowDelay="0"
                     ToolTipService.ShowDuration="3000" />
             </DockPanel>
-            <!--<RichTextBox
+            <RichTextBox
                 Grid.Row="1"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
-                Margin="0,0,5,0"
+                Margin="1 0 5 1"
+                BorderThickness="0"
                 HorizontalAlignment="Stretch"
                 Panel.ZIndex="0"
                 Background="Transparent"
                 BorderBrush="#3D3D3D"
                 CaretBrush="White"
                 FontSize="25"
-                Foreground="#A8A8A8"
-                Visibility="Collapsed">
+                Foreground="#A8A8A8">
                 <ity:Interaction.Triggers>
                     <ity:EventTrigger EventName="TextChanged">
                         <itn:CallMethodAction MethodName="FunctionBoxTextChanged" TargetObject="{Binding}" />
                     </ity:EventTrigger>
                 </ity:Interaction.Triggers>
                 <CustomControls:EnabledFlowDocument FontFamily="Minecraft" LineHeight="5" />
-            </RichTextBox>-->
+            </RichTextBox>
             <GridSplitter
                 Grid.Row="1"
                 Grid.Column="1"

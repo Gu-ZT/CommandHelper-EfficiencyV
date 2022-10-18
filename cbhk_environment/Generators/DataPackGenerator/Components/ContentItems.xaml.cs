@@ -70,6 +70,9 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
             FileName.IsReadOnly = false;
             FileName.Focus();
             FileName.SelectAll();
+
+            FileName.Visibility = Visibility.Visible;
+            DisplayFileName.Visibility = Visibility.Collapsed;
         }
 
         /// <summary>
@@ -97,6 +100,9 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                 else
                     FileName.Text = originalName;
                 FileName.IsReadOnly = true;
+
+                FileName.Visibility = Visibility.Collapsed;
+                DisplayFileName.Visibility = Visibility.Visible;
             }
         }
 

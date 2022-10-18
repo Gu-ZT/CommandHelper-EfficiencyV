@@ -126,7 +126,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                         }
                         break;
                     case ContentType.File:
-                        if (File.Exists(folderPath))
+                        if (Directory.Exists(folderPath))
                         {
                             string[] subContent = Directory.GetFiles(folderPath);
                             foreach (string item in subContent)
@@ -143,6 +143,19 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                                 break;
                             }
                         }
+
+                        if(File.Exists(folderPath))
+                        {
+                            //实例化一个文件节点
+                            ContentItems contentItems = new ContentItems(folderPath, type);
+                            RichTreeViewItems CurrentNode = new RichTreeViewItems
+                            {
+                                Uid = folderPath,
+                                Tag = type,
+                                Header = contentItems,
+                            };
+                            result = CurrentNode;
+                        }
                         break;
                 }
             }
@@ -156,7 +169,8 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
         /// <returns></returns>
         public static ContentType GetTargetContentType(string contentPath)
         {
-            return ContentType.DataPack;
+            ContentType resultType = ContentType.UnKnown;
+            return resultType;
         }
 
         /// <summary>

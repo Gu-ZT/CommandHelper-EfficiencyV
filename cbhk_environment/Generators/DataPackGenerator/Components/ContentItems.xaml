@@ -53,7 +53,20 @@
             Foreground="White"
             IsReadOnly="True"
             KeyDown="ModifyCompletedKeyDown"
-            Text="abc" />
+            Text="abc"
+            Visibility="Collapsed" />
+        <TextBlock
+            x:Name="DisplayFileName"
+            Grid.Column="2"
+            Width="Auto"
+            Margin="0,0,5,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            Background="Transparent"
+            FontSize="15"
+            Foreground="White"
+            Text="abc"
+            Visibility="Visible" />
         <CustomControls:IconTextButtons
             Grid.Column="3"
             Width="20"

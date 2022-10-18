@@ -269,6 +269,33 @@ namespace cbhk_environment.Generators.DataPackGenerator
         /// </summary>
         private void OpenLocalFileCommand()
         {
+            Microsoft.Win32.OpenFileDialog fileBrowser = new Microsoft.Win32.OpenFileDialog()
+            {
+                Multiselect = true,
+                RestoreDirectory = true,
+                Title = "请选择一个或多个与Minecraft相关的文件",
+                Filter = "Minecraft函数文件|*.mcfunction;|JSON文件|*.json"
+            };
+
+            if (fileBrowser.ShowDialog() == true)
+            {
+                foreach (string FileName in fileBrowser.FileNames)
+                {
+                    contentType = ContentReader.ContentType.File;
+                    RichTreeViewItems contentNodes = ContentReader.ReadTargetContent(FileName, contentType);
+
+                    if (contentNodes != null)
+                    {
+                        ContentView.Items.Add(contentNodes);
+                        InitPageVisibility = Visibility.Collapsed;
+                        FunctionEditorZoneVisibility = Visibility.Visible;
+
+                        //添加进近期使用内容链表
+                        string folderName = Path.GetFileNameWithoutExtension(FileName);
+                        File.WriteAllText(recentContentsFolderPath + "\\" + folderName + ".content", FileName);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -277,6 +304,7 @@ namespace cbhk_environment.Generators.DataPackGenerator
         /// <exception cref="NotImplementedException"></exception>
         private void CreateLocalDataPackCommand()
         {
+
         }
 
         /// <summary>

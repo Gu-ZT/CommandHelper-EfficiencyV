@@ -185,7 +185,7 @@
                         x:Name="dropDownBorder"
                         Margin="0"
                         Padding="0"
-                        Background="Transparent"
+                        Background="{TemplateBinding Background}"
                         BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}"
                         BorderThickness="1">
                         <ScrollViewer
@@ -248,6 +248,9 @@
                     IsReadOnly="{Binding IsReadOnly, RelativeSource={RelativeSource TemplatedParent}}"
                     Style="{StaticResource ComboBoxEditableTextBox}">
                     <ity:Interaction.Triggers>
+                        <ity:EventTrigger EventName="Loaded">
+                            <itn:CallMethodAction MethodName="ContentTextBoxLoaded" TargetObject="{Binding}" />
+                        </ity:EventTrigger>
                         <ity:EventTrigger EventName="KeyUp">
                             <itn:CallMethodAction MethodName="UpdateSelectionItem" TargetObject="{Binding}" />
                         </ity:EventTrigger>

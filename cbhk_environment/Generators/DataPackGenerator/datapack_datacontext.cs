@@ -1,5 +1,6 @@
 ﻿using cbhk_environment.CustomControls;
 using cbhk_environment.Generators.DataPackGenerator.Components;
+using cbhk_environment.Generators.DataPackGenerator.DatapackInitializationForms;
 using cbhk_environment.WindowDictionaries;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -304,7 +305,12 @@ namespace cbhk_environment.Generators.DataPackGenerator
         /// <exception cref="NotImplementedException"></exception>
         private void CreateLocalDataPackCommand()
         {
+            //打开模板选择窗体
+            TemplateSelect templateSelect = new TemplateSelect();
+            if(templateSelect.ShowDialog() == true)
+            {
 
+            }
         }
 
         /// <summary>
@@ -500,7 +506,7 @@ namespace cbhk_environment.Generators.DataPackGenerator
                 #region 添加日期
                 //添加固定节点
                 RichTreeViewItems fixNode = recentContentList.First();
-                if (fixNode.Parent == null && fixNode.Items.Count > 0)
+                if (fixNode.Parent == null)
                     recentContentView.Items.Add(fixNode);
 
                 if (recentContentView.Items.Count < 2)
@@ -548,17 +554,21 @@ namespace cbhk_environment.Generators.DataPackGenerator
                 {
                     RecentItemList.Add(recentItems);
 
-                    RichTreeViewItems currentDateNode = recentContentList.Where(item => item.Tag.ToString() == dateData).First();
-                    int CurrentDateNodeIndex = recentContentList.IndexOf(currentDateNode);
-                    recentItems.Tag = CurrentDateNodeIndex;
+                    List<RichTreeViewItems> targetNodeList = recentContentList.Where(item => item.Tag.ToString() == dateData).ToList();
 
-                    currentDateNode.Foreground = RecentContentForeground;
-                    RichTreeViewItems contentItem = new RichTreeViewItems
+                    if(targetNodeList.Count > 0)
                     {
-                        Header = recentItems,
-                        Margin = new Thickness(0, 0, 0, 10)
-                    };
-                    currentDateNode.Items.Add(contentItem);
+                        int CurrentDateNodeIndex = recentContentList.IndexOf(targetNodeList[0]);
+                        recentItems.Tag = CurrentDateNodeIndex;
+
+                        targetNodeList[0].Foreground = RecentContentForeground;
+                        RichTreeViewItems contentItem = new RichTreeViewItems
+                        {
+                            Header = recentItems,
+                            Margin = new Thickness(0, 0, 0, 10)
+                        };
+                        targetNodeList[0].Items.Add(contentItem);
+                    }
                 }
             }
         }

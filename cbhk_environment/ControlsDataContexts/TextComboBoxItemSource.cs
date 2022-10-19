@@ -35,6 +35,24 @@ namespace cbhk_environment.ControlsDataContexts
             #endregion
         }
 
+        /// <summary>
+        /// 选择第一个成员
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void ContentTextBoxLoaded(object sender, RoutedEventArgs e)
+        {
+            TextBox box = sender as TextBox;
+            TextComboBoxs combobox = box.TemplatedParent as TextComboBoxs;
+
+            if(combobox.Items.Count > 0)
+            {
+                combobox.SelectedIndex = 0;
+                TextSource textSource = combobox.Items[0] as TextSource;
+                box.Text = textSource.ItemText;
+            }
+        }
+
         public void UpdateSelectionItem(object sender, KeyEventArgs e)
         {
             TextBox box = sender as TextBox;

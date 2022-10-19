@@ -15,14 +15,14 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
         /// <summary>
         /// 保存文件原来的名字
         /// </summary>
-        string originalName = "";
+        private string originalName = "";
 
-        public ContentItems(string FilePath,ContentReader.ContentType type)
+        public ContentItems(string FilePath, ContentReader.ContentType type)
         {
             InitializeComponent();
 
             Uid = FilePath;
-            FileName.Text = Path.GetFileName(FilePath);
+            DisplayFileName.Text = Path.GetFileName(FilePath);
 
             if (FilePath != null && File.Exists(FilePath))
             {
@@ -42,7 +42,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
             if (FilePath != null && Directory.Exists(FilePath))
             {
                 string iconKey = "folder_closed";
-                if(type == ContentReader.ContentType.DataPack)
+                if (type == ContentReader.ContentType.DataPack)
                     iconKey = "datapack";
 
                 var keys = datapack_datacontext.IconDictionary.Keys;
@@ -54,7 +54,6 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                             FileTypeIcon.Source = icon;
                         break;
                     }
-
                 }
             }
         }
@@ -66,8 +65,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
         /// <param name="e"></param>
         private void ModifyFileNameClick(object sender, RoutedEventArgs e)
         {
-            originalName = FileName.Text;
-            FileName.IsReadOnly = false;
+            originalName = FileName.Text = DisplayFileName.Text;
             FileName.Focus();
             FileName.SelectAll();
 
@@ -82,7 +80,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
         /// <param name="e"></param>
         private void ModifyCompletedKeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.Enter && originalName != FileName.Text)
+            if (e.Key == Key.Enter && originalName != FileName.Text)
             {
                 if (File.Exists(Uid))
                 {
@@ -99,8 +97,8 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                 }
                 else
                     FileName.Text = originalName;
-                FileName.IsReadOnly = true;
 
+                DisplayFileName.Text = FileName.Text;
                 FileName.Visibility = Visibility.Collapsed;
                 DisplayFileName.Visibility = Visibility.Visible;
             }
@@ -114,13 +112,13 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
         private void DeleteClick(object sender, RoutedEventArgs e)
         {
             RichTreeViewItems parent = Parent as RichTreeViewItems;
-            if(parent.Parent is RichTreeViewItems)
+            if (parent.Parent is RichTreeViewItems)
             {
                 RichTreeViewItems grand_parent = parent.Parent as RichTreeViewItems;
                 grand_parent.Items.Remove(parent);
             }
             else
-                if(parent.Parent is TreeView)
+                if (parent.Parent is TreeView)
             {
                 TreeView grand_parent = parent.Parent as TreeView;
                 grand_parent.Items.Remove(parent);

@@ -128,6 +128,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
             {
                 datapack_datacontext.recentContentList.First().Items.Remove(parent);
                 datapack_datacontext.recentContentList[ItemIndex].Items.Add(parent);
+                datapack_datacontext.recentContentList[ItemIndex].Visibility = Visibility.Visible;
                 RotateTransform nintyRotate = new RotateTransform(90);
                 thumbtack.RenderTransform = nintyRotate;
             }
@@ -135,6 +136,11 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
             if (CurrentIndex != -1 && CurrentIndex == ItemIndex)
             {
                 datapack_datacontext.recentContentList[ItemIndex].Items.Remove(parent);
+
+                //如果没有子级则隐藏
+                if (datapack_datacontext.recentContentList[ItemIndex].Items.Count == 0)
+                    datapack_datacontext.recentContentList[ItemIndex].Visibility = Visibility.Collapsed;
+
                 datapack_datacontext.recentContentList.First().Items.Add(parent);
                 RotateTransform zeroRotate = new RotateTransform(0);
                 thumbtack.RenderTransform = zeroRotate;

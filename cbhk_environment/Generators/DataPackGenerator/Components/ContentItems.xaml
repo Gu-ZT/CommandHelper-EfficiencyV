@@ -51,7 +51,6 @@
             CaretBrush="White"
             FontSize="15"
             Foreground="White"
-            IsReadOnly="True"
             KeyDown="ModifyCompletedKeyDown"
             Text="abc"
             Visibility="Collapsed" />

@@ -222,9 +222,22 @@
     <Compile Include="Generators\DataPackGenerator\Components\RecentItems.xaml.cs">
       <DependentUpon>RecentItems.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Generators\DataPackGenerator\Components\TemplateItems.xaml.cs">
+      <DependentUpon>TemplateItems.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Generators\DataPackGenerator\Components\TemplateTypeTag.xaml.cs">
+      <DependentUpon>TemplateTypeTag.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Generators\DataPackGenerator\Components\TextColorManager.cs" />
     <Compile Include="Generators\DataPackGenerator\DataPack.xaml.cs">
       <DependentUpon>DataPack.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Generators\DataPackGenerator\DatapackInitializationForms\DatapackGenerateSetup.xaml.cs">
+      <DependentUpon>DatapackGenerateSetup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Generators\DataPackGenerator\DatapackInitializationForms\initialization_datacontext.cs" />
+    <Compile Include="Generators\DataPackGenerator\DatapackInitializationForms\TemplateSelect.xaml.cs">
+      <DependentUpon>TemplateSelect.xaml</DependentUpon>
     </Compile>
     <Compile Include="Generators\DataPackGenerator\datapack_datacontext.cs" />
     <Compile Include="Generators\VillagerGenerator\Components\GossipsItems.xaml.cs">
@@ -485,7 +498,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Generators\DataPackGenerator\Components\TemplateItems.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Generators\DataPackGenerator\Components\TemplateTypeTag.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Generators\DataPackGenerator\DataPack.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Generators\DataPackGenerator\DatapackInitializationForms\DatapackGenerateSetup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Generators\DataPackGenerator\DatapackInitializationForms\TemplateSelect.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -730,7 +759,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Generators\ArmorStandGenerator\resources\images\" />
-    <Folder Include="Generators\DataPackGenerator\TemplateForms\" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.8">

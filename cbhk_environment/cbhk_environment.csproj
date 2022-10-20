@@ -222,6 +222,9 @@
     <Compile Include="Generators\DataPackGenerator\Components\RecentItems.xaml.cs">
       <DependentUpon>RecentItems.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Generators\DataPackGenerator\Components\RecentTemplateItems.xaml.cs">
+      <DependentUpon>RecentTemplateItems.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Generators\DataPackGenerator\Components\TemplateItems.xaml.cs">
       <DependentUpon>TemplateItems.xaml</DependentUpon>
     </Compile>
@@ -495,6 +498,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Generators\DataPackGenerator\Components\RecentItems.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Generators\DataPackGenerator\Components\RecentTemplateItems.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

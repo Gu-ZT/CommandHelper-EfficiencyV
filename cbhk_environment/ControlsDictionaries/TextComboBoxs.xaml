@@ -42,7 +42,7 @@
         <GradientStop Offset="1.0" Color="#FFE5E5E5" />
     </LinearGradientBrush>
     <SolidColorBrush x:Key="ComboBox.Static.Border" Color="Black" />
-    <SolidColorBrush x:Key="ComboBox.Static.Caret" Color="Lime" />
+    <SolidColorBrush x:Key="ComboBox.Static.Caret" Color="White" />
     <SolidColorBrush x:Key="ComboBox.Static.Glyph" Color="Black" />
     <SolidColorBrush x:Key="ComboBox.Static.Editable.Background" Color="#FFFFFFFF" />
     <SolidColorBrush x:Key="ComboBox.Static.Editable.Border" Color="#FFABADB3" />

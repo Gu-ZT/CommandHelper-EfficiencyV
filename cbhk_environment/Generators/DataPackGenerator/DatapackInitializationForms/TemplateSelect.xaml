@@ -62,53 +62,74 @@
             </ScrollViewer>
         </StackPanel>
         <StackPanel Grid.Column="1" Margin="10,0,0,0">
-            <TextBox
-                Width="322"
-                Height="35"
-                Margin="0,30,0,20"
-                Padding="0,2,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                BorderBrush="#424242"
-                CaretBrush="White"
-                FontSize="25"
-                Foreground="White">
-                <ity:Interaction.Triggers>
-                    <ity:EventTrigger EventName="TextChanged">
-                        <itn:CallMethodAction MethodName="" TargetObject="{Binding}" />
-                    </ity:EventTrigger>
-                </ity:Interaction.Triggers>
-                <TextBox.Resources>
-                    <VisualBrush
-                        x:Key="BackgroundBrush"
-                        AlignmentX="Left"
-                        Stretch="Uniform">
-                        <VisualBrush.Visual>
-                            <Grid
-                                Width="322"
-                                Height="33"
-                                Background="#383838">
-                                <TextBlock
-                                    VerticalAlignment="Center"
-                                    Background="Transparent"
-                                    FontSize="12"
-                                    Foreground="#D6D6D6"
-                                    Text=" 搜索模板" />
-                            </Grid>
-                        </VisualBrush.Visual>
-                    </VisualBrush>
-                </TextBox.Resources>
-                <TextBox.Style>
-                    <Style TargetType="TextBox">
-                        <Setter Property="Background" Value="Transparent" />
-                        <Style.Triggers>
-                            <Trigger Property="Text" Value="">
-                                <Setter Property="Background" Value="{StaticResource BackgroundBrush}" />
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </TextBox.Style>
-            </TextBox>
+            <DockPanel Margin="0,30,0,20">
+                <TextBox
+                    Width="322"
+                    Height="35"
+                    Padding="0,2,0,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    BorderBrush="#424242"
+                    CaretBrush="White"
+                    FontSize="25"
+                    Foreground="White">
+                    <ity:Interaction.Triggers>
+                        <ity:EventTrigger EventName="TextChanged">
+                            <itn:CallMethodAction MethodName="SearchBoxTextChanged" TargetObject="{Binding}" />
+                        </ity:EventTrigger>
+                    </ity:Interaction.Triggers>
+                    <TextBox.Resources>
+                        <VisualBrush
+                            x:Key="BackgroundBrush"
+                            AlignmentX="Left"
+                            Stretch="Uniform">
+                            <VisualBrush.Visual>
+                                <Grid
+                                    Width="322"
+                                    Height="33"
+                                    Background="#383838">
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        Background="Transparent"
+                                        FontSize="12"
+                                        Foreground="#D6D6D6"
+                                        Text=" 搜索模板" />
+                                </Grid>
+                            </VisualBrush.Visual>
+                        </VisualBrush>
+                    </TextBox.Resources>
+                    <TextBox.Style>
+                        <Style TargetType="TextBox">
+                            <Setter Property="Background" Value="Transparent" />
+                            <Style.Triggers>
+                                <Trigger Property="Text" Value="">
+                                    <Setter Property="Background" Value="{StaticResource BackgroundBrush}" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+                <CustomControls:TextButtons
+                    Margin="0,0,50,0"
+                    HorizontalAlignment="Right"
+                    Background="Transparent"
+                    Command="{Binding ClearAllSelectParameters}"
+                    Style="{DynamicResource TextButtonsStyle}"
+                    Visibility="{Binding ClearAllParametersVisibility}">
+                    <TextBlock Foreground="#54A6EB" Text="清除全部筛选">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="White" />
+                                        <Setter Property="TextDecorations" Value="Baseline" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </CustomControls:TextButtons>
+            </DockPanel>
             <DockPanel Margin="0,0,0,20">
                 <CustomControls:TextComboBoxs
                     Width="140"
@@ -120,10 +141,14 @@
                     FontSize="20"
                     Foreground="White"
                     ItemsSource="{Binding VersionList, Mode=OneWay}"
+                    SelectedItem="{Binding SelectedVersion, Mode=OneWayToSource}"
                     Style="{DynamicResource TextComboBox}">
                     <ity:Interaction.Triggers>
                         <ity:EventTrigger EventName="SelectionChanged">
                             <itn:CallMethodAction MethodName="TemplateVersionChanged" TargetObject="{Binding}" />
+                        </ity:EventTrigger>
+                        <ity:EventTrigger EventName="Loaded">
+                            <itn:CallMethodAction MethodName="VersionSelectorLoaded" TargetObject="{Binding}" />
                         </ity:EventTrigger>
                     </ity:Interaction.Triggers>
                 </CustomControls:TextComboBoxs>
@@ -137,10 +162,14 @@
                     FontSize="20"
                     Foreground="White"
                     ItemsSource="{Binding FileTypeList, Mode=OneWay}"
+                    SelectedItem="{Binding SelectedFileType, Mode=OneWayToSource}"
                     Style="{DynamicResource TextComboBox}">
                     <ity:Interaction.Triggers>
                         <ity:EventTrigger EventName="SelectionChanged">
                             <itn:CallMethodAction MethodName="TemplateFileTypeChanged" TargetObject="{Binding}" />
+                        </ity:EventTrigger>
+                        <ity:EventTrigger EventName="Loaded">
+                            <itn:CallMethodAction MethodName="FileTypeSelectorLoaded" TargetObject="{Binding}" />
                         </ity:EventTrigger>
                     </ity:Interaction.Triggers>
                 </CustomControls:TextComboBoxs>
@@ -158,18 +187,49 @@
                         <ity:EventTrigger EventName="SelectionChanged">
                             <itn:CallMethodAction MethodName="TemplateFunctionTypeChanged" TargetObject="{Binding}" />
                         </ity:EventTrigger>
+                        <ity:EventTrigger EventName="Loaded">
+                            <itn:CallMethodAction MethodName="FunctionSelectorLoaded" TargetObject="{Binding}" />
+                        </ity:EventTrigger>
                     </ity:Interaction.Triggers>
                 </CustomControls:TextComboBoxs>
+            </DockPanel>
+            <DockPanel Margin="0,0,0,10">
+                <CustomControls:TextCheckBoxs
+                    Margin="0,0,10,0"
+                    Foreground="White"
+                    HeaderHeight="20"
+                    HeaderText="全选"
+                    HeaderWidth="20"
+                    Style="{DynamicResource TextCheckBox}">
+                    <ity:Interaction.Triggers>
+                        <ity:EventTrigger EventName="Click">
+                            <itn:CallMethodAction MethodName="SelectAllClick" TargetObject="{Binding}" />
+                        </ity:EventTrigger>
+                    </ity:Interaction.Triggers>
+                </CustomControls:TextCheckBoxs>
+                <CustomControls:TextCheckBoxs
+                    Foreground="White"
+                    HeaderHeight="20"
+                    HeaderText="反选"
+                    HeaderWidth="20"
+                    Style="{DynamicResource TextCheckBox}">
+                    <ity:Interaction.Triggers>
+                        <ity:EventTrigger EventName="Click">
+                            <itn:CallMethodAction MethodName="ReverseSelectAllClick" TargetObject="{Binding}" />
+                        </ity:EventTrigger>
+                    </ity:Interaction.Triggers>
+                </CustomControls:TextCheckBoxs>
             </DockPanel>
             <ScrollViewer
                 Height="450"
                 MaxHeight="450"
+                Margin="0,0,10,0"
                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                 ScrollViewer.VerticalScrollBarVisibility="Auto"
                 Style="{DynamicResource for_scrollviewer}">
                 <ity:Interaction.Triggers>
                     <ity:EventTrigger EventName="Loaded">
-                        <itn:CallMethodAction MethodName="TemplateListLoaded" TargetObject="{Binding}" />
+                        <itn:CallMethodAction MethodName="TemplateListViewerLoaded" TargetObject="{Binding}" />
                     </ity:EventTrigger>
                 </ity:Interaction.Triggers>
                 <ItemsControl ItemsSource="{Binding TemplateList, Mode=OneWay}">
@@ -181,7 +241,7 @@
                 </ItemsControl>
             </ScrollViewer>
             <DockPanel
-                Margin="0,25,25,0"
+                Margin="0,15,25,0"
                 HorizontalAlignment="Right"
                 LastChildFill="False">
                 <CustomControls:TextButtons
@@ -203,6 +263,7 @@
                     Background="#403582"
                     BorderThickness="0"
                     Command="{Binding NextStep}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
                     Content="下一步"
                     Foreground="White"
                     MouseLeftDownBackground="#333333"

@@ -45,12 +45,31 @@ namespace cbhk_environment.ControlsDataContexts
             TextBox box = sender as TextBox;
             TextComboBoxs combobox = box.TemplatedParent as TextComboBoxs;
 
-            if(combobox.Items.Count > 0)
+            //订阅选择成员更新事件
+            combobox.SelectionChanged += ComboboxSelectionChanged;
+
+            if (combobox.Items.Count > 0)
             {
                 combobox.SelectedIndex = 0;
                 TextSource textSource = combobox.Items[0] as TextSource;
                 box.Text = textSource.ItemText;
             }
+        }
+
+        /// <summary>
+        /// 实时更新所选文本显示
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ComboboxSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            TextComboBoxs current_box = sender as TextComboBoxs;
+
+            TextSource CurrentItem = current_box.SelectedItem as TextSource;
+
+            TextBox text_box = current_box.Template.FindName("EditableTextBox", current_box) as TextBox;
+
+            text_box.Text = CurrentItem.ItemText;
         }
 
         public void UpdateSelectionItem(object sender, KeyEventArgs e)

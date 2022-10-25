@@ -15,6 +15,10 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
         SolidColorBrush UnSelectColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("Transparent"));
         //当前模板的id
         public string TemplateID = "";
+        //文件类型
+        public string FileType = "";
+        //功能类型
+        public string FunctionType = "";
 
         public TemplateItems()
         {

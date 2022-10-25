@@ -211,6 +211,9 @@
       <DependentUpon>ContentItems.xaml</DependentUpon>
     </Compile>
     <Compile Include="Generators\DataPackGenerator\Components\DescriptionData.cs" />
+    <Compile Include="Generators\DataPackGenerator\Components\FilterItems.xaml.cs">
+      <DependentUpon>FilterItems.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Generators\DataPackGenerator\Components\FolderItems.xaml.cs">
       <DependentUpon>FolderItems.xaml</DependentUpon>
     </Compile>
@@ -486,6 +489,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Generators\DataPackGenerator\Components\ContentItems.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Generators\DataPackGenerator\Components\FilterItems.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

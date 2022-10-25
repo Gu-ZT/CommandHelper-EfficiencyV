@@ -13,20 +13,32 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using WK.Libraries.BetterFolderBrowserNS;
 
 namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationForms
 {
     public class initialization_datacontext: ObservableObject
     {
         /// <summary>
-        /// 初始化模板选择窗体
+        /// 初始化模板选择和属性设置窗体数据上下文
         /// </summary>
         public initialization_datacontext()
         {
             #region 链接命令
-            LastStep = new RelayCommand<Window>(LastStepCommand);
-            NextStep = new RelayCommand<Window>(NextStepCommand);
+            TemplateLastStep = new RelayCommand<Window>(TemplateLastStepCommand);
+            TemplateNextStep = new RelayCommand<Window>(TemplateNextStepCommand);
             ClearAllSelectParameters = new RelayCommand(ClearAllSelectParametersCommand);
+
+            AttributeLastStep = new RelayCommand(AttributeLastStepCommand);
+            AttributeNextStep = new RelayCommand(AttributeNextStepCommand);
+            SetDatapackPath = new RelayCommand(SetDatapackPathCommand);
+            SetDatapackDescription = new RelayCommand(SetDatapackDescriptionCommand);
+            AddDatapackFilter = new RelayCommand(AddDatapackFilterCommand);
+            ClearDatapackFilter = new RelayCommand(ClearDatapackFilterCommand);
+
+            CopyDatapackName = new RelayCommand(CopyDatapackNameCommand);
+            CopyDatapackPath = new RelayCommand(CopyDatapackPathCommand);
+            CopyDatapackDescription = new RelayCommand(CopyDatapackDescriptionCommand);
             #endregion
 
             #region 载入版本
@@ -55,6 +67,28 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
             }
             #endregion
         }
+
+        #region js脚本执行者
+        string js_file = AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js";
+        static string language = "javascript";
+        public static ScriptControlClass json_parser = new ScriptControlClass()
+        {
+            Language = language
+        };
+        public static object JsonScript(string JScript)
+        {
+            object Result = null;
+            try
+            {
+                Result = json_parser.Eval(JScript);
+            }
+            catch (Exception ex)
+            {
+                return ex.Source + "\n" + ex.Message;
+            }
+            return Result;
+        }
+        #endregion
 
         #region 模板选择窗体逻辑处理
 
@@ -88,66 +122,11 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         //存放功能类型列表
         public ObservableCollection<TextSource> FunctionTypeList { get; set; } = new ObservableCollection<TextSource> { };
 
+        //存储所有类型的模板标签
+        public static List<string> SelectedTemplateTypeTagList = new List<string> { };
+
         //获取搜索文本框引用
         TextBox SearchBox = null;
-
-        #region 存储数据包的名称
-        private string datapackName = "Datapack";
-        public string DatapackName
-        {
-            get { return datapackName; }
-            set
-            {
-                datapackName = value;
-
-                if (datapackName.Trim() == "")
-                    DatapackNameIsNull = Visibility.Visible;
-                else
-                    DatapackNameIsNull = Visibility.Hidden;
-
-                OnPropertyChanged();
-            }
-        }
-        #endregion
-
-        #region 数据包名称为空时的提示可见性
-        private Visibility datapackNameIsNull = Visibility.Hidden;
-        public Visibility DatapackNameIsNull
-        {
-            get { return datapackNameIsNull; }
-            set
-            {
-                datapackNameIsNull = value;
-                OnPropertyChanged();
-            }
-        }
-        #endregion
-
-        #region 存储数据包的描述
-        private string datapackDescription = "";
-        public string DatapackDescription
-        {
-            get { return datapackDescription; }
-            set
-            {
-                datapackDescription = value;
-                OnPropertyChanged();
-            }
-        }
-        #endregion
-
-        #region 存储数据包的过滤器
-        private string datapackFilter = "";
-        public string DatapackFilter
-        {
-            get { return datapackFilter; }
-            set
-            {
-                datapackFilter = value;
-                OnPropertyChanged();
-            }
-        }
-        #endregion
 
         #region 存储已选择的版本
         private static TextSource selectedVersion = null;
@@ -197,9 +176,9 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         }
         #endregion
 
-        #region 上一步、下一步命令和清除所有筛选
-        public RelayCommand<Window> LastStep { get; set; }
-        public RelayCommand<Window> NextStep { get; set; }
+        #region 模板窗体:上一步、下一步命令和清除所有筛选
+        public RelayCommand<Window> TemplateLastStep { get; set; }
+        public RelayCommand<Window> TemplateNextStep { get; set; }
         public RelayCommand ClearAllSelectParameters { get; set; }
         #endregion
 
@@ -222,28 +201,6 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         }
         #endregion
 
-        #region js脚本执行者
-        string js_file = AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js";
-        static string language = "javascript";
-        public static ScriptControlClass json_parser = new ScriptControlClass()
-        {
-            Language = language
-        };
-        public static object JsonScript(string JScript)
-        {
-            object Result = null;
-            try
-            {
-                Result = json_parser.Eval(JScript);
-            }
-            catch (Exception ex)
-            {
-                return ex.Source + "\n" + ex.Message;
-            }
-            return Result;
-        }
-        #endregion
-
         /// <summary>
         /// 清除所有筛选参数
         /// </summary>
@@ -260,7 +217,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         /// 返回上一步
         /// </summary>
         /// <exception cref="NotImplementedException"></exception>
-        private void LastStepCommand(Window target)
+        private void TemplateLastStepCommand(Window target)
         {
             target.DialogResult = false;
         }
@@ -269,7 +226,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         /// 进入下一步
         /// </summary>
         /// <exception cref="NotImplementedException"></exception>
-        private void NextStepCommand(Window target)
+        private void TemplateNextStepCommand(Window target)
         {
             //获取已选择的版本和文件类型
             string SelectedVersionString = SelectedVersion.ItemText;
@@ -280,8 +237,9 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
             if (SelectedFileTypeString == "所有文件类型")
                 SelectedFileTypeString = DefaultFileType.ItemText.ToLower();
 
+            //存储已选择的模板成员
             List<object> SelectedTemplateList = SelectedTemplateItemList;
-
+            //存储待生成的模板成员
             List<string> TemplateWaitToGenerator = new List<string> { };
 
             foreach (var item in SelectedTemplateList)
@@ -291,13 +249,27 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
                     RecentTemplateItems recentTemplateItem = item as RecentTemplateItems;
                     if (File.Exists(recentTemplateItem.FilePath))
                         TemplateWaitToGenerator.Add(recentTemplateItem.FilePath);
+
+                    string FileType = recentTemplateItem.FileType;
+                    string FunctionType = recentTemplateItem.FunctionType;
+                    if (!SelectedTemplateTypeTagList.Contains(FileType))
+                        SelectedTemplateTypeTagList.Add(FileType);
+                    if (!SelectedTemplateTypeTagList.Contains(FunctionType))
+                        SelectedTemplateTypeTagList.Add(FunctionType);
                 }
 
                 if (item is TemplateItems)
                 {
                     TemplateItems TemplateItem = item as TemplateItems;
-                    if (File.Exists(TemplateDataFilePath + "\\" + SelectedVersion + "\\" + TemplateItem.TemplateID + "." + SelectedFileType))
-                        TemplateWaitToGenerator.Add(TemplateDataFilePath + "\\" + SelectedVersion + "\\" + TemplateItem.TemplateID + "." + SelectedFileType);
+                    if (File.Exists(TemplateDataFilePath + "\\" + SelectedVersionString + "\\" + TemplateItem.TemplateID + "." + SelectedFileTypeString))
+                        TemplateWaitToGenerator.Add(TemplateDataFilePath + "\\" + SelectedVersionString + "\\" + TemplateItem.TemplateID + "." + SelectedFileTypeString);
+
+                    string FileType = TemplateItem.FileType;
+                    string FunctionType = TemplateItem.FunctionType;
+                    if (!SelectedTemplateTypeTagList.Contains(FileType))
+                        SelectedTemplateTypeTagList.Add(FileType);
+                    if (!SelectedTemplateTypeTagList.Contains(FunctionType))
+                        SelectedTemplateTypeTagList.Add(FunctionType);
                 }
             }
 
@@ -581,7 +553,6 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
             if(Directory.Exists(RecentTemplateDataFilePath) && File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js"))
             {
                 string[] recentTemplateDataList = Directory.GetFiles(RecentTemplateDataFilePath);
-                string js_file = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js");
                 JsonScript(js_file);
 
                 foreach (string recentTemplateData in recentTemplateDataList)
@@ -620,6 +591,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         /// <param name="e"></param>
         public void TemplateListViewerLoaded(object sender, RoutedEventArgs e)
         {
+            SelectedTemplateTypeTagList.Clear();
             if (Directory.Exists(TemplateMetaDataFilePath) && File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js"))
             {
                 string js_file = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js");
@@ -649,8 +621,12 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
                     #endregion
 
                     #region 实例化模板成员
-                    TemplateItems templateItem = new TemplateItems();
-                    templateItem.TemplateID = FileName;
+                    TemplateItems templateItem = new TemplateItems
+                    {
+                        TemplateID = FileName,
+                        FileType = FileType,
+                        FunctionType = FunctionType
+                    };
                     templateItem.TemplateName.Text = name;
                     templateItem.TemplateDescription.Text = description;
                     templateItem.MouseLeftButtonUp += TemplateItemMouseLeftButtonUp;
@@ -688,5 +664,347 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         }
 
         #endregion
+
+        #region 属性设置窗体逻辑处理
+
+        #region 属性设置窗体:上一步、下一步和设置路径等指令
+        public RelayCommand AttributeLastStep { get; set; }
+        public RelayCommand AttributeNextStep { get; set; }
+        public RelayCommand SetDatapackPath { get; set; }
+        public RelayCommand SetDatapackDescription { get; set; }
+        public RelayCommand AddDatapackFilter { get; set; }
+        public RelayCommand ClearDatapackFilter { get; set; }
+        public RelayCommand CopyDatapackName { get; set; }
+        public RelayCommand CopyDatapackPath { get; set; }
+        public RelayCommand CopyDatapackDescription { get; set; }
+        #endregion
+
+        #region 存储数据包的名称
+        private string datapackName = "Datapack";
+        public string DatapackName
+        {
+            get { return datapackName; }
+            set
+            {
+                datapackName = value;
+
+                if (datapackName.Trim() == "")
+                    DatapackNameIsNull = Visibility.Visible;
+                else
+                    DatapackNameIsNull = Visibility.Hidden;
+
+                OnPropertyChanged();
+            }
+        }
+        #endregion
+
+        #region 存储数据包的保存路径
+        private TextSource selectedDatapackPath = new TextSource() { ItemText = "" };
+        public TextSource SelectedDatapackPath
+        {
+            get { return selectedDatapackPath; }
+            set
+            {
+                selectedDatapackPath = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion
+
+        #region 存储数据包对应的游戏版本
+        private TextSource selectedDatapackVersion = new TextSource() { ItemText = "" };
+        public TextSource SelectedDatapackVersion
+        {
+            get { return selectedDatapackVersion; }
+            set
+            {
+                selectedDatapackVersion = value;
+            }
+        }
+        #endregion
+
+        #region 数据包名称为空时的提示可见性
+        private Visibility datapackNameIsNull = Visibility.Hidden;
+        public Visibility DatapackNameIsNull
+        {
+            get { return datapackNameIsNull; }
+            set
+            {
+                datapackNameIsNull = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion
+
+        #region 存储数据包的描述类型
+        private TextSource selectedDatapackDescriptionType = new TextSource() { ItemText = "" };
+        public TextSource SelectedDatapackDescriptionType
+        {
+            get { return selectedDatapackDescriptionType; }
+            set
+            {
+                selectedDatapackDescriptionType = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion
+
+        #region 存储数据包的描述
+        private string selectedDatapackDescription = "This is a Datapack";
+        public string SelectedDatapackDescription
+        {
+            get { return selectedDatapackDescription; }
+            set
+            {
+                selectedDatapackDescription = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion
+
+        #region 存储数据包的过滤器
+        public static ObservableCollection<FilterItems> DatapackFilterSource { get; set; } = new ObservableCollection<FilterItems> { };
+        private string datapackFilter = "";
+        public string DatapackFilter
+        {
+            get { return datapackFilter; }
+            set
+            {
+                datapackFilter = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion
+
+        #region 存储数据包简介类型键入控件父级容器、布尔类型、切换控件的引用
+        TextComboBoxs DescriptionBoolBox = null;
+        DockPanel DescriptionContainer = null;
+        TextComboBoxs DescriptionTypeSwitcher = null;
+        #endregion
+
+        //数据包历史路径列表
+        public ObservableCollection<TextSource> HistoryDatapackGeneratorPathList { get; set; } = new ObservableCollection<TextSource> { };
+
+        //存储数据包历史路径配置文件
+        string HistoryDatapackGeneratorPathFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\DataPack\\data\\historyDatapackGeneratorPath.ini";
+
+        //数据包所对应游戏版本配置文件路径
+        string DatapackVersionFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\datapackVersion.json";
+
+        //数据包简介数据类型配置文件路径
+        string DatapackDescriptionTypeFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\DataPack\\data\\descriptionTypeList.ini";
+
+        //数据包所对应游戏版本数据库
+        Dictionary<string, string> DatapackVersionDatabase = new Dictionary<string, string> { };
+
+        /// <summary>
+        /// 初始化已选中的所有模板的标签类型
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void TypeTagListLoaded(object sender,RoutedEventArgs e)
+        {
+            DockPanel container = sender as DockPanel;
+            bool IsFirst = true;
+            foreach (string SelectedTemplateTypeTag in SelectedTemplateTypeTagList)
+            {
+                TemplateTypeTag templateTypeTag = new TemplateTypeTag(SelectedTemplateTypeTag);
+                if (IsFirst)
+                    templateTypeTag.Margin = new Thickness(0);
+                IsFirst = false;
+                container.Children.Add(templateTypeTag);
+            }
+        }
+
+        /// <summary>
+        /// 初始化数据包简介数据源
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void DatapackDescriptionTypeLoaded(object sender, RoutedEventArgs e)
+        {
+            DescriptionTypeSwitcher = sender as TextComboBoxs;
+
+            if (File.Exists(DatapackDescriptionTypeFilePath))
+            {
+                ObservableCollection<TextSource> descriptionList = new ObservableCollection<TextSource> { };
+                DescriptionTypeSwitcher.ItemsSource = descriptionList;
+
+                #region 解析简介类型配置文件
+                string[] DescriptionList = File.ReadAllLines(DatapackDescriptionTypeFilePath);
+
+                foreach (string descriptionItem in DescriptionList)
+                {
+                    descriptionList.Add(new TextSource() { ItemText = descriptionItem });
+                }
+                #endregion
+            }
+        }
+
+        /// <summary>
+        /// 初始化数据包所对应游戏版本数据源
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void DatapackVersionLoaded(object sender, RoutedEventArgs e)
+        {
+            TextComboBoxs VersionBox = sender as TextComboBoxs;
+
+            if (File.Exists(DatapackVersionFilePath))
+            {
+                ObservableCollection<TextSource> versionList = new ObservableCollection<TextSource> { };
+                VersionBox.ItemsSource = versionList;
+
+                #region 解析版本配置文件
+                string VersionFile = File.ReadAllText(DatapackVersionFilePath);
+                string[] versionStringList = VersionFile.Replace("{", "").Replace("}", "").Replace("\"", "").Split(',');
+                foreach (string versionItem in versionStringList)
+                {
+                    string[] itemData = versionItem.Split(':');
+                    string display = itemData[0].Trim();
+                    string value = itemData[1].Trim();
+                    versionList.Add(new TextSource() { ItemText = display });
+                    DatapackVersionDatabase.Add(display, value);
+                }
+                #endregion
+
+                if(versionList.Count > 0)
+                SelectedDatapackVersion = versionList[0];
+            }
+        }
+
+        /// <summary>
+        /// 初始化数据包简介父级容器
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void DatapackDescriptionContainerLoaded(object sender, RoutedEventArgs e)
+        {
+            DescriptionContainer = sender as DockPanel;
+        }
+
+        /// <summary>
+        /// 初始化数据包简介布尔类数据源
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void DatapackDescriptionBoolTypeLoaded(object sender, RoutedEventArgs e)
+        {
+            //获取引用
+            DescriptionBoolBox = sender as TextComboBoxs;
+            DescriptionBoolBox.Items.Add(new TextSource() { ItemText = "true" });
+            DescriptionBoolBox.Items.Add(new TextSource() { ItemText = "false" });
+        }
+
+        /// <summary>
+        /// 同步设置不同数据类型的控件可见性
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void DescriptionTypeSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            TextSource CurrentItem = DescriptionTypeSwitcher.SelectedItem as TextSource;
+            string CurrentValue = CurrentItem.ItemText;
+            foreach (FrameworkElement item in DescriptionContainer.Children)
+            {
+                if (item.Uid == CurrentValue || item.Uid.Contains(CurrentValue))
+                    item.Visibility = Visibility.Visible;
+                else
+                    if(item.Uid != "")
+                    item.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        /// <summary>
+        /// 添加一个数据包过滤器成员
+        /// </summary>
+        private void AddDatapackFilterCommand()
+        {
+            FilterItems filterItems = new FilterItems();
+            DatapackFilterSource.Add(filterItems);
+        }
+
+        /// <summary>
+        /// 清空数据包的过滤器
+        /// </summary>
+        private void ClearDatapackFilterCommand()
+        {
+            DatapackFilterSource.Clear();
+        }
+
+        /// <summary>
+        /// 设置数据包的描述
+        /// </summary>
+        private void SetDatapackDescriptionCommand()
+        {
+        }
+
+        /// <summary>
+        /// 设置数据包的路径
+        /// </summary>
+        private void SetDatapackPathCommand()
+        {
+            BetterFolderBrowser folderBrowser = new BetterFolderBrowser()
+            {
+                Multiselect = false,
+                Title = "请选择当前数据包生成路径",
+                RootFolder = Environment.SpecialFolder.MyComputer.ToString(),
+            };
+
+            if(folderBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                if(Directory.Exists(folderBrowser.SelectedFolder))
+                {
+                    string selectedPath = folderBrowser.SelectedFolder;
+                    if (HistoryDatapackGeneratorPathList.Where(item=>item.ItemText == selectedPath).Count() == 0)
+                    HistoryDatapackGeneratorPathList.Add(new TextSource() { ItemText = selectedPath });
+
+                    if(SelectedDatapackPath.ItemText == "")
+                       SelectedDatapackPath = HistoryDatapackGeneratorPathList[0];
+                }
+            }
+        }
+
+        /// <summary>
+        /// 属性设置窗体进入下一步
+        /// </summary>
+        private void AttributeNextStepCommand()
+        {
+            //生成数据包
+            //关闭所有初始化窗体
+        }
+
+        /// <summary>
+        /// 属性设置窗体进入上一步
+        /// </summary>
+        private void AttributeLastStepCommand()
+        {
+            //关闭属性设置窗体
+        }
+        #endregion
+
+        /// <summary>
+        /// 复制数据包的简介
+        /// </summary>
+        private void CopyDatapackDescriptionCommand()
+        {
+            Clipboard.SetText(SelectedDatapackDescription);
+        }
+
+        /// <summary>
+        /// 复制数据包的路径
+        /// </summary>
+        private void CopyDatapackPathCommand()
+        {
+            Clipboard.SetText(SelectedDatapackPath.ItemText);
+        }
+
+        /// <summary>
+        /// 复制数据包的名称
+        /// </summary>
+        private void CopyDatapackNameCommand()
+        {
+            Clipboard.SetText(DatapackName);
+        }
     }
 }

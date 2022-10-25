@@ -198,6 +198,7 @@
                             <Grid
                                 x:Name="grid"
                                 Margin="0"
+                                Background="Black"
                                 RenderOptions.ClearTypeHint="Enabled">
                                 <Canvas
                                     x:Name="canvas"

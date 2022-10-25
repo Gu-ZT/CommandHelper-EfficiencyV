@@ -79,7 +79,7 @@ namespace cbhk_environment.ControlsDataContexts
 
             #region 打开下拉框
             ObservableCollection<TextSource> dataGroup = current_box.ItemsSource as ObservableCollection<TextSource>;
-            var target_data_groups = dataGroup.Where(item => item.item_text.Contains(box.Text.Trim()));
+            var target_data_groups = dataGroup.Where(item => item.ItemText.Contains(box.Text.Trim()));
             if (box.Text.Trim() == "")
                 pop.IsOpen = false;
             if (target_data_groups.Count() > 1)
@@ -170,7 +170,7 @@ namespace cbhk_environment.ControlsDataContexts
     }
     public class TextSource:ObservableObject
     {
-        public string item_text { get; set; }
+        private string item_text { get; set; }
 
         public string ItemText
         {

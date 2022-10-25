@@ -17,7 +17,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
     /// <summary>
     /// DatapackGenerateSetup.xaml 的交互逻辑
     /// </summary>
-    public partial class DatapackGenerateSetup
+    public partial class DatapackGenerateSetup:Window
     {
         public DatapackGenerateSetup()
         {

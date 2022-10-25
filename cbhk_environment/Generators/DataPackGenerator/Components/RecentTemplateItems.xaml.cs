@@ -13,6 +13,10 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
         public string FilePath = "";
         //模板版本
         public string Version = "";
+        //文件类型
+        public string FileType = "";
+        //功能类型
+        public string FunctionType = "";
 
         /// <summary>
         /// 实例化一个历史模板

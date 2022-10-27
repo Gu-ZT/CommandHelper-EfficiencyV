@@ -1,6 +1,7 @@
 ﻿using cbhk_environment.ControlsDataContexts;
 using cbhk_environment.CustomControls;
 using cbhk_environment.Generators.DataPackGenerator.Components;
+using cbhk_environment.Generators.WrittenBookGenerator;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MSScriptControl;
@@ -11,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using WK.Libraries.BetterFolderBrowserNS;
@@ -762,6 +764,27 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         }
         #endregion
 
+        #region 存储数据包JSON组件类型的描述数据
+        private string jsonObjectDescription = "";
+        private string JsonObjectDescription
+        {
+            get { return jsonObjectDescription; }
+            set
+            {
+                jsonObjectDescription = value;
+            }
+        }
+        private string jsonArrayDescription = "";
+        private string JsonArrayDescription
+        {
+            get { return jsonArrayDescription; }
+            set
+            {
+                jsonArrayDescription = value;
+            }
+        }
+        #endregion
+
         #region 存储数据包的过滤器
         public static ObservableCollection<FilterItems> DatapackFilterSource { get; set; } = new ObservableCollection<FilterItems> { };
         private string datapackFilter = "";
@@ -796,6 +819,9 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
 
         //数据包所对应游戏版本数据库
         Dictionary<string, string> DatapackVersionDatabase = new Dictionary<string, string> { };
+
+        //用于显示数据包简介的文档对象
+        List<EnabledFlowDocument> DescriptionDisplayDocument = null;
 
         /// <summary>
         /// 初始化已选中的所有模板的标签类型
@@ -937,6 +963,21 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         /// </summary>
         private void SetDatapackDescriptionCommand()
         {
+            //实例化一个成书生成器作为JSON文本编辑工具
+            WrittenBook writtenBook = new WrittenBook(DataPack.cbhk,true);
+            written_book_datacontext datacontext = writtenBook.DataContext as written_book_datacontext;
+
+            if (DescriptionDisplayDocument != null)
+            {
+                datacontext.HistroyFlowDocumentList = DescriptionDisplayDocument;
+            }
+
+            if (writtenBook.ShowDialog() == true)
+            {
+                DescriptionDisplayDocument = datacontext.HistroyFlowDocumentList;
+                JsonArrayDescription = datacontext.result;
+                JsonObjectDescription = datacontext.object_result;
+            }
         }
 
         /// <summary>

@@ -264,7 +264,7 @@
                             </Style.Triggers>
                         </Style>
                     </Border.Style>
-                    <Image Panel.ZIndex="0" Source="/cbhk_environment;component/resources/cbhk_form/images/signature_button.png">
+                    <Image Panel.ZIndex="0">
                         <ity:Interaction.Triggers>
                             <ity:EventTrigger EventName="MouseLeftButtonDown">
                                 <itn:CallMethodAction MethodName="SignatureMouseLeftButtonDown" TargetObject="{Binding}" />

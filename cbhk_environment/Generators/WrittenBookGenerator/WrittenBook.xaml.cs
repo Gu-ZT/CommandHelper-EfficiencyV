@@ -1,5 +1,4 @@
-﻿
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 
 namespace cbhk_environment.Generators.WrittenBookGenerator
@@ -13,9 +12,10 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
         /// 主窗体
         /// </summary>
         public static MainWindow cbhk = null;
-        public WrittenBook(MainWindow win)
+        public WrittenBook(MainWindow win, bool AsAnInternalTool = false)
         {
             InitializeComponent();
+            written_book_datacontext.AsInternalTool = AsAnInternalTool;
             cbhk = win;
         }
     }

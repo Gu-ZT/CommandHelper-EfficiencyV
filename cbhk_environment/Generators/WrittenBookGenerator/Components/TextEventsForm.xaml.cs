@@ -112,5 +112,75 @@ namespace cbhk_environment.Generators.WrittenBookGenerator.Components
         {
             InsertionPanel.Visibility = (sender as RadiusToggleButtons).IsChecked.Value ? Visibility.Visible : Visibility.Collapsed;
         }
+
+        /// <summary>
+        /// 打开所有事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AllEnableClick(object sender, RoutedEventArgs e)
+        {
+            EnableClickEvent.IsChecked = EnableHoverEvent.IsChecked = EnableInsertion.IsChecked = (sender as RadiusToggleButtons).IsChecked.Value;
+        }
+
+        /// <summary>
+        /// 被动勾选点击事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EnableClickEventChecked(object sender, RoutedEventArgs e)
+        {
+            EnableClickEventClick(sender,null);
+        }
+
+        /// <summary>
+        /// 被动取消点击事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EnableClickEventUnchecked(object sender, RoutedEventArgs e)
+        {
+            EnableClickEventClick(sender, null);
+        }
+
+        /// <summary>
+        /// 被动勾选悬浮事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EnableHoverEventChecked(object sender, RoutedEventArgs e)
+        {
+            EnableHoverEventClick(sender,null);
+        }
+
+        /// <summary>
+        /// 被动取消悬浮事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EnableHoverEventUnchecked(object sender, RoutedEventArgs e)
+        {
+            EnableHoverEventClick(sender, null);
+        }
+
+        /// <summary>
+        /// 被动勾选插入
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EnableInsertionChecked(object sender, RoutedEventArgs e)
+        {
+            EnableInsertionClick(sender,null);
+        }
+
+        /// <summary>
+        /// 被动取消插入
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EnableInsertionUnchecked(object sender, RoutedEventArgs e)
+        {
+            EnableInsertionClick(sender, null);
+        }
     }
 }

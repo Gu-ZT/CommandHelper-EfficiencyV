@@ -22,6 +22,7 @@
                         x:Name="AllEnable"
                         Height="30"
                         HorizontalAlignment="Center"
+                        Click="AllEnableClick"
                         Foreground="White"
                         SelectedToggleText=""
                         Style="{DynamicResource RadiusToggleButton}"
@@ -33,31 +34,37 @@
                         x:Name="EnableClickEvent"
                         Height="30"
                         HorizontalAlignment="Center"
+                        Checked="EnableClickEventChecked"
                         Click="EnableClickEventClick"
                         Foreground="White"
                         SelectedToggleText="点击事件"
                         Style="{DynamicResource RadiusToggleButton}"
-                        UnSelectedToggleText="点击事件" />
+                        UnSelectedToggleText="点击事件"
+                        Unchecked="EnableClickEventUnchecked" />
                     <!--  IsChecked="{Binding EnableEditHoverEvent, Mode=OneWayToSource}"  -->
                     <CustomControls:RadiusToggleButtons
                         x:Name="EnableHoverEvent"
                         Height="30"
                         HorizontalAlignment="Center"
+                        Checked="EnableHoverEventChecked"
                         Click="EnableHoverEventClick"
                         Foreground="White"
                         SelectedToggleText="悬浮事件"
                         Style="{DynamicResource RadiusToggleButton}"
-                        UnSelectedToggleText="悬浮事件" />
+                        UnSelectedToggleText="悬浮事件"
+                        Unchecked="EnableHoverEventUnchecked" />
                     <!--  IsChecked="{Binding EnableEditInsertion, Mode=OneWayToSource}"  -->
                     <CustomControls:RadiusToggleButtons
                         x:Name="EnableInsertion"
                         Height="30"
                         HorizontalAlignment="Center"
+                        Checked="EnableInsertionChecked"
                         Click="EnableInsertionClick"
                         Foreground="White"
                         SelectedToggleText="插入文本"
                         Style="{DynamicResource RadiusToggleButton}"
-                        UnSelectedToggleText="插入文本" />
+                        UnSelectedToggleText="插入文本"
+                        Unchecked="EnableInsertionUnchecked" />
                 </StackPanel>
             </DockPanel>
             <StackPanel x:Name="ClickEventPanel" Margin="0,5">
@@ -79,6 +86,7 @@
                     <CustomControls:TextComboBoxs
                         x:Name="ClickEventActionBox"
                         Height="30"
+                        Background="Black"
                         FontSize="20"
                         Foreground="White"
                         Loaded="ClickEventsLoaded"
@@ -121,6 +129,7 @@
                     <CustomControls:TextComboBoxs
                         x:Name="HoverEventActionBox"
                         Height="30"
+                        Background="Black"
                         FontSize="20"
                         Foreground="White"
                         Loaded="HoverEventsLoaded"

@@ -2,7 +2,7 @@
 
 namespace cbhk_environment.CustomControls
 {
-    internal class EnabledFlowDocument:FlowDocument
+    public class EnabledFlowDocument:FlowDocument
     {
         protected override bool IsEnabledCore
         {

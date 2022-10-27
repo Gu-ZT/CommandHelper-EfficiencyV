@@ -17,7 +17,6 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Windows.System.Profile;
 
 namespace cbhk_environment.Generators.WrittenBookGenerator
 {
@@ -43,7 +42,7 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
         #endregion
 
         //成书编辑框引用
-        RichTextBox written_box = null;
+        public RichTextBox written_box = null;
 
         //成书背景文件路径
         string backgroundFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\WrittenBook\\images\\written_book_background.png";
@@ -89,8 +88,7 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
         public static List<char> obfuscates = new List<char> { };
 
         //流文档链表,每个成员代表成书中的一页
-
-        List<EnabledFlowDocument> WrittenBookPages = new List<EnabledFlowDocument> { };
+        public List<EnabledFlowDocument> WrittenBookPages = new List<EnabledFlowDocument> { };
 
         /// <summary>
         /// 一页总字符数
@@ -145,13 +143,12 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
         {
             get 
             { 
-                MaxPage = WrittenBookPages.Count; 
-                PageData = "页面 ：" + (currentPageIndex + 1).ToString() + "/" + MaxPage.ToString(); 
                 return currentPageIndex;
             }
             set
             {
                 currentPageIndex = value;
+                MaxPage = WrittenBookPages.Count;
                 PageData = "页面 ：" + (CurrentPageIndex + 1).ToString() + "/" + MaxPage.ToString();
                 if (CurrentPageIndex > 0)
                     DisplayLeftArrow = Visibility.Visible;
@@ -279,7 +276,7 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
         #endregion
 
         #region 当前页码与总页数数据
-        string pageData = "页面 ：1/1";
+        private string pageData = "页面 ：1/1";
         public string PageData
         {
             get { return pageData; }
@@ -367,7 +364,7 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
         #endregion
 
         #region 控制页码显示
-        private Visibility displayPageIndex = Visibility.Collapsed;
+        private Visibility displayPageIndex = Visibility.Visible;
         public Visibility DisplayPageIndex
         {
             get { return displayPageIndex; }
@@ -476,6 +473,26 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
         //当前光标选中的文本对象链表
         List<RichRun> CurrentSelectedRichRunList = new List<RichRun> { };
 
+        //作为内部工具被调用
+        public static bool AsInternalTool = false;
+
+        /// <summary>
+        /// 保存最终结果
+        /// </summary>
+        public string result = "";
+
+        /// <summary>
+        /// 保存最终结果的首个json对象
+        /// </summary>
+        public string object_result = "";
+
+        //保存成书的文档链表，用于显示和编辑
+        public List<EnabledFlowDocument> HistroyFlowDocumentList = null;
+
+        /// <summary>
+        /// 是否作为内部工具被调用
+        /// </summary>
+        /// <param name="AsAnInternalTool"></param>
         public written_book_datacontext()
         {
             #region 链接指令
@@ -921,16 +938,46 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
         /// </summary>
         private void run_command()
         {
-            //最终结果
-            string result = "/give @p written_book";
-            //合并所有页数据
-            string pages_string = "pages:[";
-            //每一页的数据
-            string page_string = "";
-            //遍历所有文档
-            foreach (EnabledFlowDocument page in WrittenBookPages)
+            if(!AsInternalTool)
             {
-                List<Paragraph> page_content = page.Blocks.ToList().ConvertAll(item => item as Paragraph);
+                //最终结果
+                string result = "/give @p written_book";
+                //合并所有页数据
+                string pages_string = "pages:[";
+                //每一页的数据
+                string page_string = "";
+                //遍历所有文档
+                foreach (EnabledFlowDocument page in WrittenBookPages)
+                {
+                    List<Paragraph> page_content = page.Blocks.ToList().ConvertAll(item => item as Paragraph);
+                    page_string += "'[\"\",";
+                    for (int i = 0; i < page_content.Count; i++)
+                    {
+                        page_string += string.Join("", page_content[i].Inlines.ToList().ConvertAll(line => line as RichRun).Select(run =>
+                        {
+                            return run.Result;
+                        }));
+                    }
+                    page_string = page_string.TrimEnd(',') + "]',";
+                }
+                pages_string += page_string.TrimEnd(',') + "]";
+                pages_string = pages_string.Trim() == "pages:['[\"\"]']" || pages_string.Trim() == "pages:['[\"\",{\"text\":\"\"}]']" ? "" : pages_string;
+                string NBTData = "";
+                NBTData += TitleString + AuthorString + pages_string;
+                NBTData = "{" + NBTData.TrimEnd(',') + "}";
+                result += NBTData;
+
+                GenerateResultDisplayer.Displayer displayer = GenerateResultDisplayer.Displayer.GetContentDisplayer();
+                displayer.GeneratorResult(OverLying, new string[] { result }, new string[] { "" }, new string[] { icon_path }, new System.Windows.Media.Media3D.Vector3D() { X = 30, Y = 30 });
+                displayer.Show();
+            }
+            else//作为内部工具被调用
+            {
+                //第一页的数据
+                string page_string = "";
+                //仅获取文档内容
+                HistroyFlowDocumentList = WrittenBookPages;
+                List<Paragraph> page_content = HistroyFlowDocumentList[0].Blocks.ToList().ConvertAll(item => item as Paragraph);
                 page_string += "'[\"\",";
                 for (int i = 0; i < page_content.Count; i++)
                 {
@@ -938,19 +985,19 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
                     {
                         return run.Result;
                     }));
+
+                    if (i == 0)
+                        object_result = page_content[i].Inlines.ToList().ConvertAll(line => line as RichRun)[0].Result.TrimEnd(',');
                 }
                 page_string = page_string.TrimEnd(',') + "]',";
-            }
-            pages_string += page_string.TrimEnd(',') + "]";
-            pages_string = pages_string.Trim() == "pages:['[\"\"]']" || pages_string.Trim() == "pages:['[\"\",{\"text\":\"\"}]']" ? "" : pages_string;
-            string NBTData = "";
-            NBTData += TitleString + AuthorString + pages_string;
-            NBTData = "{" + NBTData.TrimEnd(',') + "}";
-            result += NBTData;
 
-            GenerateResultDisplayer.Displayer displayer = GenerateResultDisplayer.Displayer.GetContentDisplayer();
-            displayer.GeneratorResult(OverLying, new string[] { result }, new string[] { "" }, new string[] { icon_path }, new System.Windows.Media.Media3D.Vector3D() { X = 30, Y = 30 });
-            displayer.Show();
+                page_string = page_string.TrimEnd(',').Trim('\'');
+                result = page_string;
+                written_box.Document = new EnabledFlowDocument();
+
+                CommonWindow window = Window.GetWindow(written_box) as CommonWindow;
+                window.DialogResult = true;
+            }
         }
 
         /// <summary>
@@ -1172,7 +1219,16 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
         {
             written_box = sender as RichTextBox;
             //初始化文档链表
-            WrittenBookPages.Add(written_box.Document as EnabledFlowDocument);
+            if (HistroyFlowDocumentList == null)
+                WrittenBookPages.Add(written_box.Document as EnabledFlowDocument);
+            else
+            {
+                HistroyFlowDocumentList.All(item => { item.FontFamily = new FontFamily(commonFontFamily); return true; });
+                WrittenBookPages = HistroyFlowDocumentList;
+
+                if(WrittenBookPages.Count > 0)
+                written_box.Document = WrittenBookPages[0];
+            }
         }
 
         /// <summary>
@@ -1385,10 +1441,7 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
         /// <param name="e"></param>
         public void LeftArrowMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            CurrentPageIndex--;
-            //获取当前文档对象
-            EnabledFlowDocument currentFlowDocument = written_box.Document as EnabledFlowDocument;
-            WrittenBookPages[CurrentPageIndex + 1] = currentFlowDocument;
+            --CurrentPageIndex;
             written_box.Document = WrittenBookPages[CurrentPageIndex];
         }
 
@@ -1399,13 +1452,9 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
         /// <param name="e"></param>
         public void RightArrowMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            CurrentPageIndex++;
-            //获取当前文档对象
-            EnabledFlowDocument currentFlowDocument = written_box.Document as EnabledFlowDocument;
-            while (WrittenBookPages.Count < (CurrentPageIndex + 1))
-                WrittenBookPages.Add(new EnabledFlowDocument() { FontFamily = new FontFamily(commonFontFamily),FontSize = 30, LineHeight = 10 });
-            MaxPage = WrittenBookPages.Count;
-            WrittenBookPages[CurrentPageIndex - 1] = currentFlowDocument;
+            if(WrittenBookPages.Count <= (CurrentPageIndex + 1))
+            WrittenBookPages.Add(new EnabledFlowDocument() { FontFamily = new FontFamily(commonFontFamily), FontSize = 30, LineHeight = 10 });
+            ++CurrentPageIndex;
             written_box.Document = WrittenBookPages[CurrentPageIndex];
         }
 

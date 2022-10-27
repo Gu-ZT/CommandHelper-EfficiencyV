@@ -40,15 +40,31 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                 Background = UnSelectColor;
         }
 
+        /// <summary>
+        /// 鼠标进入后更新样式
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TemplateItemMouseEnter(object sender, MouseEventArgs e)
         {
             Background = SelectedColor;
+
+            foreach (TemplateTypeTag item in TemplateTypeTagPanel.Children)
+                item.border.BorderThickness = new System.Windows.Thickness(1);
         }
 
+        /// <summary>
+        /// 鼠标离开后更新样式
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TemplateItemMouseLeave(object sender, MouseEventArgs e)
         {
             if(!TemplateSelector.IsChecked.Value)
             Background = UnSelectColor;
+
+            foreach (TemplateTypeTag item in TemplateTypeTagPanel.Children)
+                item.border.BorderThickness = new System.Windows.Thickness(0);
         }
 
         private void TemplateSelectorChecked(object sender, System.Windows.RoutedEventArgs e)

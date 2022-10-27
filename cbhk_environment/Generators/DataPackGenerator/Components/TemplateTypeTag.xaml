@@ -6,10 +6,12 @@
     xmlns:local="clr-namespace:cbhk_environment.Generators.DataPackGenerator.Components"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Margin="15,0,0,0"
+    Padding="0,0,0,2"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
     <Border
+        x:Name="border"
         Width="Auto"
         Height="Auto"
         Padding="5"

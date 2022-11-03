@@ -17,6 +17,7 @@ namespace cbhk_signin
         {
             base.OnStartup(e);
             TaskbarIcon = (TaskbarIcon)FindResource("cbhk_taskbar");
+            //TaskbarIcon.ContextMenu.Style = FindResource("DefaultContextMenu") as Style;
         }
 
         //首先注册开始和退出事件

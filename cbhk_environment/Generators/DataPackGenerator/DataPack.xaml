@@ -39,8 +39,15 @@
                 </ity:EventTrigger>
             </ity:Interaction.Triggers>
         </CustomControls:RichTreeViewItems>
+        <CustomControls:RichTabItems Style="{DynamicResource RichTabItem}" Visibility="Collapsed">
+            <ity:Interaction.Triggers>
+                <ity:EventTrigger EventName="Loaded">
+                    <itn:CallMethodAction MethodName="RichTabItemStyleLoaded" TargetObject="{Binding}" />
+                </ity:EventTrigger>
+            </ity:Interaction.Triggers>
+        </CustomControls:RichTabItems>
         <!--  {Binding FunctionEditorZoneVisibility, Mode=OneWay}  -->
-        <Grid Panel.ZIndex="0" Visibility="{Binding FunctionEditorZoneVisibility, Mode=OneWay}">
+        <Grid Panel.ZIndex="1" Visibility="{Binding FunctionEditorZoneVisibility, Mode=OneWay}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="15*" />
@@ -153,10 +160,11 @@
                 Panel.ZIndex="0"
                 Background="Transparent"
                 BorderBrush="#3D3D3D"
-                BorderThickness="0"
+                BorderThickness="1"
                 CaretBrush="White"
                 FontSize="25"
-                Foreground="#A8A8A8">
+                Foreground="#A8A8A8"
+                Visibility="Collapsed">
                 <ity:Interaction.Triggers>
                     <ity:EventTrigger EventName="TextChanged">
                         <itn:CallMethodAction MethodName="FunctionBoxTextChanged" TargetObject="{Binding}" />

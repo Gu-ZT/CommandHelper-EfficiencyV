@@ -441,9 +441,9 @@
                         FontFamily="Minecraft AE Pixel"
                         FontSize="30"
                         LineHeight="10">
-                        <Paragraph>
+                        <CustomControls:RichParagraph>
                             <CustomControls:RichRun Text="" />
-                        </Paragraph>
+                        </CustomControls:RichParagraph>
                     </CustomControls:EnabledFlowDocument>
                 </RichTextBox>
                 <Image

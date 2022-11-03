@@ -36,14 +36,42 @@
                 Foreground="White"
                 Text="创建新的数据包" />
             <TextBlock
-                Margin="0,0,80,20"
+                Margin="0,0,90,20"
                 HorizontalAlignment="Center"
                 FontSize="20"
                 Foreground="White"
                 Text="最近使用的内容模板" />
+            <DockPanel Margin="35,5,0,0" HorizontalAlignment="Left">
+                <CustomControls:TextCheckBoxs
+                    Margin="0,0,10,0"
+                    Foreground="White"
+                    HeaderHeight="20"
+                    HeaderText="全选"
+                    HeaderWidth="20"
+                    Style="{DynamicResource TextCheckBox}">
+                    <ity:Interaction.Triggers>
+                        <ity:EventTrigger EventName="Click">
+                            <itn:CallMethodAction MethodName="SelectAllRecentTemplatesClick" TargetObject="{Binding}" />
+                        </ity:EventTrigger>
+                    </ity:Interaction.Triggers>
+                </CustomControls:TextCheckBoxs>
+                <CustomControls:TextCheckBoxs
+                    Foreground="White"
+                    HeaderHeight="20"
+                    HeaderText="反选"
+                    HeaderWidth="20"
+                    Style="{DynamicResource TextCheckBox}">
+                    <ity:Interaction.Triggers>
+                        <ity:EventTrigger EventName="Click">
+                            <itn:CallMethodAction MethodName="ReverseSelectAllRecentTemplatesClick" TargetObject="{Binding}" />
+                        </ity:EventTrigger>
+                    </ity:Interaction.Triggers>
+                </CustomControls:TextCheckBoxs>
+            </DockPanel>
             <ScrollViewer
                 Width="300"
-                MaxHeight="550"
+                MaxHeight="500"
+                Margin="0,10,0,0"
                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                 ScrollViewer.VerticalScrollBarVisibility="Auto"
                 Style="{DynamicResource for_scrollviewer}">
@@ -203,7 +231,7 @@
                     Style="{DynamicResource TextCheckBox}">
                     <ity:Interaction.Triggers>
                         <ity:EventTrigger EventName="Click">
-                            <itn:CallMethodAction MethodName="SelectAllClick" TargetObject="{Binding}" />
+                            <itn:CallMethodAction MethodName="SelectAllTemplatesClick" TargetObject="{Binding}" />
                         </ity:EventTrigger>
                     </ity:Interaction.Triggers>
                 </CustomControls:TextCheckBoxs>
@@ -215,7 +243,7 @@
                     Style="{DynamicResource TextCheckBox}">
                     <ity:Interaction.Triggers>
                         <ity:EventTrigger EventName="Click">
-                            <itn:CallMethodAction MethodName="ReverseSelectAllClick" TargetObject="{Binding}" />
+                            <itn:CallMethodAction MethodName="ReverseSelectAllTemplatesClick" TargetObject="{Binding}" />
                         </ity:EventTrigger>
                     </ity:Interaction.Triggers>
                 </CustomControls:TextCheckBoxs>

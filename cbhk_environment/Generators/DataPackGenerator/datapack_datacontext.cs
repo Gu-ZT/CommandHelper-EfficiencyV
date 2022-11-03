@@ -15,6 +15,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Windows.ApplicationModel.DataTransfer;
 using WK.Libraries.BetterFolderBrowserNS;
 
 namespace cbhk_environment.Generators.DataPackGenerator
@@ -62,7 +63,9 @@ namespace cbhk_environment.Generators.DataPackGenerator
         SolidColorBrush RecentContentForeground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
 
         //树视图样式引用
-        Style RichTreeViewItemStyle = null;
+        public static Style RichTreeViewItemStyle = null;
+        //标签页样式引用
+        public static Style RichTabItemStyle = null;
 
         //指定新建内容成员的类型
         static ContentReader.ContentType contentType = ContentReader.ContentType.DataPack;
@@ -74,7 +77,7 @@ namespace cbhk_environment.Generators.DataPackGenerator
         SolidColorBrush searchResultIsNullBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
 
         //获取文本编辑区的引用
-        TabControl FileModifyZone = null;
+        public TabControl FileModifyZone = null;
 
         #region 初始化页面右侧按钮的指令列表
         public RelayCommand OpenLocalProject { get; set; }
@@ -89,12 +92,12 @@ namespace cbhk_environment.Generators.DataPackGenerator
                     new RichTreeViewItems() { Header = "已固定",Tag = "Fixed",IsExpanded = true,Visibility = Visibility.Collapsed},
                     new RichTreeViewItems() { Header = "今天",Tag = "ToDay",IsExpanded = true},
                     new RichTreeViewItems() { Header = "昨天",Tag = "Yesterday",IsExpanded = true },
-                    new RichTreeViewItems() { Header = "一周内",Tag = "ThisWeek",IsExpanded = true },
-                    new RichTreeViewItems() { Header = "超过一周",Tag = "LastWeek",IsExpanded = true },
-                    new RichTreeViewItems() { Header = "一月内",Tag = "ThisMonth",IsExpanded = true },
-                    new RichTreeViewItems() { Header = "超过一月",Tag = "LastMonth",IsExpanded = true },
+                    new RichTreeViewItems() { Header = "这周",Tag = "ThisWeek",IsExpanded = true },
+                    new RichTreeViewItems() { Header = "一周内",Tag = "LastWeek",IsExpanded = true },
+                    new RichTreeViewItems() { Header = "这个月",Tag = "ThisMonth",IsExpanded = true },
+                    new RichTreeViewItems() { Header = "一月内",Tag = "LastMonth",IsExpanded = true },
                     new RichTreeViewItems() { Header = "今年",Tag = "ThisYear",IsExpanded = true },
-                    new RichTreeViewItems() { Header = "超过一年",Tag = "LastYear",IsExpanded = true }
+                    new RichTreeViewItems() { Header = "一年内",Tag = "LastYear",IsExpanded = true }
                 };
         #endregion
 
@@ -121,7 +124,7 @@ namespace cbhk_environment.Generators.DataPackGenerator
         #endregion
 
         #region 近期内容搜索视图可见性
-        Visibility recentItemSearchPanelVisibility = Visibility.Visible;
+        Visibility recentItemSearchPanelVisibility = Visibility.Collapsed;
         public Visibility RecentItemSearchPanelVisibility
         {
             get { return recentItemSearchPanelVisibility; }
@@ -309,7 +312,63 @@ namespace cbhk_environment.Generators.DataPackGenerator
             TemplateSelect templateSelect = new TemplateSelect();
             if(templateSelect.ShowDialog() == true)
             {
+                initialization_datacontext initDataContext = templateSelect.DataContext as initialization_datacontext;
 
+                //合并选择的路径和数据包名
+                string RootPath = initDataContext.SelectedDatapackPath.ItemText + "\\" + initDataContext.DatapackName + "\\";
+                //创建数据包文件夹
+                Directory.CreateDirectory(RootPath);
+
+                foreach (var selectedTemplateItem in initialization_datacontext.SelectedTemplateItemList)
+                {
+                    if (selectedTemplateItem is RecentTemplateItems)
+                    {
+                        RecentTemplateItems recentTemplateItem = selectedTemplateItem as RecentTemplateItems;
+                        if (File.Exists(initDataContext.RecentTemplateDataFilePath + "\\" + initDataContext.SelectedVersionString + "\\" + recentTemplateItem.TemplateID + "." + initDataContext.SelectedFileTypeString))
+                        {
+                            //复制模板到当前数据包生成路径下的指定命名空间中
+                            Directory.CreateDirectory(RootPath + "data\\" + (initDataContext.DatapackMainNameSpace == "" ? initDataContext.DatapackName : initDataContext.DatapackMainNameSpace) + "\\" + recentTemplateItem.FileNameSpace);
+                            File.Copy(initDataContext.RecentTemplateDataFilePath + "\\" + initDataContext.SelectedVersionString + "\\" + recentTemplateItem.TemplateID + "." + initDataContext.SelectedFileTypeString, RootPath + "data\\" + (initDataContext.DatapackMainNameSpace == "" ? initDataContext.DatapackName : initDataContext.DatapackMainNameSpace) + "\\" + recentTemplateItem.FileNameSpace);
+                        }
+                        else
+                            if (File.Exists(initDataContext.RecentTemplateDataFilePath + "\\contents\\" + recentTemplateItem.TemplateID + ".content"))
+                        {
+                            //读取数据
+                            string FilePath = File.ReadAllText(initDataContext.RecentTemplateDataFilePath + "\\contents\\" + recentTemplateItem.TemplateID + ".content");
+                            //分析内容类型
+                            ContentReader.ContentType contentType = ContentReader.GetTargetContentType(FilePath);
+                            //根据内容类型复制到对应的命名空间下(仅复制第一层文件夹,标记源路径数据,订阅事件,实现逐层复制)
+                            switch (contentType)
+                            {
+                                case ContentReader.ContentType.DataPack:
+                                case ContentReader.ContentType.Folder:
+                                    RichTreeViewItems contentNodes = ContentReader.ReadTargetContent(FilePath, contentType);
+                                    if (contentNodes != null)
+                                    {
+                                        ContentView.Items.Add(contentNodes);
+
+                                        //添加进近期使用内容链表
+                                        string folderName = Path.GetFileNameWithoutExtension(FilePath);
+                                        File.WriteAllText(recentContentsFolderPath + "\\" + folderName + ".content", FilePath);
+                                    }
+                                    break;
+                            }
+                        }
+                    }
+
+                    if (selectedTemplateItem is TemplateItems)
+                    {
+                        TemplateItems templateItem = selectedTemplateItem as TemplateItems;
+                        if (File.Exists(initDataContext.TemplateDataFilePath + "\\" + initDataContext.SelectedVersionString + "\\" + templateItem.TemplateID + "." + initDataContext.SelectedFileTypeString))
+                        {
+
+                        }
+                    }
+                }
+
+                //切换面板显示
+                InitPageVisibility = Visibility.Collapsed;
+                FunctionEditorZoneVisibility = Visibility.Visible;
             }
         }
 
@@ -406,6 +465,16 @@ namespace cbhk_environment.Generators.DataPackGenerator
         }
 
         /// <summary>
+        /// 获取标签页样式引用
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void RichTabItemStyleLoaded(object sender, RoutedEventArgs e)
+        {
+            RichTabItemStyle = (sender as RichTabItems).Style;
+        }
+
+        /// <summary>
         /// 获取内容树视图引用
         /// </summary>
         /// <param name="sender"></param>
@@ -435,7 +504,7 @@ namespace cbhk_environment.Generators.DataPackGenerator
                         RecentItems contentItem = item.Header as RecentItems;
                         if(RecentItemSearchPanel.Items.Contains(contentItem))
                         {
-                            RecentItems newItem = new RecentItems() { Cursor = Cursors.Hand };
+                            RecentItems newItem = new RecentItems();
                             newItem.MouseLeftButtonUp += AnalysisRecentItemData;
                             newItem.Tag = contentItem.Tag;
                             newItem.FileIcon.Source = new BitmapImage(new Uri(contentItem.CurrentFileIconPath, UriKind.Absolute));
@@ -459,7 +528,9 @@ namespace cbhk_environment.Generators.DataPackGenerator
             //设置显示数据源
             RecentItemList.All(item =>
             {
-                if (item.FileName.Text.Contains(RecentItemTextBox.Text))
+                string searchText = RecentItemTextBox.Text.ToLower().Trim();
+                string itemFileName = item.FileName.Text.ToLower();
+                if (itemFileName.Contains(searchText))
                 {
                     RecentItemSearchResults.Add(item);
                     if (RecentItemList.Contains(item))
@@ -503,6 +574,7 @@ namespace cbhk_environment.Generators.DataPackGenerator
                         last_parent.Items.Clear();
                     }
                 }
+
                 #region 添加日期
                 //添加固定节点
                 RichTreeViewItems fixNode = recentContentList.First();
@@ -593,7 +665,7 @@ namespace cbhk_environment.Generators.DataPackGenerator
                 string FilePath = File.ReadAllText(CurrentContentFilePath);
 
                 //近期内容类型为未知
-                contentType = ContentReader.ContentType.UnKnown;
+                contentType = ContentReader.GetTargetContentType(FilePath);
                 RichTreeViewItems contentItem = ContentReader.ReadTargetContent(FilePath,contentType);
 
                 if(contentItem != null)
@@ -603,14 +675,14 @@ namespace cbhk_environment.Generators.DataPackGenerator
                     FunctionEditorZoneVisibility = Visibility.Visible;
                 }
                 else
-                if (MessageBox.Show("当前所选内容不存在,是否删除引用?","警告",MessageBoxButton.OKCancel) == MessageBoxResult.OK)
-                    {
-                        RichTreeViewItems dateItem = item.Parent as RichTreeViewItems;
-                        dateItem.Items.Remove(item);
-                        if (dateItem.Items.Count == 0)
-                            recentContentView.Items.Remove(dateItem);
-                        File.Delete(CurrentContentFilePath);
-                    }
+                if (MessageBox.Show("当前所选内容不存在或无法识别,是否删除引用?", "警告", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                {
+                    RichTreeViewItems parent = item.Parent as RichTreeViewItems;
+                    RichTreeViewItems dateItem = parent.Parent as RichTreeViewItems;
+                    dateItem.Items.Remove(parent);
+                    dateItem.Visibility = dateItem.Items.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+                    File.Delete(CurrentContentFilePath);
+                }
             }
         }
 

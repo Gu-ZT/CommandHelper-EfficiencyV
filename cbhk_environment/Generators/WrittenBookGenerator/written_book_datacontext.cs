@@ -1,6 +1,7 @@
 ﻿using cbhk_environment.ControlsDataContexts;
 using cbhk_environment.CustomControls;
 using cbhk_environment.CustomControls.ColorPickers;
+using cbhk_environment.GeneralTools;
 using cbhk_environment.Generators.WrittenBookGenerator.Components;
 using cbhk_environment.WindowDictionaries;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -938,7 +939,7 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
         /// </summary>
         private void run_command()
         {
-            if(!AsInternalTool)
+            if (!AsInternalTool)
             {
                 //最终结果
                 string result = "/give @p written_book";
@@ -1124,6 +1125,29 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
                 TextPointer select = written_box.CaretPosition;
                 int index = start.GetOffsetToPosition(select);
                 richRun.Text = richRun.Text.Insert(index - 1, Clipboard.GetText());
+                e.Handled = true;
+            }
+
+            if (e.Key == Key.Enter)
+            {
+                var control = new RichParagraph();
+                if (written_box.CaretPosition.IsEndOfBlock())
+                {
+                    written_box.Document.Blocks.InsertAfter(written_box.CaretPosition.Paragraph, control);
+                }
+                else
+                {
+                    if (written_box.CaretPosition.IsAtLineStartPosition)
+                    {
+                        written_box.Document.Blocks.InsertBefore(written_box.CaretPosition.Paragraph, control);
+                    }
+                    else
+                    {
+                        written_box.Document.Blocks.InsertBefore(written_box.CaretPosition.InsertParagraphBreak().Paragraph, control);
+                    }
+                }
+                written_box.CaretPosition = control.ContentStart;
+                written_box.Focus();
                 e.Handled = true;
             }
 

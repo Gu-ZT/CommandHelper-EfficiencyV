@@ -57,7 +57,6 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                 FileName.Text = Path.GetFileNameWithoutExtension(filePath);
                 FileName.FontWeight = FontWeights.Bold;
 
-                Cursor = Cursors.Hand;
                 ToolTip = "打开本地数据包\r\n" + filePath;
                 ToolTipService.SetInitialShowDelay(this, 0);
                 ToolTipService.SetShowDuration(this, 1000);
@@ -76,8 +75,8 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
             int day_data = DateTime.Now.Day;
 
             int day_interval = day_data - CurrentTime.Day;
-            int month_interval = CurrentTime.Month - month_data;
-            int year_interval = CurrentTime.Year - year_data;
+            int month_interval = month_data - CurrentTime.Month;
+            int year_interval = year_data - CurrentTime.Year;
 
             //去年
             if (year_interval == 1)

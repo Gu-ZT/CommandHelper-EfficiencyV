@@ -21,8 +21,6 @@
 
     <Style x:Key="RichTabItem" TargetType="{x:Type CustomControls:RichTabItems}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-        <Setter Property="Foreground" Value="Black" />
-        <Setter Property="Background" Value="{StaticResource TabItem.Static.Background}" />
         <Setter Property="BorderBrush" Value="{StaticResource TabItem.Static.Border}" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="MinHeight" Value="30" />
@@ -36,7 +34,9 @@
                     <Grid
                         x:Name="templateRoot"
                         Width="Auto"
-                        Height="Auto"
+                        Height="20"
+                        MinWidth="50"
+                        MaxWidth="300"
                         Background="{TemplateBinding Background}"
                         SnapsToDevicePixels="true">
                         <Grid.ColumnDefinitions>
@@ -67,17 +67,31 @@
                             Grid.Column="0"
                             VerticalAlignment="Center"
                             Panel.ZIndex="1"
+                            FontSize="20"
                             Foreground="{TemplateBinding Foreground}"
                             Text="{TemplateBinding HeaderText}"
                             TextAlignment="Center" />
                         <Border
-                            x:Name="CloseButton"
+                            x:Name="CloseButtonBorder"
                             Grid.Column="1"
-                            Margin="0,0,5,0"
+                            Width="20"
+                            Height="20"
+                            Margin="0,5,0,0"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
+                            CornerRadius="3"
                             Visibility="Hidden">
+                            <!--
+                                IconColor="White"
+                                IconData="M762.5 200l37.5 37.5-262.5 262.5 262.5 262.5-37.5 37.5-262.5-262.5-262.5 262.5-37.5-37.5 262.5-262.5-262.5-262.5 37.5-37.5 262.5 262.5z"
+                                IconHeight="10"
+                                IconWidth="10"
+                            -->
+                            <!--  Content="×"  -->
                             <CustomControls:IconTextButtons
+                                x:Name="CloseButton"
+                                Width="10"
+                                Height="10"
                                 Background="{TemplateBinding CloseButtonBackground}"
                                 BorderBrush="{TemplateBinding CloseButtonBorderBrush}"
                                 BorderThickness="{TemplateBinding CloseButtonBorderThickness}"
@@ -110,10 +124,14 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter TargetName="SelectedLine" Property="Visibility" Value="Visible" />
-                            <Setter TargetName="CloseButton" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="CloseButtonBorder" Property="Visibility" Value="Visible" />
                         </Trigger>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="CloseButton" Property="Visibility" Value="Visible" />
+                        <Trigger SourceName="CloseButton" Property="IsMouseOver" Value="True">
+                            <Setter TargetName="CloseButton" Property="IconColor" Value="Red" />
+                        </Trigger>
+                        <Trigger SourceName="CloseButtonBorder" Property="IsMouseOver" Value="True">
+                            <Setter TargetName="CloseButtonBorder" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="CloseButtonBorder" Property="Background" Value="#323232" />
                         </Trigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
@@ -122,8 +140,8 @@
                             </MultiDataTrigger.Conditions>
                             <Setter Property="Panel.ZIndex" Value="1" />
                             <Setter Property="Margin" Value="-6,0,0,0" />
-                            <Setter TargetName="CloseButton" Property="Background" Value="White" />
-                            <!--<Setter TargetName="CloseButton" Property="Foreground" Value="Black" />-->
+                            <Setter TargetName="CloseButtonBorder" Property="Background" Value="White" />
+                            <!--<Setter TargetName="CloseButtonBorder" Property="Foreground" Value="Black" />-->
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
@@ -132,8 +150,8 @@
                             </MultiDataTrigger.Conditions>
                             <Setter Property="Panel.ZIndex" Value="1" />
                             <Setter Property="Margin" Value="0,0,0,-6" />
-                            <Setter TargetName="CloseButton" Property="Background" Value="White" />
-                            <!--<Setter TargetName="CloseButton" Property="Foreground" Value="Black" />-->
+                            <Setter TargetName="CloseButtonBorder" Property="Background" Value="White" />
+                            <!--<Setter TargetName="CloseButtonBorder" Property="Foreground" Value="Black" />-->
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
@@ -142,8 +160,8 @@
                             </MultiDataTrigger.Conditions>
                             <Setter Property="Panel.ZIndex" Value="1" />
                             <Setter Property="Margin" Value="0,0,-6,0" />
-                            <Setter TargetName="CloseButton" Property="Background" Value="White" />
-                            <!--<Setter TargetName="CloseButton" Property="Foreground" Value="Black" />-->
+                            <Setter TargetName="CloseButtonBorder" Property="Background" Value="White" />
+                            <!--<Setter TargetName="CloseButtonBorder" Property="Foreground" Value="Black" />-->
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
@@ -152,8 +170,8 @@
                             </MultiDataTrigger.Conditions>
                             <Setter Property="Panel.ZIndex" Value="1" />
                             <Setter Property="Margin" Value="0,-6,0,0" />
-                            <Setter TargetName="CloseButton" Property="Background" Value="Transparent" />
-                            <!--<Setter TargetName="CloseButton" Property="Foreground" Value="White" />-->
+                            <Setter TargetName="CloseButtonBorder" Property="Background" Value="Transparent" />
+                            <!--<Setter TargetName="CloseButtonBorder" Property="Foreground" Value="White" />-->
                         </MultiDataTrigger>
                         <!--<MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
@@ -162,7 +180,7 @@
                             </MultiDataTrigger.Conditions>
                             <Setter Property="Panel.ZIndex" Value="1" />
                             <Setter Property="Margin" Value="0,-6,0,0" />
-                            <Setter TargetName="CloseButton" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="CloseButtonBorder" Property="Visibility" Value="Collapsed" />
                         </MultiDataTrigger>-->
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

@@ -163,6 +163,7 @@
     <Compile Include="CustomControls\IconTextButtons.cs" />
     <Compile Include="CustomControls\RadiusToggleButtons.cs" />
     <Compile Include="CustomControls\RichCheckBoxs.cs" />
+    <Compile Include="CustomControls\RichParagraph.cs" />
     <Compile Include="CustomControls\RichRun.cs" />
     <Compile Include="CustomControls\RichTabItems.cs" />
     <Compile Include="CustomControls\RichTreeViewItems.cs" />
@@ -195,6 +196,7 @@
     <Compile Include="GeneralTools\MosaicHelper.cs" />
     <Compile Include="GeneralTools\OpenFolderThenSelectFiles.cs" />
     <Compile Include="GeneralTools\ParticleManagement.cs" />
+    <Compile Include="GeneralTools\RichTextBoxTools.cs" />
     <Compile Include="GeneralTools\ScrollToSomeWhere.cs" />
     <Compile Include="GeneralTools\ScrollViewerHelper\FramewrokElementExtensions.cs" />
     <Compile Include="GeneralTools\ScrollViewerHelper\ScrollToControlAction.cs" />
@@ -388,6 +390,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="ControlsDictionaries\ContextMenus.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ControlsDictionaries\IconCheckBoxs.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -533,6 +539,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Generators\DataPackGenerator\Dictionaries\Icons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Generators\DataPackGenerator\Dictionaries\TreeViewContextMenu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

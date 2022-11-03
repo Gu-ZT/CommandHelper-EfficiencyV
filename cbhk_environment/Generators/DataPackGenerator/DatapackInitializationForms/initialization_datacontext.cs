@@ -12,9 +12,9 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using Windows.Devices.PointOfService;
 using WK.Libraries.BetterFolderBrowserNS;
 
 namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationForms
@@ -31,8 +31,8 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
             TemplateNextStep = new RelayCommand<Window>(TemplateNextStepCommand);
             ClearAllSelectParameters = new RelayCommand(ClearAllSelectParametersCommand);
 
-            AttributeLastStep = new RelayCommand(AttributeLastStepCommand);
-            AttributeNextStep = new RelayCommand(AttributeNextStepCommand);
+            AttributeLastStep = new RelayCommand<Window>(AttributeLastStepCommand);
+            AttributeNextStep = new RelayCommand<Window>(AttributeNextStepCommand);
             SetDatapackPath = new RelayCommand(SetDatapackPathCommand);
             SetDatapackDescription = new RelayCommand(SetDatapackDescriptionCommand);
             AddDatapackFilter = new RelayCommand(AddDatapackFilterCommand);
@@ -41,6 +41,9 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
             CopyDatapackName = new RelayCommand(CopyDatapackNameCommand);
             CopyDatapackPath = new RelayCommand(CopyDatapackPathCommand);
             CopyDatapackDescription = new RelayCommand(CopyDatapackDescriptionCommand);
+            CopyDatapackMainNameSpace = new RelayCommand(CopyDatapackMainNameSpaceCommand);
+
+            SynchronizePackAndNameSpaceName = new RelayCommand<TextCheckBoxs>(SynchronizePackAndNameSpaceNameCommand);
             #endregion
 
             #region 载入版本
@@ -101,19 +104,22 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         string TemplateMetaDataFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\DataPack\\data\\templates\\introductions";
 
         //模板存放路径
-        public static string TemplateDataFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\DataPack\\data\\templates\\presets";
+        public string TemplateDataFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\DataPack\\data\\templates\\presets";
 
         //近期使用的模板存放路径
-        string RecentTemplateDataFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\DataPack\\data\\recent_templates";
+        public string RecentTemplateDataFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\DataPack\\data\\recent_templates";
 
         //存储已选中的模板
         public static List<object> SelectedTemplateItemList = new List<object>() { };
 
         //近期使用的模板成员
-        public ObservableCollection<RecentTemplateItems> RecentTemplateList { get; set; } = new ObservableCollection<RecentTemplateItems>();
+        public static ObservableCollection<RecentTemplateItems> RecentTemplateList { get; set; } = new ObservableCollection<RecentTemplateItems>();
 
         //模板成员集合
-        public ObservableCollection<TemplateItems> TemplateList { get; set; } = new ObservableCollection<TemplateItems>();
+        public static ObservableCollection<TemplateItems> TemplateList { get; set; } = new ObservableCollection<TemplateItems>();
+
+        //模板状态锁，防止更新死循环
+        public static bool TemplateCheckLock = false;
 
         //存放版本列表
         public ObservableCollection<TextSource> VersionList { get; set; } = new ObservableCollection<TextSource> { };
@@ -125,7 +131,16 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         public ObservableCollection<TextSource> FunctionTypeList { get; set; } = new ObservableCollection<TextSource> { };
 
         //存储所有类型的模板标签
-        public static List<string> SelectedTemplateTypeTagList = new List<string> { };
+        public List<string> SelectedTemplateTypeTagList = new List<string> { };
+
+        /// <summary>
+        /// 已选择的版本
+        /// </summary>
+        public string SelectedVersionString = "";
+        /// <summary>
+        /// 已选择的文件类型
+        /// </summary>
+        public string SelectedFileTypeString = "";
 
         //获取搜索文本框引用
         TextBox SearchBox = null;
@@ -231,27 +246,19 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         private void TemplateNextStepCommand(Window target)
         {
             //获取已选择的版本和文件类型
-            string SelectedVersionString = SelectedVersion.ItemText;
-            string SelectedFileTypeString = SelectedFileType.ItemText.ToLower();
+            SelectedVersionString = SelectedVersion.ItemText;
+            SelectedFileTypeString = SelectedFileType.ItemText.ToLower();
 
             if (SelectedVersionString == "所有版本")
                 SelectedVersionString = DefaultVersion.ItemText;
             if (SelectedFileTypeString == "所有文件类型")
                 SelectedFileTypeString = DefaultFileType.ItemText.ToLower();
 
-            //存储已选择的模板成员
-            List<object> SelectedTemplateList = SelectedTemplateItemList;
-            //存储待生成的模板成员
-            List<string> TemplateWaitToGenerator = new List<string> { };
-
-            foreach (var item in SelectedTemplateList)
+            foreach (var selectedTemplateItemList in SelectedTemplateItemList)
             {
-                if (item is RecentTemplateItems)
+                if (selectedTemplateItemList is RecentTemplateItems)
                 {
-                    RecentTemplateItems recentTemplateItem = item as RecentTemplateItems;
-                    if (File.Exists(recentTemplateItem.FilePath))
-                        TemplateWaitToGenerator.Add(recentTemplateItem.FilePath);
-
+                    RecentTemplateItems recentTemplateItem = selectedTemplateItemList as RecentTemplateItems;
                     string FileType = recentTemplateItem.FileType;
                     string FunctionType = recentTemplateItem.FunctionType;
                     if (!SelectedTemplateTypeTagList.Contains(FileType))
@@ -260,14 +267,11 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
                         SelectedTemplateTypeTagList.Add(FunctionType);
                 }
 
-                if (item is TemplateItems)
+                if (selectedTemplateItemList is TemplateItems)
                 {
-                    TemplateItems TemplateItem = item as TemplateItems;
-                    if (File.Exists(TemplateDataFilePath + "\\" + SelectedVersionString + "\\" + TemplateItem.TemplateID + "." + SelectedFileTypeString))
-                        TemplateWaitToGenerator.Add(TemplateDataFilePath + "\\" + SelectedVersionString + "\\" + TemplateItem.TemplateID + "." + SelectedFileTypeString);
-
-                    string FileType = TemplateItem.FileType;
-                    string FunctionType = TemplateItem.FunctionType;
+                    TemplateItems templateItem = selectedTemplateItemList as TemplateItems;
+                    string FileType = templateItem.FileType;
+                    string FunctionType = templateItem.FunctionType;
                     if (!SelectedTemplateTypeTagList.Contains(FileType))
                         SelectedTemplateTypeTagList.Add(FileType);
                     if (!SelectedTemplateTypeTagList.Contains(FunctionType))
@@ -279,7 +283,11 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
             DatapackGenerateSetup datapackGenerateSetup = new DatapackGenerateSetup();
             if (datapackGenerateSetup.ShowDialog() == true)
             {
-
+                //TemplateGenerator.Generator(SelectedTemplateItemList,RecentTemplateDataFilePath,TemplateDataFilePath,SelectedVersionString,SelectedFileTypeString, SelectedDatapackPathString);
+                //处理完毕后清空已选择模板列表成员
+                SelectedTemplateItemList.Clear();
+                //当前窗体已完成任务
+                target.DialogResult = true;
             }
         }
 
@@ -343,7 +351,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void SelectAllClick(object sender, RoutedEventArgs e)
+        public void SelectAllTemplatesClick(object sender, RoutedEventArgs e)
         {
             TextCheckBoxs box = sender as TextCheckBoxs;
             TemplateList.All(item=> { if(item.Visibility == Visibility.Visible) item.TemplateSelector.IsChecked = box.IsChecked; return true; });
@@ -354,10 +362,32 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void ReverseSelectAllClick(object sender, RoutedEventArgs e)
+        public void ReverseSelectAllTemplatesClick(object sender, RoutedEventArgs e)
         {
             TextCheckBoxs box = sender as TextCheckBoxs;
             TemplateList.All(item => { if (item.Visibility == Visibility.Visible) item.TemplateSelector.IsChecked = !item.TemplateSelector.IsChecked; return true; });
+        }
+
+        /// <summary>
+        /// 全选历史模板
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void SelectAllRecentTemplatesClick(object sender, RoutedEventArgs e)
+        {
+            TextCheckBoxs box = sender as TextCheckBoxs;
+            RecentTemplateList.All(item => { if (item.Visibility == Visibility.Visible) item.TemplateSelector.IsChecked = box.IsChecked; return true; });
+        }
+
+        /// <summary>
+        /// 反选历史模板
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void ReverseSelectAllRecentTemplatesClick(object sender, RoutedEventArgs e)
+        {
+            TextCheckBoxs box = sender as TextCheckBoxs;
+            RecentTemplateList.All(item => { if (item.Visibility == Visibility.Visible) item.TemplateSelector.IsChecked = !item.TemplateSelector.IsChecked; return true; });
         }
 
         /// <summary>
@@ -670,8 +700,8 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         #region 属性设置窗体逻辑处理
 
         #region 属性设置窗体:上一步、下一步和设置路径等指令
-        public RelayCommand AttributeLastStep { get; set; }
-        public RelayCommand AttributeNextStep { get; set; }
+        public RelayCommand<Window> AttributeLastStep { get; set; }
+        public RelayCommand<Window> AttributeNextStep { get; set; }
         public RelayCommand SetDatapackPath { get; set; }
         public RelayCommand SetDatapackDescription { get; set; }
         public RelayCommand AddDatapackFilter { get; set; }
@@ -679,6 +709,8 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         public RelayCommand CopyDatapackName { get; set; }
         public RelayCommand CopyDatapackPath { get; set; }
         public RelayCommand CopyDatapackDescription { get; set; }
+        public RelayCommand CopyDatapackMainNameSpace { get; set; }
+        public RelayCommand<TextCheckBoxs> SynchronizePackAndNameSpaceName { get; set; }
         #endregion
 
         #region 存储数据包的名称
@@ -700,8 +732,27 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         }
         #endregion
 
+        #region 存储数据包的主命名空间名称
+        private string datapackMainNameSpace = "Datapack";
+        public string DatapackMainNameSpace
+        {
+            get { return datapackMainNameSpace; }
+            set
+            {
+                datapackMainNameSpace = value;
+
+                if (datapackMainNameSpace.Trim() == "")
+                    DatapackNameIsNull = Visibility.Visible;
+                else
+                    DatapackNameIsNull = Visibility.Hidden;
+
+                OnPropertyChanged();
+            }
+        }
+        #endregion
+
         #region 存储数据包的保存路径
-        private TextSource selectedDatapackPath = new TextSource() { ItemText = "" };
+        private static TextSource selectedDatapackPath = new TextSource() { ItemText = "" };
         public TextSource SelectedDatapackPath
         {
             get { return selectedDatapackPath; }
@@ -733,6 +784,32 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
             set
             {
                 datapackNameIsNull = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion
+
+        #region 数据包命名空间为空时的提示可见性
+        private Visibility datapackMainNameSpaceIsNull = Visibility.Hidden;
+        public Visibility DatapackMainNameSpaceIsNull
+        {
+            get { return datapackMainNameSpaceIsNull; }
+            set
+            {
+                datapackMainNameSpaceIsNull = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion
+
+        #region 命名空间可操作性
+        private bool canModifyNameSpace = true;
+        public bool CanModifyNameSpace
+        {
+            get { return canModifyNameSpace; }
+            set
+            {
+                canModifyNameSpace = value;
                 OnPropertyChanged();
             }
         }
@@ -1009,20 +1086,25 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         /// <summary>
         /// 属性设置窗体进入下一步
         /// </summary>
-        private void AttributeNextStepCommand()
+        private void AttributeNextStepCommand(Window target)
         {
-            //生成数据包
-            //关闭所有初始化窗体
+            #region 整理数据包的各种属性
+            foreach (FilterItems filterItem in DatapackFilterSource)
+            {
+            }
+            #endregion
+            //关闭属性设置窗体
+            target.DialogResult = true;
         }
 
         /// <summary>
         /// 属性设置窗体进入上一步
         /// </summary>
-        private void AttributeLastStepCommand()
+        private void AttributeLastStepCommand(Window target)
         {
             //关闭属性设置窗体
+            target.DialogResult = false;
         }
-        #endregion
 
         /// <summary>
         /// 复制数据包的简介
@@ -1047,5 +1129,23 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         {
             Clipboard.SetText(DatapackName);
         }
+
+        /// <summary>
+        /// 复制数据包的主命名空间名称
+        /// </summary>
+        private void CopyDatapackMainNameSpaceCommand()
+        {
+            Clipboard.SetText(DatapackMainNameSpace);
+        }
+
+        /// <summary>
+        /// 同步主命名空间和数据包的名称
+        /// </summary>
+        private void SynchronizePackAndNameSpaceNameCommand(TextCheckBoxs box)
+        {
+            CanModifyNameSpace = !box.IsChecked.Value;
+            DatapackMainNameSpace = DatapackName;
+        }
+        #endregion
     }
 }

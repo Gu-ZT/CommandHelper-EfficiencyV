@@ -1,11 +1,16 @@
 ﻿using cbhk_environment.CustomControls;
+using cbhk_environment.CustomControls.SkeletonScreen;
+using cbhk_environment.WindowDictionaries;
 using System;
 using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace cbhk_environment.Generators.DataPackGenerator.Components
 {
@@ -170,6 +175,17 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
         public static ContentType GetTargetContentType(string contentPath)
         {
             ContentType resultType = ContentType.UnKnown;
+
+            //当前内容为数据包
+            if(Directory.Exists(contentPath+"\\data") && File.Exists(contentPath+"\\pack.mcmeta"))
+                return ContentType.DataPack;
+            //当前内容为文件夹
+            if (Directory.Exists(contentPath))
+                return ContentType.Folder;
+            //当前内容为文件
+            if (File.Exists(contentPath+".json") || File.Exists(contentPath+".mcfunction"))
+                return ContentType.File;
+
             return resultType;
         }
 
@@ -199,10 +215,9 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                     descriptionCount = int.Parse(datapack_datacontext.JsonScript("getCurrentObjectLength('.pack.description');").ToString());
             }
 
-            int itemCount = -1;
             //检查过滤器是否有成员
             if (HasFilter && HasBlock)
-                int.TryParse(datapack_datacontext.JsonScript("getCurrentObjectLength('.filter.block');").ToString(), out itemCount);
+                int.TryParse(datapack_datacontext.JsonScript("getCurrentObjectLength('.filter.block');").ToString(), out int itemCount);
 
             //已确定简介为数组且有成员
             if (descriptionCount > 0 || descriptionType.ToString() == "object")
@@ -334,6 +349,60 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
         private static void ClickToModifyTheFile(object sender, MouseButtonEventArgs e)
         {
             RichTreeViewItems currentItem = sender as RichTreeViewItems;
+
+            string FilePath = currentItem.Uid;
+            string FileName = Path.GetFileName(FilePath);
+            string extension = Path.GetExtension(FilePath);
+
+            if(File.Exists(FilePath))
+            {
+                if(extension == ".mcfunction")
+                {
+                    CommonWindow window = Window.GetWindow(currentItem) as CommonWindow;
+                    datapack_datacontext mainDataContext = window.DataContext as datapack_datacontext;
+                    TabControl fileZone = mainDataContext.FileModifyZone;
+                    RichTextBox richTextBox = new RichTextBox()
+                    {
+                        Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#A8A8A8")),
+                        Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("Transparent")),
+                        BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3D3D3D")),
+                        BorderThickness = new Thickness(1),
+                        FontFamily = new FontFamily("Minecraft"),
+                        FontSize = 25,
+                        CaretBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"))
+                    };
+
+                    #region 更新当前选中的.mcfunction文件的内容
+                    string[] FunctionContents = File.ReadAllLines(FilePath);
+                    richTextBox.Document = new EnabledFlowDocument();
+                    //逐行添加数据
+                    foreach (string LineData in FunctionContents)
+                    {
+                        Paragraph line = new Paragraph(new Run(LineData) { Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")) });
+                        richTextBox.Document.Blocks.Add(line);
+                    }
+                    #endregion
+
+                    RichTabItems richTabItems = new RichTabItems
+                    {
+                        HeaderText = FileName,
+                        Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")),
+                        Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("Transparent")),
+                        CloseButtonForeground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")),
+                        CloseButtonBackground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("Transparent")),
+                        CloseButtonBorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")),
+                        CloseButtonBorderThickness = new Thickness(1),
+                        Content = richTextBox,
+                        Style = datapack_datacontext.RichTabItemStyle
+                    };
+                    fileZone.Items.Add(richTabItems);
+                }
+
+                if(extension == ".json")
+                {
+                    //识别该json文件所属的功能类型并打开对应的生成器
+                }
+            }
         }
 
         /// <summary>

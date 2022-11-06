@@ -16,6 +16,7 @@ using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using Windows.Devices.PointOfService;
 using WK.Libraries.BetterFolderBrowserNS;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Header;
 
 namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationForms
 {
@@ -283,9 +284,6 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
             DatapackGenerateSetup datapackGenerateSetup = new DatapackGenerateSetup();
             if (datapackGenerateSetup.ShowDialog() == true)
             {
-                //TemplateGenerator.Generator(SelectedTemplateItemList,RecentTemplateDataFilePath,TemplateDataFilePath,SelectedVersionString,SelectedFileTypeString, SelectedDatapackPathString);
-                //处理完毕后清空已选择模板列表成员
-                SelectedTemplateItemList.Clear();
                 //当前窗体已完成任务
                 target.DialogResult = true;
             }
@@ -592,28 +590,16 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
                     string recentTemplateString = File.ReadAllText(recentTemplateData);
                     JsonScript("parseJSON(" + recentTemplateString + ");");
 
-                    string filePath = JsonScript("getJSON('.filePath');").ToString();
-                    string typeName = JsonScript("getJSON('.typeName');").ToString();
-                    string fileImage = JsonScript("getJSON('.fileImage');").ToString();
-                    string templateType = JsonScript("getJSON('.templateType');").ToString();
+                    string filePath = JsonScript("getJSON('.FilePath');").ToString();
+                    string typeName = JsonScript("getJSON('.TypeName');").ToString();
+                    string fileImage = JsonScript("getJSON('.FileImage');").ToString();
+                    string templateType = JsonScript("getJSON('.TemplateType');").ToString();
+                    string nameSpace = JsonScript("getJSON('.NameSpace');").ToString();
 
-                    RecentTemplateItems recentTemplateItems = new RecentTemplateItems(filePath,typeName,fileImage,templateType);
-
-                    recentTemplateItems.MouseLeftButtonUp += RecentTemplateItemsMouseLeftButtonUp;
-
+                    RecentTemplateItems recentTemplateItems = new RecentTemplateItems(filePath,typeName,fileImage,templateType,nameSpace);
                     RecentTemplateList.Add(recentTemplateItems);
                 }
             }
-        }
-
-        /// <summary>
-        /// 已选择某个历史模板
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void RecentTemplateItemsMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-
         }
 
         /// <summary>
@@ -661,7 +647,6 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
                     };
                     templateItem.TemplateName.Text = name;
                     templateItem.TemplateDescription.Text = description;
-                    templateItem.MouseLeftButtonUp += TemplateItemMouseLeftButtonUp;
 
                     //判断获取的文件名是否有对应的图标文件
                     if (File.Exists(TemplateIconFilePath + "\\" + FileName + ".png"))
@@ -679,20 +664,6 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
                 //设置默认的文件类型
                 DefaultFileType = FileTypeList.Last();
             }
-        }
-
-        /// <summary>
-        /// 加入或退出已选择模板列表
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void TemplateItemMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            TemplateItems current = sender as TemplateItems;
-            if (current.TemplateSelector.IsChecked.Value)
-                SelectedTemplateItemList.Add(current);
-            else
-                SelectedTemplateItemList.Remove(current);
         }
 
         #endregion
@@ -774,6 +745,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
                 selectedDatapackVersion = value;
             }
         }
+        private string SelectedDatapackVersionString = "";
         #endregion
 
         #region 数据包名称为空时的提示可见性
@@ -1088,10 +1060,44 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         /// </summary>
         private void AttributeNextStepCommand(Window target)
         {
+            //数据包名、主命名空间、生成路径任意一项为空则不提供生成服务
+            string SelectedDatapackPathString = SelectedDatapackPath.ItemText.Trim();
+            if (DatapackName.Trim() == "" || DatapackMainNameSpace.Trim() == "" || SelectedDatapackPathString == "")
+                return;
+
             #region 整理数据包的各种属性
-            foreach (FilterItems filterItem in DatapackFilterSource)
+            //整合过滤器数据
+            DatapackFilter = "\"filter\":{\"block\":[" + string.Join("",DatapackFilterSource.Select(item=>item.FilterBlock)).TrimEnd(',') + "]}";
+            //搜索对应的数据包版本号
+            foreach (var item in DatapackVersionDatabase)
             {
+                if(item.Key == SelectedDatapackVersion.ItemText)
+                {
+                    SelectedDatapackVersionString = item.Value;
+                    break;
+                }
             }
+
+            //合并简介信息
+            if (SelectedDatapackDescriptionType.ItemText == "Object")
+                SelectedDatapackDescription = JsonObjectDescription;
+            else
+                if(SelectedDatapackDescriptionType.ItemText == "Array")
+                SelectedDatapackDescription = JsonArrayDescription;
+            if (SelectedDatapackDescriptionType.ItemText == "Bool")
+                SelectedDatapackDescription = (DescriptionBoolBox.SelectedItem as TextSource).ItemText;
+
+            //合并pack信息
+            string pack = "\"pack\":{\"pack_format\":" + SelectedDatapackVersionString + ",\"description\":\"" + SelectedDatapackDescription + "\"},";
+
+            //合并最终配置文件数据
+            string pack_mcmeta = pack + DatapackFilter;
+
+            #region 根据填写的生成路径，数据包名和主命名空间来生成一个初始包
+            Directory.CreateDirectory(SelectedDatapackPathString + "\\" + DatapackName + "\\data\\" + DatapackMainNameSpace);
+            File.WriteAllText(SelectedDatapackPathString + "\\" + DatapackName + "\\pack.mcmeta", pack_mcmeta,System.Text.Encoding.UTF8);
+            #endregion
+            
             #endregion
             //关闭属性设置窗体
             target.DialogResult = true;

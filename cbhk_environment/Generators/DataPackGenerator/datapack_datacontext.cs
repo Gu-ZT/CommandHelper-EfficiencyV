@@ -342,6 +342,7 @@ namespace cbhk_environment.Generators.DataPackGenerator
                             {
                                 case ContentReader.ContentType.DataPack:
                                 case ContentReader.ContentType.Folder:
+                                case ContentReader.ContentType.File:
                                     RichTreeViewItems contentNodes = ContentReader.ReadTargetContent(FilePath, contentType);
                                     if (contentNodes != null)
                                     {
@@ -361,10 +362,40 @@ namespace cbhk_environment.Generators.DataPackGenerator
                         TemplateItems templateItem = selectedTemplateItem as TemplateItems;
                         if (File.Exists(initDataContext.TemplateDataFilePath + "\\" + initDataContext.SelectedVersionString + "\\" + templateItem.TemplateID + "." + initDataContext.SelectedFileTypeString))
                         {
+                            //复制模板到当前数据包生成路径下的指定命名空间中
+                            Directory.CreateDirectory(RootPath + "data\\" + (initDataContext.DatapackMainNameSpace == "" ? initDataContext.DatapackName : initDataContext.DatapackMainNameSpace) + "\\" + templateItem.FileNameSpace);
+                            File.Copy(initDataContext.RecentTemplateDataFilePath + "\\" + initDataContext.SelectedVersionString + "\\" + templateItem.TemplateID + "." + initDataContext.SelectedFileTypeString, RootPath + "data\\" + (initDataContext.DatapackMainNameSpace == "" ? initDataContext.DatapackName : initDataContext.DatapackMainNameSpace) + "\\" + templateItem.FileNameSpace);
+                        }
+                        else
+                            if(File.Exists(initDataContext.TemplateDataFilePath + "\\contents\\" + templateItem.TemplateID + ".content"))
+                        {
+                            //读取数据
+                            string FilePath = File.ReadAllText(initDataContext.TemplateDataFilePath + "\\contents\\" + templateItem.TemplateID + ".content");
+                            //分析内容类型
+                            ContentReader.ContentType contentType = ContentReader.GetTargetContentType(FilePath);
+                            //根据内容类型复制到对应的命名空间下(仅复制第一层文件夹,标记源路径数据,订阅事件,实现逐层复制)
+                            switch (contentType)
+                            {
+                                case ContentReader.ContentType.DataPack:
+                                case ContentReader.ContentType.Folder:
+                                case ContentReader.ContentType.File:
+                                    RichTreeViewItems contentNodes = ContentReader.ReadTargetContent(FilePath, contentType);
+                                    if (contentNodes != null)
+                                    {
+                                        ContentView.Items.Add(contentNodes);
 
+                                        //添加进近期使用内容链表
+                                        string folderName = Path.GetFileNameWithoutExtension(FilePath);
+                                        File.WriteAllText(recentContentsFolderPath + "\\" + folderName + ".content", FilePath);
+                                    }
+                                    break;
+                            }
                         }
                     }
                 }
+
+                //处理完毕后清空已选择模板列表成员
+                initialization_datacontext.SelectedTemplateItemList.Clear();
 
                 //切换面板显示
                 InitPageVisibility = Visibility.Collapsed;

@@ -20,6 +20,8 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
         public string FunctionType = "";
         //所属命名空间
         public string FileNameSpace = "";
+        //文件路径
+        public string FilePath = "";
 
         //选中后的背景色
         SolidColorBrush SelectedColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3D3D3D"));
@@ -33,10 +35,12 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
         /// <param name="typeName">类型名</param>
         /// <param name="fileImage">模板图标</param>
         /// <param name="templateType">模板类型</param>
-        public RecentTemplateItems(string filePath,string typeName,string fileImage,string templateType)
+        public RecentTemplateItems(string filePath,string typeName,string fileImage,string templateType,string nameSpace)
         {
             InitializeComponent();
 
+            FilePath = filePath;
+            FileNameSpace = nameSpace;
             TemplateName.Text = typeName;
             TemplateImage.Source = new BitmapImage(new Uri(fileImage, UriKind.Absolute));
             TemplateType.Children.Add(new TemplateTypeTag(templateType));
@@ -96,6 +100,16 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                 //更新完毕
                 initialization_datacontext.TemplateCheckLock = false;
             }
+        }
+
+        /// <summary>
+        /// 切换选中状态
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UserControlMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            TemplateSelector.IsChecked = !TemplateSelector.IsChecked;
         }
     }
 }

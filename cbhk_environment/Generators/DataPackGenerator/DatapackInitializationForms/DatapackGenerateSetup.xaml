@@ -196,6 +196,7 @@
             HorizontalAlignment="Left"
             Background="Transparent"
             Foreground="White"
+            IsEditable="False"
             IsReadOnly="True"
             SelectedItem="{Binding SelectedDatapackVersion, Mode=TwoWay}"
             Style="{DynamicResource TextComboBox}">
@@ -245,6 +246,7 @@
                 VerticalAlignment="Center"
                 Background="Transparent"
                 Foreground="White"
+                IsEditable="False"
                 IsReadOnly="True"
                 SelectedItem="{Binding SelectedDatapackDescriptionType, Mode=TwoWay}"
                 Style="{DynamicResource TextComboBox}">
@@ -266,6 +268,7 @@
                 VerticalAlignment="Top"
                 Background="Transparent"
                 Foreground="White"
+                IsEditable="False"
                 IsReadOnly="True"
                 Style="{DynamicResource TextComboBox}"
                 Visibility="Collapsed">
@@ -290,7 +293,7 @@
                 MaxValue="2147483647"
                 MinValue="-2147483648"
                 Template="{DynamicResource ColorNumbericUpDown}"
-                Text="0"
+                Text="{Binding SelectedDatapackDescription, Mode=TwoWay}"
                 Visibility="Collapsed" />
             <TextBox
                 Uid="String"

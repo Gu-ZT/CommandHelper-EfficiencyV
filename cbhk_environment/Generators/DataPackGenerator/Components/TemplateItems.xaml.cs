@@ -11,14 +11,14 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
     /// </summary>
     public partial class TemplateItems : UserControl
     {
-        //当前模板的id
+        //模板ID
         public string TemplateID = "";
         //文件类型
         public string FileType = "";
-        //功能类型
-        public string FunctionType = "";
         //所属命名空间
         public string FileNameSpace = "";
+        //功能类型
+        public string FunctionType = "";
 
         //选中后的背景色
         SolidColorBrush SelectedColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3D3D3D"));
@@ -85,7 +85,6 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
             {
                 //表示加入已选择模板列表
                 initialization_datacontext.SelectedTemplateItemList.Add(this);
-
                 //表示开始更新
                 initialization_datacontext.TemplateCheckLock = true;
 
@@ -113,7 +112,6 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
             {
                 //表示退出已选择模板列表
                 initialization_datacontext.SelectedTemplateItemList.Remove(this);
-
                 //表示开始更新
                 initialization_datacontext.TemplateCheckLock = true;
 

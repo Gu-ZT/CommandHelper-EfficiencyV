@@ -10,12 +10,12 @@
     d:DesignWidth="800"
     MouseLeftButtonUp="UserControlMouseLeftButtonUp"
     mc:Ignorable="d">
-    <Grid>
+    <Grid Height="30">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="5*" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="10*" />
         </Grid.ColumnDefinitions>
         <CustomControls:TextCheckBoxs
             x:Name="TemplateSelector"
@@ -31,7 +31,9 @@
         <Image
             x:Name="TemplateImage"
             Grid.Column="1"
-            Margin="0,0,0,10"
+            Width="15"
+            Height="15"
+            Margin="10,0,0,0"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Source="/cbhk_environment;component/resources/cbhk_form/images/cb.ico" />

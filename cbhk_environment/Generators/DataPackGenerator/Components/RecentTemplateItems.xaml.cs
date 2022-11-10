@@ -12,12 +12,6 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
     /// </summary>
     public partial class RecentTemplateItems : UserControl
     {
-        //当前模板的id
-        public string TemplateID = "";
-        //文件类型
-        public string FileType = "";
-        //功能类型
-        public string FunctionType = "";
         //所属命名空间
         public string FileNameSpace = "";
         //文件路径
@@ -35,7 +29,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
         /// <param name="typeName">类型名</param>
         /// <param name="fileImage">模板图标</param>
         /// <param name="templateType">模板类型</param>
-        public RecentTemplateItems(string filePath,string typeName,string fileImage,string templateType,string nameSpace)
+        public RecentTemplateItems(string filePath,string fileType,string typeName,string fileImage,string nameSpace)
         {
             InitializeComponent();
 
@@ -43,7 +37,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
             FileNameSpace = nameSpace;
             TemplateName.Text = typeName;
             TemplateImage.Source = new BitmapImage(new Uri(fileImage, UriKind.Absolute));
-            TemplateType.Children.Add(new TemplateTypeTag(templateType));
+            TemplateType.Children.Add(new TemplateTypeTag(fileType));
         }
 
         /// <summary>
@@ -57,9 +51,6 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
 
             if (!initialization_datacontext.TemplateCheckLock)
             {
-                //表示加入已选择模板列表
-                initialization_datacontext.SelectedTemplateItemList.Add(this);
-
                 //表示开始更新
                 initialization_datacontext.TemplateCheckLock = true;
 
@@ -85,9 +76,6 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
 
             if (!initialization_datacontext.TemplateCheckLock)
             {
-                //表示退出已选择模板列表
-                initialization_datacontext.SelectedTemplateItemList.Remove(this);
-
                 //表示开始更新
                 initialization_datacontext.TemplateCheckLock = true;
 

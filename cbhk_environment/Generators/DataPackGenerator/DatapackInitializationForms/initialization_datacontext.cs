@@ -12,11 +12,8 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using Windows.Devices.PointOfService;
 using WK.Libraries.BetterFolderBrowserNS;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Header;
 
 namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationForms
 {
@@ -98,40 +95,64 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
 
         #region 模板选择窗体逻辑处理
 
-        //模板图标文件存放路径
+        /// <summary>
+        /// 模板图标文件存放路径
+        /// </summary>
         string TemplateIconFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\DataPack\\images";
 
-        //模板元数据存放路径
+        /// <summary>
+        /// 模板元数据存放路径
+        /// </summary>
         string TemplateMetaDataFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\DataPack\\data\\templates\\introductions";
 
-        //模板存放路径
+        /// <summary>
+        /// 模板存放路径
+        /// </summary>
         public string TemplateDataFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\DataPack\\data\\templates\\presets";
 
-        //近期使用的模板存放路径
+        /// <summary>
+        /// 近期使用的模板存放路径
+        /// </summary>
         public string RecentTemplateDataFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\DataPack\\data\\recent_templates";
 
-        //存储已选中的模板
-        public static List<object> SelectedTemplateItemList = new List<object>() { };
+        /// <summary>
+        /// 存储已选中的模板
+        /// </summary>
+        public static List<TemplateItems> SelectedTemplateItemList = new List<TemplateItems>() { };
 
-        //近期使用的模板成员
+        /// <summary>
+        /// 近期使用的模板成员
+        /// </summary>
         public static ObservableCollection<RecentTemplateItems> RecentTemplateList { get; set; } = new ObservableCollection<RecentTemplateItems>();
 
-        //模板成员集合
+        /// <summary>
+        /// 模板成员集合
+        /// </summary>
         public static ObservableCollection<TemplateItems> TemplateList { get; set; } = new ObservableCollection<TemplateItems>();
 
-        //模板状态锁，防止更新死循环
+        /// <summary>
+        /// 模板状态锁，防止更新死循环
+        /// </summary>
         public static bool TemplateCheckLock = false;
 
-        //存放版本列表
+        /// <summary>
+        /// 存放版本列表
+        /// </summary>
         public ObservableCollection<TextSource> VersionList { get; set; } = new ObservableCollection<TextSource> { };
 
-        //存放文件类型列表
+        /// <summary>
+        /// 存放文件类型列表
+        /// </summary>
         public ObservableCollection<TextSource> FileTypeList { get; set; } = new ObservableCollection<TextSource> { };
 
-        //存放功能类型列表
+        /// <summary>
+        /// 存放功能类型列表
+        /// </summary>
         public ObservableCollection<TextSource> FunctionTypeList { get; set; } = new ObservableCollection<TextSource> { };
 
-        //存储所有类型的模板标签
+        /// <summary>
+        /// 存储所有类型的模板标签
+        /// </summary>
         public List<string> SelectedTemplateTypeTagList = new List<string> { };
 
         /// <summary>
@@ -257,27 +278,12 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
 
             foreach (var selectedTemplateItemList in SelectedTemplateItemList)
             {
-                if (selectedTemplateItemList is RecentTemplateItems)
-                {
-                    RecentTemplateItems recentTemplateItem = selectedTemplateItemList as RecentTemplateItems;
-                    string FileType = recentTemplateItem.FileType;
-                    string FunctionType = recentTemplateItem.FunctionType;
+                    string FileType = selectedTemplateItemList.FileType;
+                    string FunctionType = selectedTemplateItemList.FunctionType;
                     if (!SelectedTemplateTypeTagList.Contains(FileType))
                         SelectedTemplateTypeTagList.Add(FileType);
                     if (!SelectedTemplateTypeTagList.Contains(FunctionType))
                         SelectedTemplateTypeTagList.Add(FunctionType);
-                }
-
-                if (selectedTemplateItemList is TemplateItems)
-                {
-                    TemplateItems templateItem = selectedTemplateItemList as TemplateItems;
-                    string FileType = templateItem.FileType;
-                    string FunctionType = templateItem.FunctionType;
-                    if (!SelectedTemplateTypeTagList.Contains(FileType))
-                        SelectedTemplateTypeTagList.Add(FileType);
-                    if (!SelectedTemplateTypeTagList.Contains(FunctionType))
-                        SelectedTemplateTypeTagList.Add(FunctionType);
-                }
             }
 
             //打开数据包设置窗体
@@ -306,6 +312,9 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
                 TemplateList.All(item => { item.Visibility = Visibility.Visible;return true; });
                 return;
             }
+
+            //设置清除筛选按钮可见
+            ClearAllParametersVisibility = Visibility.Visible;
 
             foreach (TemplateItems Template in TemplateList)
             {
@@ -580,23 +589,22 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         /// <param name="e"></param>
         public void RecentTemplateListLoaded(object sender, RoutedEventArgs e)
         {
-            if(Directory.Exists(RecentTemplateDataFilePath) && File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js"))
+            if (Directory.Exists(RecentTemplateDataFilePath) && File.Exists(js_file) && RecentTemplateList.Count == 0)
             {
-                string[] recentTemplateDataList = Directory.GetFiles(RecentTemplateDataFilePath);
+                string[] recentTemplateDataList = Directory.GetFiles(RecentTemplateDataFilePath,"*.*",SearchOption.AllDirectories);
                 JsonScript(js_file);
-
                 foreach (string recentTemplateData in recentTemplateDataList)
                 {
                     string recentTemplateString = File.ReadAllText(recentTemplateData);
-                    JsonScript("parseJSON(" + recentTemplateString + ");");
+                    JsonScript("var data =" + recentTemplateString);
 
-                    string filePath = JsonScript("getJSON('.FilePath');").ToString();
-                    string typeName = JsonScript("getJSON('.TypeName');").ToString();
-                    string fileImage = JsonScript("getJSON('.FileImage');").ToString();
-                    string templateType = JsonScript("getJSON('.TemplateType');").ToString();
-                    string nameSpace = JsonScript("getJSON('.NameSpace');").ToString();
+                    string templateName = JsonScript("data.TemplateName").ToString();
+                    string fileType = JsonScript("data.FileType").ToString();
+                    string nameSpace = JsonScript("data.FileNameSpace").ToString();
+                    string filePath = JsonScript("data.FilePath").ToString();
+                    string iconPath = JsonScript("data.IconPath").ToString();
 
-                    RecentTemplateItems recentTemplateItems = new RecentTemplateItems(filePath,typeName,fileImage,templateType,nameSpace);
+                    RecentTemplateItems recentTemplateItems = new RecentTemplateItems(filePath, fileType, templateName, iconPath, nameSpace);
                     RecentTemplateList.Add(recentTemplateItems);
                 }
             }
@@ -610,7 +618,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         public void TemplateListViewerLoaded(object sender, RoutedEventArgs e)
         {
             SelectedTemplateTypeTagList.Clear();
-            if (Directory.Exists(TemplateMetaDataFilePath) && File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js"))
+            if (Directory.Exists(TemplateMetaDataFilePath) && File.Exists(js_file))
             {
                 string js_file = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js");
                 List<string> templateList = Directory.GetFiles(TemplateMetaDataFilePath).ToList();
@@ -618,14 +626,14 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
 
                 foreach (string template in templateList)
                 {
-                    string FileName = Path.GetFileNameWithoutExtension(template);//获取文件名
-
                     string templateData = File.ReadAllText(template);
-                    JsonScript("parseJSON(" + templateData + ");");
-                    string description = JsonScript("getJSON('.description');").ToString();
-                    string name = JsonScript("getJSON('.name');").ToString();
-                    string FileType = JsonScript("getJSON('.FileType');").ToString();
-                    string FunctionType = JsonScript("getJSON('.FunctionType');").ToString();
+                    JsonScript("var data =" + templateData);
+
+                    string FileName = Path.GetFileNameWithoutExtension(template);
+                    string Description = JsonScript("data.Description").ToString();
+                    string TemplateName = JsonScript("data.Name").ToString();
+                    string FileType = JsonScript("data.FileType").ToString();
+                    string FunctionType = JsonScript("data.FunctionType").ToString();
 
                     #region 载入文件类型和功能类型
                     if (FileTypeList.Where(item=>item.ItemText == FileType).Count() == 0)
@@ -645,16 +653,21 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
                         FileType = FileType,
                         FunctionType = FunctionType
                     };
-                    templateItem.TemplateName.Text = name;
-                    templateItem.TemplateDescription.Text = description;
+
+                    if(TemplateName != null)
+                    templateItem.TemplateName.Text = TemplateName;
+                    if(Description != null)
+                    templateItem.TemplateDescription.Text = Description;
 
                     //判断获取的文件名是否有对应的图标文件
-                    if (File.Exists(TemplateIconFilePath + "\\" + FileName + ".png"))
+                    if (FileName != null && File.Exists(TemplateIconFilePath + "\\" + FileName + ".png"))
                         templateItem.TemplateImage.Source = new BitmapImage(
                             new Uri(TemplateIconFilePath + "\\" + FileName + ".png", UriKind.Absolute));
 
                     //添加文件类型和功能类型标签
+                    if(FileType != null)
                     templateItem.TemplateTypeTagPanel.Children.Add(new TemplateTypeTag(FileType));
+                    if(FunctionType != null)
                     templateItem.TemplateTypeTagPanel.Children.Add(new TemplateTypeTag(FunctionType));
 
                     TemplateList.Add(templateItem);
@@ -1062,7 +1075,10 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         {
             //数据包名、主命名空间、生成路径任意一项为空则不提供生成服务
             string SelectedDatapackPathString = SelectedDatapackPath.ItemText.Trim();
-            if (DatapackName.Trim() == "" || DatapackMainNameSpace.Trim() == "" || SelectedDatapackPathString == "")
+            if (DatapackName.Trim() == "" || 
+                DatapackMainNameSpace.Trim() == "" || 
+                SelectedDatapackPathString == "" || 
+                !Directory.Exists(SelectedDatapackPathString))
                 return;
 
             #region 整理数据包的各种属性
@@ -1092,14 +1108,37 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
 
             //合并最终配置文件数据
             string pack_mcmeta = pack + DatapackFilter;
+            #endregion
 
             #region 根据填写的生成路径，数据包名和主命名空间来生成一个初始包
             Directory.CreateDirectory(SelectedDatapackPathString + "\\" + DatapackName + "\\data\\" + DatapackMainNameSpace);
             File.WriteAllText(SelectedDatapackPathString + "\\" + DatapackName + "\\pack.mcmeta", pack_mcmeta,System.Text.Encoding.UTF8);
             #endregion
-            
+
+            #region 记住并复制模板
+            foreach (var selectedTemplateItem in SelectedTemplateItemList)
+            {
+                if (File.Exists(RecentTemplateDataFilePath + "\\" + SelectedVersionString + "\\" + selectedTemplateItem.TemplateID + "." + SelectedFileTypeString))
+                {
+                    #region 整合路径与模板数据
+                    string WriteFilePath = RecentTemplateDataFilePath + "\\" + SelectedVersionString + "\\" + selectedTemplateItem.TemplateID + ".content";
+                    //整合文件路径
+                    string FilePath = TemplateDataFilePath + "\\" + SelectedVersionString + "\\" + selectedTemplateItem.TemplateID + "." + SelectedFileTypeString;
+                    //整合目标路径
+                    string targetPath = SelectedDatapackPath + "\\" + DatapackName + "\\" + DatapackMainNameSpace + "\\" + selectedTemplateItem.FileNameSpace + "\\" + selectedTemplateItem.TemplateID + "." + SelectedFileTypeString;
+                    //整合历史模板的json数据
+                    string templateJSON = "{\"TemplateName\":\"" + selectedTemplateItem.TemplateName.Text + "\",\"FileType\":\"" + SelectedFileTypeString + "\",\"FileNameSpace\":\"" + selectedTemplateItem.FileNameSpace + "\",\"FilePath\":\"" + FilePath + "\",\"IconPath\":\"" + TemplateIconFilePath+ "\\datapack.png" + "\"}";
+                    #endregion
+
+                    //写入历史模板目录中
+                    File.WriteAllText(WriteFilePath, templateJSON);
+                    //复制到数据包生成路径中(生成路径+数据包名+数据包主命名空间+模板所属命名空间+模板ID+已选择的文件类型)
+                    File.Copy(FilePath, targetPath);
+                }
+            }
             #endregion
-            //关闭属性设置窗体
+
+            //属性设置窗体任务完成
             target.DialogResult = true;
         }
 

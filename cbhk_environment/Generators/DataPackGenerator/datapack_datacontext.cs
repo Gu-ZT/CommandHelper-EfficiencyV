@@ -15,7 +15,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Windows.ApplicationModel.DataTransfer;
 using WK.Libraries.BetterFolderBrowserNS;
 
 namespace cbhk_environment.Generators.DataPackGenerator
@@ -46,6 +45,9 @@ namespace cbhk_environment.Generators.DataPackGenerator
 
         //近期内容文件列表路径
         public static string recentContentsFolderPath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\DataPack\\data\\recent_contents";
+
+        //近期模板文件列表路径
+        public static string recentTemplateFolderPath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\DataPack\\data\\recent_templates";
 
         //存储包过滤器的成员
         public static List<PackFilter> packFilterList = new List<PackFilter> { };
@@ -223,17 +225,16 @@ namespace cbhk_environment.Generators.DataPackGenerator
                 if(File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js") && 
                     grammaticalRadical.Count == 0)
                 {
-                    string js_file = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js");
                     JsonScript(js_file);
 
-                    JsonScript("parseJSON(" + grammaticalJson + ");");
-                    int item_count = int.Parse(JsonScript("getLength();").ToString());
+                    JsonScript("var data = " + grammaticalJson);
+                    int.TryParse(JsonScript("data.length").ToString(), out int item_count);
 
                     for (int i = 0; i < item_count; i++)
                     {
-                        string radicalString = JsonScript("getJSON('[" + i + "].radical');").ToString();
+                        string radicalString = JsonScript("data[" + i + "].radical").ToString();
                         //存储指令部首和对应的索引
-                        grammaticalRadical.Add(radicalString,i);
+                        grammaticalRadical.Add(radicalString, i);
                     }
                 }
             }
@@ -310,7 +311,7 @@ namespace cbhk_environment.Generators.DataPackGenerator
         {
             //打开模板选择窗体
             TemplateSelect templateSelect = new TemplateSelect();
-            if(templateSelect.ShowDialog() == true)
+            if (templateSelect.ShowDialog() == true)
             {
                 initialization_datacontext initDataContext = templateSelect.DataContext as initialization_datacontext;
 
@@ -319,80 +320,9 @@ namespace cbhk_environment.Generators.DataPackGenerator
                 //创建数据包文件夹
                 Directory.CreateDirectory(RootPath);
 
-                foreach (var selectedTemplateItem in initialization_datacontext.SelectedTemplateItemList)
-                {
-                    if (selectedTemplateItem is RecentTemplateItems)
-                    {
-                        RecentTemplateItems recentTemplateItem = selectedTemplateItem as RecentTemplateItems;
-                        if (File.Exists(initDataContext.RecentTemplateDataFilePath + "\\" + initDataContext.SelectedVersionString + "\\" + recentTemplateItem.TemplateID + "." + initDataContext.SelectedFileTypeString))
-                        {
-                            //复制模板到当前数据包生成路径下的指定命名空间中
-                            Directory.CreateDirectory(RootPath + "data\\" + (initDataContext.DatapackMainNameSpace == "" ? initDataContext.DatapackName : initDataContext.DatapackMainNameSpace) + "\\" + recentTemplateItem.FileNameSpace);
-                            File.Copy(initDataContext.RecentTemplateDataFilePath + "\\" + initDataContext.SelectedVersionString + "\\" + recentTemplateItem.TemplateID + "." + initDataContext.SelectedFileTypeString, RootPath + "data\\" + (initDataContext.DatapackMainNameSpace == "" ? initDataContext.DatapackName : initDataContext.DatapackMainNameSpace) + "\\" + recentTemplateItem.FileNameSpace);
-                        }
-                        else
-                            if (File.Exists(initDataContext.RecentTemplateDataFilePath + "\\contents\\" + recentTemplateItem.TemplateID + ".content"))
-                        {
-                            //读取数据
-                            string FilePath = File.ReadAllText(initDataContext.RecentTemplateDataFilePath + "\\contents\\" + recentTemplateItem.TemplateID + ".content");
-                            //分析内容类型
-                            ContentReader.ContentType contentType = ContentReader.GetTargetContentType(FilePath);
-                            //根据内容类型复制到对应的命名空间下(仅复制第一层文件夹,标记源路径数据,订阅事件,实现逐层复制)
-                            switch (contentType)
-                            {
-                                case ContentReader.ContentType.DataPack:
-                                case ContentReader.ContentType.Folder:
-                                case ContentReader.ContentType.File:
-                                    RichTreeViewItems contentNodes = ContentReader.ReadTargetContent(FilePath, contentType);
-                                    if (contentNodes != null)
-                                    {
-                                        ContentView.Items.Add(contentNodes);
-
-                                        //添加进近期使用内容链表
-                                        string folderName = Path.GetFileNameWithoutExtension(FilePath);
-                                        File.WriteAllText(recentContentsFolderPath + "\\" + folderName + ".content", FilePath);
-                                    }
-                                    break;
-                            }
-                        }
-                    }
-
-                    if (selectedTemplateItem is TemplateItems)
-                    {
-                        TemplateItems templateItem = selectedTemplateItem as TemplateItems;
-                        if (File.Exists(initDataContext.TemplateDataFilePath + "\\" + initDataContext.SelectedVersionString + "\\" + templateItem.TemplateID + "." + initDataContext.SelectedFileTypeString))
-                        {
-                            //复制模板到当前数据包生成路径下的指定命名空间中
-                            Directory.CreateDirectory(RootPath + "data\\" + (initDataContext.DatapackMainNameSpace == "" ? initDataContext.DatapackName : initDataContext.DatapackMainNameSpace) + "\\" + templateItem.FileNameSpace);
-                            File.Copy(initDataContext.RecentTemplateDataFilePath + "\\" + initDataContext.SelectedVersionString + "\\" + templateItem.TemplateID + "." + initDataContext.SelectedFileTypeString, RootPath + "data\\" + (initDataContext.DatapackMainNameSpace == "" ? initDataContext.DatapackName : initDataContext.DatapackMainNameSpace) + "\\" + templateItem.FileNameSpace);
-                        }
-                        else
-                            if(File.Exists(initDataContext.TemplateDataFilePath + "\\contents\\" + templateItem.TemplateID + ".content"))
-                        {
-                            //读取数据
-                            string FilePath = File.ReadAllText(initDataContext.TemplateDataFilePath + "\\contents\\" + templateItem.TemplateID + ".content");
-                            //分析内容类型
-                            ContentReader.ContentType contentType = ContentReader.GetTargetContentType(FilePath);
-                            //根据内容类型复制到对应的命名空间下(仅复制第一层文件夹,标记源路径数据,订阅事件,实现逐层复制)
-                            switch (contentType)
-                            {
-                                case ContentReader.ContentType.DataPack:
-                                case ContentReader.ContentType.Folder:
-                                case ContentReader.ContentType.File:
-                                    RichTreeViewItems contentNodes = ContentReader.ReadTargetContent(FilePath, contentType);
-                                    if (contentNodes != null)
-                                    {
-                                        ContentView.Items.Add(contentNodes);
-
-                                        //添加进近期使用内容链表
-                                        string folderName = Path.GetFileNameWithoutExtension(FilePath);
-                                        File.WriteAllText(recentContentsFolderPath + "\\" + folderName + ".content", FilePath);
-                                    }
-                                    break;
-                            }
-                        }
-                    }
-                }
+                //作为数据包写入到最近使用的内容中
+                string recentDatapackPath = RootPath.TrimEnd('\\');
+                File.WriteAllText(recentContentsFolderPath + "\\" + initDataContext.DatapackName + ".content", recentDatapackPath);
 
                 //处理完毕后清空已选择模板列表成员
                 initialization_datacontext.SelectedTemplateItemList.Clear();

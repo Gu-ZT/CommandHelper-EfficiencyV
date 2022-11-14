@@ -13,6 +13,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using Windows.ApplicationModel.Chat;
 using WK.Libraries.BetterFolderBrowserNS;
 
 namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationForms
@@ -278,12 +279,12 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
 
             foreach (var selectedTemplateItemList in SelectedTemplateItemList)
             {
-                    string FileType = selectedTemplateItemList.FileType;
-                    string FunctionType = selectedTemplateItemList.FunctionType;
-                    if (!SelectedTemplateTypeTagList.Contains(FileType))
-                        SelectedTemplateTypeTagList.Add(FileType);
-                    if (!SelectedTemplateTypeTagList.Contains(FunctionType))
-                        SelectedTemplateTypeTagList.Add(FunctionType);
+                string FileType = selectedTemplateItemList.FileType;
+                string FunctionType = selectedTemplateItemList.FunctionType;
+                if (!SelectedTemplateTypeTagList.Contains(FileType))
+                    SelectedTemplateTypeTagList.Add(FileType);
+                if (!SelectedTemplateTypeTagList.Contains(FunctionType))
+                    SelectedTemplateTypeTagList.Add(FunctionType);
             }
 
             //打开数据包设置窗体
@@ -634,6 +635,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
                     string TemplateName = JsonScript("data.Name").ToString();
                     string FileType = JsonScript("data.FileType").ToString();
                     string FunctionType = JsonScript("data.FunctionType").ToString();
+                    string fileNameSpace = JsonScript("data.NameSpace").ToString();
 
                     #region 载入文件类型和功能类型
                     if (FileTypeList.Where(item=>item.ItemText == FileType).Count() == 0)
@@ -651,7 +653,8 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
                     {
                         TemplateID = FileName,
                         FileType = FileType,
-                        FunctionType = FunctionType
+                        FunctionType = FunctionType,
+                        FileNameSpace = fileNameSpace
                     };
 
                     if(TemplateName != null)
@@ -756,6 +759,8 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
             set
             {
                 selectedDatapackVersion = value;
+                OnPropertyChanged();
+                SelectedDatapackVersionString = selectedDatapackVersion.ItemText;
             }
         }
         private string SelectedDatapackVersionString = "";
@@ -1083,7 +1088,8 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
 
             #region 整理数据包的各种属性
             //整合过滤器数据
-            DatapackFilter = "\"filter\":{\"block\":[" + string.Join("",DatapackFilterSource.Select(item=>item.FilterBlock)).TrimEnd(',') + "]}";
+            if(DatapackFilterSource.Count > 0)
+            DatapackFilter = ",\"filter\":{\"block\":[" + string.Join("",DatapackFilterSource.Select(item=>item.FilterBlock)).TrimEnd(',') + "]}";
             //搜索对应的数据包版本号
             foreach (var item in DatapackVersionDatabase)
             {
@@ -1104,10 +1110,10 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
                 SelectedDatapackDescription = (DescriptionBoolBox.SelectedItem as TextSource).ItemText;
 
             //合并pack信息
-            string pack = "\"pack\":{\"pack_format\":" + SelectedDatapackVersionString + ",\"description\":\"" + SelectedDatapackDescription + "\"},";
+            string pack = "\"pack\":{\"pack_format\":" + SelectedDatapackVersionString + ",\"description\":\"" + SelectedDatapackDescription + "\"}";
 
             //合并最终配置文件数据
-            string pack_mcmeta = pack + DatapackFilter;
+            string pack_mcmeta = "{" + pack + DatapackFilter + "}";
             #endregion
 
             #region 根据填写的生成路径，数据包名和主命名空间来生成一个初始包
@@ -1118,16 +1124,38 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
             #region 记住并复制模板
             foreach (var selectedTemplateItem in SelectedTemplateItemList)
             {
-                if (File.Exists(RecentTemplateDataFilePath + "\\" + SelectedVersionString + "\\" + selectedTemplateItem.TemplateID + "." + SelectedFileTypeString))
+                string fileType = selectedTemplateItem.FileType.ToLower();
+                SelectedDatapackVersionString = SelectedDatapackVersion.ItemText;
+
+                //自动选取较高的版本
+                if(SelectedDatapackVersionString.Contains("~"))
+                {
+                    string[] twoVersion = SelectedDatapackVersionString.Split('~');
+                    string leftVersion = twoVersion[0].Replace(".", "");
+                    string rightVersion = twoVersion[1].Replace(".", "");
+                    int leftVersionValue = int.Parse(leftVersion);
+                    int rightVersionValue = int.Parse(rightVersion);
+
+                    SelectedDatapackVersionString = leftVersionValue > rightVersionValue? twoVersion[0] : twoVersion[1];
+                }
+
+                if (File.Exists(TemplateDataFilePath + "\\" + SelectedDatapackVersionString + "\\" + selectedTemplateItem.TemplateID + "." + fileType))
                 {
                     #region 整合路径与模板数据
-                    string WriteFilePath = RecentTemplateDataFilePath + "\\" + SelectedVersionString + "\\" + selectedTemplateItem.TemplateID + ".content";
-                    //整合文件路径
-                    string FilePath = TemplateDataFilePath + "\\" + SelectedVersionString + "\\" + selectedTemplateItem.TemplateID + "." + SelectedFileTypeString;
+                    //写入当前的历史模板
+                    string WriteFilePath = RecentTemplateDataFilePath + "\\" + SelectedDatapackVersionString + "\\" + selectedTemplateItem.TemplateID + ".json";
+
+                    //整合模板文件路径
+                    string FilePath = TemplateDataFilePath + "\\" + SelectedDatapackVersionString + "\\" + selectedTemplateItem.TemplateID + "." + fileType;
+
                     //整合目标路径
-                    string targetPath = SelectedDatapackPath + "\\" + DatapackName + "\\" + DatapackMainNameSpace + "\\" + selectedTemplateItem.FileNameSpace + "\\" + selectedTemplateItem.TemplateID + "." + SelectedFileTypeString;
+                    string targetPath = SelectedDatapackPathString + DatapackName + "\\data\\" + DatapackMainNameSpace + "\\" + selectedTemplateItem.FileNameSpace + "\\" + selectedTemplateItem.TemplateID + "." + fileType;
+
+                    string targetFolderPath = Path.GetDirectoryName(targetPath);
+                    Directory.CreateDirectory(targetFolderPath);
+
                     //整合历史模板的json数据
-                    string templateJSON = "{\"TemplateName\":\"" + selectedTemplateItem.TemplateName.Text + "\",\"FileType\":\"" + SelectedFileTypeString + "\",\"FileNameSpace\":\"" + selectedTemplateItem.FileNameSpace + "\",\"FilePath\":\"" + FilePath + "\",\"IconPath\":\"" + TemplateIconFilePath+ "\\datapack.png" + "\"}";
+                    string templateJSON = "{\"TemplateName\":\"" + selectedTemplateItem.TemplateName.Text + "\",\"FileType\":\"" + fileType + "\",\"FileNameSpace\":\"" + selectedTemplateItem.FileNameSpace + "\",\"FilePath\":\"" + FilePath.Replace("\\","\\\\") + "\",\"IconPath\":\"" + TemplateIconFilePath.Replace("\\", "\\\\") + "\\\\"+ selectedTemplateItem.TemplateID + ".png" + "\"}";
                     #endregion
 
                     //写入历史模板目录中

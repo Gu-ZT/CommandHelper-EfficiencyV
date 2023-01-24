@@ -31,5 +31,14 @@ namespace cbhk_environment.CustomControls
 
         public static readonly DependencyProperty HeaderHeightProperty =
             DependencyProperty.Register("HeaderHeight", typeof(double), typeof(TextCheckBoxs), new PropertyMetadata(default(double)));
+
+        public Thickness TextCheckMargin
+        {
+            get { return (Thickness)GetValue(TextCheckMarginProperty); }
+            set { SetValue(TextCheckMarginProperty, value); }
+        }
+
+        public static readonly DependencyProperty TextCheckMarginProperty =
+            DependencyProperty.Register("TextCheckMargin", typeof(Thickness), typeof(TextCheckBoxs), new PropertyMetadata(default(Thickness)));
     }
 }

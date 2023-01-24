@@ -51,17 +51,22 @@
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
                             Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="5">
-                            <Viewbox HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            BorderBrush="Black"
+                            BorderThickness="1">
+                            <Border.RenderTransform>
+                                <RotateTransform Angle="45" />
+                            </Border.RenderTransform>
+                            <Viewbox HorizontalAlignment="Left" VerticalAlignment="Stretch">
+                                <Viewbox.RenderTransform>
+                                    <RotateTransform Angle="-45" />
+                                </Viewbox.RenderTransform>
                                 <Grid x:Name="markGrid">
                                     <Path
                                         x:Name="optionMark"
-                                        Margin="1"
+                                        Margin="0,0,0,0"
                                         Data="M350.098633 707.71959l-210.483852-210.483852-71.423703 71.423703 281.907555 281.907555 605.710288-605.710288-71.423703-71.423703L350.098633 707.71959z"
                                         Fill="{StaticResource OptionMark.Static.Glyph}"
-                                        Opacity="0"
+                                        Opacity="1"
                                         Stretch="None" />
                                     <Ellipse
                                         x:Name="indeterminateMark"

@@ -1782,12 +1782,13 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
                         ImageVisibility = Visibility.Collapsed,
                         ColorVisibility = Visibility.Collapsed,
                         TextVisibility = Visibility.Visible,
-                        TextMargin = new Thickness(0, 0, 0, 0),
+                        TextMargin = new Thickness(0, 5, 0, 0),
                         Width = 100,
+                        Margin = new Thickness(10,0,0,0),
                         Height = 30,
                         HeaderText = item,
-                        HeaderHeight = 20,
-                        HeaderWidth = 20,
+                        HeaderHeight = 15,
+                        HeaderWidth = 15,
                         HorizontalAlignment = HorizontalAlignment.Left,
                         Style = (NBTList.Children[0] as RichCheckBoxs).Style
                     };

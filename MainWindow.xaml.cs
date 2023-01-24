@@ -53,9 +53,6 @@ namespace cbhk_signin
             ////初始化用户设置
             //ReadUserSettings();
 
-            //string[] test = new string[1] {"" };
-            //string test1 =  test[1];
-
             #region 调试
             ShowInTaskbar = false;
             WindowState = WindowState.Minimized;
@@ -110,6 +107,15 @@ namespace cbhk_signin
             return result;
         }
 
+        /// <summary>
+        /// 替换正则无法识别的特殊字符
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        private string uriencode(string url)
+        {
+            return url.Replace(" ", "%20").Replace("\"", "%22").Replace("#", "%23").Replace("%", "%25").Replace("&", "%26").Replace("(", "%28").Replace(")", "%29").Replace("+", "%2B").Replace(",", "%2C").Replace("/", "%2F").Replace(":", "%3A").Replace(";", "%3B").Replace("<", "%3C").Replace("=", "%3D").Replace(">", "%3E").Replace("?", "%3F").Replace("@", "%40").Replace("\\", "%5C").Replace("|", "%7C");
+        }
 
         /// <summary>
         /// 登录
@@ -156,7 +162,7 @@ namespace cbhk_signin
             JObject result = new JObject();
             try
             {
-                result = JsonConvert.DeserializeObject(signin.GetDataByPost("https://mc.metamo.cn/api/user/OAuth/login", Regex.Match(user_name_box.Text, "(.*)").ToString(), Regex.Match(user_pwd_box.Password, "(.*)").ToString())) as JObject;
+                result = JsonConvert.DeserializeObject(signin.GetDataByPost("https://mc.metamo.cn/api/user/OAuth/login", uriencode(Regex.Match(user_name_box.Text, "(.*)").ToString()), uriencode(Regex.Match(user_pwd_box.Password, "(.*)").ToString()))) as JObject;
             }
             catch
             {

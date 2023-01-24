@@ -21,6 +21,8 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
         SolidColorBrush SelectedColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3D3D3D"));
         //未选中的背景色
         SolidColorBrush UnSelectColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("Transparent"));
+        //存储数据上下文的引用
+        public TemplateSelectDataContext initializationDatacontext = null;
 
         /// <summary>
         /// 实例化一个历史模板
@@ -49,19 +51,23 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
         {
             Background = SelectedColor;
 
-            if (!initialization_datacontext.TemplateCheckLock)
+            if (!TemplateSelectDataContext.TemplateCheckLock)
             {
                 //表示开始更新
-                initialization_datacontext.TemplateCheckLock = true;
+                TemplateSelectDataContext.TemplateCheckLock = true;
 
-                foreach (TemplateItems templateItems in initialization_datacontext.TemplateList)
+                foreach (TemplateItems templateItems in initializationDatacontext.TemplateList)
                 {
                     if (templateItems.TemplateName.Text == TemplateName.Text)
+                    {
                         templateItems.TemplateSelector.IsChecked = true;
+                        //表示加入已选择模板列表
+                        TemplateSelectDataContext.SelectedTemplateItemList.Add(templateItems);
+                    }
                 }
 
                 //更新完毕
-                initialization_datacontext.TemplateCheckLock = false;
+                TemplateSelectDataContext.TemplateCheckLock = false;
             }
         }
 
@@ -74,19 +80,19 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
         {
             Background = UnSelectColor;
 
-            if (!initialization_datacontext.TemplateCheckLock)
+            if (!TemplateSelectDataContext.TemplateCheckLock)
             {
                 //表示开始更新
-                initialization_datacontext.TemplateCheckLock = true;
+                TemplateSelectDataContext.TemplateCheckLock = true;
 
-                foreach (TemplateItems templateItems in initialization_datacontext.TemplateList)
+                foreach (TemplateItems templateItems in initializationDatacontext.TemplateList)
                 {
                     if (templateItems.TemplateName.Text == TemplateName.Text)
                         templateItems.TemplateSelector.IsChecked = false;
                 }
 
                 //更新完毕
-                initialization_datacontext.TemplateCheckLock = false;
+                TemplateSelectDataContext.TemplateCheckLock = false;
             }
         }
 

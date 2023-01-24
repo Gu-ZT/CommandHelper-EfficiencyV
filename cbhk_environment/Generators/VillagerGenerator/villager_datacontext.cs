@@ -15,10 +15,7 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Windows.Data;
 using cbhk_environment.ControlsDataContexts;
-using Xceed.Wpf.AvalonDock.Controls;
 using System.Windows.Controls.Primitives;
-using HandyControl.Tools.Extension;
-using Windows.Devices.PointOfService;
 
 namespace cbhk_environment.Generators.VillagerGenerator
 {
@@ -178,7 +175,7 @@ namespace cbhk_environment.Generators.VillagerGenerator
             {
                 if (transactionItems.Count == 0) return "";
                 string result = "Offers:{Recipes:[";
-                string transactionItemData = string.Join("", transactionItems.Select(item => "{"+ item.TransactionItemData + "},"));
+                string transactionItemData = string.Join("", transactionItems.Select(item => item.TransactionItemData + ","));
                 result += transactionItemData.TrimEnd(',') + "]},";
                 return result;
             }
@@ -242,7 +239,8 @@ namespace cbhk_environment.Generators.VillagerGenerator
         {
             get
             {
-                return MeetingPointDimension.ItemText.Trim() != "" ? "dimension:\"minecraft" + MeetingPointDimension.ItemText + "\"" : "";
+                string DimensionId = DimensionDataBase.Where(item => item.Value == MeetingPointDimension.ItemText).First().Key;
+                return MeetingPointDimension.ItemText.Trim() != "" ? "dimension:\"minecraft:" + DimensionId + "\"" : "";
             }
         }
         private string MeetingPoint
@@ -251,9 +249,10 @@ namespace cbhk_environment.Generators.VillagerGenerator
             {
                 string result = "meeting_point:{";
                 string pos = MeetingPointX.Trim() != "" && MeetingPointY.Trim() != "" && MeetingPointZ.Trim() != "" ? "pos:[" + MeetingPointX + "," + MeetingPointY + "," + MeetingPointZ + "]," : "";
+                if(MeetingPointDimensionString != "" && pos != "")
                 result += pos + MeetingPointDimensionString;
                 if (result.Trim() == "meeting_point:{") return "";
-                return result.TrimEnd(',') + "}";
+                return result.TrimEnd(',') + "},";
             }
         }
         #endregion
@@ -299,7 +298,8 @@ namespace cbhk_environment.Generators.VillagerGenerator
         {
             get
             {
-                return HomeDimension.ItemText.Trim() != "" ? "dimension:\"minecraft" + HomeDimension.ItemText + "\"" : "";
+                string DimensionId = DimensionDataBase.Where(item=>item.Value == HomeDimension.ItemText).First().Key;
+                return HomeDimension.ItemText.Trim() != "" ? "dimension:\"minecraft:" + DimensionId + "\"" : "";
             }
         }
         private string Home
@@ -308,6 +308,7 @@ namespace cbhk_environment.Generators.VillagerGenerator
             {
                 string result = "home:{";
                 string pos = HomeX.Trim() != "" && HomeY.Trim() != "" && HomeZ.Trim() != "" ? "pos:[" + HomeX + "," + HomeY + "," + HomeZ + "]," : "";
+                if(pos != "" && HomeDimensionString != "")
                 result += pos + HomeDimensionString;
                 if (result.Trim() == "home:{") return "";
                 return result.TrimEnd(',') + "},";
@@ -356,7 +357,8 @@ namespace cbhk_environment.Generators.VillagerGenerator
         {
             get
             {
-                return JobSiteDimension.ItemText.Trim() !=""? "dimension:\"minecraft" + JobSiteDimension.ItemText + "\",":"";
+                string DimensionId = DimensionDataBase.Where(item => item.Value == jobSiteDimension.ItemText).First().Key;
+                return JobSiteDimension.ItemText.Trim() !=""? "dimension:\"minecraft:" + DimensionId + "\",":"";
             }
         }
         private string JobSite
@@ -365,6 +367,7 @@ namespace cbhk_environment.Generators.VillagerGenerator
             {
                 string result = "job_site:{";
                 string pos = JobSiteX.Trim() != "" && JobSiteY.Trim() !="" && JobSiteZ.Trim() != ""? "pos:[" + JobSiteX + "," + JobSiteY + "," + JobSiteZ + "],":"";
+                if(pos != "" && JobSiteDimensionString != "")
                 result += pos + JobSiteDimensionString;
                 if (result.Trim() == "job_site:{") return "";
                 return result.TrimEnd(',')+"},";
@@ -378,7 +381,8 @@ namespace cbhk_environment.Generators.VillagerGenerator
             get
             {
                 if (!CanEditBrain || OnlyEditItem == Visibility.Collapsed) return "";
-                string result = "Brain:{memories:{" + MeetingPoint + Home + JobSite + "}},";
+                string memoriesContent = MeetingPoint + Home + JobSite;
+                string result = "Brain:{memories:{" + memoriesContent.TrimEnd(',') + "}},";
                 if (result.Trim() == "Brain:{memories:{}},") return "";
                 return result;
             }
@@ -504,7 +508,7 @@ namespace cbhk_environment.Generators.VillagerGenerator
         #endregion
 
         #region 此村民最后一次前往工作站点重新供应交易的刻。
-        private string lastRestock = "";
+        private string lastRestock = "0";
         public string LastRestock
         {
             get { return lastRestock; }
@@ -520,7 +524,7 @@ namespace cbhk_environment.Generators.VillagerGenerator
         #endregion
 
         #region 此村民当前的经验值。
-        private string xp = "";
+        private string xp = "1";
         public string Xp
         {
             get { return xp; }
@@ -810,13 +814,13 @@ namespace cbhk_environment.Generators.VillagerGenerator
             };
             #endregion
 
-            BindingOperations.SetBinding(transactionItemDataForm.rewardExp, RadiusToggleButtons.IsCheckedProperty, rewardExpBinder);
-            BindingOperations.SetBinding(transactionItemDataForm.maxUses, ColorNumbericUpDowns.TextProperty, maxUsesBinder);
-            BindingOperations.SetBinding(transactionItemDataForm.uses, ColorNumbericUpDowns.TextProperty, usesBinder);
-            BindingOperations.SetBinding(transactionItemDataForm.xp, ColorNumbericUpDowns.TextProperty, xpBinder);
-            BindingOperations.SetBinding(transactionItemDataForm.demand, ColorNumbericUpDowns.TextProperty, demandBinder);
-            BindingOperations.SetBinding(transactionItemDataForm.specialPrice, ColorNumbericUpDowns.TextProperty, specialPriceBinder);
-            BindingOperations.SetBinding(transactionItemDataForm.priceMultiplier, ColorNumbericUpDowns.TextProperty, priceMultiplierBinder);
+            BindingOperations.SetBinding(transactionItemDataForm.rewardExp, ToggleButton.IsCheckedProperty, rewardExpBinder);
+            BindingOperations.SetBinding(transactionItemDataForm.maxUses, TextBox.TextProperty, maxUsesBinder);
+            BindingOperations.SetBinding(transactionItemDataForm.uses, TextBox.TextProperty, usesBinder);
+            BindingOperations.SetBinding(transactionItemDataForm.xp, TextBox.TextProperty, xpBinder);
+            BindingOperations.SetBinding(transactionItemDataForm.demand, TextBox.TextProperty, demandBinder);
+            BindingOperations.SetBinding(transactionItemDataForm.specialPrice, TextBox.TextProperty, specialPriceBinder);
+            BindingOperations.SetBinding(transactionItemDataForm.priceMultiplier, TextBox.TextProperty, priceMultiplierBinder);
         }
 
         /// <summary>

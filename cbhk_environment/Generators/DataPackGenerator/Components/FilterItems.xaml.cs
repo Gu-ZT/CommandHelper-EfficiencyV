@@ -47,7 +47,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
             {
                 if (Directory.Exists(folderBrowser.SelectedFolder))
                 {
-                    NameSpaceBox.Text = folderBrowser.SelectedFolder;
+                    NameSpaceBox.Text = folderBrowser.SelectedFolder.Replace("\\","/");
                 }
             }
         }
@@ -74,7 +74,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
             {
                 if (Directory.Exists(folderBrowser.SelectedFolder))
                 {
-                    PathBox.Text = folderBrowser.SelectedFolder;
+                    PathBox.Text = folderBrowser.SelectedFolder.Replace("\\", "/");
                 }
             }
         }
@@ -86,7 +86,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
         /// <param name="e"></param>
         private void DeleteMouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
-            initialization_datacontext.DatapackFilterSource.Remove(this);
+            DatapackGenerateSetupDataContext.DatapackFilterSource.Remove(this);
         }
     }
 }

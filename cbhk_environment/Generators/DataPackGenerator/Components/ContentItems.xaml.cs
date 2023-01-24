@@ -84,9 +84,10 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
             {
                 if (File.Exists(Uid))
                 {
-                    string extensionName = Path.GetExtension(Uid);
+                    //string extensionName = Path.GetExtension(Uid);
                     string pathName = Path.GetDirectoryName(Uid);
-                    File.Move(pathName + "\\" + originalName + extensionName, pathName + "\\" + FileName.Text + extensionName);
+                    File.Move(pathName + "\\" + originalName /*+ extensionName*/, pathName + "\\" + FileName.Text /*+ extensionName*/);
+                    Uid = pathName + "\\" + FileName.Text;
                 }
                 else
                     if (Directory.Exists(Uid))
@@ -94,6 +95,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                     DirectoryInfo folderNameInfo = new DirectoryInfo(Uid);
                     string folderName = folderNameInfo.Parent.FullName;
                     Directory.Move(Uid, folderName + "\\" + FileName.Text);
+                    Uid = folderName + "\\" + FileName.Text;
                 }
                 else
                     FileName.Text = originalName;

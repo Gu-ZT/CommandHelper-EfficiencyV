@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -21,21 +22,6 @@ namespace cbhk_environment.Generators.DataPackGenerator
 {
     public class datapack_datacontext:ObservableObject
     {
-        //存储所有类型的变量(比如记分板类型，记分板变量等等),用于补全
-        Dictionary<string, ObservableCollection<string>> variable_source = new Dictionary<string, ObservableCollection<string>> { };
-        //选择器类型文件路径
-        string targetSelectorFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\DataPack\\data\\target_selector.json";
-        //选择器参数文件路径
-        string targetSelectorParameterFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\DataPack\\data\\target_selector_parameters.json";
-        //bossbar样式文件路径
-        string bossbarStyleFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\bossbarStyles.ini";
-        //bossbar颜色文件路径
-        string bossbarColorFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\bossbarColors.ini";
-        //原版成就文件路径
-        string advancementsFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\vanilla_advancement_list.ini";
-        //原版生物属性列表
-        string mobAttributeFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\mob_attribute_list.ini";
-
         //存储语法树数据
         Dictionary<string, ObservableCollection<string>> grammaticalTree = new Dictionary<string, ObservableCollection<string>> { };
         //存储所有指令的部首
@@ -58,9 +44,6 @@ namespace cbhk_environment.Generators.DataPackGenerator
         //获取近期内容视图引用
         TreeView recentContentView = null;
 
-        //获取内容视图引用
-        TreeView ContentView = null;
-
         //近期内容前景色
         SolidColorBrush RecentContentForeground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
 
@@ -78,8 +61,31 @@ namespace cbhk_environment.Generators.DataPackGenerator
         //未搜索到结果文本的前景色
         SolidColorBrush searchResultIsNullBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
 
-        //获取文本编辑区的引用
-        public TabControl FileModifyZone = null;
+        #region 主页，模板设置页，属性设置页，数据上下文的引用
+        /// <summary>
+        /// 主页
+        /// </summary>
+        private static HomePage homePage = new HomePage();
+        /// <summary>
+        /// 属性设置页
+        /// </summary>
+        private static DatapackGenerateSetupPage datapackGenerateSetupPage = null;
+        /// <summary>
+        /// 模板选择页
+        /// </summary>
+        private static TemplateSelectPage templateSelectPage = null;
+        /// <summary>
+        /// 编辑页
+        /// </summary>
+        private static EditPage editPage = null;
+        /// <summary>
+        /// 页面容器
+        /// </summary>
+        private static Frame PageFrame = new Frame()
+        {
+            NavigationUIVisibility = System.Windows.Navigation.NavigationUIVisibility.Hidden
+        };
+        #endregion
 
         #region 初始化页面右侧按钮的指令列表
         public RelayCommand OpenLocalProject { get; set; }
@@ -101,6 +107,10 @@ namespace cbhk_environment.Generators.DataPackGenerator
                     new RichTreeViewItems() { Header = "今年",Tag = "ThisYear",IsExpanded = true },
                     new RichTreeViewItems() { Header = "一年内",Tag = "LastYear",IsExpanded = true }
                 };
+        #endregion
+
+        #region 保存新增的节点对象
+        public static List<RichTreeViewItems> newTreeViewItems = new List<RichTreeViewItems> { };
         #endregion
 
         #region 近期内容的所有交互对象(用于搜索)
@@ -247,6 +257,35 @@ namespace cbhk_environment.Generators.DataPackGenerator
             #endregion
         }
 
+        public DatapackGenerateSetupPage GetDatapackGenerateSetupPage()
+        {
+            return datapackGenerateSetupPage;
+        }
+
+        public EditPage GetEditPage()
+        {
+            return editPage;
+        }
+
+        public void DataPackClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            newTreeViewItems.Clear();
+        }
+
+        /// <summary>
+        /// 初始化数据包生成器的主页
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void LoadHomePage(object sender, RoutedEventArgs e)
+        {
+            ContentControl contentControl = sender as ContentControl;
+            if(homePage.DataContext == null)
+            homePage.DataContext = this;
+            PageFrame.Content = homePage;
+            contentControl.Content = PageFrame;
+        }
+
         /// <summary>
         /// 返回主页
         /// </summary>
@@ -266,7 +305,10 @@ namespace cbhk_environment.Generators.DataPackGenerator
         /// </summary>
         private void run_command()
         {
-
+            RichTabItems CurrentItem = EditDataContext.FileModifyZone.SelectedItem as RichTabItems;
+            RichTextBox CurrentTextBox = CurrentItem.Content as RichTextBox;
+            TextRange CurrentContent = new TextRange(CurrentTextBox.Document.ContentStart, CurrentTextBox.Document.ContentEnd);
+            File.WriteAllText(CurrentItem.Uid,CurrentContent.Text);
         }
 
         /// <summary>
@@ -291,7 +333,7 @@ namespace cbhk_environment.Generators.DataPackGenerator
 
                     if (contentNodes != null)
                     {
-                        ContentView.Items.Add(contentNodes);
+                        newTreeViewItems.Add(contentNodes);
                         InitPageVisibility = Visibility.Collapsed;
                         FunctionEditorZoneVisibility = Visibility.Visible;
 
@@ -300,6 +342,11 @@ namespace cbhk_environment.Generators.DataPackGenerator
                         File.WriteAllText(recentContentsFolderPath + "\\" + folderName + ".content", FileName);
                     }
                 }
+                editPage = new EditPage
+                {
+                    DataContext = new EditDataContext()
+                };
+                PageFrame.Content = editPage;
             }
         }
 
@@ -309,28 +356,13 @@ namespace cbhk_environment.Generators.DataPackGenerator
         /// <exception cref="NotImplementedException"></exception>
         private void CreateLocalDataPackCommand()
         {
-            //打开模板选择窗体
-            TemplateSelect templateSelect = new TemplateSelect();
-            if (templateSelect.ShowDialog() == true)
-            {
-                initialization_datacontext initDataContext = templateSelect.DataContext as initialization_datacontext;
-
-                //合并选择的路径和数据包名
-                string RootPath = initDataContext.SelectedDatapackPath.ItemText + "\\" + initDataContext.DatapackName + "\\";
-                //创建数据包文件夹
-                Directory.CreateDirectory(RootPath);
-
-                //作为数据包写入到最近使用的内容中
-                string recentDatapackPath = RootPath.TrimEnd('\\');
-                File.WriteAllText(recentContentsFolderPath + "\\" + initDataContext.DatapackName + ".content", recentDatapackPath);
-
-                //处理完毕后清空已选择模板列表成员
-                initialization_datacontext.SelectedTemplateItemList.Clear();
-
-                //切换面板显示
-                InitPageVisibility = Visibility.Collapsed;
-                FunctionEditorZoneVisibility = Visibility.Visible;
-            }
+            #region 载入模板选择窗体
+            if(templateSelectPage == null)
+                templateSelectPage = new TemplateSelectPage();
+            if(templateSelectPage.DataContext == null)
+            templateSelectPage.DataContext = new TemplateSelectDataContext();
+            PageFrame.Content = templateSelectPage;
+            #endregion
         }
 
         /// <summary>
@@ -346,6 +378,7 @@ namespace cbhk_environment.Generators.DataPackGenerator
                 Title = "请选择要编辑的Minecraft相关文件夹"
             };
             if(betterFolderBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
                 foreach (string FilePath in betterFolderBrowser.SelectedPaths)
                 {
                     contentType = ContentReader.ContentType.Folder;
@@ -353,7 +386,7 @@ namespace cbhk_environment.Generators.DataPackGenerator
 
                     if (contentNodes != null)
                     {
-                        ContentView.Items.Add(contentNodes);
+                        newTreeViewItems.Add(contentNodes);
                         InitPageVisibility = Visibility.Collapsed;
                         FunctionEditorZoneVisibility = Visibility.Visible;
 
@@ -362,6 +395,12 @@ namespace cbhk_environment.Generators.DataPackGenerator
                         File.WriteAllText(recentContentsFolderPath + "\\" + folderName + ".content", FilePath);
                     }
                 }
+                editPage = new EditPage
+                {
+                    DataContext = new EditDataContext()
+                };
+                PageFrame.Content = editPage;
+            }
         }
 
         /// <summary>
@@ -377,6 +416,8 @@ namespace cbhk_environment.Generators.DataPackGenerator
             };
 
             if (betterFolderBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                
                 foreach (string FilePath in betterFolderBrowser.SelectedPaths)
                 {
                     contentType = ContentReader.ContentType.DataPack;
@@ -384,7 +425,7 @@ namespace cbhk_environment.Generators.DataPackGenerator
 
                     if (contentNodes != null)
                     {
-                        ContentView.Items.Add(contentNodes);
+                        newTreeViewItems.Add(contentNodes);
                         InitPageVisibility = Visibility.Collapsed;
                         FunctionEditorZoneVisibility = Visibility.Visible;
 
@@ -393,16 +434,12 @@ namespace cbhk_environment.Generators.DataPackGenerator
                         File.WriteAllText(recentContentsFolderPath + "\\" + folderName + ".content", FilePath);
                     }
                 }
-        }
-
-        /// <summary>
-        /// 获取文本编辑区的引用
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void FileModifyZoneLoaded(object sender, RoutedEventArgs e)
-        {
-            FileModifyZone = sender as TabControl;
+                editPage = new EditPage
+                {
+                    DataContext = new EditDataContext()
+                };
+                PageFrame.Content = editPage;
+            }
         }
 
         /// <summary>
@@ -433,16 +470,6 @@ namespace cbhk_environment.Generators.DataPackGenerator
         public void RichTabItemStyleLoaded(object sender, RoutedEventArgs e)
         {
             RichTabItemStyle = (sender as RichTabItems).Style;
-        }
-
-        /// <summary>
-        /// 获取内容树视图引用
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void ContentViewLoaded(object sender, RoutedEventArgs e)
-        {
-            ContentView = sender as TreeView;
         }
 
         /// <summary>
@@ -631,7 +658,7 @@ namespace cbhk_environment.Generators.DataPackGenerator
 
                 if(contentItem != null)
                 {
-                    ContentView.Items.Add(contentItem);
+                    newTreeViewItems.Add(contentItem);
                     InitPageVisibility = Visibility.Collapsed;
                     FunctionEditorZoneVisibility = Visibility.Visible;
                 }
@@ -644,17 +671,13 @@ namespace cbhk_environment.Generators.DataPackGenerator
                     dateItem.Visibility = dateItem.Items.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
                     File.Delete(CurrentContentFilePath);
                 }
+
+                editPage = new EditPage
+                {
+                    DataContext = new EditDataContext()
+                };
+                PageFrame.Content = editPage;
             }
-        }
-
-        /// <summary>
-        /// 函数编辑框文本更新
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void FunctionBoxTextChanged(object sender, TextChangedEventArgs e)
-        {
-
         }
     }
 }

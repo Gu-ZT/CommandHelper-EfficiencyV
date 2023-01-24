@@ -7,8 +7,6 @@ using System.Text;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using Windows.Media.Core;
 
 namespace cbhk_environment.CustomControls
 {
@@ -160,14 +158,16 @@ namespace cbhk_environment.CustomControls
         {
             get
             {
-                string result;
-                Paragraph paragraph = Parent as Paragraph;
-                EnabledFlowDocument currentDocument = paragraph.Parent as EnabledFlowDocument;
-                int currentIndex = currentDocument.Blocks.ToList().IndexOf(paragraph);
-                string colorString = Foreground.ToString().Remove(1,2);
-                string textString = UID.Trim() != "" ?UID:Text;
-
-                result = "{\"text\":\"" + (currentIndex > 0 ? "\\r\\n" : "") + textString + "\"" + (colorString!="#000000"?",\"color\":\""+colorString+"\"":"") + (FontStyle == FontStyles.Italic ? ",\"italic\":true" : "") + (FontWeight == FontWeights.Bold ? ",\"bold\":true" : "") + (TextDecorations.Contains(underlined_style) ? ",\"underlined\":true" : "") + (TextDecorations.Contains(strikethrough_style) ? ",\"strikethrough\":true" : "") + (IsObfuscated && ObfuscateTimer.Enabled? ",\"obfuscated\":true" : "") + EventData + "},";
+                Paragraph CurrentParagraph = Parent as RichParagraph;
+                bool IsFirstParagraph = Equals((CurrentParagraph.Parent as FlowDocument).Blocks.FirstBlock as Paragraph, CurrentParagraph);
+                string result = "";
+                string textString = UID.Trim() != "" ? UID : Text;
+                textString = textString.Replace("\\","\\\\\\\\").Replace("\"","\\\\\"");
+                if (!(IsFirstParagraph && textString.Length == 0))
+                {
+                    string colorString = Foreground.ToString().Remove(1, 2);
+                    result = "{\"text\":\"" + (!IsFirstParagraph ? "\\\\n" : "") + textString + "\"" + (colorString != "#000000" ? ",\"color\":\"" + colorString + "\"" : "") + (FontStyle == FontStyles.Italic ? ",\"italic\":true" : "") + (FontWeight == FontWeights.Bold ? ",\"bold\":true" : "") + (TextDecorations.Contains(underlined_style) ? ",\"underlined\":true" : "") + (TextDecorations.Contains(strikethrough_style) ? ",\"strikethrough\":true" : "") + (IsObfuscated && ObfuscateTimer.Enabled ? ",\"obfuscated\":true" : "") + EventData + "},";
+                }
                 return result;
             }
         }
@@ -180,8 +180,8 @@ namespace cbhk_environment.CustomControls
         /// </summary>
         public RichRun()
         {
-            if (base.Text.Trim() != "")
-                Text = base.Text;
+            if (Text.Trim() != "")
+                Text = Text;
             Obfuscates = written_book_datacontext.obfuscates;
             ObfuscateTimer.Tick += ObfuscateTick;
             MouseEnter += ObfuscateTextMouseEnter;

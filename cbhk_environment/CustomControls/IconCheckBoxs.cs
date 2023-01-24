@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Security.Cryptography;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 
@@ -32,5 +33,15 @@ namespace cbhk_environment.CustomControls
 
         public static readonly DependencyProperty HeaderHeightProperty =
             DependencyProperty.Register("HeaderHeight", typeof(double), typeof(IconCheckBoxs), new PropertyMetadata(default(double)));
+
+
+        public Thickness IconCheckMargin
+        {
+            get { return (Thickness)GetValue(IconCheckMarginProperty); }
+            set { SetValue(IconCheckMarginProperty, value); }
+        }
+
+        public static readonly DependencyProperty IconCheckMarginProperty =
+            DependencyProperty.Register("IconCheckMargin", typeof(Thickness), typeof(IconCheckBoxs), new PropertyMetadata(default(Thickness)));
     }
 }

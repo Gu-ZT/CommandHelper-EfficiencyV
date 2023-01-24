@@ -134,12 +134,12 @@
                 Width="90"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                VerticalContentAlignment="Center"
                 Content="生成覆盖"
                 FontSize="15"
                 Foreground="White"
-                HeaderHeight="20"
-                HeaderWidth="20"
+                HeaderHeight="10"
+                HeaderWidth="10"
+                IconCheckMargin="5 0 0 5"
                 IsChecked="{Binding OverLying, Mode=OneWayToSource}"
                 Style="{DynamicResource IconCheckBox}" />
             <CustomControls:IconTextButtons
@@ -288,11 +288,12 @@
                             Cursor="Hand"
                             FontSize="15"
                             Foreground="White"
-                            HeaderHeight="15"
+                            HeaderHeight="10"
                             HeaderText="名称可见性"
-                            HeaderWidth="15"
+                            HeaderWidth="10"
                             IsChecked="{Binding Path=CustomNameVisible, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
-                            Style="{StaticResource TextCheckBox}" />
+                            Style="{StaticResource TextCheckBox}"
+                            TextCheckMargin="5 0 0 0" />
                         <TextBlock
                             Margin="5,0,0,0"
                             VerticalAlignment="Center"

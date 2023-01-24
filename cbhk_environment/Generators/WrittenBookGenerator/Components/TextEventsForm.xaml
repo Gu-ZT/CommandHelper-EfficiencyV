@@ -15,7 +15,7 @@
             <DockPanel>
                 <StackPanel>
                     <TextBlock
-                        FontSize="20"
+                        FontSize="15"
                         Foreground="White"
                         Text="全部开启" />
                     <CustomControls:RadiusToggleButtons

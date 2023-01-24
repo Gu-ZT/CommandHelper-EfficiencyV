@@ -19,6 +19,7 @@
     ResizeMode="CanResize"
     WindowChrome.WindowChrome="{DynamicResource WindowChromeKey}"
     WindowStartupLocation="CenterScreen"
+    WindowStyle="None"
     mc:Ignorable="d">
 
     <Window.Resources>

@@ -69,7 +69,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
             Background = UnSelectColor;
 
             foreach (TemplateTypeTag item in TemplateTypeTagPanel.Children)
-                item.border.BorderThickness = new System.Windows.Thickness(0);
+                item.border.BorderThickness = new Thickness(0);
         }
 
         /// <summary>
@@ -81,21 +81,21 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
         {
             Background = SelectedColor;
 
-            if(!initialization_datacontext.TemplateCheckLock)
+            if(!TemplateSelectDataContext.TemplateCheckLock)
             {
                 //表示加入已选择模板列表
-                initialization_datacontext.SelectedTemplateItemList.Add(this);
+                TemplateSelectDataContext.SelectedTemplateItemList.Add(this);
                 //表示开始更新
-                initialization_datacontext.TemplateCheckLock = true;
+                TemplateSelectDataContext.TemplateCheckLock = true;
 
-                foreach (RecentTemplateItems recentTemplateItems in initialization_datacontext.RecentTemplateList)
+                foreach (RecentTemplateItems recentTemplateItems in TemplateSelectDataContext.RecentTemplateList)
                 {
                     if (recentTemplateItems.TemplateName.Text == TemplateName.Text)
                         recentTemplateItems.TemplateSelector.IsChecked = true;
                 }
 
                 //更新完毕
-                initialization_datacontext.TemplateCheckLock = false;
+                TemplateSelectDataContext.TemplateCheckLock = false;
             }
         }
 
@@ -108,21 +108,21 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
         {
             Background = UnSelectColor;
 
-            if(!initialization_datacontext.TemplateCheckLock)
+            if(!TemplateSelectDataContext.TemplateCheckLock)
             {
                 //表示退出已选择模板列表
-                initialization_datacontext.SelectedTemplateItemList.Remove(this);
+                TemplateSelectDataContext.SelectedTemplateItemList.Remove(this);
                 //表示开始更新
-                initialization_datacontext.TemplateCheckLock = true;
+                TemplateSelectDataContext.TemplateCheckLock = true;
 
-                foreach (RecentTemplateItems recentTemplateItems in initialization_datacontext.RecentTemplateList)
+                foreach (RecentTemplateItems recentTemplateItems in TemplateSelectDataContext.RecentTemplateList)
                 {
                     if (recentTemplateItems.TemplateName.Text == TemplateName.Text)
                         recentTemplateItems.TemplateSelector.IsChecked = false;
                 }
 
                 //更新完毕
-                initialization_datacontext.TemplateCheckLock = false;
+                TemplateSelectDataContext.TemplateCheckLock = false;
             }
         }
     }

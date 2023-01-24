@@ -1,9 +1,6 @@
 ﻿using cbhk_environment.CustomControls;
-using cbhk_environment.CustomControls.SkeletonScreen;
-using cbhk_environment.WindowDictionaries;
 using System;
 using System.Collections.Generic;
-using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -69,15 +66,14 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                                     string js_file = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js");
                                     datapack_datacontext.JsonScript(js_file);
                                     string content = File.ReadAllText(folderPath + "\\pack.mcmeta");
-                                    datapack_datacontext.JsonScript("parseJSON(" + content + ");");
-                                    int.TryParse(datapack_datacontext.JsonScript("getJSON('.pack.pack_format');").ToString(),out int packFormat);
+                                    datapack_datacontext.JsonScript("var data="+content);
+                                    int.TryParse(datapack_datacontext.JsonScript("data.pack.pack_format").ToString(),out int packFormat);
 
                                     object descriptionObject = DescriptionParser();
-
                                     string nameSpace = "";
                                     string path = "";
                                     int FilterBlockLength = 0;
-                                    
+
                                 }
                                 #endregion
 
@@ -358,9 +354,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
             {
                 if(extension == ".mcfunction")
                 {
-                    CommonWindow window = Window.GetWindow(currentItem) as CommonWindow;
-                    datapack_datacontext mainDataContext = window.DataContext as datapack_datacontext;
-                    TabControl fileZone = mainDataContext.FileModifyZone;
+                    TabControl fileZone = EditDataContext.FileModifyZone;
                     RichTextBox richTextBox = new RichTextBox()
                     {
                         Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#A8A8A8")),
@@ -385,6 +379,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
 
                     RichTabItems richTabItems = new RichTabItems
                     {
+                        Uid = FilePath,
                         HeaderText = FileName,
                         Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")),
                         Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("Transparent")),

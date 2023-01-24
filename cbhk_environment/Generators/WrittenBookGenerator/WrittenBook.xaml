@@ -12,11 +12,11 @@
     xmlns:local_window="clr-namespace:cbhk_environment.WindowDictionaries"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="成书生成器"
-    Width="500"
-    MinWidth="500"
-    MinHeight="600"
+    Width="360"
+    Height="640"
     Background="#2F2F2F"
     ContextMenu="{x:Null}"
+    ResizeMode="NoResize"
     mc:Ignorable="d">
 
     <Window.DataContext>
@@ -31,20 +31,16 @@
             CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local_window:CommonWindow}}" />
     </Window.InputBindings>
 
-    <Window.Resources>
-        <SolidColorBrush x:Key="SelectionColor" Color="#0207FF" />
-    </Window.Resources>
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="20*" />
+            <RowDefinition Height="15*" />
         </Grid.RowDefinitions>
         <DockPanel
             Grid.Row="0"
-            Height="30"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Top">
+            Height="25"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center">
             <CustomControls:IconTextButtons
                 Width="55"
                 Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DockPanel}, Path=ActualHeight}"
@@ -118,24 +114,28 @@
                 ToolTipService.InitialShowDelay="0"
                 ToolTipService.ShowDuration="3000" />
         </DockPanel>
-        <Viewbox Grid.Row="1">
-            <Grid>
-                <Grid.RowDefinitions>
+        <Viewbox
+            Grid.Row="1"
+            Width="360"
+            Height="600"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top">
+            <StackPanel Margin="0">
+                <!--<Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="5*" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="10*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
+                </Grid.ColumnDefinitions>-->
                 <StackPanel
-                    Grid.Row="0"
-                    Grid.Column="0"
-                    Height="820"
+                    HorizontalAlignment="Center"
                     VerticalAlignment="Top"
+                    Orientation="Horizontal"
                     Visibility="{Binding DisplayStylePanel, Mode=OneWay}">
                     <Button
-                        Width="50"
+                        Width="55"
                         Height="50"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Top"
@@ -150,7 +150,7 @@
                         <TextBlock FontWeight="Bold" Text="B" />
                     </Button>
                     <Button
-                        Width="50"
+                        Width="55"
                         Height="50"
                         Padding="0,0,2,0"
                         HorizontalAlignment="Center"
@@ -165,7 +165,7 @@
                         <TextBlock FontStyle="Italic" Text="i" />
                     </Button>
                     <Button
-                        Width="50"
+                        Width="55"
                         Height="50"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Top"
@@ -183,7 +183,7 @@
                         </TextBlock>
                     </Button>
                     <Button
-                        Width="50"
+                        Width="55"
                         Height="50"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Top"
@@ -201,7 +201,7 @@
                         </TextBlock>
                     </Button>
                     <Button
-                        Width="50"
+                        Width="55"
                         Height="50"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Top"
@@ -214,7 +214,7 @@
                         ToolTipService.InitialShowDelay="0"
                         ToolTipService.ShowDuration="1000" />
                     <Button
-                        Width="50"
+                        Width="55"
                         Height="50"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Top"
@@ -227,9 +227,10 @@
                         ToolTipService.InitialShowDelay="0"
                         ToolTipService.ShowDuration="1000" />
                     <ColorPicker:ColorPickers
-                        Uid="Left"
-                        Width="50"
+                        Width="55"
                         Height="50"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Top"
                         Background="Black"
                         SelectColor="{Binding SelectionColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         ToolTip="设置选定文本颜色"
@@ -245,256 +246,20 @@
                         </ity:Interaction.Triggers>
                     </ColorPicker:ColorPickers>
                 </StackPanel>
-                <Border
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Width="505"
-                    Height="105"
-                    Margin="0,620,0,0"
-                    BorderBrush="Black"
-                    BorderThickness="4"
-                    Visibility="{Binding DisplaySignature, Mode=OneWay}">
-                    <Border.Style>
-                        <Style TargetType="{x:Type Border}">
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="BorderBrush" Value="#FFFF" />
-                                    <Setter Property="Cursor" Value="Hand" />
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Border.Style>
-                    <Image Panel.ZIndex="0">
-                        <ity:Interaction.Triggers>
-                            <ity:EventTrigger EventName="MouseLeftButtonDown">
-                                <itn:CallMethodAction MethodName="SignatureMouseLeftButtonDown" TargetObject="{Binding}" />
-                            </ity:EventTrigger>
-                            <ity:EventTrigger EventName="Loaded">
-                                <itn:CallMethodAction MethodName="SignatureBackgroundLoaded" TargetObject="{Binding}" />
-                            </ity:EventTrigger>
-                        </ity:Interaction.Triggers>
-                    </Image>
-                </Border>
-                <Image
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Width="580"
-                    Height="722"
-                    Margin="0,0,0,200"
-                    Panel.ZIndex="0">
+                <ContentControl
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Height="500">
                     <ity:Interaction.Triggers>
                         <ity:EventTrigger EventName="Loaded">
-                            <itn:CallMethodAction MethodName="BackgroundLoaded" TargetObject="{Binding}" />
+                            <itn:CallMethodAction MethodName="LoadedEditPage" TargetObject="{Binding}" />
                         </ity:EventTrigger>
                     </ity:Interaction.Triggers>
-                </Image>
-                <DockPanel
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Margin="60,70,0,0"
-                    HorizontalAlignment="Left"
-                    Visibility="{Binding DisplayExceedsCount, Mode=OneWay}">
-                    <TextBlock
-                        FontSize="20"
-                        Foreground="Black"
-                        Text="查看超出的字符数:">
-                        <ity:Interaction.Triggers>
-                            <ity:EventTrigger EventName="Loaded">
-                                <itn:CallMethodAction MethodName="ExceedsTextBlockLoaded" TargetObject="{Binding}" />
-                            </ity:EventTrigger>
-                        </ity:Interaction.Triggers>
-                    </TextBlock>
-                    <TextBlock
-                        FontSize="20"
-                        Foreground="Red"
-                        Text="{Binding ExceedsCount, Mode=OneWay}" />
-                </DockPanel>
-                <TextBox
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Width="460"
-                    Height="50"
-                    Margin="60,0,0,540"
-                    HorizontalAlignment="Left"
-                    Panel.ZIndex="1"
-                    Background="#FFF9EB"
-                    BorderBrush="Black"
-                    FontFamily="Minecraft AE Pixel"
-                    FontSize="35"
-                    Text="{Binding Title, Mode=TwoWay}"
-                    Visibility="{Binding DisplayTitle, Mode=OneWay}" />
-                <TextBox
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Width="250"
-                    Height="55"
-                    Margin="60,0,0,430"
-                    HorizontalAlignment="Left"
-                    Panel.ZIndex="1"
-                    Background="#FFF9EB"
-                    BorderBrush="Black"
-                    FontFamily="Minecraft AE Pixel"
-                    FontSize="35"
-                    Text="{Binding Author, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                    Visibility="{Binding DisplayAuthor, Mode=OneWay}" />
-                <Image
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Width="280"
-                    Margin="10,0,0,140"
-                    HorizontalAlignment="Left"
+                </ContentControl>
+                <!--<StackPanel
+                    HorizontalAlignment="Center"
                     VerticalAlignment="Bottom"
-                    Visibility="{Binding DisplaySignatureButton, Mode=OneWay}">
-                    <ity:Interaction.Triggers>
-                        <ity:EventTrigger EventName="MouseLeftButtonDown">
-                            <itn:CallMethodAction MethodName="SignatureAndCloseMouseLeftButtonDown" TargetObject="{Binding}" />
-                        </ity:EventTrigger>
-                        <ity:EventTrigger EventName="Loaded">
-                            <itn:CallMethodAction MethodName="SignatureAndCloseLoaded" TargetObject="{Binding}" />
-                        </ity:EventTrigger>
-                    </ity:Interaction.Triggers>
-                    <Image.Style>
-                        <Style TargetType="Image">
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Cursor" Value="Hand" />
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Image.Style>
-                </Image>
-                <Image
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Width="280"
-                    Margin="290,0,0,140"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Bottom"
-                    Visibility="{Binding DisplayCancelSignatureButton, Mode=OneWay}">
-                    <ity:Interaction.Triggers>
-                        <ity:EventTrigger EventName="MouseLeftButtonDown">
-                            <itn:CallMethodAction MethodName="SignatureCancelMouseLeftButtonDown" TargetObject="{Binding}" />
-                        </ity:EventTrigger>
-                        <ity:EventTrigger EventName="Loaded">
-                            <itn:CallMethodAction MethodName="SignatureCancelLoaded" TargetObject="{Binding}" />
-                        </ity:EventTrigger>
-                    </ity:Interaction.Triggers>
-                    <Image.Style>
-                        <Style TargetType="Image">
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Cursor" Value="Hand" />
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Image.Style>
-                </Image>
-                <TextBlock
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Margin="0,50,75,0"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Top"
-                    Panel.ZIndex="1"
-                    Background="#FDF7E8"
-                    FontFamily="Minecraft AE Pixel"
-                    FontSize="45"
-                    Foreground="Black"
-                    Text="{Binding PageData, Mode=OneWay}"
-                    TextAlignment="Center"
-                    Visibility="{Binding DisplayPageIndex, Mode=OneWay}" />
-                <RichTextBox
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Width="465"
-                    Height="520"
-                    Margin="0,0,0,200"
-                    Padding="0,5,0,0"
-                    Panel.ZIndex="1"
-                    Background="Transparent"
-                    BorderThickness="0"
-                    CaretBrush="Black"
-                    ContextMenu="{x:Null}"
-                    Foreground="Black"
-                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                    ScrollViewer.VerticalScrollBarVisibility="Auto"
-                    SelectionBrush="{StaticResource SelectionColor}"
-                    Visibility="{Binding DisplayWrittenBox, Mode=OneWay}">
-                    <ity:Interaction.Triggers>
-                        <ity:EventTrigger EventName="Loaded">
-                            <itn:CallMethodAction MethodName="WrittenBoxLoaded" TargetObject="{Binding}" />
-                        </ity:EventTrigger>
-                        <ity:EventTrigger EventName="PreviewKeyDown">
-                            <itn:CallMethodAction MethodName="WrittenBoxPreviewKeyDown" TargetObject="{Binding}" />
-                        </ity:EventTrigger>
-                        <ity:EventTrigger EventName="PreviewMouseRightButtonDown">
-                            <itn:CallMethodAction MethodName="OpenEventForm" TargetObject="{Binding}" />
-                        </ity:EventTrigger>
-                        <ity:EventTrigger EventName="PreviewTextInput">
-                            <itn:CallMethodAction MethodName="WrittenBoxPreviewTextInput" TargetObject="{Binding}" />
-                        </ity:EventTrigger>
-                        <ity:EventTrigger EventName="TextChanged">
-                            <itn:CallMethodAction MethodName="WrittenBoxTextChanged" TargetObject="{Binding}" />
-                        </ity:EventTrigger>
-                    </ity:Interaction.Triggers>
-                    <CustomControls:EnabledFlowDocument
-                        FontFamily="Minecraft AE Pixel"
-                        FontSize="30"
-                        LineHeight="10">
-                        <CustomControls:RichParagraph>
-                            <CustomControls:RichRun Text="" />
-                        </CustomControls:RichParagraph>
-                    </CustomControls:EnabledFlowDocument>
-                </RichTextBox>
-                <Image
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Width="74"
-                    Height="41"
-                    Margin="300,375,0,0"
-                    Visibility="{Binding DisplayRightArrow, Mode=OneWay}">
-                    <ity:Interaction.Triggers>
-                        <ity:EventTrigger EventName="Loaded">
-                            <itn:CallMethodAction MethodName="RightArrowLoaded" TargetObject="{Binding}" />
-                        </ity:EventTrigger>
-                        <ity:EventTrigger EventName="MouseEnter">
-                            <itn:CallMethodAction MethodName="RightArrowMouseEnter" TargetObject="{Binding}" />
-                        </ity:EventTrigger>
-                        <ity:EventTrigger EventName="MouseLeave">
-                            <itn:CallMethodAction MethodName="RightArrowMouseLeave" TargetObject="{Binding}" />
-                        </ity:EventTrigger>
-                        <ity:EventTrigger EventName="MouseLeftButtonDown">
-                            <itn:CallMethodAction MethodName="RightArrowMouseLeftButtonDown" TargetObject="{Binding}" />
-                        </ity:EventTrigger>
-                    </ity:Interaction.Triggers>
-                </Image>
-                <Image
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Width="74"
-                    Height="41"
-                    Margin="0,375,300,0"
-                    Visibility="{Binding DisplayLeftArrow, Mode=OneWay}">
-                    <ity:Interaction.Triggers>
-                        <ity:EventTrigger EventName="Loaded">
-                            <itn:CallMethodAction MethodName="LeftArrowLoaded" TargetObject="{Binding}" />
-                        </ity:EventTrigger>
-                        <ity:EventTrigger EventName="MouseEnter">
-                            <itn:CallMethodAction MethodName="LeftArrowMouseEnter" TargetObject="{Binding}" />
-                        </ity:EventTrigger>
-                        <ity:EventTrigger EventName="MouseLeave">
-                            <itn:CallMethodAction MethodName="LeftArrowMouseLeave" TargetObject="{Binding}" />
-                        </ity:EventTrigger>
-                        <ity:EventTrigger EventName="MouseLeftButtonDown">
-                            <itn:CallMethodAction MethodName="LeftArrowMouseLeftButtonDown" TargetObject="{Binding}" />
-                        </ity:EventTrigger>
-                    </ity:Interaction.Triggers>
-                </Image>
-                <StackPanel
-                    Grid.Row="0"
-                    Grid.Column="2"
-                    Height="820"
-                    VerticalAlignment="Top"
+                    Orientation="Horizontal"
                     Visibility="{Binding DisplayStylePanel, Mode=OneWay}">
                     <Button
                         Width="50"
@@ -592,6 +357,8 @@
                         Uid="Right"
                         Width="50"
                         Height="50"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Top"
                         Background="Black"
                         SelectColor="{Binding SelectionColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         ToolTip="设置选定文本颜色"
@@ -606,8 +373,80 @@
                             </ity:EventTrigger>
                         </ity:Interaction.Triggers>
                     </ColorPicker:ColorPickers>
-                </StackPanel>
-            </Grid>
+                </StackPanel>-->
+            </StackPanel>
         </Viewbox>
+        <Border
+            Grid.Row="1"
+            Width="360"
+            Height="75"
+            VerticalAlignment="Bottom"
+            Panel.ZIndex="1"
+            BorderBrush="Black"
+            BorderThickness="4">
+            <ity:Interaction.Triggers>
+                <ity:EventTrigger EventName="MouseLeftButtonDown">
+                    <itn:CallMethodAction MethodName="SignatureMouseLeftButtonDown" TargetObject="{Binding}" />
+                </ity:EventTrigger>
+                <ity:EventTrigger EventName="Loaded">
+                    <itn:CallMethodAction MethodName="SignatureButtonBackgroundLoaded" TargetObject="{Binding}" />
+                </ity:EventTrigger>
+            </ity:Interaction.Triggers>
+            <Border.Style>
+                <Style TargetType="{x:Type Border}">
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="BorderBrush" Value="#FFFF" />
+                            <Setter Property="Cursor" Value="Hand" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+        </Border>
+        <CustomControls:TextButtons
+            Grid.Row="1"
+            Width="360"
+            Height="40"
+            Margin="0,0,0,50"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Bottom"
+            Background="Transparent"
+            BorderThickness="0"
+            ClickMode="Press"
+            Content="署名并关闭"
+            Foreground="White"
+            Style="{DynamicResource TextButtonsStyle}"
+            Visibility="Collapsed">
+            <ity:Interaction.Triggers>
+                <ity:EventTrigger EventName="Click">
+                    <itn:CallMethodAction MethodName="SignatureAndCloseClicked" TargetObject="{Binding}" />
+                </ity:EventTrigger>
+                <ity:EventTrigger EventName="Loaded">
+                    <itn:CallMethodAction MethodName="SignatureAndCloseLoaded" TargetObject="{Binding}" />
+                </ity:EventTrigger>
+            </ity:Interaction.Triggers>
+        </CustomControls:TextButtons>
+        <CustomControls:TextButtons
+            Grid.Row="1"
+            Width="360"
+            Height="40"
+            Margin="0,0,0,15"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Bottom"
+            Background="Transparent"
+            BorderThickness="0"
+            ClickMode="Press"
+            Content="取消"
+            Foreground="White"
+            Style="{DynamicResource TextButtonsStyle}">
+            <ity:Interaction.Triggers>
+                <ity:EventTrigger EventName="Click">
+                    <itn:CallMethodAction MethodName="SignatureCancelClicked" TargetObject="{Binding}" />
+                </ity:EventTrigger>
+                <ity:EventTrigger EventName="Loaded">
+                    <itn:CallMethodAction MethodName="SignatureCancelLoaded" TargetObject="{Binding}" />
+                </ity:EventTrigger>
+            </ity:Interaction.Triggers>
+        </CustomControls:TextButtons>
     </Grid>
 </local_window:CommonWindow>

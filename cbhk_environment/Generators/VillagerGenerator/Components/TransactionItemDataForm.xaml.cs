@@ -46,6 +46,7 @@ namespace cbhk_environment.Generators.VillagerGenerator.Components
         {
             ColorNumbericUpDowns colorNumbericUpDowns = sender as ColorNumbericUpDowns;
             TextBox box = colorNumbericUpDowns.Template.FindName("textbox", colorNumbericUpDowns) as TextBox;
+            if(box != null)
             box.Text = colorNumbericUpDowns.Text;
         }
     }

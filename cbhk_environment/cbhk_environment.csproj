@@ -240,14 +240,22 @@
     <Compile Include="Generators\DataPackGenerator\DataPack.xaml.cs">
       <DependentUpon>DataPack.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Generators\DataPackGenerator\DatapackInitializationForms\DatapackGenerateSetup.xaml.cs">
-      <DependentUpon>DatapackGenerateSetup.xaml</DependentUpon>
+    <Compile Include="Generators\DataPackGenerator\DatapackInitializationForms\DatapackGenerateSetupDataContext.cs" />
+    <Compile Include="Generators\DataPackGenerator\DatapackInitializationForms\DatapackGenerateSetupPage.xaml.cs">
+      <DependentUpon>DatapackGenerateSetupPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Generators\DataPackGenerator\DatapackInitializationForms\initialization_datacontext.cs" />
-    <Compile Include="Generators\DataPackGenerator\DatapackInitializationForms\TemplateSelect.xaml.cs">
-      <DependentUpon>TemplateSelect.xaml</DependentUpon>
+    <Compile Include="Generators\DataPackGenerator\DatapackInitializationForms\HomePage.xaml.cs">
+      <DependentUpon>HomePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Generators\DataPackGenerator\DatapackInitializationForms\TemplateSelectDataContext.cs" />
+    <Compile Include="Generators\DataPackGenerator\DatapackInitializationForms\TemplateSelectPage.xaml.cs">
+      <DependentUpon>TemplateSelectPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Generators\DataPackGenerator\datapack_datacontext.cs" />
+    <Compile Include="Generators\DataPackGenerator\EditDataContext.cs" />
+    <Compile Include="Generators\DataPackGenerator\EditPage.xaml.cs">
+      <DependentUpon>EditPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Generators\VillagerGenerator\Components\GossipsItems.xaml.cs">
       <DependentUpon>GossipsItems.xaml</DependentUpon>
     </Compile>
@@ -261,6 +269,12 @@
       <DependentUpon>Villager.xaml</DependentUpon>
     </Compile>
     <Compile Include="Generators\VillagerGenerator\villager_datacontext.cs" />
+    <Compile Include="Generators\WrittenBookGenerator\Components\EditPage.xaml.cs">
+      <DependentUpon>EditPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Generators\WrittenBookGenerator\Components\SignaturePage.xaml.cs">
+      <DependentUpon>SignaturePage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Generators\WrittenBookGenerator\Components\TextEventsForm.xaml.cs">
       <DependentUpon>TextEventsForm.xaml</DependentUpon>
     </Compile>
@@ -530,11 +544,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Generators\DataPackGenerator\DatapackInitializationForms\DatapackGenerateSetup.xaml">
+    <Page Include="Generators\DataPackGenerator\DatapackInitializationForms\DatapackGenerateSetupPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Generators\DataPackGenerator\DatapackInitializationForms\TemplateSelect.xaml">
+    <Page Include="Generators\DataPackGenerator\DatapackInitializationForms\HomePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Generators\DataPackGenerator\DatapackInitializationForms\TemplateSelectPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -543,6 +561,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Generators\DataPackGenerator\Dictionaries\TreeViewContextMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Generators\DataPackGenerator\EditPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -559,6 +581,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Generators\VillagerGenerator\Villager.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Generators\WrittenBookGenerator\Components\EditPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Generators\WrittenBookGenerator\Components\SignaturePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -731,9 +761,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="resources\common\images\TextButtonBackground.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="resources\cbhk_form\images\cbhk_group.jpg" />
     <Resource Include="resources\cbhk_form\images\my_qq.png" />
     <Resource Include="resources\cbhk_form\images\special_thanks.jpg" />
@@ -840,10 +867,24 @@
     <Resource Include="resources\cbhk_form\images\empty.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="resources\common\images\background_button.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="resources\common\images\arrow.png" />
+    <Resource Include="resources\common\images\ButtonLocked.png" />
+    <Resource Include="resources\common\images\ButtonNormal.png" />
+    <Resource Include="resources\common\images\ButtonPressed.png" />
+    <Resource Include="resources\common\images\CheckboxChecked.png" />
+    <Resource Include="resources\common\images\CheckboxEmpty.png" />
+    <Resource Include="resources\common\images\ContentBox.png" />
+    <Resource Include="resources\common\images\Frame.png" />
+    <Resource Include="resources\common\images\RadiusToggleButtonOff.png" />
+    <Resource Include="resources\common\images\RadiusToggleButtonOffLocked.png" />
+    <Resource Include="resources\common\images\RadiusToggleButtonOn.png" />
+    <Resource Include="resources\common\images\RadiusToggleButtonOnLocked.png" />
+    <Resource Include="resources\common\images\SliderBar.png" />
+    <Resource Include="resources\common\images\SliderButton.png" />
+    <Resource Include="resources\common\images\SliderButtonLocked.png" />
+    <Resource Include="resources\common\images\TextEditBox.png" />
+    <Resource Include="resources\common\images\TextToggleButtonLocked.png" />
+    <Resource Include="resources\common\images\TextToggleButtonNormal.png" />
+    <Resource Include="resources\common\images\TextToggleButtonPressed.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

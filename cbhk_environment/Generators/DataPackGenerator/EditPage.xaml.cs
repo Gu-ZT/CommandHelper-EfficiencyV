@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationForms
+namespace cbhk_environment.Generators.DataPackGenerator
 {
     /// <summary>
-    /// TemplateSelect.xaml 的交互逻辑
+    /// EditPage.xaml 的交互逻辑
     /// </summary>
-    public partial class TemplateSelect:Window
+    public partial class EditPage : Page
     {
-        public TemplateSelect()
+        public EditPage()
         {
             InitializeComponent();
         }

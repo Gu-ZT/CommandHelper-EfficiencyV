@@ -48,11 +48,16 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             CornerRadius="5">
+                            <Border.RenderTransform>
+                                <RotateTransform Angle="45" />
+                            </Border.RenderTransform>
                             <Viewbox HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                <Viewbox.RenderTransform>
+                                    <RotateTransform Angle="-45" />
+                                </Viewbox.RenderTransform>
                                 <Grid x:Name="markGrid">
                                     <Path
                                         x:Name="optionMark"
-                                        Margin="1"
                                         Data="M136 138 c-13 -24 -33 -60 -43 -81 l-19 -38 -14 25 c-7 14 -20 26 -27 26 -9 0 -4 -12 14 -35 15 -19 30 -35 33 -35 3 0 17 26 32 58 14 31 36 72 48 90 12 17 17 32 11 32 -5 0 -21 -19 -35 -42z"
                                         Fill="{StaticResource OptionMark.Static.Glyph}"
                                         Opacity="0"

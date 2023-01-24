@@ -1,5 +1,5 @@
-﻿<Window
-    x:Class="cbhk_environment.Generators.DataPackGenerator.DatapackInitializationForms.TemplateSelect"
+﻿<Page
+    x:Class="cbhk_environment.Generators.DataPackGenerator.DatapackInitializationForms.TemplateSelectPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:CustomControls="clr-namespace:cbhk_environment.CustomControls"
@@ -7,23 +7,13 @@
     xmlns:itn="http://schemas.microsoft.com/expression/2010/interactions"
     xmlns:ity="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:local="clr-namespace:cbhk_environment.Generators.DataPackGenerator.DatapackInitializationForms"
-    xmlns:local_datacontext="clr-namespace:cbhk_environment.Generators.DataPackGenerator.DatapackInitializationForms"
-    xmlns:local_window="clr-namespace:cbhk_environment.WindowDictionaries"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="创建新数据包"
-    Width="900"
-    Height="680"
-    Background="#242424"
-    ResizeMode="NoResize"
-    WindowStartupLocation="CenterScreen"
-    WindowStyle="None"
+    Title="TemplateSelectPage"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
     mc:Ignorable="d">
 
-    <Window.DataContext>
-        <local_datacontext:initialization_datacontext />
-    </Window.DataContext>
-
-    <Grid>
+    <Grid Width="1080" Height="571">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*" />
             <ColumnDefinition Width="5*" />
@@ -36,12 +26,12 @@
                 Foreground="White"
                 Text="创建新的数据包" />
             <TextBlock
-                Margin="0,0,90,20"
+                Margin="0,0,90,10"
                 HorizontalAlignment="Center"
                 FontSize="20"
                 Foreground="White"
                 Text="最近使用的内容模板" />
-            <DockPanel Margin="35,5,0,0" HorizontalAlignment="Left">
+            <DockPanel Margin="65,0,0,0" HorizontalAlignment="Left">
                 <CustomControls:TextCheckBoxs
                     Margin="0,0,10,0"
                     Foreground="White"
@@ -250,7 +240,7 @@
             </DockPanel>
             <ScrollViewer
                 Height="450"
-                MaxHeight="450"
+                MaxHeight="340"
                 Margin="0,0,10,0"
                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                 ScrollViewer.VerticalScrollBarVisibility="Auto"
@@ -278,7 +268,7 @@
                     Background="#3D3D3D"
                     BorderThickness="0"
                     Command="{Binding TemplateLastStep}"
-                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Page, Mode=FindAncestor}}"
                     Content="上一步"
                     Foreground="White"
                     MouseLeftDownBackground="#333333"
@@ -291,7 +281,7 @@
                     Background="#403582"
                     BorderThickness="0"
                     Command="{Binding TemplateNextStep}"
-                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Page, Mode=FindAncestor}}"
                     Content="下一步"
                     Foreground="White"
                     MouseLeftDownBackground="#333333"
@@ -300,4 +290,4 @@
             </DockPanel>
         </StackPanel>
     </Grid>
-</Window>
+</Page>

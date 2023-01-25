@@ -6,6 +6,15 @@ namespace cbhk_environment.CustomControls
 {
     public class ColorNumbericUpDowns:TextBox
     {
+        public ImageBrush PressedBackground
+        {
+            get { return (ImageBrush)GetValue(PressedBackgroundProperty); }
+            set { SetValue(PressedBackgroundProperty, value); }
+        }
+
+        public static readonly DependencyProperty PressedBackgroundProperty =
+            DependencyProperty.Register("PressedBackground", typeof(ImageBrush), typeof(RepeatButtonWithBackground), new PropertyMetadata(default(ImageBrush)));
+
         public Brush ArrowBackground
         {
             get { return (Brush)GetValue(ArrowBackgroundProperty); }

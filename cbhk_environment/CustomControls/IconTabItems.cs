@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace cbhk_environment.CustomControls
@@ -59,5 +60,14 @@ namespace cbhk_environment.CustomControls
 
         public static readonly DependencyProperty TextMarginProperty =
             DependencyProperty.Register("TextMargin", typeof(Thickness), typeof(IconTabItems), new PropertyMetadata(default(Thickness)));
+
+        public ImageBrush Selectedbackground
+        {
+            get { return (ImageBrush)GetValue(SelectedbackgroundProperty); }
+            set { SetValue(SelectedbackgroundProperty, value); }
+        }
+
+        public static readonly DependencyProperty SelectedbackgroundProperty =
+            DependencyProperty.Register("Selectedbackground", typeof(ImageBrush), typeof(IconTabItems), new PropertyMetadata(default(ImageBrush)));
     }
 }

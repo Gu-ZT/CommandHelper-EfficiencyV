@@ -9,8 +9,8 @@
     mc:Ignorable="d">
     <Border
         x:Name="border"
-        Width="600"
-        Height="210"
+        Width="300"
+        Height="150"
         Background="Transparent"
         BorderBrush="{x:Null}"
         BorderThickness="0">
@@ -21,7 +21,8 @@
             VerticalScrollBarVisibility="Hidden">
             <Canvas
                 x:Name="mainCanvas"
-                Margin="2"
+                Height="200"
+                Margin="5,0"
                 Background="Transparent" />
         </ScrollViewer>
     </Border>

@@ -162,6 +162,7 @@
     <Compile Include="CustomControls\IconTabItems.cs" />
     <Compile Include="CustomControls\IconTextButtons.cs" />
     <Compile Include="CustomControls\RadiusToggleButtons.cs" />
+    <Compile Include="CustomControls\RepeatButtonWithBackground.cs" />
     <Compile Include="CustomControls\RichCheckBoxs.cs" />
     <Compile Include="CustomControls\RichParagraph.cs" />
     <Compile Include="CustomControls\RichRun.cs" />
@@ -428,6 +429,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="ControlsDictionaries\RepeatButtonWithBackground.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ControlsDictionaries\ResizableTextBoxs.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -451,6 +456,10 @@
     <Page Include="ControlsDictionaries\SimpaleScrollViewers.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ControlsDictionaries\TabControlWithScrollBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ControlsDictionaries\TextButtons.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -885,6 +894,10 @@
     <Resource Include="resources\common\images\TextToggleButtonLocked.png" />
     <Resource Include="resources\common\images\TextToggleButtonNormal.png" />
     <Resource Include="resources\common\images\TextToggleButtonPressed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\common\images\issue.png" />
+    <Resource Include="resources\common\images\switch.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

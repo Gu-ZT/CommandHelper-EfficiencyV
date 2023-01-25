@@ -7,15 +7,6 @@ namespace cbhk_environment.CustomControls
 
     public class ColorSliders : Slider
     {
-        public CornerRadius BackgroundRadius
-        {
-            get { return (CornerRadius)GetValue(BackgroundRadiusProperty); }
-            set { SetValue(BackgroundRadiusProperty, value); }
-        }
-
-        public static readonly DependencyProperty BackgroundRadiusProperty =
-            DependencyProperty.Register("BackgroundRadius", typeof(CornerRadius), typeof(ColorSliders), new PropertyMetadata(default(CornerRadius)));
-
         public Brush BackgroundColor
         {
             get { return (Brush)GetValue(BackgroundColorProperty); }

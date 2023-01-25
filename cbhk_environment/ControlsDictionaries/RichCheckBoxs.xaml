@@ -48,9 +48,6 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             CornerRadius="5">
-                            <Border.RenderTransform>
-                                <RotateTransform Angle="45" />
-                            </Border.RenderTransform>
                             <Viewbox HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <Viewbox.RenderTransform>
                                     <RotateTransform Angle="-45" />

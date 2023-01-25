@@ -43,5 +43,14 @@ namespace cbhk_environment.CustomControls
 
         public static readonly DependencyProperty IconCheckMarginProperty =
             DependencyProperty.Register("IconCheckMargin", typeof(Thickness), typeof(IconCheckBoxs), new PropertyMetadata(default(Thickness)));
+
+        public BitmapImage IconCheckBackgroundImage
+        {
+            get { return (BitmapImage)GetValue(IconCheckBackgroundImageProperty); }
+            set { SetValue(IconCheckBackgroundImageProperty, value); }
+        }
+
+        public static readonly DependencyProperty IconCheckBackgroundImageProperty =
+            DependencyProperty.Register("IconCheckBackgroundImage", typeof(BitmapImage), typeof(IconCheckBoxs), new PropertyMetadata(default(BitmapImage)));
     }
 }

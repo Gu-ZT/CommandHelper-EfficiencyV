@@ -266,62 +266,62 @@
                     </Border.Background>
                 </Border>
                 <Menu Padding="0,10,0,0" Background="Transparent">
-                    <MenuItem Style="{StaticResource TextMenuItem}">
+                    <MenuItem>
                         <MenuItem.Header>
                             <TextBlock Foreground="White" Text="设置" />
                         </MenuItem.Header>
-                        <MenuItem Click="StatupItemClick" Style="{StaticResource TextMenuItem}">
+                        <MenuItem Click="StatupItemClick">
                             <MenuItem.Header>
                                 <TextBlock Foreground="White" Text="启动项" />
                             </MenuItem.Header>
                         </MenuItem>
-                        <MenuItem Click="IndividualizationForm" Style="{StaticResource TextMenuItem}">
+                        <MenuItem Click="IndividualizationForm">
                             <MenuItem.Header>
                                 <TextBlock Foreground="White" Text="个性化" />
                             </MenuItem.Header>
                         </MenuItem>
                     </MenuItem>
-                    <MenuItem Style="{StaticResource TextMenuItem}">
+                    <MenuItem>
                         <MenuItem.Header>
                             <TextBlock Foreground="White" Text="更多" />
                         </MenuItem.Header>
                         <MenuItem.DataContext>
                             <main_form_data_context:More />
                         </MenuItem.DataContext>
-                        <MenuItem Command="{Binding ConversationGroupCommand}" Style="{StaticResource TextMenuItem}">
+                        <MenuItem Command="{Binding ConversationGroupCommand}">
                             <MenuItem.Header>
                                 <TextBlock Foreground="White" Text="进群交流" />
                             </MenuItem.Header>
                         </MenuItem>
-                        <MenuItem Command="{Binding FeedBackBugsCommand}" Style="{StaticResource TextMenuItem}">
+                        <MenuItem Command="{Binding FeedBackBugsCommand}">
                             <MenuItem.Header>
                                 <TextBlock Foreground="White" Text="反馈bug" />
                             </MenuItem.Header>
                         </MenuItem>
-                        <MenuItem Command="{Binding AboutUsCommand}" Style="{StaticResource TextMenuItem}">
+                        <MenuItem Command="{Binding AboutUsCommand}">
                             <MenuItem.Header>
                                 <TextBlock Foreground="White" Text="关于编辑器" />
                             </MenuItem.Header>
                         </MenuItem>
                     </MenuItem>
-                    <MenuItem Style="{StaticResource TextMenuItem}">
+                    <MenuItem>
                         <MenuItem.Header>
                             <TextBlock Foreground="White" Text="指令教程" />
                         </MenuItem.Header>
                         <MenuItem.DataContext>
                             <main_form_data_context:CommandClasses />
                         </MenuItem.DataContext>
-                        <MenuItem Command="{Binding BasicKnowledgeCommand}" Style="{StaticResource TextMenuItem}">
+                        <MenuItem Command="{Binding BasicKnowledgeCommand}">
                             <MenuItem.Header>
                                 <TextBlock Foreground="White" Text="基础" />
                             </MenuItem.Header>
                         </MenuItem>
-                        <MenuItem Command="{Binding AdvancedKnowledgeCommand}" Style="{StaticResource TextMenuItem}">
+                        <MenuItem Command="{Binding AdvancedKnowledgeCommand}">
                             <MenuItem.Header>
                                 <TextBlock Foreground="White" Text="进阶" />
                             </MenuItem.Header>
                         </MenuItem>
-                        <MenuItem Command="{Binding OriginalEditionModKnowledgeCommand}" Style="{StaticResource TextMenuItem}">
+                        <MenuItem Command="{Binding OriginalEditionModKnowledgeCommand}">
                             <MenuItem.Header>
                                 <TextBlock Foreground="White" Text="原版模组" />
                             </MenuItem.Header>

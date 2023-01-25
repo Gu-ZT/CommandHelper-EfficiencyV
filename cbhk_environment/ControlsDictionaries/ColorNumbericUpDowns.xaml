@@ -6,12 +6,22 @@
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:local_contexts="clr-namespace:cbhk_environment.ControlsDataContexts">
 
+    <Style x:Key="NumbericButtonStyle" TargetType="RepeatButton">
+        <Style.Triggers>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=PressedBackground}" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=ArrowBackground}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
     <ControlTemplate x:Key="ColorNumbericUpDown" TargetType="{x:Type CustomControls:ColorNumbericUpDowns}">
         <Border
             Background="Transparent"
             BorderBrush="Black"
-            BorderThickness="1"
-            CornerRadius="5">
+            BorderThickness="1">
             <Grid Background="Transparent">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
@@ -58,7 +68,8 @@
                     BorderBrush="{x:Null}"
                     BorderThickness="0"
                     Delay="100"
-                    Interval="25">
+                    Interval="25"
+                    Style="{StaticResource NumbericButtonStyle}">
                     <RepeatButton.DataContext>
                         <local_contexts:ColorNumbericUpDownHander />
                     </RepeatButton.DataContext>
@@ -68,7 +79,10 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                     <RepeatButton.Content>
-                        <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Viewbox
+                            Margin="0,0,3,3"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
                             <Path Fill="{TemplateBinding ArrowForeground}">
                                 <Path.Data>
                                     M500.8 461.909333L267.306667 695.296l-45.226667-45.269333 278.741333-278.613334L779.306667 650.026667l-45.248 45.226666z
@@ -87,7 +101,8 @@
                     BorderBrush="{x:Null}"
                     BorderThickness="0"
                     Delay="100"
-                    Interval="25">
+                    Interval="25"
+                    Style="{StaticResource NumbericButtonStyle}">
                     <RepeatButton.DataContext>
                         <local_contexts:ColorNumbericUpDownHander />
                     </RepeatButton.DataContext>
@@ -97,7 +112,10 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                     <RepeatButton.Content>
-                        <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Viewbox
+                            Margin="0,0,3,3"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
                             <Path Fill="{TemplateBinding ArrowForeground}">
                                 <Path.Data>
                                     M500.8 604.779L267.307 371.392l-45.227 45.27 278.741 278.613L779.307 416.66l-45.248-45.248z

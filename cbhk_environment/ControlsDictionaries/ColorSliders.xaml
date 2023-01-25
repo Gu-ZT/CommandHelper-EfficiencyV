@@ -19,6 +19,8 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <ImageBrush x:Key="SliderBackground" ImageSource="/cbhk_environment;component/resources/common/images/SliderBar.png" />
+    <ImageBrush x:Key="SliderButton" ImageSource="/cbhk_environment;component/resources/common/images/SliderButton.png" />
     <SolidColorBrush x:Key="SliderThumb.Static.Background" Color="Black" />
     <SolidColorBrush x:Key="SliderThumb.Static.Border" Color="#FFACACAC" />
     <SolidColorBrush x:Key="SliderThumb.Static.Foreground" Color="#FFE5E5E5" />
@@ -32,10 +34,11 @@
     <SolidColorBrush x:Key="SliderThumb.Track.Border" Color="#FFD6D6D6" />
 
     <ControlTemplate x:Key="SliderThumbHorizontalDefault" TargetType="{x:Type Thumb}">
-        <Viewbox
+        <Border Background="{StaticResource SliderButton}" UseLayoutRounding="False" />
+        <!--<Viewbox
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            UseLayoutRounding="True">
+            UseLayoutRounding="False">
             <Path
                 x:Name="grip"
                 VerticalAlignment="Center"
@@ -44,9 +47,9 @@
                 SnapsToDevicePixels="True"
                 Stretch="Fill"
                 StrokeThickness="1"
-                UseLayoutRounding="True" />
-        </Viewbox>
-        <ControlTemplate.Triggers>
+                UseLayoutRounding="False" />
+        </Viewbox>-->
+        <!--<ControlTemplate.Triggers>
             <Trigger Property="IsMouseOver" Value="true">
                 <Setter TargetName="grip" Property="Fill" Value="{StaticResource SliderThumb.MouseOver.Background}" />
             </Trigger>
@@ -56,7 +59,7 @@
             <Trigger Property="IsEnabled" Value="false">
                 <Setter TargetName="grip" Property="Fill" Value="{StaticResource SliderThumb.Disabled.Background}" />
             </Trigger>
-        </ControlTemplate.Triggers>
+        </ControlTemplate.Triggers>-->
     </ControlTemplate>
 
     <ControlTemplate x:Key="SliderThumbHorizontalTop" TargetType="{x:Type Thumb}">
@@ -90,6 +93,7 @@
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
+
     <ControlTemplate x:Key="SliderThumbHorizontalBottom" TargetType="{x:Type Thumb}">
         <Grid
             HorizontalAlignment="Center"
@@ -125,9 +129,8 @@
     <ControlTemplate x:Key="SliderHorizontal" TargetType="{x:Type CustomControls:ColorSliders}">
         <Border
             x:Name="border"
-            Background="{TemplateBinding Background}"
-            BorderBrush="{TemplateBinding BorderBrush}"
-            BorderThickness="0"
+            Background="Transparent"
+            BorderThickness="1"
             SnapsToDevicePixels="True">
             <Grid>
                 <Grid.RowDefinitions>
@@ -158,10 +161,8 @@
                     Height="{TemplateBinding BackgroundHeight}"
                     Margin="5,0"
                     VerticalAlignment="center"
-                    Background="{TemplateBinding BackgroundColor}"
-                    BorderBrush="{StaticResource SliderThumb.Track.Border}"
-                    BorderThickness="0"
-                    CornerRadius="{TemplateBinding BackgroundRadius}">
+                    Background="{StaticResource SliderBackground}"
+                    BorderThickness="0">
                     <Canvas Margin="-6,-1">
                         <Rectangle
                             x:Name="PART_SelectionRange"
@@ -170,7 +171,11 @@
                             Visibility="Hidden" />
                     </Canvas>
                 </Border>
-                <Track x:Name="PART_Track" Grid.Row="1">
+                <Track
+                    x:Name="PART_Track"
+                    Grid.Row="1"
+                    Grid.RowSpan="3"
+                    Margin="0,0,0,15">
                     <Track.DecreaseRepeatButton>
                         <RepeatButton Command="{x:Static Slider.DecreaseLarge}" Style="{StaticResource RepeatButtonTransparent}" />
                     </Track.DecreaseRepeatButton>
@@ -182,7 +187,6 @@
                             x:Name="Thumb"
                             Width="{TemplateBinding HanderWidth}"
                             Height="{TemplateBinding HanderHeight}"
-                            VerticalAlignment="Center"
                             Focusable="False"
                             OverridesDefaultStyle="True"
                             Template="{StaticResource SliderThumbHorizontalDefault}" />
@@ -327,7 +331,7 @@
                 <Border
                     x:Name="TrackBackground"
                     Grid.Column="1"
-                    Width="4.0"
+                    Width="4"
                     Margin="0,5"
                     HorizontalAlignment="center"
                     Background="{StaticResource SliderThumb.Track.Background}"

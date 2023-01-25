@@ -3,6 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:CustomControls="clr-namespace:cbhk_environment.CustomControls">
 
+    <ImageBrush x:Key="CheckBoxEmpty" ImageSource="/cbhk_environment;component/resources/common/images/CheckboxEmpty.png" />
+    <ImageBrush x:Key="CheckboxChecked" ImageSource="/cbhk_environment;component/resources/common/images/CheckboxChecked.png" />
     <SolidColorBrush x:Key="OptionMark.Static.Background" Color="#FFFFFFFF" />
     <SolidColorBrush x:Key="OptionMark.Static.Border" Color="#FF707070" />
     <SolidColorBrush x:Key="OptionMark.Static.Glyph" Color="#FF212121" />
@@ -46,7 +48,7 @@
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="0">
-                            <Border.RenderTransform>
+                            <!--<Border.RenderTransform>
                                 <RotateTransform Angle="45" />
                             </Border.RenderTransform>
                             <Viewbox HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
@@ -68,7 +70,7 @@
                                         Fill="{StaticResource OptionMark.Static.Glyph}"
                                         Opacity="0" />
                                 </Grid>
-                            </Viewbox>
+                            </Viewbox>-->
                         </Border>
                         <TextBlock
                             Grid.Column="1"
@@ -93,7 +95,13 @@
                             <Setter Property="FocusVisualStyle" Value="{x:Null}" />
                             <Setter Property="Padding" Value="4,-1,0,0" />
                         </Trigger>
-                        <Trigger Property="IsMouseOver" Value="true">
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="checkBoxBorder" Property="Background" Value="{StaticResource CheckboxChecked}" />
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="False">
+                            <Setter TargetName="checkBoxBorder" Property="Background" Value="{StaticResource CheckBoxEmpty}" />
+                        </Trigger>
+                        <!--<Trigger Property="IsMouseOver" Value="true">
                             <Setter TargetName="checkBoxBorder" Property="Background" Value="{StaticResource OptionMark.MouseOver.Background}" />
                             <Setter TargetName="checkBoxBorder" Property="BorderBrush" Value="{StaticResource OptionMark.MouseOver.Border}" />
                             <Setter TargetName="optionMark" Property="Fill" Value="{StaticResource OptionMark.MouseOver.Glyph}" />
@@ -118,7 +126,7 @@
                         <Trigger Property="IsChecked" Value="{x:Null}">
                             <Setter TargetName="optionMark" Property="Opacity" Value="0" />
                             <Setter TargetName="indeterminateMark" Property="Opacity" Value="1" />
-                        </Trigger>
+                        </Trigger>-->
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

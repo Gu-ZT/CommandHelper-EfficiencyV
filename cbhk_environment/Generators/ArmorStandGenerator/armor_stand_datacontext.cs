@@ -444,7 +444,7 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
 
         #region 重置动作的按钮前景颜色对象
         //灰色
-        static SolidColorBrush gray_brush = new SolidColorBrush(Color.FromRgb(128, 128, 128));
+        static SolidColorBrush gray_brush = new SolidColorBrush(Color.FromRgb(100, 100, 100));
         //白色
         static SolidColorBrush white_brush = new SolidColorBrush(Color.FromRgb(255, 255, 255));
         #endregion
@@ -1766,7 +1766,7 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void RichCheckboxListLoaded(object sender, RoutedEventArgs e)
+        public void NBTCheckboxListLoaded(object sender, RoutedEventArgs e)
         {
             if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\ArmorStand\\data\\base_nbt.ini"))
                 as_nbts = File.ReadAllLines(AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\ArmorStand\\data\\base_nbt.ini", Encoding.UTF8).ToList();
@@ -1776,34 +1776,29 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
             {
                 foreach (string item in as_nbts)
                 {
-                    RichCheckBoxs richCheckBoxs = new RichCheckBoxs
+                    TextCheckBoxs textCheckBox = new TextCheckBoxs
                     {
                         Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255)),
-                        ImageVisibility = Visibility.Collapsed,
-                        ColorVisibility = Visibility.Collapsed,
-                        TextVisibility = Visibility.Visible,
-                        TextMargin = new Thickness(0, 5, 0, 0),
-                        Width = 100,
                         Margin = new Thickness(10,0,0,0),
-                        Height = 30,
                         HeaderText = item,
-                        HeaderHeight = 15,
-                        HeaderWidth = 15,
+                        HeaderHeight = 20,
+                        HeaderWidth = 20,
                         HorizontalAlignment = HorizontalAlignment.Left,
-                        Style = (NBTList.Children[0] as RichCheckBoxs).Style
+                        VerticalAlignment = VerticalAlignment.Center,
+                        Style = (NBTList.Children[0] as TextCheckBoxs).Style
                     };
-                    NBTList.Children.Add(richCheckBoxs);
-                    richCheckBoxs.Click += BoolNBTBoxClick;
+                    NBTList.Children.Add(textCheckBox);
+                    textCheckBox.Click += BoolNBTBoxClick;
                     switch (item)
                     {
                         case "ShowArms":
                             {
-                                richCheckBoxs.Click += ShowArmsInModel;
+                                textCheckBox.Click += ShowArmsInModel;
                                 break;
                             }
                         case "NoBasePlate":
                             {
-                                richCheckBoxs.Click += NoBasePlateInModel;
+                                textCheckBox.Click += NoBasePlateInModel;
                                 break;
                             }
                     }
@@ -1832,7 +1827,7 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
         /// <param name="e"></param>
         private void BoolNBTBoxClick(object sender, RoutedEventArgs e)
         {
-            RichCheckBoxs current = sender as RichCheckBoxs;
+            TextCheckBoxs current = sender as TextCheckBoxs;
             if (current.IsChecked.Value)
                 BoolTypeNBT.Add(current.HeaderText);
             else
@@ -1977,7 +1972,7 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
         /// </summary>
         public void ShowArmsInModel(object sender, RoutedEventArgs e)
         {
-            if ((sender as RichCheckBoxs).IsChecked.Value)
+            if ((sender as TextCheckBoxs).IsChecked.Value)
             {
                 groupScene.Children.Add(Lhand_cubeModel);
                 groupScene.Children.Add(Rhand_cubeModel);
@@ -1994,7 +1989,7 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
         /// </summary>
         public void NoBasePlateInModel(object sender, RoutedEventArgs e)
         {
-            if ((sender as RichCheckBoxs).IsChecked.Value)
+            if ((sender as TextCheckBoxs).IsChecked.Value)
                 groupScene.Children.Remove(BasePlate_cubeModel);
             else
                 groupScene.Children.Add(BasePlate_cubeModel);

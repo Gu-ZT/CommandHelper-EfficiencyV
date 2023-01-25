@@ -3,6 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:CustomControls="clr-namespace:cbhk_environment.CustomControls">
 
+    <ImageBrush x:Key="RadiusToggleButtonOff" ImageSource="/cbhk_environment;component/resources/common/images/RadiusToggleButtonOff.png" />
+    <ImageBrush x:Key="RadiusToggleButtonOn" ImageSource="/cbhk_environment;component/resources/common/images/RadiusToggleButtonOn.png" />
     <SolidColorBrush x:Key="Button.Static.Background" Color="Black" />
     <SolidColorBrush x:Key="Text.Checked.Foreground" Color="White" />
     <SolidColorBrush x:Key="Text.UnChecked.Foreground" Color="Gray" />
@@ -28,13 +30,11 @@
                     <DockPanel LastChildFill="True">
                         <Border
                             x:Name="border"
-                            Width="45"
-                            Height="25"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{StaticResource Button.Static.Border}"
-                            CornerRadius="15"
+                            Width="{TemplateBinding ToggleWidth}"
+                            Height="{TemplateBinding ToggleHeight}"
+                            BorderThickness="0"
                             SnapsToDevicePixels="true">
-                            <Path
+                            <!--<Path
                                 x:Name="CheckShape"
                                 Width="15"
                                 Height="15"
@@ -47,7 +47,7 @@
                                         RadiusX="8"
                                         RadiusY="8" />
                                 </Path.Data>
-                            </Path>
+                            </Path>-->
                         </Border>
                         <TextBlock
                             x:Name="UnCheckText"
@@ -75,7 +75,7 @@
                     </DockPanel>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
-                            <Trigger.EnterActions>
+                            <!--<Trigger.EnterActions>
                                 <BeginStoryboard>
                                     <Storyboard>
                                         <ThicknessAnimation
@@ -110,15 +110,21 @@
                                             Duration="0:0:0.2" />
                                     </Storyboard>
                                 </BeginStoryboard>
-                            </Trigger.ExitActions>
+                            </Trigger.ExitActions>-->
                             <Setter TargetName="CheckText" Property="Visibility" Value="Visible" />
                             <Setter TargetName="UnCheckText" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource RadiusToggleButtonOn}" />
                         </Trigger>
-                        <Trigger Property="IsMouseOver" Value="true">
+                        <Trigger Property="IsChecked" Value="False">
+                            <Setter TargetName="CheckText" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="UnCheckText" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource RadiusToggleButtonOff}" />
+                        </Trigger>
+                        <!--<Trigger Property="IsMouseOver" Value="true">
                             <Setter TargetName="border" Property="Background" Value="{StaticResource Button.MouseOver.Background}" />
                             <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource Button.MouseOver.Border}" />
-                        </Trigger>
-                        <Trigger Property="IsPressed" Value="true">
+                        </Trigger>-->
+                        <!--<Trigger Property="IsPressed" Value="true">
                             <Setter TargetName="border" Property="Background" Value="{StaticResource Button.Pressed.Background}" />
                             <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource Button.Pressed.Border}" />
                         </Trigger>
@@ -126,7 +132,7 @@
                             <Setter TargetName="border" Property="Background" Value="{StaticResource Button.Disabled.Background}" />
                             <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource Button.Disabled.Border}" />
                             <Setter TargetName="contentPresenter" Property="TextElement.Foreground" Value="{StaticResource Button.Disabled.Foreground}" />
-                        </Trigger>
+                        </Trigger>-->
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

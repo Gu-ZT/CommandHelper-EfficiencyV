@@ -19,13 +19,15 @@
                         x:Name="templateRoot"
                         Width="{TemplateBinding Width}"
                         Height="{TemplateBinding Height}"
+                        Background="{TemplateBinding Background}"
                         SnapsToDevicePixels="true">
                         <Image
                             x:Name="image"
                             Width="{TemplateBinding ImageWidth}"
                             Height="{TemplateBinding ImageHeight}"
                             Margin="{TemplateBinding ImageMargin}"
-                            Source="{TemplateBinding HeaderImage}" />
+                            Source="{TemplateBinding HeaderImage}"
+                            Visibility="Collapsed" />
                         <TextBlock
                             Margin="{TemplateBinding TextMargin}"
                             VerticalAlignment="Center"
@@ -46,6 +48,12 @@
                     </Grid>
                     <ControlTemplate.Triggers>
                         <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="true" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="templateRoot" Property="Background" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Selectedbackground}" />
+                        </MultiDataTrigger>
+                        <!--<MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
                                 <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="true" />
                                 <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Left" />
@@ -76,7 +84,7 @@
                             </MultiDataTrigger.Conditions>
                             <Setter Property="Panel.ZIndex" Value="1" />
                             <Setter Property="Margin" Value="0,-6,0,0" />
-                        </MultiDataTrigger>
+                        </MultiDataTrigger>-->
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

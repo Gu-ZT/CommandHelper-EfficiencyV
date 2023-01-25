@@ -41,9 +41,10 @@
                         <Image
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
-                            Source="{TemplateBinding ThicknessBackground}" />
+                            Source="{TemplateBinding ThicknessBackground}"
+                            Visibility="Collapsed" />
                         <TextBlock
-                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
                             Text="{TemplateBinding Content}"
                             TextAlignment="Center" />
                     </Grid>
@@ -56,8 +57,8 @@
                             <Setter TargetName="BackgroundGrid" Property="Background" Value="{Binding MouseLeftDownBackground, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <!--<Setter TargetName="border" Property="Background" Value="{StaticResource Button.Disabled.Background}" />
-                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource Button.Disabled.Border}" />-->
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource Button.Disabled.Background}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource Button.Disabled.Border}" />
                             <Setter TargetName="contentPresenter" Property="TextElement.Foreground" Value="{StaticResource Button.Disabled.Foreground}" />
                         </Trigger>
                     </ControlTemplate.Triggers>

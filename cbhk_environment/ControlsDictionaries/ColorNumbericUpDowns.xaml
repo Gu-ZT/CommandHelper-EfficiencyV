@@ -6,13 +6,29 @@
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:local_contexts="clr-namespace:cbhk_environment.ControlsDataContexts">
 
-    <Style x:Key="NumbericButtonStyle" TargetType="RepeatButton">
+    <ImageBrush x:Key="ButtonNormal" ImageSource="/cbhk_environment;component/resources/common/images/ButtonNormal.png" />
+    <ImageBrush x:Key="ButtonPressed" ImageSource="/cbhk_environment;component/resources/common/images/ButtonPressed.png" />
+    <ImageBrush x:Key="TextBoxBackground" ImageSource="/cbhk_environment;component/resources/common/images/TextEditBox.png" />
+
+    <!--<Style x:Key="NumbericButtonStyle" TargetType="RepeatButton">
         <Style.Triggers>
             <Trigger Property="IsPressed" Value="True">
-                <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=PressedBackground}" />
+                <Setter Property="Background" Value="{StaticResource ButtonPressed}" />
             </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=ArrowBackground}" />
+                <Setter Property="Background" Value="{StaticResource ButtonNormal}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>-->
+
+    <Style TargetType="{x:Type RepeatButton}">
+        <Setter Property="Foreground" Value="Black" />
+        <Style.Triggers>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{StaticResource ButtonPressed}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="False">
+                <Setter Property="Background" Value="{StaticResource ButtonNormal}" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -36,12 +52,11 @@
                     Grid.RowSpan="2"
                     Grid.Column="0"
                     VerticalContentAlignment="Center"
-                    Background="{TemplateBinding Background}"
                     BorderThickness="0"
                     CaretBrush="{TemplateBinding CaretBrush}"
                     FontSize="{TemplateBinding FontSize}"
                     FontWeight="Medium"
-                    Foreground="{TemplateBinding Foreground}"
+                    Foreground="White"
                     Text="{TemplateBinding Text}">
                     <TextBox.DataContext>
                         <local_contexts:ColorNumbericUpDownHander />
@@ -64,12 +79,10 @@
                     Grid.Column="1"
                     Width="Auto"
                     Height="Auto"
-                    Background="{TemplateBinding ArrowBackground}"
                     BorderBrush="{x:Null}"
                     BorderThickness="0"
                     Delay="100"
-                    Interval="25"
-                    Style="{StaticResource NumbericButtonStyle}">
+                    Interval="25">
                     <RepeatButton.DataContext>
                         <local_contexts:ColorNumbericUpDownHander />
                     </RepeatButton.DataContext>
@@ -83,7 +96,7 @@
                             Margin="0,0,3,3"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center">
-                            <Path Fill="{TemplateBinding ArrowForeground}">
+                            <Path Fill="Black">
                                 <Path.Data>
                                     M500.8 461.909333L267.306667 695.296l-45.226667-45.269333 278.741333-278.613334L779.306667 650.026667l-45.248 45.226666z
                                 </Path.Data>
@@ -97,12 +110,10 @@
                     Grid.Column="1"
                     Width="Auto"
                     Height="Auto"
-                    Background="{TemplateBinding ArrowBackground}"
                     BorderBrush="{x:Null}"
                     BorderThickness="0"
                     Delay="100"
-                    Interval="25"
-                    Style="{StaticResource NumbericButtonStyle}">
+                    Interval="25">
                     <RepeatButton.DataContext>
                         <local_contexts:ColorNumbericUpDownHander />
                     </RepeatButton.DataContext>
@@ -116,7 +127,7 @@
                             Margin="0,0,3,3"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center">
-                            <Path Fill="{TemplateBinding ArrowForeground}">
+                            <Path Fill="Black">
                                 <Path.Data>
                                     M500.8 604.779L267.307 371.392l-45.227 45.27 278.741 278.613L779.307 416.66l-45.248-45.248z
                                 </Path.Data>

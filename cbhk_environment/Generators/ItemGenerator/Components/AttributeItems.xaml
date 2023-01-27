@@ -16,24 +16,24 @@
                 VerticalAlignment="Center"
                 Foreground="White"
                 Text="属性名:" />
-            <CustomControls:TextComboBoxs
+            <ComboBox
                 Width="100"
                 HorizontalAlignment="Left"
                 Loaded="AttributeIdsLoaded"
                 SelectionChanged="AttributeIdSelectionChanged"
-                Style="{DynamicResource TextComboBox}" />
+                Style="{DynamicResource TextComboBoxStyle}" />
             <TextBlock
                 Margin="5,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Foreground="White"
                 Text="生效槽位:" />
-            <CustomControls:TextComboBoxs
+            <ComboBox
                 Width="60"
                 HorizontalAlignment="Left"
                 Loaded="AttributeSlotsLoaded"
                 SelectionChanged="AttributeSlotSelectionChanged"
-                Style="{DynamicResource TextComboBox}" />
+                Style="{DynamicResource TextComboBoxStyle}" />
             <TextBlock
                 Margin="5,0"
                 HorizontalAlignment="Left"
@@ -64,13 +64,13 @@
                 VerticalAlignment="Center"
                 Foreground="White"
                 Text="值类型:" />
-            <CustomControls:TextComboBoxs
+            <ComboBox
                 Width="60"
                 Height="30"
                 HorizontalAlignment="Left"
                 Loaded="AttributeValueTypesLoaded"
                 SelectionChanged="AttributeValueTypeSelectionChanged"
-                Style="{DynamicResource TextComboBox}" />
+                Style="{DynamicResource TextComboBoxStyle}" />
             <TextBlock
                 Margin="5,0"
                 HorizontalAlignment="Left"

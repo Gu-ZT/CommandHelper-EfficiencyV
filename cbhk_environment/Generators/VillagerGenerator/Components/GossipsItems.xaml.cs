@@ -19,8 +19,8 @@ namespace cbhk_environment.Generators.VillagerGenerator.Components
             get
             {
                 string result;
-                ControlsDataContexts.TextSource item_data = Type.SelectedItem as ControlsDataContexts.TextSource;
-                string TypeData = item_data.ItemText.Trim() != ""?"Type:"+ item_data.ItemText+",":"";
+                string item_data = Type.SelectedItem.ToString();
+                string TypeData = item_data.Trim() != ""?"Type:"+ item_data+",":"";
                 string ValueData = Value.Text.Trim() != "" ? "Value:" + (Value.Text.Contains(".") ? Value.Text.Split('.')[0] :Value.Text) +",":"";
                 string TargetData = Target.Text.Trim() != "" ?"Target:"+Target.Text+",":"";
                 result = TypeData != "" || ValueData != "" || TargetData != "" ?TypeData + ValueData + TargetData:"";
@@ -31,7 +31,7 @@ namespace cbhk_environment.Generators.VillagerGenerator.Components
         #endregion
 
         //言论类型
-        ObservableCollection<TextSource> TypeList = new ObservableCollection<TextSource> { };
+        ObservableCollection<string> TypeList = new ObservableCollection<string> { };
 
         //言论配置文件路径
         string TypeFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\Villager\\data\\GossipTypes.ini";
@@ -50,15 +50,12 @@ namespace cbhk_environment.Generators.VillagerGenerator.Components
                 string[] types = File.ReadAllLines(TypeFilePath);
                 for (int i = 0; i < types.Length; i++)
                 {
-                    TypeList.Add(new TextSource()
-                    {
-                        ItemText = types[i]
-                    });
+                    TypeList.Add(types[i]);
                 }
                 textComboBoxs.ItemsSource = TypeList;
                 textComboBoxs.SelectedItem = TypeList.First();
                 TextBox box = textComboBoxs.Template.FindName("EditableTextBox", textComboBoxs) as TextBox;
-                box.Text = TypeList.First().ItemText;
+                box.Text = TypeList.First();
             }
         }
     }

@@ -38,13 +38,13 @@ namespace cbhk_environment.Generators.ItemGenerator.Components
         private void AttributeIdsLoaded(object sender, RoutedEventArgs e)
         {
             TextComboBoxs textComboBoxs = sender as TextComboBoxs;
-            textComboBoxs.ItemsSource = MainWindow.AttributeSource.ItemDataSource;
+            textComboBoxs.ItemsSource = MainWindow.AttributeSource;
 
             IdLoaded = true;
             textComboBoxs.SelectedIndex = 0;
             AttributeIdSelectionChanged(textComboBoxs, null);
             TextBox box = textComboBoxs.Template.FindName("EditableTextBox", textComboBoxs) as TextBox;
-            box.Text = (textComboBoxs.Items[0] as TextSource).ItemText;
+            box.Text = textComboBoxs.Items[0].ToString();
 
         }
 
@@ -69,13 +69,13 @@ namespace cbhk_environment.Generators.ItemGenerator.Components
         private void AttributeSlotsLoaded(object sender, RoutedEventArgs e)
         {
             TextComboBoxs textComboBoxs = sender as TextComboBoxs;
-            textComboBoxs.ItemsSource = MainWindow.AttributeSlotSource.ItemDataSource;
+            textComboBoxs.ItemsSource = MainWindow.AttributeSlotSource;
 
             SlotLoaded = true;
             textComboBoxs.SelectedIndex = 0;
             AttributeSlotSelectionChanged(textComboBoxs, null);
             TextBox box = textComboBoxs.Template.FindName("EditableTextBox", textComboBoxs) as TextBox;
-            box.Text = (textComboBoxs.Items[0] as TextSource).ItemText;
+            box.Text = textComboBoxs.Items[0].ToString();
         }
 
         private void AttributeValueLoaded(object sender, RoutedEventArgs e)
@@ -94,13 +94,13 @@ namespace cbhk_environment.Generators.ItemGenerator.Components
         private void AttributeValueTypesLoaded(object sender, RoutedEventArgs e)
         {
             TextComboBoxs textComboBoxs = sender as TextComboBoxs;
-            textComboBoxs.ItemsSource = MainWindow.AttributeValueTypeSource.ItemDataSource;
+            textComboBoxs.ItemsSource = MainWindow.AttributeValueTypeSource;
 
             SlotLoaded = true;
             textComboBoxs.SelectedIndex = 0;
             AttributeValueTypeSelectionChanged(textComboBoxs, null);
             TextBox box = textComboBoxs.Template.FindName("EditableTextBox", textComboBoxs) as TextBox;
-            box.Text = (textComboBoxs.Items[0] as TextSource).ItemText;
+            box.Text = textComboBoxs.Items[0].ToString();
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace cbhk_environment.Generators.ItemGenerator.Components
             if(IdLoaded)
             {
                 TextComboBoxs current_box = sender as TextComboBoxs;
-                TextSource current_data = current_box.SelectedItem as TextSource;
+                string current_data = current_box.SelectedItem as string;
 
                 AttributeItems control_parent = current_box.FindParent<AttributeItems>();
                 if (parent == null)
@@ -129,7 +129,7 @@ namespace cbhk_environment.Generators.ItemGenerator.Components
                 #endregion
 
                 #region 添加当前选中的成员
-                string current_key = MainWindow.attribute_database.Where(item => item.Value == current_data.ItemText).Select(item => item.Key).First();
+                string current_key = MainWindow.attribute_database.Where(item => item.Value == current_data).Select(item => item.Key).First();
 
                 if ((item_datacontext.AttributeIDs.Count - 1) >= 0)
                     item_datacontext.AttributeIDs.Insert(index, current_key);
@@ -149,7 +149,7 @@ namespace cbhk_environment.Generators.ItemGenerator.Components
             if(SlotLoaded)
             {
                 TextComboBoxs current_box = sender as TextComboBoxs;
-                TextSource current_data = current_box.SelectedItem as TextSource;
+                string current_data = current_box.SelectedItem as string;
 
                 AttributeItems control_parent = current_box.FindParent<AttributeItems>();
                 if (parent == null)
@@ -166,7 +166,7 @@ namespace cbhk_environment.Generators.ItemGenerator.Components
 
                 #region 添加当前选中的成员
 
-                string current_key = MainWindow.attribute_database.Where(item => item.Value == current_data.ItemText).Select(item => item.Key).First();
+                string current_key = MainWindow.attribute_database.Where(item => item.Value == current_data).Select(item => item.Key).First();
 
                 if ((item_datacontext.AttributeSlots.Count - 1) >= 0)
                     item_datacontext.AttributeSlots.Insert(index, current_key);
@@ -221,7 +221,7 @@ namespace cbhk_environment.Generators.ItemGenerator.Components
             if (ValueTypeLoaded)
             {
                 TextComboBoxs current_box = sender as TextComboBoxs;
-                TextSource current_data = current_box.SelectedItem as TextSource;
+                string current_data = current_box.SelectedItem as string;
 
                 AttributeItems control_parent = current_box.FindParent<AttributeItems>();
                 if (parent == null)
@@ -238,7 +238,7 @@ namespace cbhk_environment.Generators.ItemGenerator.Components
 
                 #region 添加当前选中的成员
 
-                string current_key = MainWindow.attribute_database.Where(item => item.Value == current_data.ItemText).Select(item => item.Key).First();
+                string current_key = MainWindow.attribute_database.Where(item => item.Value == current_data).Select(item => item.Key).First();
 
                 if ((item_datacontext.AttributeValueTypes.Count - 1) >= 0)
                     item_datacontext.AttributeValueTypes.Insert(index, current_key);

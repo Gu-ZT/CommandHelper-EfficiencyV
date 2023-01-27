@@ -72,13 +72,13 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
         //署名完毕背景文件路径
         string sureToSignatureFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\WrittenBook\\images\\sure_to_signature.png";
         //署名完毕按钮引用
-        TextButtons sureToSignatureButton = null;
+        IconTextButtons sureToSignatureButton = null;
         //取消署名背景文件路径
         string signatureCancelFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\WrittenBook\\images\\cancel_signature.png";
         //点击事件数据源
-        public static ObservableCollection<TextSource> clickEventSource = new ObservableCollection<TextSource> { };
+        public static ObservableCollection<string> clickEventSource = new ObservableCollection<string> { };
         //悬浮事件数据源
-        public static ObservableCollection<TextSource> hoverEventSource = new ObservableCollection<TextSource> { };
+        public static ObservableCollection<string> hoverEventSource = new ObservableCollection<string> { };
         //点击事件数据源文件路径
         string clickEventSourceFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\WrittenBook\\data\\clickEventActions.ini";
         //悬浮事件数据源文件路径
@@ -304,13 +304,11 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
                 OnPropertyChanged();
                 if(author.Trim() != "" && File.Exists(sureToSignatureFilePath) && !HaveAuthor)
                 {
-                    sureToSignatureButton.ThicknessBackground = new BitmapImage(new Uri(sureToSignatureFilePath, UriKind.Absolute));
                     HaveAuthor = true;
                 }
                 else
                     if(author.Trim() == "" && File.Exists(signatureAndCloseFilePath) && HaveAuthor)
                 {
-                    sureToSignatureButton.ThicknessBackground = new BitmapImage(new Uri(signatureAndCloseFilePath, UriKind.Absolute));
                     HaveAuthor = false;
                 }
             }
@@ -403,9 +401,9 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
         public string object_result = "";
 
         //取消署名按钮引用
-        TextButtons signatureCancelButton = null;
+        IconTextButtons signatureCancelButton = null;
         //署名按钮
-        Border SignatureButton = null;
+        IconTextButtons SignatureButton = null;
 
         //保存成书的文档链表，用于显示和编辑
         public List<EnabledFlowDocument> HistroyFlowDocumentList = null;
@@ -440,10 +438,7 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
                 for (int i = 0; i < source.Length; i++)
                 {
                     string[] data = source[i].Split('.');
-                    clickEventSource.Add(new TextSource()
-                    {
-                        ItemText = data[1]
-                    });
+                    clickEventSource.Add(data[1]);
                     if (!EventDataBase.ContainsKey(data[0]))
                         EventDataBase.Add(data[0], data[1]);
                 }
@@ -457,10 +452,7 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
                 for (int i = 0; i < source.Length; i++)
                 {
                     string[] data = source[i].Split('.');
-                    hoverEventSource.Add(new TextSource()
-                    {
-                        ItemText = data[1]
-                    });
+                    hoverEventSource.Add(data[1]);
                     if (!EventDataBase.ContainsKey(data[0]))
                         EventDataBase.Add(data[0], data[1]);
                 }
@@ -973,10 +965,10 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
                 EventComponent.ClickEventActionBox.ApplyTemplate();
                 EventComponent.HoverEventActionBox.ApplyTemplate();
                 TextBox clickEventActionBox = EventComponent.ClickEventActionBox.Template.FindName("EditableTextBox", EventComponent.ClickEventActionBox) as TextBox;
-                clickEventActionBox.Text = CurrentRichRun.ClickEventActionItem.ItemText;
+                clickEventActionBox.Text = CurrentRichRun.ClickEventActionItem;
 
                 TextBox hoverEventActionBox = EventComponent.HoverEventActionBox.Template.FindName("EditableTextBox", EventComponent.HoverEventActionBox) as TextBox;
-                hoverEventActionBox.Text = CurrentRichRun.HoverEventActionItem.ItemText;
+                hoverEventActionBox.Text = CurrentRichRun.HoverEventActionItem;
                 #endregion
 
                 BindingOperations.SetBinding(EventComponent.ClickEventValueBox, TextBox.TextProperty, ClickEventValueBinder);
@@ -1217,8 +1209,7 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
         {
             if (File.Exists(signatureAndCloseFilePath))
             {
-                sureToSignatureButton = sender as TextButtons;
-                sureToSignatureButton.ThicknessBackground = new BitmapImage(new Uri(signatureAndCloseFilePath, UriKind.Absolute));
+                sureToSignatureButton = sender as IconTextButtons;
                 sureToSignatureButton.Click += SignatureAndCloseClicked;
             }
         }
@@ -1230,10 +1221,8 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
         /// <param name="e"></param>
         public void SignatureCancelLoaded(object sender, RoutedEventArgs e)
         {
-            signatureCancelButton = sender as TextButtons;
+            signatureCancelButton = sender as IconTextButtons;
             signatureCancelButton.Click += SignatureCancelClicked;
-            if (File.Exists(signatureCancelFilePath))
-                signatureCancelButton.ThicknessBackground = new BitmapImage(new Uri(signatureCancelFilePath, UriKind.Absolute));
         }
 
         /// <summary>
@@ -1313,8 +1302,8 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
         {
             if (File.Exists(signatureFilePath))
             {
-                SignatureButton = sender as Border;
-                SignatureButton.Background = new ImageBrush(new BitmapImage(new Uri(signatureFilePath, UriKind.Absolute)));
+                SignatureButton = sender as IconTextButtons;
+                //SignatureButton.Background = new ImageBrush(new BitmapImage(new Uri(signatureFilePath, UriKind.Absolute)));
             }
         }
 
@@ -1323,7 +1312,7 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void SignatureMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        public void SignatureClick(object sender, RoutedEventArgs e)
         {
             if (signaturePage == null)
                 signaturePage = new SignaturePage();

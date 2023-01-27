@@ -115,7 +115,6 @@
                     Cursor="Hand"
                     FlowDirection="LeftToRight"
                     Foreground="White"
-                    Style="{StaticResource TextMenuItem}"
                     ToolTip="切换版本"
                     ToolTipService.InitialShowDelay="0">
                     <MenuItem.Header>
@@ -143,7 +142,6 @@
                         FontSize="20"
                         Foreground="White"
                         IsChecked="{Binding Version1_12, Mode=TwoWay}"
-                        SelectedBackground="Gray"
                         Style="{StaticResource TextToggleButtonsStyle}" />
                     <CustomControls:TextToggleButtons
                         HorizontalAlignment="Stretch"
@@ -154,7 +152,6 @@
                         FontSize="20"
                         Foreground="White"
                         IsChecked="{Binding Version1_13, Mode=TwoWay}"
-                        SelectedBackground="Gray"
                         Style="{StaticResource TextToggleButtonsStyle}" />
                 </MenuItem>
             </Menu>
@@ -171,7 +168,7 @@
                             <itn:CallMethodAction MethodName="IconViewerLoaded" TargetObject="{Binding}" />
                         </ity:EventTrigger>
                     </ity:Interaction.Triggers>
-                    <CustomControls:TextButtons Style="{DynamicResource TextButtonsStyle}" />
+                    <CustomControls:TextButtons Style="{DynamicResource TextButtonsStyle}" Visibility="Collapsed" />
                 </StackPanel>
             </ScrollViewer>
             <Grid Grid.Column="1" Background="#C6C6C6">
@@ -194,7 +191,7 @@
                     Background="Transparent"
                     Foreground="White"
                     Text="添加ID" />
-                <CustomControls:IconComboBoxs
+                <ComboBox
                     Width="620"
                     Height="50"
                     HorizontalAlignment="Left"
@@ -202,7 +199,9 @@
                     AllowDrop="False"
                     FontSize="30"
                     Foreground="White"
-                    Style="{DynamicResource ComboBoxWithIcon}">
+                    SelectedIndex="0"
+                    SelectedItem="{Binding SelectItemIdSource, Mode=TwoWay}"
+                    Style="{DynamicResource IconComboBoxStyle}">
                     <ity:Interaction.Triggers>
                         <ity:EventTrigger EventName="Loaded">
                             <itn:CallMethodAction MethodName="ItemIdsLoaded" TargetObject="{Binding}" />
@@ -211,7 +210,7 @@
                             <itn:CallMethodAction MethodName="AddItemIdKeyUp" TargetObject="{Binding}" />
                         </ity:EventTrigger>
                     </ity:Interaction.Triggers>
-                </CustomControls:IconComboBoxs>
+                </ComboBox>
             </DockPanel>
         </Grid>
         <Grid

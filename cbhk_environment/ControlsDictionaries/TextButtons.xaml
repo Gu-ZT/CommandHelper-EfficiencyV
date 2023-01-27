@@ -43,10 +43,6 @@
                             VerticalAlignment="Stretch"
                             Source="{TemplateBinding ThicknessBackground}"
                             Visibility="Collapsed" />
-                        <TextBlock
-                            HorizontalAlignment="Center"
-                            Text="{TemplateBinding Content}"
-                            TextAlignment="Center" />
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="true">

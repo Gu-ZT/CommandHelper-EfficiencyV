@@ -158,11 +158,11 @@ namespace cbhk_environment.Generators.VillagerGenerator
         //交易列表
         public static List<string> Recipes = new List<string> { };
         //言论搜索类型数据源
-        ObservableCollection<TextSource> gossipSearchType = new ObservableCollection<TextSource> { };
+        ObservableCollection<string> gossipSearchType = new ObservableCollection<string> { };
         //言论搜索类型配置文件路径
         string gossipSearchTypeFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\Villager\\data\\GossipSearchTypes.ini";
         //维度数据源
-        ObservableCollection<TextSource> DimensionTypeSource = new ObservableCollection<TextSource> { };
+        ObservableCollection<string> DimensionTypeSource = new ObservableCollection<string> { };
         //维度数据源配置文件路径
         string dimensionTypeFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\Villager\\data\\DimensionTypes.ini";
         //维度类型数据库
@@ -226,8 +226,8 @@ namespace cbhk_environment.Generators.VillagerGenerator
                 return meeting_pointZ;
             }
         }
-        private TextSource meetingPointDimension = null;
-        public TextSource MeetingPointDimension
+        private string meetingPointDimension = null;
+        public string MeetingPointDimension
         {
             get { return meetingPointDimension; }
             set
@@ -239,8 +239,8 @@ namespace cbhk_environment.Generators.VillagerGenerator
         {
             get
             {
-                string DimensionId = DimensionDataBase.Where(item => item.Value == MeetingPointDimension.ItemText).First().Key;
-                return MeetingPointDimension.ItemText.Trim() != "" ? "dimension:\"minecraft:" + DimensionId + "\"" : "";
+                string DimensionId = DimensionDataBase.Where(item => item.Value == MeetingPointDimension).First().Key;
+                return MeetingPointDimension.Trim() != "" ? "dimension:\"minecraft:" + DimensionId + "\"" : "";
             }
         }
         private string MeetingPoint
@@ -285,8 +285,8 @@ namespace cbhk_environment.Generators.VillagerGenerator
                 return homeZ;
             }
         }
-        private TextSource homeDimension = null;
-        public TextSource HomeDimension
+        private string homeDimension = null;
+        public string HomeDimension
         {
             get { return homeDimension; }
             set
@@ -298,8 +298,8 @@ namespace cbhk_environment.Generators.VillagerGenerator
         {
             get
             {
-                string DimensionId = DimensionDataBase.Where(item=>item.Value == HomeDimension.ItemText).First().Key;
-                return HomeDimension.ItemText.Trim() != "" ? "dimension:\"minecraft:" + DimensionId + "\"" : "";
+                string DimensionId = DimensionDataBase.Where(item=>item.Value == HomeDimension).First().Key;
+                return HomeDimension.Trim() != "" ? "dimension:\"minecraft:" + DimensionId + "\"" : "";
             }
         }
         private string Home
@@ -344,8 +344,8 @@ namespace cbhk_environment.Generators.VillagerGenerator
                 return job_siteZ;
             }
         }
-        private TextSource jobSiteDimension = null;
-        public TextSource JobSiteDimension
+        private string jobSiteDimension = null;
+        public string JobSiteDimension
         {
             get { return jobSiteDimension; }
             set
@@ -357,8 +357,8 @@ namespace cbhk_environment.Generators.VillagerGenerator
         {
             get
             {
-                string DimensionId = DimensionDataBase.Where(item => item.Value == jobSiteDimension.ItemText).First().Key;
-                return JobSiteDimension.ItemText.Trim() !=""? "dimension:\"minecraft:" + DimensionId + "\",":"";
+                string DimensionId = DimensionDataBase.Where(item => item.Value == jobSiteDimension).First().Key;
+                return JobSiteDimension.Trim() !=""? "dimension:\"minecraft:" + DimensionId + "\",":"";
             }
         }
         private string JobSite
@@ -401,14 +401,14 @@ namespace cbhk_environment.Generators.VillagerGenerator
         Dictionary<string, string> VillagerTypeDataBase = new Dictionary<string, string> { };
         Dictionary<string, string> VillagerProfessionTypeDataBase = new Dictionary<string, string> { };
 
-        ObservableCollection<TextSource> VillagerTypeSource = new ObservableCollection<TextSource> { };
-        ObservableCollection<TextSource> VillagerProfessionTypeSource = new ObservableCollection<TextSource> { };
-        ObservableCollection<TextSource> VillagerLevelSource = new ObservableCollection<TextSource> { };
+        ObservableCollection<string> VillagerTypeSource = new ObservableCollection<string> { };
+        ObservableCollection<string> VillagerProfessionTypeSource = new ObservableCollection<string> { };
+        ObservableCollection<string> VillagerLevelSource = new ObservableCollection<string> { };
         #endregion
 
         #region 村民种类
-        TextSource villagerType = null;
-        public TextSource VillagerType
+        string villagerType = null;
+        public string VillagerType
         {
             get
             {
@@ -424,15 +424,15 @@ namespace cbhk_environment.Generators.VillagerGenerator
             get
             {
                 string result = "type:\"minecraft:";
-                result = result + VillagerTypeDataBase.Where(item => item.Value == VillagerType.ItemText).First().Key + "\",";
+                result = result + VillagerTypeDataBase.Where(item => item.Value == VillagerType).First().Key + "\",";
                 return result;
             }
         }
         #endregion
 
         #region 村民职业
-        TextSource villagerProfessionType = null;
-        public TextSource VillagerProfessionType
+        string villagerProfessionType = null;
+        public string VillagerProfessionType
         {
             get { return villagerProfessionType; }
             set
@@ -445,15 +445,15 @@ namespace cbhk_environment.Generators.VillagerGenerator
             get
             {
                 string result = "profession:\"minecraft:";
-                result = result + VillagerProfessionTypeDataBase.Where(item => item.Value == villagerProfessionType.ItemText).First().Key + "\",";
+                result = result + VillagerProfessionTypeDataBase.Where(item => item.Value == villagerProfessionType).First().Key + "\",";
                 return result;
             }
         }
         #endregion
 
         #region 村民交易等级
-        private TextSource villagerLevel = null;
-        public TextSource VillagerLevel
+        private string villagerLevel = null;
+        public string VillagerLevel
         {
             get { return villagerLevel; }
             set
@@ -466,7 +466,7 @@ namespace cbhk_environment.Generators.VillagerGenerator
             get
             {
                 string result = "level:";
-                result = result + VillagerLevel.ItemText + ",";
+                result = result + VillagerLevel + ",";
                 return result;
             }
         }
@@ -587,10 +587,7 @@ namespace cbhk_environment.Generators.VillagerGenerator
                     if(!VillagerTypeDataBase.ContainsKey(id))
                     VillagerTypeDataBase.Add(id,name);
 
-                    VillagerTypeSource.Add(new TextSource()
-                    {
-                        ItemText = name
-                    });
+                    VillagerTypeSource.Add(name);
                 }
                 box.ItemsSource = VillagerTypeSource;
                 box.SelectedItem = VillagerTypeSource[0];
@@ -618,10 +615,7 @@ namespace cbhk_environment.Generators.VillagerGenerator
                     if(!VillagerProfessionTypeDataBase.ContainsKey(id))
                     VillagerProfessionTypeDataBase.Add(id, name);
 
-                    VillagerProfessionTypeSource.Add(new TextSource()
-                    {
-                        ItemText = name
-                    });
+                    VillagerProfessionTypeSource.Add(name);
                 }
                 box.ItemsSource = VillagerProfessionTypeSource;
                 box.SelectedItem = VillagerProfessionTypeSource[0];
@@ -642,10 +636,7 @@ namespace cbhk_environment.Generators.VillagerGenerator
                 int level = int.Parse(File.ReadAllText(VillagerLevelSourceFilePath));
                 for (int i = 1; i <= level; i++)
                 {
-                    VillagerLevelSource.Add(new TextSource()
-                    {
-                        ItemText = i.ToString()
-                    });
+                    VillagerLevelSource.Add(i.ToString());
                 }
                 box.ItemsSource = VillagerLevelSource;
                 box.SelectedItem = VillagerLevelSource[0];
@@ -673,10 +664,7 @@ namespace cbhk_environment.Generators.VillagerGenerator
                     if(!DimensionDataBase.ContainsKey(id))
                     DimensionDataBase.Add(id, name);
 
-                    DimensionTypeSource.Add(new TextSource()
-                    {
-                        ItemText = name
-                    });
+                    DimensionTypeSource.Add(name);
                 }
                 box.ItemsSource = DimensionTypeSource;
                 box.SelectedItem = DimensionTypeSource[0];
@@ -943,10 +931,7 @@ namespace cbhk_environment.Generators.VillagerGenerator
                 string[] types = File.ReadAllLines(gossipSearchTypeFilePath);
                 for (int i = 0; i < types.Length; i++)
                 {
-                    gossipSearchType.Add(new TextSource()
-                    {
-                        ItemText = types[i]
-                    });
+                    gossipSearchType.Add(types[i]);
                 }
             }
             GossipSearchType.ItemsSource = gossipSearchType;
@@ -961,11 +946,11 @@ namespace cbhk_environment.Generators.VillagerGenerator
         {
             if(CanEditGossips)
             {
-                TextSource current_type = GossipSearchType.SelectedItem as TextSource;
+                string current_type = GossipSearchType.SelectedItem as string;
                 List<GossipsItems> target_gossip = gossipItems.Where(gossip =>
                 {
-                    TextSource type = gossip.Type.SelectedItem as TextSource;
-                    if (gossip.Target.Text == GossipSearchTarget.Text.Trim() && type.ItemText == current_type.ItemText)
+                    string type = gossip.Type.SelectedItem as string;
+                    if (gossip.Target.Text == GossipSearchTarget.Text.Trim() && type == current_type)
                         return true;
                     else
                         return false;
@@ -985,19 +970,19 @@ namespace cbhk_environment.Generators.VillagerGenerator
         {
             GossipsItems current_item = sender as GossipsItems;
 
-            string current_type = (current_item.Type.SelectedItem as TextSource).ItemText.Trim();
+            string current_type = current_item.Type.SelectedItem.ToString();
 
             if (current_type != "minor_negative" && current_type != "trading")
                 return;
 
             string search_type = current_type == "minor_negative" ? "trading" : current_type;
 
-            TextSource compare_type = null;
+            string compare_type = null;
 
             List<GossipsItems> another_item = gossipItems.Where(item =>
             {
-                compare_type = item.Type.SelectedItem as TextSource;
-                if (item.Target.Text.Trim() == current_item.Target.Text.Trim() && search_type == compare_type.ItemText)
+                compare_type = item.Type.SelectedItem as string;
+                if (item.Target.Text.Trim() == current_item.Target.Text.Trim() && search_type == compare_type)
                     return true;
                 else
                     return false;

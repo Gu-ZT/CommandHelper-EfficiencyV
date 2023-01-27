@@ -40,22 +40,19 @@
                     Height="70"
                     Margin="10,0,0,0"
                     Cursor="Hand"
-                    Loaded="CellLoaded"
-                    Source="/cbhk_environment;component/resources/cbhk_form/images/cell.png" />
+                    Loaded="CellLoaded" />
                 <Image
                     Width="65"
                     Height="65"
                     Margin="30,0"
                     Cursor="Hand"
-                    Loaded="ArrowLoaded"
-                    Source="/cbhk_environment;component/resources/cbhk_form/images/arrow.png" />
+                    Loaded="ArrowLoaded" />
                 <Image
                     Width="70"
                     Height="70"
                     Margin="10,0"
                     Cursor="Hand"
-                    Loaded="CellLoaded"
-                    Source="/cbhk_environment;component/resources/cbhk_form/images/cell.png" />
+                    Loaded="CellLoaded" />
             </DockPanel>
             <Border
                 Grid.Row="0"
@@ -109,7 +106,6 @@
                     FontWeight="Bold"
                     IsChecked="False"
                     Loaded="MultipleModeLoaded"
-                    SelectedBackground="#FF226A82"
                     Style="{DynamicResource TextToggleButtonsStyle}" />
                 <CustomControls:IconTextButtons
                     Width="25"

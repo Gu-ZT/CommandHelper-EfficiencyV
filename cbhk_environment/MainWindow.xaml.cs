@@ -157,23 +157,23 @@ namespace cbhk_environment
 
         #region 所有数据源对象
         //属性数据源
-        public static TextComboBoxItemSource AttributeSource = new TextComboBoxItemSource();
+        public static ObservableCollection<string> AttributeSource = new ObservableCollection<string> { };
         //属性生效槽位数据源
-        public static TextComboBoxItemSource AttributeSlotSource = new TextComboBoxItemSource();
+        public static ObservableCollection<string> AttributeSlotSource = new ObservableCollection<string> { };
         //属性值类型数据源
-        public static TextComboBoxItemSource AttributeValueTypeSource = new TextComboBoxItemSource();
+        public static ObservableCollection<string> AttributeValueTypeSource = new ObservableCollection<string> { };
         //物品id数据源
-        public static ComboBoxItemSource ItemIdSource = new ComboBoxItemSource();
+        public static ObservableCollection<IconComboBoxItem> ItemIdSource = new ObservableCollection<IconComboBoxItem> { };
         //附魔id数据源
-        public static TextComboBoxItemSource EnchantmentIdSource = new TextComboBoxItemSource();
+        public static ObservableCollection<string> EnchantmentIdSource = new ObservableCollection<string> { };
         //保存id与name
         public static Dictionary<string, BitmapImage> entity_database = new Dictionary<string, BitmapImage> { };
         //物品id数据源
-        public static ComboBoxItemSource EntityIdSource = new ComboBoxItemSource();
+        public static ObservableCollection<IconComboBoxItem> EntityIdSource = new ObservableCollection<IconComboBoxItem> { };
         //保存药水id与name
         public static Dictionary<string, string> mob_effect_database = new Dictionary<string, string> { };
         //药水id数据源
-        public static ComboBoxItemSource MobEffectIdSource = new ComboBoxItemSource();
+        public static ObservableCollection<IconComboBoxItem> MobEffectIdSource = new ObservableCollection<IconComboBoxItem> { };
         //保存id与name
         public static Dictionary<string, BitmapImage> item_database = new Dictionary<string, BitmapImage> { };
         //保存附魔id与name
@@ -183,12 +183,12 @@ namespace cbhk_environment
         //保存隐藏信息id与name
         public static Dictionary<string, string> hide_infomation_database = new Dictionary<string, string> { };
         //信息隐藏标记
-        public static TextComboBoxItemSource hide_flags_source = new TextComboBoxItemSource();
-        public static ObservableCollection<TextSource> hide_flags_collection = new ObservableCollection<TextSource>();
+        public static ObservableCollection<string> hide_flags_source = new ObservableCollection<string> { };
+        public static ObservableCollection<string> hide_flags_collection = new ObservableCollection<string>();
 
         //标签生成器的过滤类型数据源
-        public static TextComboBoxItemSource TypeItemSource = new TextComboBoxItemSource();
-        public static ObservableCollection<TextSource> TagTypeCollection = new ObservableCollection<TextSource>();
+        public static ObservableCollection<string> TypeItemSource = new ObservableCollection<string> { };
+        public static ObservableCollection<string> TagTypeCollection = new ObservableCollection<string>();
 
         //粒子列表数据源
         public static ObservableCollection<string> particle_database = new ObservableCollection<string> { };
@@ -269,10 +269,8 @@ namespace cbhk_environment
                 string js_file = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js");
 
                 JsonScript(js_file);
-
-                ObservableCollection<ItemDataGroup> itemDataGroups = new ObservableCollection<ItemDataGroup>();
-                string item_id = "";
-                string item_name = "";
+                string item_id;
+                string item_name;
 
                 JsonScript("parseJSON(" + items_json + ");");
                 int item_count = int.Parse(JsonScript("getLength();").ToString());
@@ -280,17 +278,15 @@ namespace cbhk_environment
                 {
                     item_id = JsonScript("getJSON('[" + i + "].id');").ToString();
                     item_name = JsonScript("getJSON('[" + i + "].name');").ToString();
-
                     BitmapImage image = null;
                     if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + item_id + ".png"))
                     {
                         image = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + item_id + ".png", UriKind.Relative));
-                        itemDataGroups.Add(new ItemDataGroup() { ItemImagePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + item_id + ".png", ItemText = item_name, ItemImage = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + item_id + ".png", UriKind.Absolute)) });
+                        ItemIdSource.Add(new IconComboBoxItem() { ComboBoxItemText = item_name, ComboBoxItemIcon = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + item_id + ".png", UriKind.Absolute)) });
                     }
                     if (!item_database.ContainsKey(item_id + "." + item_name))
                         item_database.Add(item_id + "." + item_name, image);
                 }
-                ItemIdSource.ItemDataSource = itemDataGroups;
             }
             #endregion
 
@@ -303,7 +299,7 @@ namespace cbhk_environment
 
                 JsonScript(js_file);
 
-                ObservableCollection<TextSource> itemDataGroups = new ObservableCollection<TextSource>();
+                ObservableCollection<string> itemDataGroups = new ObservableCollection<string>();
                 string enchantment_id = "";
                 string enchantment_name = "";
                 string enchantment_num = "";
@@ -317,9 +313,9 @@ namespace cbhk_environment
                     enchantment_name = JsonScript("getJSON('[" + i + "].name');").ToString();
                     enchantment_num = JsonScript("getJSON('[" + i + "].num');").ToString();
                     enchantment_databse.Add(enchantment_id, enchantment_name + enchantment_num);
-                    itemDataGroups.Add(new TextSource() { ItemText = enchantment_name });
+                    itemDataGroups.Add(enchantment_name);
                 }
-                EnchantmentIdSource.ItemDataSource = itemDataGroups;
+                EnchantmentIdSource = itemDataGroups;
             }
             #endregion
 
@@ -335,7 +331,6 @@ namespace cbhk_environment
                 string potion_id = "";
                 string potion_name = "";
                 string potion_num = "";
-                ObservableCollection<ItemDataGroup> itemDataGroups = new ObservableCollection<ItemDataGroup>();
 
                 JsonScript("parseJSON(" + potion_json + ");");
 
@@ -349,17 +344,16 @@ namespace cbhk_environment
                     mob_effect_database.Add(potion_id, potion_name + potion_num);
                     if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\mob_effects_images\\" + potion_id + ".png"))
                     {
-                        itemDataGroups.Add(new ItemDataGroup() { ItemImagePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\mob_effects_images\\" + potion_id + ".png", ItemText = potion_name, ItemImage = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\mob_effects_images\\" + potion_id + ".png", UriKind.Absolute)) });
+                        MobEffectIdSource.Add(new IconComboBoxItem() { ComboBoxItemText = potion_name, ComboBoxItemIcon = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\mob_effects_images\\" + potion_id + ".png", UriKind.Absolute)) });
                     }
                 }
-                MobEffectIdSource.ItemDataSource = itemDataGroups;
             }
             #endregion
 
             #region 获取属性列表
-            if (AttributeSource.ItemDataSource == null)
+            if (AttributeSource.Count == 0)
             {
-                ObservableCollection<TextSource> attribbuteSource = new ObservableCollection<TextSource>();
+                ObservableCollection<string> attribbuteSource = new ObservableCollection<string>();
 
                 if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\Item\\data\\AttributeIds.ini"))
                 {
@@ -371,17 +365,17 @@ namespace cbhk_environment
                         string attribute_name = attribute_info[1];
                         if (!attribute_database.ContainsKey(attribue_id))
                             attribute_database.Add(attribue_id, attribute_name);
-                        attribbuteSource.Add(new TextSource() { ItemText = attribute_name });
+                        attribbuteSource.Add(attribute_name);
                     }
-                    AttributeSource.ItemDataSource = attribbuteSource;
+                    AttributeSource = attribbuteSource;
                 }
             }
             #endregion
 
             #region 获取属性生效槽位列表
-            if (AttributeSlotSource.ItemDataSource == null)
+            if (AttributeSlotSource.Count == 0)
             {
-                ObservableCollection<TextSource> attributeSlotSource = new ObservableCollection<TextSource>();
+                ObservableCollection<string> attributeSlotSource = new ObservableCollection<string>();
 
                 if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\Item\\data\\Slots.ini"))
                 {
@@ -393,17 +387,17 @@ namespace cbhk_environment
                         string attribute_name = attribute_info[1];
                         if (!attribute_database.ContainsKey(attribue_id))
                             attribute_database.Add(attribue_id, attribute_name);
-                        attributeSlotSource.Add(new TextSource() { ItemText = attribute_name });
+                        attributeSlotSource.Add(attribute_name);
                     }
-                    AttributeSlotSource.ItemDataSource = attributeSlotSource;
+                    AttributeSlotSource = attributeSlotSource;
                 }
             }
             #endregion
 
             #region 获取属性类型列表
-            if (AttributeValueTypeSource.ItemDataSource == null)
+            if (AttributeValueTypeSource.Count == 0)
             {
-                ObservableCollection<TextSource> attributeValueTypeSource = new ObservableCollection<TextSource>();
+                ObservableCollection<string> attributeValueTypeSource = new ObservableCollection<string>();
                 if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\Item\\data\\ValueTypes.ini"))
                 {
                     string[] attribute = File.ReadAllLines(AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\Item\\data\\ValueTypes.ini");
@@ -414,15 +408,15 @@ namespace cbhk_environment
                         string attribute_name = attribute_info[1];
                         if (!attribute_database.ContainsKey(attribue_id))
                             attribute_database.Add(attribue_id, attribute_name);
-                        attributeValueTypeSource.Add(new TextSource() { ItemText = attribute_name });
+                        attributeValueTypeSource.Add(attribute_name);
                     }
-                    AttributeValueTypeSource.ItemDataSource = attributeValueTypeSource;
+                    AttributeValueTypeSource = attributeValueTypeSource;
                 }
             }
             #endregion
 
             #region 获取信息隐藏标记
-            hide_flags_source.ItemDataSource = hide_flags_collection;
+            hide_flags_source = hide_flags_collection;
             if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\Item\\data\\HideInfomationOptions.ini"))
             {
                 string[] hide_flag = File.ReadAllLines(AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\Item\\data\\HideInfomationOptions.ini");
@@ -430,7 +424,7 @@ namespace cbhk_environment
                 {
                     string[] hide_info = item.Split(':');
                     hide_infomation_database.Add(hide_info[0], hide_info[1]);
-                    hide_flags_collection.Add(new TextSource() { ItemText = hide_info[1] });
+                    hide_flags_collection.Add(hide_info[1]);
                 }
             }
             #endregion
@@ -443,8 +437,6 @@ namespace cbhk_environment
                 string js_file = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js");
 
                 JsonScript(js_file);
-
-                ObservableCollection<ItemDataGroup> itemDataGroups = new ObservableCollection<ItemDataGroup>();
                 string entity_id = "";
                 string entity_name = "";
                 BitmapImage image = new BitmapImage();
@@ -460,7 +452,7 @@ namespace cbhk_environment
                         Bitmap bitmap = new Bitmap(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + entity_id + "_spawn_egg.png");
                         bitmap = GeneralTools.ChangeBitmapSize.Magnifier(bitmap, 2);
                         image = GeneralTools.BitmapImageConverter.ToBitmapImage(bitmap);
-                        itemDataGroups.Add(new ItemDataGroup() { ItemImagePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + entity_id + "_spawn_egg.png", ItemText = entity_name, ItemImage = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + entity_id + "_spawn_egg.png", UriKind.Absolute)) });
+                        EntityIdSource.Add(new IconComboBoxItem() { ComboBoxItemText = entity_name, ComboBoxItemIcon = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + entity_id + "_spawn_egg.png", UriKind.Absolute)) });
                     }
                     else
                     if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + entity_id + ".png"))
@@ -468,12 +460,11 @@ namespace cbhk_environment
                         Bitmap bitmap = new Bitmap(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + entity_id + ".png");
                         bitmap = GeneralTools.ChangeBitmapSize.Magnifier(bitmap, 2);
                         image = GeneralTools.BitmapImageConverter.ToBitmapImage(bitmap);
-                        itemDataGroups.Add(new ItemDataGroup() { ItemImagePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + entity_id + ".png", ItemText = entity_name, ItemImage = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + entity_id + ".png", UriKind.Absolute)) });
+                        EntityIdSource.Add(new IconComboBoxItem() { ComboBoxItemText = entity_name, ComboBoxItemIcon = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + entity_id + ".png", UriKind.Absolute)) });
                     }
                     if (!entity_database.ContainsKey(entity_id + "." + entity_name))
                         entity_database.Add(entity_id + "." + entity_name, image);
                 }
-                EntityIdSource.ItemDataSource = itemDataGroups;
             }
             #endregion
 
@@ -583,9 +574,9 @@ namespace cbhk_environment
                 string[] Types = File.ReadAllLines(AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\Tag\\TypeFilter.ini");
                 for (int i = 0; i < Types.Length; i++)
                 {
-                    TagTypeCollection.Add(new TextSource() { ItemText = Types[i] });
+                    TagTypeCollection.Add(Types[i]);
                 }
-                TypeItemSource.ItemDataSource = TagTypeCollection;
+                TypeItemSource = TagTypeCollection;
             }
             #endregion
         }

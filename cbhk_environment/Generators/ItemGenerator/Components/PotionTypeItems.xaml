@@ -4,17 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:CustomControls="clr-namespace:cbhk_environment.CustomControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:itn="http://schemas.microsoft.com/expression/2010/interactions"
-    xmlns:ity="http://schemas.microsoft.com/expression/2010/interactivity"
-    xmlns:local_datacontext="clr-namespace:cbhk_environment.ControlsDataContexts"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-
-    <UserControl.Resources>
-        <local_datacontext:ComboBoxItemSource x:Key="ComboBoxItemSource" />
-    </UserControl.Resources>
 
     <Border Background="#2F2F2F">
         <DockPanel Height="30">
@@ -24,14 +17,13 @@
                 VerticalAlignment="Center"
                 Foreground="White"
                 Text="药水类型:" />
-            <CustomControls:IconComboBoxs
+            <ComboBox
                 Width="100"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                DataContext="{StaticResource ComboBoxItemSource}"
                 Loaded="MobEffectIdLoaded"
                 SelectionChanged="MobEffectIdSelectionChanged"
-                Style="{DynamicResource ComboBoxWithIcon}" />
+                Style="{DynamicResource IconComboBoxStyle}" />
             <TextBlock
                 Margin="5,0"
                 HorizontalAlignment="Left"

@@ -23,6 +23,11 @@
         <local_datacontext:written_book_datacontext />
     </Window.DataContext>
 
+    <Window.Resources>
+        <ImageBrush x:Key="ButtonNormal" ImageSource="/cbhk_environment;component/resources/common/images/ButtonNormal.png" />
+        <ImageBrush x:Key="ButtonPressed" ImageSource="/cbhk_environment;component/resources/common/images/ButtonPressed.png" />
+    </Window.Resources>
+
     <Window.InputBindings>
         <KeyBinding Key="F5" Command="{Binding RunCommand}" />
         <KeyBinding
@@ -376,46 +381,40 @@
                 </StackPanel>-->
             </StackPanel>
         </Viewbox>
-        <Border
+        <CustomControls:IconTextButtons
             Grid.Row="1"
             Width="360"
             Height="75"
+            Padding="0,0,0,10"
             VerticalAlignment="Bottom"
             Panel.ZIndex="1"
-            BorderBrush="Black"
-            BorderThickness="4">
+            Background="{StaticResource ButtonNormal}"
+            Content="署名"
+            FontSize="30"
+            PressedBackground="{StaticResource ButtonPressed}"
+            Style="{DynamicResource IconTextButton}">
             <ity:Interaction.Triggers>
-                <ity:EventTrigger EventName="MouseLeftButtonDown">
-                    <itn:CallMethodAction MethodName="SignatureMouseLeftButtonDown" TargetObject="{Binding}" />
+                <ity:EventTrigger EventName="Click">
+                    <itn:CallMethodAction MethodName="SignatureClick" TargetObject="{Binding}" />
                 </ity:EventTrigger>
                 <ity:EventTrigger EventName="Loaded">
                     <itn:CallMethodAction MethodName="SignatureButtonBackgroundLoaded" TargetObject="{Binding}" />
                 </ity:EventTrigger>
             </ity:Interaction.Triggers>
-            <Border.Style>
-                <Style TargetType="{x:Type Border}">
-                    <Style.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="BorderBrush" Value="#FFFF" />
-                            <Setter Property="Cursor" Value="Hand" />
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </Border.Style>
-        </Border>
-        <CustomControls:TextButtons
+        </CustomControls:IconTextButtons>
+        <CustomControls:IconTextButtons
             Grid.Row="1"
             Width="360"
             Height="40"
             Margin="0,0,0,50"
             HorizontalAlignment="Center"
             VerticalAlignment="Bottom"
-            Background="Transparent"
+            Background="{StaticResource ButtonNormal}"
             BorderThickness="0"
-            ClickMode="Press"
             Content="署名并关闭"
-            Foreground="White"
-            Style="{DynamicResource TextButtonsStyle}"
+            Foreground="Black"
+            PressedBackground="{StaticResource ButtonPressed}"
+            Style="{DynamicResource IconTextButton}"
             Visibility="Collapsed">
             <ity:Interaction.Triggers>
                 <ity:EventTrigger EventName="Click">
@@ -425,20 +424,21 @@
                     <itn:CallMethodAction MethodName="SignatureAndCloseLoaded" TargetObject="{Binding}" />
                 </ity:EventTrigger>
             </ity:Interaction.Triggers>
-        </CustomControls:TextButtons>
-        <CustomControls:TextButtons
+        </CustomControls:IconTextButtons>
+        <CustomControls:IconTextButtons
             Grid.Row="1"
             Width="360"
             Height="40"
             Margin="0,0,0,15"
             HorizontalAlignment="Center"
             VerticalAlignment="Bottom"
-            Background="Transparent"
+            Background="{StaticResource ButtonNormal}"
             BorderThickness="0"
-            ClickMode="Press"
             Content="取消"
-            Foreground="White"
-            Style="{DynamicResource TextButtonsStyle}">
+            Foreground="Black"
+            PressedBackground="{StaticResource ButtonPressed}"
+            Style="{DynamicResource IconTextButton}"
+            Visibility="Collapsed">
             <ity:Interaction.Triggers>
                 <ity:EventTrigger EventName="Click">
                     <itn:CallMethodAction MethodName="SignatureCancelClicked" TargetObject="{Binding}" />
@@ -447,6 +447,6 @@
                     <itn:CallMethodAction MethodName="SignatureCancelLoaded" TargetObject="{Binding}" />
                 </ity:EventTrigger>
             </ity:Interaction.Triggers>
-        </CustomControls:TextButtons>
+        </CustomControls:IconTextButtons>
     </Grid>
 </local_window:CommonWindow>

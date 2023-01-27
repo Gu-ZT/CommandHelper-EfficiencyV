@@ -1,14 +1,9 @@
 ﻿using cbhk_environment.CustomControls;
 using cbhk_environment.GeneralTools.ScrollViewerHelper;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
 using cbhk_environment.ControlsDataContexts;
-using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 
 namespace cbhk_environment.Generators.ItemGenerator.Components
@@ -62,15 +57,8 @@ namespace cbhk_environment.Generators.ItemGenerator.Components
         /// <param name="e"></param>
         private void MobEffectIdLoaded(object sender, RoutedEventArgs e)
         {
-            IconComboBoxs iconComboBoxs = sender as IconComboBoxs;
-            iconComboBoxs.ItemsSource = MainWindow.MobEffectIdSource.ItemDataSource;
-
-            iconComboBoxs.SelectedIndex = 0;
-            TextBox box = iconComboBoxs.Template.FindName("EditableTextBox", iconComboBoxs) as TextBox;
-            ItemDataGroup first = iconComboBoxs.Items[0] as ItemDataGroup;
-            box.Text = first.ItemText;
-            Image image = iconComboBoxs.Template.FindName("PART_DisplayIcon", iconComboBoxs) as Image;
-            image.Source = first.ItemImage;
+            ComboBox iconComboBoxs = sender as ComboBox;
+            iconComboBoxs.ItemsSource = MainWindow.MobEffectIdSource;
             IdLoaded = true;
             MobEffectIdSelectionChanged(iconComboBoxs, null);
         }
@@ -110,8 +98,8 @@ namespace cbhk_environment.Generators.ItemGenerator.Components
         {
             if(IdLoaded)
             {
-                IconComboBoxs current_box = sender as IconComboBoxs;
-                ItemDataGroup current_item = current_box.SelectedItem as ItemDataGroup;
+                ComboBox current_box = sender as ComboBox;
+                IconComboBoxItem current_item = current_box.SelectedItem as IconComboBoxItem;
 
                 PotionTypeItems control_parent = current_box.FindParent<PotionTypeItems>();
                 StackPanel parent = control_parent.FindParent<StackPanel>();
@@ -126,7 +114,7 @@ namespace cbhk_environment.Generators.ItemGenerator.Components
                 #endregion
 
                 #region 添加当前选中的成员
-                string current_key = MainWindow.mob_effect_database.Where(item => Regex.Match(item.Value, @"[\u4E00-\u9FFF]+").ToString() == current_item.ItemText).First().Value;
+                string current_key = MainWindow.mob_effect_database.Where(item => Regex.Match(item.Value, @"[\u4E00-\u9FFF]+").ToString() == current_item.ComboBoxItemText).First().Value;
                 current_key = Regex.Match(current_key,@"[\d]+").ToString();
 
                 if ((item_datacontext.MobEffectIDs.Count - 1) >= 0)

@@ -71,7 +71,6 @@
                     FontWeight="Bold"
                     IsChecked="False"
                     Loaded="MultipleModeLoaded"
-                    SelectedBackground="#FF226A82"
                     Style="{DynamicResource TextToggleButtonsStyle}" />
                 <CustomControls:IconTextButtons
                     Width="25"

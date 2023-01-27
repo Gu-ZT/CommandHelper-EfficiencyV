@@ -420,8 +420,8 @@ namespace cbhk_environment.Generators.EntityGenerator
         #region 数据
 
         #region 实体ID
-        private ItemDataGroup entity_id = null;
-        public ItemDataGroup EntityId
+        private IconComboBoxItem entity_id = null;
+        public IconComboBoxItem EntityId
         {
             get { return entity_id; }
             set
@@ -435,7 +435,7 @@ namespace cbhk_environment.Generators.EntityGenerator
             get
             {
                 string result = "";
-                result = MainWindow.entity_database.Where(item=>item.Key.Contains(EntityId.ItemText)).First().Key;
+                result = MainWindow.entity_database.Where(item=>item.Key.Contains(EntityId.ComboBoxItemText)).First().Key;
                 result = Regex.Match(result, @"[a-zA-Z_]+").ToString();
                 return result.Trim() != ""? result:"";
             }
@@ -604,13 +604,22 @@ namespace cbhk_environment.Generators.EntityGenerator
         {
             get
             {
-                string result = "ActiveEffects:[";
-                for (int i = 0; i < MobEffectIDs.Count; i++)
+                if(MobEffectDurations.Count == MobEffectIDs.Count)
                 {
-                    result += "{Id:" + MobEffectIDs[i] + "b,Duration:" + MobEffectDurations[i] + ",Amplifier:" + MobEffectLevels[i] +"b,Ambient:0b,ShowParticles:0b},";
+                    string result = "ActiveEffects:[";
+                    for (int i = 0; i < MobEffectIDs.Count; i++)
+                    {
+                        result += "{Id:" + MobEffectIDs[i] + "b,Duration:" + MobEffectDurations[i] + ",Amplifier:" + MobEffectLevels[i] + "b,Ambient:0b,ShowParticles:0b},";
+                    }
+                    result = result.Trim() != "ActiveEffects:[" ? result.TrimEnd(',') + "]," : "";
+                    return result;
                 }
-                result = result.Trim()!= "ActiveEffects:[" ? result.TrimEnd(',')+"],":"";
-                return result;
+                else
+                {
+                    MobEffectDurations.Clear();
+                    MobEffectIDs.Clear();
+                    return "";
+                }
             }
         }
         #endregion
@@ -905,17 +914,8 @@ namespace cbhk_environment.Generators.EntityGenerator
         /// <param name="e"></param>
         public void EntityIdsLoaded(object sender, RoutedEventArgs e)
         {
-            IconComboBoxs iconComboBoxs = sender as IconComboBoxs;
-            iconComboBoxs.ItemsSource = MainWindow.EntityIdSource.ItemDataSource;
-
-            iconComboBoxs.SelectedIndex = 0;
-            iconComboBoxs.ApplyTemplate();
-            TextBox box = iconComboBoxs.Template.FindName("EditableTextBox", iconComboBoxs) as TextBox;
-            ItemDataGroup first = iconComboBoxs.Items[0] as ItemDataGroup;
-            box.Text = first.ItemText;
-            Image box_image = iconComboBoxs.Template.FindName("PART_DisplayIcon", iconComboBoxs) as Image;
-            box_image.Source = first.ItemImage;
-            EntityId = first;
+            ComboBox comboBoxs = sender as ComboBox;
+            comboBoxs.ItemsSource = MainWindow.EntityIdSource;
         }
     }
 }

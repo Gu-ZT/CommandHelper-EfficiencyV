@@ -29,12 +29,12 @@ namespace cbhk_environment.Generators.ItemGenerator.Components
         private void EnchantmentIdLoaded(object sender, RoutedEventArgs e)
         {
             TextComboBoxs iconComboBoxs = sender as TextComboBoxs;
-            iconComboBoxs.ItemsSource = MainWindow.EnchantmentIdSource.ItemDataSource;
+            iconComboBoxs.ItemsSource = MainWindow.EnchantmentIdSource;
 
             iconComboBoxs.SelectedIndex = 0;
             TextBox box = iconComboBoxs.Template.FindName("EditableTextBox", iconComboBoxs) as TextBox;
-            TextSource first = iconComboBoxs.Items[0] as TextSource;
-            box.Text = first.ItemText;
+            string first = iconComboBoxs.Items[0] as string;
+            box.Text = first;
             IdLoaded = true;
             EnchantmentIdSelectionChanged(iconComboBoxs, null);
         }
@@ -83,7 +83,7 @@ namespace cbhk_environment.Generators.ItemGenerator.Components
             if(IdLoaded)
             {
                 TextComboBoxs current_box = sender as TextComboBoxs;
-                TextSource current_data = current_box.SelectedItem as TextSource;
+                string current_data = current_box.SelectedItem as string;
 
                 EnchantmentItems control_parent = current_box.FindParent<EnchantmentItems>();
                 StackPanel parent = control_parent.Parent as StackPanel;
@@ -98,7 +98,7 @@ namespace cbhk_environment.Generators.ItemGenerator.Components
 
                 #region 添加当前选中的成员
 
-                string current_key = MainWindow.enchantment_databse.Where(item => Regex.Match(item.Value, @"[\u4E00-\u9FFF]+").ToString() == current_data.ItemText).Select(item => item.Key).First();
+                string current_key = MainWindow.enchantment_databse.Where(item => Regex.Match(item.Value, @"[\u4E00-\u9FFF]+").ToString() == current_data).Select(item => item.Key).First();
 
                 if ((item_datacontext.EnchantmentIDs.Count - 1) >= 0)
                     item_datacontext.EnchantmentIDs.Insert(index, current_key);

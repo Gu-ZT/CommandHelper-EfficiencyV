@@ -105,7 +105,6 @@
                     Cursor="Hand"
                     FlowDirection="LeftToRight"
                     Foreground="White"
-                    Style="{StaticResource TextMenuItem}"
                     ToolTip="切换版本"
                     ToolTipService.InitialShowDelay="0">
                     <MenuItem.Header>
@@ -133,7 +132,6 @@
                         FontSize="20"
                         Foreground="White"
                         IsChecked="{Binding Version1_12, Mode=TwoWay}"
-                        SelectedBackground="Gray"
                         Style="{StaticResource TextToggleButtonsStyle}" />
                     <CustomControls:TextToggleButtons
                         HorizontalAlignment="Stretch"
@@ -144,7 +142,6 @@
                         FontSize="20"
                         Foreground="White"
                         IsChecked="{Binding Version1_13, Mode=TwoWay}"
-                        SelectedBackground="Gray"
                         Style="{StaticResource TextToggleButtonsStyle}" />
                 </MenuItem>
             </Menu>
@@ -182,10 +179,8 @@
                                 Height="25"
                                 Margin="0,0,5,0"
                                 HorizontalAlignment="Left"
-                                Background="Transparent"
                                 BorderBrush="Black"
                                 CaretBrush="White"
-                                Foreground="White"
                                 Text="{Binding DisplayName, Mode=TwoWay}" />
                             <TextBlock
                                 Margin="5,0,0,0"
@@ -197,29 +192,29 @@
                                 Height="25"
                                 Margin="0,0,5,0"
                                 HorizontalAlignment="Left"
-                                Background="Transparent"
                                 BorderBrush="Black"
                                 CaretBrush="White"
-                                Foreground="White"
                                 Text="{Binding ItemLore, Mode=TwoWay}" />
                             <TextBlock
                                 Margin="5,0,0,0"
                                 VerticalAlignment="Center"
                                 Background="Transparent"
                                 Text="信息隐藏:" />
-                            <CustomControls:TextComboBoxs
+                            <ComboBox
                                 Width="170"
                                 Height="25"
                                 HorizontalAlignment="Left"
+                                Background="Black"
                                 Foreground="White"
+                                SelectedIndex="0"
                                 SelectedItem="{Binding HideInfomationOption, Mode=TwoWay}"
-                                Style="{DynamicResource TextComboBox}">
+                                Style="{DynamicResource TextComboBoxStyle}">
                                 <ity:Interaction.Triggers>
                                     <ity:EventTrigger EventName="Loaded">
                                         <itn:CallMethodAction MethodName="HideFlagsLoaded" TargetObject="{Binding}" />
                                     </ity:EventTrigger>
                                 </ity:Interaction.Triggers>
-                            </CustomControls:TextComboBoxs>
+                            </ComboBox>
                         </DockPanel>
                         <DockPanel>
                             <TextBlock
@@ -238,9 +233,7 @@
                                 Margin="0,5,10,5"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
-                                Background="Transparent"
                                 BorderBrush="Black"
-                                Foreground="White"
                                 Text="{Binding CustomTag, Mode=TwoWay}" />
                             <CustomControls:IconCheckBoxs
                                 Width="90"
@@ -393,18 +386,19 @@
                                 VerticalAlignment="Center"
                                 Foreground="White"
                                 Text="物品ID:" />
-                            <CustomControls:IconComboBoxs
+                            <ComboBox
                                 Width="200"
                                 HorizontalAlignment="Left"
                                 Foreground="White"
+                                SelectedIndex="0"
                                 SelectedItem="{Binding SelectItemIdSource, Mode=TwoWay}"
-                                Style="{DynamicResource ComboBoxWithIcon}">
+                                Style="{DynamicResource IconComboBoxStyle}">
                                 <ity:Interaction.Triggers>
                                     <ity:EventTrigger EventName="Loaded">
                                         <itn:CallMethodAction MethodName="ItemIdsLoaded" TargetObject="{Binding}" />
                                     </ity:EventTrigger>
                                 </ity:Interaction.Triggers>
-                            </CustomControls:IconComboBoxs>
+                            </ComboBox>
                             <TextBlock
                                 Margin="5,0"
                                 HorizontalAlignment="Left"
@@ -414,14 +408,11 @@
                             <CustomControls:ColorNumbericUpDowns
                                 Width="120"
                                 HorizontalAlignment="Left"
-                                ArrowBackground="Transparent"
-                                ArrowForeground="White"
                                 ArrowHeight="25"
                                 ArrowWidth="25"
                                 Background="Transparent"
                                 BorderThickness="0"
                                 CaretBrush="White"
-                                Foreground="White"
                                 MaxValue="2147483647"
                                 MinValue="1"
                                 Template="{DynamicResource ColorNumbericUpDown}"
@@ -439,10 +430,8 @@
                                 ArrowForeground="White"
                                 ArrowHeight="25"
                                 ArrowWidth="25"
-                                Background="Transparent"
                                 BorderThickness="0"
                                 CaretBrush="White"
-                                Foreground="White"
                                 MaxValue="2147483647"
                                 MinValue="0"
                                 Template="{DynamicResource ColorNumbericUpDown}"

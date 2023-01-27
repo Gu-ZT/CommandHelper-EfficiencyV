@@ -57,15 +57,9 @@ namespace cbhk_environment.Generators.EntityGenerator.Components
         /// <param name="e"></param>
         private void MobEffectIdLoaded(object sender, RoutedEventArgs e)
         {
-            IconComboBoxs iconComboBoxs = sender as IconComboBoxs;
-            iconComboBoxs.ItemsSource = MainWindow.MobEffectIdSource.ItemDataSource;
-
+            ComboBox iconComboBoxs = sender as ComboBox;
+            iconComboBoxs.ItemsSource = MainWindow.MobEffectIdSource;
             iconComboBoxs.SelectedIndex = 0;
-            TextBox box = iconComboBoxs.Template.FindName("EditableTextBox", iconComboBoxs) as TextBox;
-            ItemDataGroup first = iconComboBoxs.Items[0] as ItemDataGroup;
-            box.Text = first.ItemText;
-            Image image = iconComboBoxs.Template.FindName("PART_DisplayIcon", iconComboBoxs) as Image;
-            image.Source = first.ItemImage;
             IdLoaded = true;
             MobEffectIdSelectionChanged(iconComboBoxs, null);
         }
@@ -105,8 +99,8 @@ namespace cbhk_environment.Generators.EntityGenerator.Components
         {
             if (IdLoaded)
             {
-                IconComboBoxs current_box = sender as IconComboBoxs;
-                ItemDataGroup current_item = current_box.SelectedItem as ItemDataGroup;
+                ComboBox current_box = sender as ComboBox;
+                IconComboBoxItem current_item = current_box.SelectedItem as IconComboBoxItem;
 
                 PotionTypeItems control_parent = current_box.FindParent<PotionTypeItems>();
                 StackPanel parent = control_parent.FindParent<StackPanel>();
@@ -121,7 +115,7 @@ namespace cbhk_environment.Generators.EntityGenerator.Components
                 #endregion
 
                 #region 添加当前选中的成员
-                string current_key = MainWindow.mob_effect_database.Where(item => Regex.Match(item.Value, @"[\u4E00-\u9FFF]+").ToString() == current_item.ItemText).First().Value;
+                string current_key = MainWindow.mob_effect_database.Where(item => Regex.Match(item.Value, @"[\u4E00-\u9FFF]+").ToString() == current_item.ComboBoxItemText).First().Value;
                 current_key = Regex.Match(current_key, @"[\d]+").ToString();
 
                 if ((entity_datacontext.MobEffectIDs.Count - 1) >= 0)

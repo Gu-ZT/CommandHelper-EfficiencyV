@@ -83,14 +83,14 @@
                         ToolTip="该事件的行为"
                         ToolTipService.InitialShowDelay="0"
                         ToolTipService.ShowDuration="1000" />
-                    <CustomControls:TextComboBoxs
+                    <ComboBox
                         x:Name="ClickEventActionBox"
                         Height="30"
                         Background="Black"
                         FontSize="20"
                         Foreground="White"
                         Loaded="ClickEventsLoaded"
-                        Style="{DynamicResource TextComboBox}" />
+                        Style="{DynamicResource TextComboBoxStyle}" />
                 </DockPanel>
                 <DockPanel Margin="0,5,0,0">
                     <TextBlock
@@ -126,14 +126,14 @@
                         ToolTip="该事件的行为"
                         ToolTipService.InitialShowDelay="0"
                         ToolTipService.ShowDuration="1000" />
-                    <CustomControls:TextComboBoxs
+                    <ComboBox
                         x:Name="HoverEventActionBox"
                         Height="30"
                         Background="Black"
                         FontSize="20"
                         Foreground="White"
                         Loaded="HoverEventsLoaded"
-                        Style="{DynamicResource TextComboBox}" />
+                        Style="{DynamicResource TextComboBoxStyle}" />
                 </DockPanel>
                 <DockPanel Margin="0,5,0,0">
                     <TextBlock

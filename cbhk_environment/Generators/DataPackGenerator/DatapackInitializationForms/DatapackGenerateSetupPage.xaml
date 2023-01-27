@@ -164,14 +164,14 @@
                 ToolTipService.ShowDuration="1000" />
         </DockPanel>
         <DockPanel Margin="0,0,0,10">
-            <CustomControls:TextComboBoxs
+            <ComboBox
                 Width="555"
                 HorizontalAlignment="Left"
                 Background="Transparent"
                 Foreground="White"
                 ItemsSource="{Binding HistoryDatapackGeneratorPathList}"
                 SelectedItem="{Binding SelectedDatapackPath, Mode=TwoWay}"
-                Style="{DynamicResource TextComboBox}" />
+                Style="{DynamicResource TextComboBoxStyle}" />
             <CustomControls:TextButtons
                 Width="35"
                 Height="25"
@@ -184,7 +184,7 @@
                 MouseLeftDownBackground="#3D3D3D"
                 MouseOverBackground="#4D4D4D"
                 Style="{DynamicResource TextButtonsStyle}" />
-            <CustomControls:TextComboBoxs
+            <ComboBox
                 Width="400"
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
@@ -193,13 +193,13 @@
                 IsEditable="False"
                 IsReadOnly="True"
                 SelectedItem="{Binding SelectedDatapackVersion, Mode=TwoWay}"
-                Style="{DynamicResource TextComboBox}">
+                Style="{DynamicResource TextComboBoxStyle}">
                 <ity:Interaction.Triggers>
                     <ity:EventTrigger EventName="Loaded">
                         <itn:CallMethodAction MethodName="DatapackVersionLoaded" TargetObject="{Binding}" />
                     </ity:EventTrigger>
                 </ity:Interaction.Triggers>
-            </CustomControls:TextComboBoxs>
+            </ComboBox>
         </DockPanel>
         <DockPanel Margin="0,0,0,10">
             <TextBlock
@@ -234,7 +234,7 @@
                 VerticalAlignment="Center"
                 Foreground="White"
                 Text="类型" />
-            <CustomControls:TextComboBoxs
+            <ComboBox
                 Width="150"
                 Margin="0,0,5,0"
                 HorizontalAlignment="Left"
@@ -244,7 +244,7 @@
                 IsEditable="False"
                 IsReadOnly="True"
                 SelectedItem="{Binding SelectedDatapackDescriptionType, Mode=TwoWay}"
-                Style="{DynamicResource TextComboBox}">
+                Style="{DynamicResource TextComboBoxStyle}">
                 <ity:Interaction.Triggers>
                     <ity:EventTrigger EventName="Loaded">
                         <itn:CallMethodAction MethodName="DatapackDescriptionTypeLoaded" TargetObject="{Binding}" />
@@ -253,7 +253,7 @@
                         <itn:CallMethodAction MethodName="DescriptionTypeSelectionChanged" TargetObject="{Binding}" />
                     </ity:EventTrigger>
                 </ity:Interaction.Triggers>
-            </CustomControls:TextComboBoxs>
+            </ComboBox>
             <CustomControls:TextComboBoxs
                 Uid="Bool"
                 Width="100"

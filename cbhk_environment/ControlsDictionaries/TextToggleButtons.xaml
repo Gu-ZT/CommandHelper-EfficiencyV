@@ -3,6 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:CustomControls="clr-namespace:cbhk_environment.CustomControls">
 
+    <ImageBrush x:Key="UnSelectedBackground" ImageSource="/cbhk_environment;component/resources/common/images/TextToggleButtonNormal.png" />
+    <ImageBrush x:Key="SelectedBackground" ImageSource="/cbhk_environment;component/resources/common/images/TextToggleButtonPressed.png" />
     <SolidColorBrush x:Key="Button.Static.Background" Color="Gray" />
     <SolidColorBrush x:Key="Button.Static.Border" Color="Black" />
     <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFBEE6FD" />
@@ -18,7 +20,7 @@
         <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}" />
         <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
         <Setter Property="IsChecked" Value="False" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="0" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Padding" Value="1" />
@@ -28,7 +30,7 @@
                     <Grid>
                         <Border
                             x:Name="border1"
-                            Background="{TemplateBinding Background}"
+                            Background="{StaticResource UnSelectedBackground}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             SnapsToDevicePixels="true">
@@ -43,7 +45,7 @@
                         </Border>
                         <Border
                             x:Name="border2"
-                            Background="{TemplateBinding SelectedBackground}"
+                            Background="{StaticResource SelectedBackground}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             SnapsToDevicePixels="true"

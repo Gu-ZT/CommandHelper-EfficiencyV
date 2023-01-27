@@ -89,8 +89,8 @@ namespace cbhk_environment.CustomControls
             }
         }
 
-        private TextSource clickEventActionItem = new TextSource() { ItemText = "运行命令" };
-        public TextSource ClickEventActionItem
+        private string clickEventActionItem = "运行命令";
+        public string ClickEventActionItem
         {
             get { return clickEventActionItem; }
             set
@@ -107,8 +107,8 @@ namespace cbhk_environment.CustomControls
                 clickEventValue = value;
             }
         }
-        private TextSource hoverEventActionItem = new TextSource() { ItemText = "显示文本" };
-        public TextSource HoverEventActionItem
+        private string hoverEventActionItem = "显示文本";
+        public string HoverEventActionItem
         {
             get { return hoverEventActionItem; }
             set
@@ -142,11 +142,11 @@ namespace cbhk_environment.CustomControls
             get
             {
                 string result = "";
-                string clickEventAction = written_book_datacontext.EventDataBase.Where(item => item.Value == ClickEventActionItem.ItemText.Trim()).First().Key;
+                string clickEventAction = written_book_datacontext.EventDataBase.Where(item => item.Value == ClickEventActionItem.Trim()).First().Key;
                 string ClickEventString = HasClickEvent ? ",\"clickEvent\":{\"action\":\"" + clickEventAction + "\",\"value\":\"" + (clickEventAction.Trim() == "open_url"? "http://" : "") + ClickEventValue + "\"}" : "";
 
-                string HoverEventString = HasHoverEvent ? ",\"hoverEvent\":{\"action\":\"" + (written_book_datacontext.EventDataBase.Where(item => item.Value == HoverEventActionItem.ItemText.Trim()).First().Key) + "\",\"value\":\"" + HoverEventValue + "\"}" : "";
-                string InsertionString = HasInsertion ? ",\"insertion\":{\"action\":\"" + (written_book_datacontext.EventDataBase.Where(item => item.Value == HoverEventActionItem.ItemText.Trim()).First().Key) + "\",\"value\":\"" + HoverEventValue + "\"}" : "";
+                string HoverEventString = HasHoverEvent ? ",\"hoverEvent\":{\"action\":\"" + (written_book_datacontext.EventDataBase.Where(item => item.Value == HoverEventActionItem.Trim()).First().Key) + "\",\"value\":\"" + HoverEventValue + "\"}" : "";
+                string InsertionString = HasInsertion ? ",\"insertion\":{\"action\":\"" + (written_book_datacontext.EventDataBase.Where(item => item.Value == HoverEventActionItem.Trim()).First().Key) + "\",\"value\":\"" + HoverEventValue + "\"}" : "";
                 result = ClickEventString + HoverEventString + InsertionString;
                 return result;
             }

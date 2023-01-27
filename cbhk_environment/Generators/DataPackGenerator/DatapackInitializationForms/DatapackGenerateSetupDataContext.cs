@@ -74,8 +74,8 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         #endregion
 
         #region 存储数据包的保存路径
-        private static TextSource selectedDatapackPath = new TextSource() { ItemText = "" };
-        public TextSource SelectedDatapackPath
+        private static string selectedDatapackPath = "";
+        public string SelectedDatapackPath
         {
             get { return selectedDatapackPath; }
             set
@@ -87,8 +87,8 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         #endregion
 
         #region 存储数据包对应的游戏版本
-        private TextSource selectedDatapackVersion = new TextSource() { ItemText = "" };
-        public TextSource SelectedDatapackVersion
+        private string selectedDatapackVersion = "";
+        public string SelectedDatapackVersion
         {
             get { return selectedDatapackVersion; }
             set
@@ -96,7 +96,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
                 selectedDatapackVersion = value;
                 OnPropertyChanged();
                 if (selectedDatapackVersion != null)
-                    SelectedDatapackVersionString = selectedDatapackVersion.ItemText;
+                    SelectedDatapackVersionString = selectedDatapackVersion;
             }
         }
         private string SelectedDatapackVersionString = "";
@@ -142,8 +142,8 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         #endregion
 
         #region 存储数据包的描述类型
-        private TextSource selectedDatapackDescriptionType = new TextSource() { ItemText = "" };
-        public TextSource SelectedDatapackDescriptionType
+        private string selectedDatapackDescriptionType = "";
+        public string SelectedDatapackDescriptionType
         {
             get { return selectedDatapackDescriptionType; }
             set
@@ -209,7 +209,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         #endregion
 
         #region 版本、生成路径、描述等数据
-        public ObservableCollection<TextSource> HistoryDatapackGeneratorPathList { get; set; } = new ObservableCollection<TextSource> { };
+        public ObservableCollection<string> HistoryDatapackGeneratorPathList { get; set; } = new ObservableCollection<string> { };
 
         //数据包所对应游戏版本配置文件路径
         string DatapackVersionFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\datapackVersion.json";
@@ -252,7 +252,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
 
             if (File.Exists(DatapackDescriptionTypeFilePath) && DescriptionTypeSwitcher.ItemsSource == null)
             {
-                ObservableCollection<TextSource> descriptionList = new ObservableCollection<TextSource> { };
+                ObservableCollection<string> descriptionList = new ObservableCollection<string> { };
                 DescriptionTypeSwitcher.ItemsSource = descriptionList;
 
                 #region 解析简介类型配置文件
@@ -260,7 +260,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
 
                 foreach (string descriptionItem in DescriptionList)
                 {
-                    descriptionList.Add(new TextSource() { ItemText = descriptionItem });
+                    descriptionList.Add(descriptionItem);
                 }
                 #endregion
             }
@@ -277,7 +277,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
 
             if (File.Exists(DatapackVersionFilePath) && DatapackVersionDatabase.Count == 0)
             {
-                ObservableCollection<TextSource> versionList = new ObservableCollection<TextSource> { };
+                ObservableCollection<string> versionList = new ObservableCollection<string> { };
                 VersionBox.ItemsSource = versionList;
 
                 #region 解析版本配置文件
@@ -289,7 +289,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
                     string[] itemData = versionItem.Split(':');
                     string display = itemData[0].Trim();
                     string value = itemData[1].Trim();
-                    versionList.Add(new TextSource() { ItemText = display });
+                    versionList.Add(display);
                     DatapackVersionDatabase.Add(display, value);
                 }
                 #endregion
@@ -321,8 +321,8 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
 
             if(DescriptionBoolBox.Items.Count == 0)
             {
-                DescriptionBoolBox.Items.Add(new TextSource() { ItemText = "true" });
-                DescriptionBoolBox.Items.Add(new TextSource() { ItemText = "false" });
+                DescriptionBoolBox.Items.Add("true");
+                DescriptionBoolBox.Items.Add("false");
             }
         }
 
@@ -354,8 +354,8 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         /// <param name="e"></param>
         public void DescriptionTypeSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            TextSource CurrentItem = DescriptionTypeSwitcher.SelectedItem as TextSource;
-            string CurrentValue = CurrentItem.ItemText;
+            string CurrentItem = DescriptionTypeSwitcher.SelectedItem as string;
+            string CurrentValue = CurrentItem;
             foreach (FrameworkElement item in DescriptionContainer.Children)
             {
                 if (item.Uid == CurrentValue || item.Uid.Contains(CurrentValue))
@@ -422,10 +422,10 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
                 if (Directory.Exists(folderBrowser.SelectedFolder))
                 {
                     string selectedPath = folderBrowser.SelectedFolder;
-                    if (HistoryDatapackGeneratorPathList.Where(item => item.ItemText == selectedPath).Count() == 0)
-                        HistoryDatapackGeneratorPathList.Add(new TextSource() { ItemText = selectedPath });
+                    if (HistoryDatapackGeneratorPathList.Where(item => item == selectedPath).Count() == 0)
+                        HistoryDatapackGeneratorPathList.Add(selectedPath);
 
-                    if (SelectedDatapackPath.ItemText == "")
+                    if (SelectedDatapackPath == "")
                         SelectedDatapackPath = HistoryDatapackGeneratorPathList[HistoryDatapackGeneratorPathList.Count - 1];
                 }
             }
@@ -437,7 +437,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         private void AttributeNextStepCommand(Page page)
         {
             #region 数据包名、主命名空间、生成路径任意一项为空则不提供生成服务
-            string SelectedDatapackPathString = SelectedDatapackPath.ItemText.Trim();
+            string SelectedDatapackPathString = SelectedDatapackPath.Trim();
             if (DatapackName.Trim() == "" ||
                 DatapackMainNameSpace.Trim() == "" ||
                 SelectedDatapackPathString == "" ||
@@ -446,7 +446,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
             #endregion
 
             #region 合并选择的路径和数据包名
-            string RootPath = SelectedDatapackPath.ItemText + "\\" + DatapackName + "\\";
+            string RootPath = SelectedDatapackPath + "\\" + DatapackName + "\\";
             //创建数据包文件夹
             Directory.CreateDirectory(RootPath);
             #endregion
@@ -463,7 +463,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
             //搜索对应的数据包版本号
             foreach (var item in DatapackVersionDatabase)
             {
-                if (item.Key == SelectedDatapackVersion.ItemText)
+                if (item.Key == SelectedDatapackVersion)
                 {
                     SelectedDatapackVersionString = item.Value;
                     break;
@@ -471,13 +471,13 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
             }
 
             //合并简介信息
-            if (SelectedDatapackDescriptionType.ItemText == "Object")
+            if (SelectedDatapackDescriptionType == "Object")
                 SelectedDatapackDescription = JsonObjectDescription;
             else
-                if (SelectedDatapackDescriptionType.ItemText == "Array")
+                if (SelectedDatapackDescriptionType == "Array")
                 SelectedDatapackDescription = JsonArrayDescription;
-            if (SelectedDatapackDescriptionType.ItemText == "Bool")
-                SelectedDatapackDescription = (DescriptionBoolBox.SelectedItem as TextSource).ItemText;
+            if (SelectedDatapackDescriptionType == "Bool")
+                SelectedDatapackDescription = DescriptionBoolBox.SelectedItem.ToString();
 
             //合并pack信息
             string pack = "\"pack\":{\"pack_format\":" + SelectedDatapackVersionString + ",\"description\":\"" + SelectedDatapackDescription + "\"}";
@@ -495,7 +495,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
             foreach (var selectedTemplateItem in TemplateSelectDataContext.SelectedTemplateItemList)
             {
                 string fileType = selectedTemplateItem.FileType.ToLower();
-                SelectedDatapackVersionString = SelectedDatapackVersion.ItemText;
+                SelectedDatapackVersionString = SelectedDatapackVersion;
 
                 //自动选取较高的版本
                 if (SelectedDatapackVersionString.Contains("~"))
@@ -573,7 +573,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         /// </summary>
         private void CopyDatapackPathCommand()
         {
-            Clipboard.SetText(SelectedDatapackPath.ItemText);
+            Clipboard.SetText(SelectedDatapackPath);
         }
 
         /// <summary>

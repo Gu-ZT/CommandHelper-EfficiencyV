@@ -45,8 +45,8 @@ namespace cbhk_environment.Generators.RecipeGenerator
         #endregion
 
         #region 保存物品ID
-        private ItemDataGroup select_item_id_source;
-        public ItemDataGroup SelectItemIdSource
+        private IconComboBoxItem select_item_id_source;
+        public IconComboBoxItem SelectItemIdSource
         {
             get { return select_item_id_source; }
             set
@@ -59,7 +59,7 @@ namespace cbhk_environment.Generators.RecipeGenerator
         {
             get
             {
-                string key = MainWindow.item_database.Where(item => Regex.Match(item.Key, @"[\u4e00-\u9fa5]+").ToString() == SelectItemIdSource.ItemText).First().Key;
+                string key = MainWindow.item_database.Where(item => Regex.Match(item.Key, @"[\u4e00-\u9fa5]+").ToString() == SelectItemIdSource.ComboBoxItemText).First().Key;
                 string result = key != "" ? Regex.Match(key, @"[a-zA-Z_]+").ToString() : "";
                 return result;
             }
@@ -251,15 +251,7 @@ namespace cbhk_environment.Generators.RecipeGenerator
         public void ItemIdsLoaded(object sender, RoutedEventArgs e)
         {
             IconComboBoxs iconComboBoxs = sender as IconComboBoxs;
-            iconComboBoxs.ItemsSource = MainWindow.ItemIdSource.ItemDataSource;
-
-            iconComboBoxs.SelectedIndex = 0;
-            TextBox box = iconComboBoxs.Template.FindName("EditableTextBox", iconComboBoxs) as TextBox;
-            ItemDataGroup first = iconComboBoxs.Items[0] as ItemDataGroup;
-            box.Text = first.ItemText;
-            Image image = iconComboBoxs.Template.FindName("PART_DisplayIcon", iconComboBoxs) as Image;
-            image.Source = first.ItemImage;
-            SelectItemIdSource = first;
+            iconComboBoxs.ItemsSource = MainWindow.ItemIdSource;
         }
 
         /// <summary>
@@ -336,9 +328,9 @@ namespace cbhk_environment.Generators.RecipeGenerator
         {
             if(e.Key == Key.Enter)
             {
-                IconComboBoxs box = sender as IconComboBoxs;
-                ItemDataGroup dataGroup = box.SelectedItem as ItemDataGroup;
-                KeyValuePair<string, BitmapImage> a_item = MainWindow.item_database.Where(item => item.Key.Contains(dataGroup.ItemText)).First();
+                ComboBox box = sender as ComboBox;
+                IconComboBoxItem dataGroup = box.SelectedItem as IconComboBoxItem;
+                KeyValuePair<string, BitmapImage> a_item = MainWindow.item_database.Where(item => item.Key.Contains(dataGroup.ComboBoxItemText)).First();
                 string image_name = Regex.Match(a_item.Key, @"[a-zA-Z_]+").ToString();
                 System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + image_name + ".png");
                 bitmap = ChangeBitmapSize.Magnifier(bitmap, 10);

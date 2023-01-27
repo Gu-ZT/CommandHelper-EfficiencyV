@@ -45,14 +45,8 @@ namespace cbhk_environment.Generators.ItemGenerator.Components
         private void CanDestroyItemLoaded(object sender, RoutedEventArgs e)
         {
             IconComboBoxs iconComboBoxs = sender as IconComboBoxs;
-            iconComboBoxs.ItemsSource = MainWindow.ItemIdSource.ItemDataSource;
-
+            iconComboBoxs.ItemsSource = MainWindow.ItemIdSource;
             iconComboBoxs.SelectedIndex = 0;
-            TextBox box = iconComboBoxs.Template.FindName("EditableTextBox", iconComboBoxs) as TextBox;
-            ItemDataGroup first = iconComboBoxs.Items[0] as ItemDataGroup;
-            box.Text = first.ItemText;
-            Image image = iconComboBoxs.Template.FindName("PART_DisplayIcon", iconComboBoxs) as Image;
-            image.Source = first.ItemImage;
             ItemLoaded = true;
             CanDestroyItemSelectionChanged(iconComboBoxs,null);
         }
@@ -66,8 +60,8 @@ namespace cbhk_environment.Generators.ItemGenerator.Components
         {
             if(ItemLoaded)
             {
-                IconComboBoxs current_box = sender as IconComboBoxs;
-                ItemDataGroup current_data = current_box.SelectedItem as ItemDataGroup;
+                ComboBox current_box = sender as ComboBox;
+                IconComboBoxItem current_data = current_box.SelectedItem as IconComboBoxItem;
                 CanDestroyItems canDestroyItems = current_box.FindParent<CanDestroyItems>();
                 StackPanel parent = canDestroyItems.FindParent<StackPanel>();
                 int index = parent.Children.IndexOf(canDestroyItems);
@@ -80,9 +74,9 @@ namespace cbhk_environment.Generators.ItemGenerator.Components
 
                 #region 添加当前选中的成员
                 if ((item_datacontext.CanDestroyBlocks.Count - 1) >= 0)
-                    item_datacontext.CanDestroyBlocks.Insert(index, current_data.ItemText);
+                    item_datacontext.CanDestroyBlocks.Insert(index, current_data.ComboBoxItemText);
                 else
-                    item_datacontext.CanDestroyBlocks.Add(current_data.ItemText);
+                    item_datacontext.CanDestroyBlocks.Add(current_data.ComboBoxItemText);
                 #endregion
             }
         }

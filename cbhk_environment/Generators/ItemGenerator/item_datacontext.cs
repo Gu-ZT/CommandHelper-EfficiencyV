@@ -187,8 +187,8 @@ namespace cbhk_environment.Generators.ItemGenerator
         #endregion
 
         #region 保存物品信息隐藏选项
-        private TextSource hide_infomation_option;
-        public TextSource HideInfomationOption
+        private string hide_infomation_option;
+        public string HideInfomationOption
         {
             get { return hide_infomation_option; }
             set
@@ -201,7 +201,7 @@ namespace cbhk_environment.Generators.ItemGenerator
         {
             get
             {
-                string key = MainWindow.hide_infomation_database.Where(item => item.Value == HideInfomationOption.ItemText).First().Key;
+                string key = MainWindow.hide_infomation_database.Where(item => item.Value == HideInfomationOption).First().Key;
                 string result = key!="0"? "HideFlags:"+key+"b," : "";
                 return result;
             }
@@ -209,21 +209,21 @@ namespace cbhk_environment.Generators.ItemGenerator
         #endregion
 
         #region 保存物品ID
-        private ItemDataGroup select_item_id_source;
-        public ItemDataGroup SelectItemIdSource
+        private IconComboBoxItem select_item_id_source;
+        public IconComboBoxItem SelectItemIdSource
         {
             get { return select_item_id_source; }
             set
             {
                 select_item_id_source = value;
-                //OnPropertyChanged();
+                OnPropertyChanged();
             }
         }
         private string ItemId
         {
             get
             {
-                string key = MainWindow.item_database.Where(item => Regex.Match(item.Key, @"[\u4e00-\u9fa5]+").ToString() == SelectItemIdSource.ItemText).First().Key;
+                string key = MainWindow.item_database.Where(item => Regex.Match(item.Key, @"[\u4e00-\u9fa5]+").ToString() == SelectItemIdSource.ComboBoxItemText).First().Key;
                 string result = key != "" ? Regex.Match(key,@"[a-zA-Z_]+").ToString() : "";
                 return result;
             }
@@ -436,17 +436,8 @@ namespace cbhk_environment.Generators.ItemGenerator
         /// <param name="e"></param>
         public void ItemIdsLoaded(object sender, RoutedEventArgs e)
         {
-            IconComboBoxs iconComboBoxs = sender as IconComboBoxs;
-            iconComboBoxs.ItemsSource = MainWindow.ItemIdSource.ItemDataSource;
-
-            iconComboBoxs.SelectedIndex = 0;
-            iconComboBoxs.ApplyTemplate();
-            TextBox box = iconComboBoxs.Template.FindName("EditableTextBox", iconComboBoxs) as TextBox;
-            ItemDataGroup first = iconComboBoxs.Items[0] as ItemDataGroup;
-            box.Text = first.ItemText;
-            Image image = iconComboBoxs.Template.FindName("PART_DisplayIcon", iconComboBoxs) as Image;
-            image.Source = first.ItemImage;
-            SelectItemIdSource = first;
+            ComboBox comboBoxs = sender as ComboBox;
+            comboBoxs.ItemsSource = MainWindow.ItemIdSource;
         }
 
         /// <summary>
@@ -456,12 +447,8 @@ namespace cbhk_environment.Generators.ItemGenerator
         /// <param name="e"></param>
         public void HideFlagsLoaded(object sender, RoutedEventArgs e)
         {
-            TextComboBoxs iconComboBoxs = sender as TextComboBoxs;
-
-            iconComboBoxs.ItemsSource = MainWindow.hide_flags_source.ItemDataSource;
-            HideInfomationOption = iconComboBoxs.Items[0] as TextSource;
-            TextBox textbox = iconComboBoxs.Template.FindName("EditableTextBox", iconComboBoxs) as TextBox;
-            textbox.Text = HideInfomationOption.ItemText;
+            ComboBox textComboBox = sender as ComboBox;
+            textComboBox.ItemsSource = MainWindow.hide_flags_source;
         }
 
         /// <summary>

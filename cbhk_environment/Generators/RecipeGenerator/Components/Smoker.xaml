@@ -30,7 +30,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Image Loaded="BackgroundLoaded" Source="/cbhk_environment;component/resources/cbhk_form/images/smoker.png" />
+            <Image Loaded="BackgroundLoaded" />
             <Border
                 Grid.Row="0"
                 Grid.Column="0"
@@ -78,7 +78,6 @@
                     FontWeight="Bold"
                     IsChecked="False"
                     Loaded="MultipleModeLoaded"
-                    SelectedBackground="#FF226A82"
                     Style="{DynamicResource TextToggleButtonsStyle}" />
                 <CustomControls:IconTextButtons
                     Width="25"

@@ -105,7 +105,6 @@
                     Cursor="Hand"
                     FlowDirection="LeftToRight"
                     Foreground="White"
-                    Style="{StaticResource TextMenuItem}"
                     ToolTip="切换版本"
                     ToolTipService.InitialShowDelay="0">
                     <MenuItem.Header>
@@ -133,7 +132,6 @@
                         FontSize="20"
                         Foreground="White"
                         IsChecked="{Binding Version1_12, Mode=TwoWay}"
-                        SelectedBackground="Gray"
                         Style="{StaticResource TextToggleButtonsStyle}" />
                     <CustomControls:TextToggleButtons
                         HorizontalAlignment="Stretch"
@@ -144,7 +142,6 @@
                         FontSize="20"
                         Foreground="White"
                         IsChecked="{Binding Version1_13, Mode=TwoWay}"
-                        SelectedBackground="Gray"
                         Style="{StaticResource TextToggleButtonsStyle}" />
                 </MenuItem>
             </Menu>
@@ -227,29 +224,27 @@
                             VerticalAlignment="Center"
                             FontSize="30"
                             Text="种类" />
-                        <CustomControls:TextComboBoxs
+                        <ComboBox
                             Width="250"
                             Height="35"
                             Margin="0,0,5,0"
                             HorizontalAlignment="Left"
                             AllowDrop="False"
-                            ArrowBackground="White"
                             FontSize="25"
-                            Foreground="Black"
                             SelectedItem="{Binding VillagerType, Mode=TwoWay}"
-                            Style="{DynamicResource TextComboBox}">
+                            Style="{DynamicResource TextComboBoxStyle}">
                             <ity:Interaction.Triggers>
                                 <ity:EventTrigger EventName="Loaded">
                                     <itn:CallMethodAction MethodName="VillagerTypeLoaded" TargetObject="{Binding}" />
                                 </ity:EventTrigger>
                             </ity:Interaction.Triggers>
-                        </CustomControls:TextComboBoxs>
+                        </ComboBox>
                         <TextBlock
                             Margin="0,0,5,0"
                             VerticalAlignment="Center"
                             FontSize="30"
                             Text="职业" />
-                        <CustomControls:TextComboBoxs
+                        <ComboBox
                             Width="250"
                             Height="35"
                             Margin="0,0,5,0"
@@ -257,19 +252,19 @@
                             AllowDrop="False"
                             FontSize="25"
                             SelectedItem="{Binding VillagerProfessionType, Mode=TwoWay}"
-                            Style="{DynamicResource TextComboBox}">
+                            Style="{DynamicResource TextComboBoxStyle}">
                             <ity:Interaction.Triggers>
                                 <ity:EventTrigger EventName="Loaded">
                                     <itn:CallMethodAction MethodName="VillagerProfessionTypeLoaded" TargetObject="{Binding}" />
                                 </ity:EventTrigger>
                             </ity:Interaction.Triggers>
-                        </CustomControls:TextComboBoxs>
+                        </ComboBox>
                         <TextBlock
                             Margin="0,0,5,0"
                             VerticalAlignment="Center"
                             FontSize="30"
                             Text="交易等级" />
-                        <CustomControls:TextComboBoxs
+                        <ComboBox
                             Width="80"
                             Height="35"
                             Margin="0,0,5,0"
@@ -277,13 +272,13 @@
                             AllowDrop="False"
                             FontSize="25"
                             SelectedItem="{Binding VillagerLevel, Mode=TwoWay}"
-                            Style="{DynamicResource TextComboBox}">
+                            Style="{DynamicResource TextComboBoxStyle}">
                             <ity:Interaction.Triggers>
                                 <ity:EventTrigger EventName="Loaded">
                                     <itn:CallMethodAction MethodName="VillagerLevelLoaded" TargetObject="{Binding}" />
                                 </ity:EventTrigger>
                             </ity:Interaction.Triggers>
-                        </CustomControls:TextComboBoxs>
+                        </ComboBox>
                         <CustomControls:TextToggleButtons
                             Height="35"
                             HorizontalAlignment="Stretch"
@@ -293,7 +288,6 @@
                             Cursor="Hand"
                             FontSize="20"
                             IsChecked="{Binding Willing, Mode=TwoWay}"
-                            SelectedBackground="Gray"
                             Style="{DynamicResource TextToggleButtonsStyle}" />
                         <CustomControls:TextToggleButtons
                             Height="35"
@@ -304,7 +298,6 @@
                             Cursor="Hand"
                             FontSize="20"
                             IsChecked="{Binding CanEditGossips, Mode=TwoWay}"
-                            SelectedBackground="Gray"
                             Style="{DynamicResource TextToggleButtonsStyle}" />
                         <CustomControls:TextToggleButtons
                             Height="35"
@@ -315,7 +308,6 @@
                             Cursor="Hand"
                             FontSize="20"
                             IsChecked="{Binding CanEditBrain, Mode=TwoWay}"
-                            SelectedBackground="Gray"
                             Style="{DynamicResource TextToggleButtonsStyle}" />
                     </DockPanel>
                     <DockPanel
@@ -499,8 +491,7 @@
                                                 BorderThickness="0"
                                                 FontSize="15"
                                                 Foreground="White"
-                                                SelectedItem="{Binding MeetingPointDimension, Mode=TwoWay}"
-                                                Style="{DynamicResource TextComboBox}">
+                                                SelectedItem="{Binding MeetingPointDimension, Mode=TwoWay}">
                                                 <ity:Interaction.Triggers>
                                                     <ity:EventTrigger EventName="Loaded">
                                                         <itn:CallMethodAction MethodName="DimensionTypeLoaded" TargetObject="{Binding}" />
@@ -620,8 +611,7 @@
                                                 BorderThickness="0"
                                                 FontSize="15"
                                                 Foreground="White"
-                                                SelectedItem="{Binding HomeDimension, Mode=TwoWay}"
-                                                Style="{DynamicResource TextComboBox}">
+                                                SelectedItem="{Binding HomeDimension, Mode=TwoWay}">
                                                 <ity:Interaction.Triggers>
                                                     <ity:EventTrigger EventName="Loaded">
                                                         <itn:CallMethodAction MethodName="DimensionTypeLoaded" TargetObject="{Binding}" />
@@ -736,8 +726,7 @@
                                                 BorderThickness="0"
                                                 FontSize="15"
                                                 Foreground="White"
-                                                SelectedItem="{Binding JobSiteDimension, Mode=TwoWay}"
-                                                Style="{DynamicResource TextComboBox}">
+                                                SelectedItem="{Binding JobSiteDimension, Mode=TwoWay}">
                                                 <ity:Interaction.Triggers>
                                                     <ity:EventTrigger EventName="Loaded">
                                                         <itn:CallMethodAction MethodName="DimensionTypeLoaded" TargetObject="{Binding}" />
@@ -790,8 +779,7 @@
                     <CustomControls:TextComboBoxs
                         Width="150"
                         Height="35"
-                        FontSize="25"
-                        Style="{DynamicResource TextComboBox}">
+                        FontSize="25">
                         <ity:Interaction.Triggers>
                             <ity:EventTrigger EventName="Loaded">
                                 <itn:CallMethodAction MethodName="GossipSearchTypeLoaded" TargetObject="{Binding}" />
@@ -806,10 +794,9 @@
                         Width="200"
                         Height="35"
                         Margin="5,0,0,0"
-                        Background="Transparent"
                         BorderBrush="Black"
                         FontSize="25"
-                        Foreground="Black">
+                        Foreground="White">
                         <ity:Interaction.Triggers>
                             <ity:EventTrigger EventName="TextChanged">
                                 <itn:CallMethodAction MethodName="SearchGossipsTextChanged" TargetObject="{Binding}" />
@@ -824,13 +811,12 @@
                         FontSize="25"
                         Text="搜索物品" />
                     <TextBox
-                        Width="350"
+                        Width="300"
                         Height="35"
-                        Margin="5,0,0,0"
-                        Background="Transparent"
+                        Margin="10,0,0,0"
                         BorderBrush="Black"
                         FontSize="25"
-                        Foreground="Black">
+                        Foreground="White">
                         <ity:Interaction.Triggers>
                             <ity:EventTrigger EventName="TextChanged">
                                 <itn:CallMethodAction MethodName="SearchItemTextChanged" TargetObject="{Binding}" />

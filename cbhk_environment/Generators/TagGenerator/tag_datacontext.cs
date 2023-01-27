@@ -160,21 +160,23 @@ namespace cbhk_environment.Generators.TagGenerator
                 bitmapImage = new BitmapImage(new Uri(image_path, UriKind.Absolute));
             else
                 bitmapImage = new BitmapImage();
+
+            //Style = icon_box_style,
             RichCheckBoxs iconCheckBoxs = new RichCheckBoxs()
             {
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
                 Cursor = Cursors.Hand,
                 Height = 30,
-                Style = icon_box_style,
+                Margin = new Thickness(10,0,0,0),
                 FontSize = 15,
                 Foreground = white_brush,
                 HeaderHeight = 20,
+                HeaderWidth = 20,
                 ImageWidth = 40,
                 ImageHeight = 40,
                 ContentImage = bitmapImage,
                 HeaderText = e.UserState.ToString(),
-                HeaderWidth = 20,
                 TextMargin = new Thickness(40, 0, 0, 0)
             };
             iconCheckBoxs.Click += ItemSelected;
@@ -192,6 +194,7 @@ namespace cbhk_environment.Generators.TagGenerator
         private void DataSourceLoadCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             checkbox_parent.Children.Remove(SkeletionGrid);
+            (checkbox_parent.Parent as ScrollViewer).IsEnabled = true;
         }
 
         /// <summary>
@@ -236,15 +239,10 @@ namespace cbhk_environment.Generators.TagGenerator
         /// <param name="e"></param>
         public void TypeFilterLoaded(object sender, RoutedEventArgs e)
         {
-            TextComboBoxs iconComboBoxs = sender as TextComboBoxs;
-            iconComboBoxs.ItemsSource = MainWindow.TypeItemSource.ItemDataSource;
-
-            iconComboBoxs.SelectedIndex = 0;
-            TextBox box = iconComboBoxs.Template.FindName("EditableTextBox", iconComboBoxs) as TextBox;
-            TextSource first = iconComboBoxs.Items[0] as TextSource;
-            box.Text = first.ItemText;
+            ComboBox comboBoxs = sender as ComboBox;
+            comboBoxs.ItemsSource = MainWindow.TypeItemSource;
             TypeLoaded = true;
-            TypeSelectionChanged(iconComboBoxs, null);
+            TypeSelectionChanged(comboBoxs, null);
         }
 
         /// <summary>

@@ -36,19 +36,19 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
 
                 #region 版本、文件类型、功能类型的默认选中项
                 if (VersionList.Count == 0)
-                    VersionList.Add(new TextSource() { ItemText = "所有版本" });
+                    VersionList.Add("所有版本");
 
                 if (FileTypeList.Count == 0)
-                    FileTypeList.Add(new TextSource() { ItemText = "所有文件类型" });
+                    FileTypeList.Add("所有文件类型");
 
                 if (FunctionTypeList.Count == 0)
-                    FunctionTypeList.Add(new TextSource() { ItemText = "所有功能类型" });
+                    FunctionTypeList.Add("所有功能类型");
                 #endregion
 
                 foreach (string version in versionList)
                 {
                     string versionString = Path.GetFileName(version);
-                    VersionList.Add(new TextSource() { ItemText = versionString });
+                    VersionList.Add(versionString);
                 }
 
                 DefaultVersion = VersionList.Last();
@@ -117,17 +117,17 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         /// <summary>
         /// 存放版本列表
         /// </summary>
-        public ObservableCollection<TextSource> VersionList { get; set; } = new ObservableCollection<TextSource> { };
+        public ObservableCollection<string> VersionList { get; set; } = new ObservableCollection<string> { };
 
         /// <summary>
         /// 存放文件类型列表
         /// </summary>
-        public ObservableCollection<TextSource> FileTypeList { get; set; } = new ObservableCollection<TextSource> { };
+        public ObservableCollection<string> FileTypeList { get; set; } = new ObservableCollection<string> { };
 
         /// <summary>
         /// 存放功能类型列表
         /// </summary>
-        public ObservableCollection<TextSource> FunctionTypeList { get; set; } = new ObservableCollection<TextSource> { };
+        public ObservableCollection<string> FunctionTypeList { get; set; } = new ObservableCollection<string> { };
 
         /// <summary>
         /// 已选择的版本
@@ -143,8 +143,8 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         #endregion
 
         #region 存储已选择的版本
-        private static TextSource selectedVersion = null;
-        public static TextSource SelectedVersion
+        private static string selectedVersion = null;
+        public static string SelectedVersion
         {
             get { return selectedVersion; }
             set
@@ -155,8 +155,8 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         #endregion
 
         #region 存储已选择的文件类型
-        private static TextSource selectedFileType = null;
-        public static TextSource SelectedFileType
+        private static string selectedFileType = null;
+        public static string SelectedFileType
         {
             get { return selectedFileType; }
             set
@@ -167,8 +167,8 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         #endregion
 
         #region 存储默认版本
-        private static TextSource defaultVersion = null;
-        public static TextSource DefaultVersion
+        private static string defaultVersion = null;
+        public static string DefaultVersion
         {
             get { return defaultVersion; }
             set
@@ -179,8 +179,8 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         #endregion
 
         #region 存储默认文件类型
-        private static TextSource defaultFileType = null;
-        public static TextSource DefaultFileType
+        private static string defaultFileType = null;
+        public static string DefaultFileType
         {
             get { return defaultFileType; }
             set
@@ -197,9 +197,9 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         #endregion
 
         #region 存储版本、文件类型和功能类型选择框的引用
-        TextComboBoxs VersionSelector = null;
-        TextComboBoxs FileTypeSelector = null;
-        TextComboBoxs FunctionTypeSelector = null;
+        ComboBox VersionSelector = null;
+        ComboBox FileTypeSelector = null;
+        ComboBox FunctionTypeSelector = null;
         #endregion
 
         #region 存储所有类型的模板标签
@@ -247,13 +247,13 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         private void TemplateNextStepCommand(Page page)
         {
             //获取已选择的版本和文件类型
-            SelectedVersionString = SelectedVersion.ItemText;
-            SelectedFileTypeString = SelectedFileType.ItemText.ToLower();
+            SelectedVersionString = SelectedVersion;
+            SelectedFileTypeString = SelectedFileType.ToLower();
 
             if (SelectedVersionString == "所有版本")
-                SelectedVersionString = DefaultVersion.ItemText;
+                SelectedVersionString = DefaultVersion;
             if (SelectedFileTypeString == "所有文件类型")
-                SelectedFileTypeString = DefaultFileType.ItemText.ToLower();
+                SelectedFileTypeString = DefaultFileType.ToLower();
 
             foreach (var selectedTemplateItemList in SelectedTemplateItemList)
             {
@@ -384,7 +384,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         /// <param name="e"></param>
         public void VersionSelectorLoaded(object sender, RoutedEventArgs e)
         {
-            VersionSelector = sender as TextComboBoxs;
+            VersionSelector = sender as ComboBox;
         }
 
         /// <summary>
@@ -394,7 +394,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         /// <param name="e"></param>
         public void FileTypeSelectorLoaded(object sender, RoutedEventArgs e)
         {
-            FileTypeSelector = sender as TextComboBoxs;
+            FileTypeSelector = sender as ComboBox;
         }
 
         /// <summary>
@@ -404,7 +404,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         /// <param name="e"></param>
         public void FunctionSelectorLoaded(object sender, RoutedEventArgs e)
         {
-            FunctionTypeSelector = sender as TextComboBoxs;
+            FunctionTypeSelector = sender as ComboBox;
         }
 
         /// <summary>
@@ -464,20 +464,20 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
             //当前选中的版本
             string CurrentVersion = "";
             if (VersionSelector != null && VersionSelector.SelectedItem != null && VersionSelector.SelectedIndex != 0)
-                CurrentVersion = (VersionSelector.SelectedItem as TextSource).ItemText;
+                CurrentVersion = VersionSelector.SelectedItem.ToString();
             else
                 IgnoreVersion = true;
             //当前选中文件类型
             string CurrentFileType = "";
             if (FileTypeSelector != null && FileTypeSelector.SelectedItem != null && FileTypeSelector.SelectedIndex != 0)
-                CurrentFileType = (FileTypeSelector.SelectedItem as TextSource).ItemText;
+                CurrentFileType = FileTypeSelector.SelectedItem.ToString();
             else
                 IgnoreFileType = true;
 
             //当前选中功能类型
             string CurrentFunctionType = "";
             if (FunctionTypeSelector != null && FunctionTypeSelector.SelectedItem != null && FunctionTypeSelector.SelectedIndex != 0 )
-                CurrentFunctionType = (FunctionTypeSelector.SelectedItem as TextSource).ItemText;
+                CurrentFunctionType = FunctionTypeSelector.SelectedItem.ToString();
             else
                 IgnoreFunctionType = true;
 
@@ -506,9 +506,9 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
                     string CurrentFileNameWithOutExtension = TemplateDataFilePath + "\\" + CurrentVersion + "\\" + templateItem.TemplateID+".";
 
                     ItemCollection ExtensionList = FileTypeSelector.Items;
-                    foreach (TextSource extension in ExtensionList)
+                    foreach (string extension in ExtensionList)
                     {
-                        string extensionString = extension.ItemText.ToLower();
+                        string extensionString = extension.ToLower();
                         if(File.Exists(CurrentFileNameWithOutExtension + extensionString))
                         {
                             SameVersion = true;
@@ -620,13 +620,13 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
                     string fileNameSpace = JsonScript("data.NameSpace").ToString();
 
                     #region 载入文件类型和功能类型
-                    if (FileTypeList.Where(item=>item.ItemText == FileType).Count() == 0)
+                    if (FileTypeList.Where(item=>item == FileType).Count() == 0)
                     {
-                        FileTypeList.Add(new TextSource() { ItemText = FileType });
+                        FileTypeList.Add(FileType);
                     }
-                    if (FunctionTypeList.Where(item => item.ItemText == FunctionType).Count() == 0)
+                    if (FunctionTypeList.Where(item => item == FunctionType).Count() == 0)
                     {
-                        FunctionTypeList.Add(new TextSource() { ItemText = FunctionType });
+                        FunctionTypeList.Add(FunctionType);
                     }
                     #endregion
 

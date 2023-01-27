@@ -19,19 +19,14 @@
             VerticalAlignment="Center"
             Foreground="White"
             Text="方块ID:" />
-        <CustomControls:IconComboBoxs
+        <ComboBox
             Width="250"
             HorizontalAlignment="Left"
             Background="Transparent"
             Loaded="CanPlaceOnItemLoaded"
+            SelectedIndex="0"
             SelectionChanged="CanPlaceOnItemSelectionChanged"
-            Style="{DynamicResource ComboBoxWithIcon}">
-            <CustomControls:IconComboBoxs.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <VirtualizingStackPanel />
-                </ItemsPanelTemplate>
-            </CustomControls:IconComboBoxs.ItemsPanel>
-        </CustomControls:IconComboBoxs>
+            Style="{DynamicResource IconComboBoxStyle}" />
         <CustomControls:IconTextButtons
             Width="50"
             Margin="10,0"

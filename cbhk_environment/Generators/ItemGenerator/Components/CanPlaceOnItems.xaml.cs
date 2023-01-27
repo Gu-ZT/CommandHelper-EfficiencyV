@@ -46,14 +46,7 @@ namespace cbhk_environment.Generators.ItemGenerator.Components
         private void CanPlaceOnItemLoaded(object sender, RoutedEventArgs e)
         {
             IconComboBoxs iconComboBoxs = sender as IconComboBoxs;
-            iconComboBoxs.ItemsSource = MainWindow.ItemIdSource.ItemDataSource;
-
-            iconComboBoxs.SelectedIndex = 0;
-            TextBox box = iconComboBoxs.Template.FindName("EditableTextBox", iconComboBoxs) as TextBox;
-            ItemDataGroup first = iconComboBoxs.Items[0] as ItemDataGroup;
-            box.Text = first.ItemText;
-            Image image = iconComboBoxs.Template.FindName("PART_DisplayIcon", iconComboBoxs) as Image;
-            image.Source = first.ItemImage;
+            iconComboBoxs.ItemsSource = MainWindow.ItemIdSource;
             ItemLoaded = true;
             CanPlaceOnItemSelectionChanged(iconComboBoxs, null);
         }
@@ -68,7 +61,7 @@ namespace cbhk_environment.Generators.ItemGenerator.Components
             if(ItemLoaded)
             {
                 IconComboBoxs current_box = sender as IconComboBoxs;
-                ItemDataGroup current_data = current_box.SelectedItem as ItemDataGroup;
+                IconComboBoxItem current_data = current_box.SelectedItem as IconComboBoxItem;
                 CanPlaceOnItems canPlaceOnItems = current_box.FindParent<CanPlaceOnItems>();
                 StackPanel parent = canPlaceOnItems.FindParent<StackPanel>();
                 int index = parent.Children.IndexOf(canPlaceOnItems);
@@ -81,9 +74,9 @@ namespace cbhk_environment.Generators.ItemGenerator.Components
 
                 #region 添加当前选中的成员
                 if ((item_datacontext.CanPlaceOnBlocks.Count - 1) >= 0)
-                    item_datacontext.CanPlaceOnBlocks.Insert(index, current_data.ItemText);
+                    item_datacontext.CanPlaceOnBlocks.Insert(index, current_data.ComboBoxItemText);
                 else
-                    item_datacontext.CanPlaceOnBlocks.Add(current_data.ItemText);
+                    item_datacontext.CanPlaceOnBlocks.Add(current_data.ComboBoxItemText);
                 #endregion
             }
         }

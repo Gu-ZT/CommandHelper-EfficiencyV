@@ -85,6 +85,7 @@
             </CustomControls:TextComboBoxs>
             <CustomControls:ColorNumbericUpDowns
                 x:Name="NumberBox"
+                Width="50"
                 Height="30"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"

@@ -2042,10 +2042,7 @@
                             </ity:Interaction.Triggers>
                         </Viewbox>
                     </Border>
-                    <Border
-                        Width="150"
-                        Height="225"
-                        Margin="5,0">
+                    <Border Width="150" Margin="5,0">
                         <Border.Background>
                             <ImageBrush ImageSource="/cbhk_environment;component/resources/common/images/Frame.png" />
                         </Border.Background>

@@ -136,11 +136,13 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ControlsDataContexts\ColorNumbericUpDownHander.cs" />
-    <Compile Include="ControlsDataContexts\ComboBoxItemSource.cs" />
+    <Compile Include="ControlsDataContexts\ComboBoxSearchDataContext.cs" />
+    <Compile Include="ControlsDataContexts\ConvertIconComboBoxItemImage.cs" />
+    <Compile Include="ControlsDataContexts\ConvertIconComboBoxItemText.cs" />
     <Compile Include="ControlsDataContexts\ResizableTextBoxHander.cs" />
     <Compile Include="ControlsDataContexts\RichCheckBoxListItemSource.cs" />
     <Compile Include="ControlsDataContexts\StringToFloat.cs" />
-    <Compile Include="ControlsDataContexts\TextComboBoxItemSource.cs" />
+    <Compile Include="ControlsDataContexts\TextComboBoxSearchDataContext.cs" />
     <Compile Include="ControlsDataContexts\TreeViewLineConverter.cs" />
     <Compile Include="CustomControls\CollapsableGrids.cs" />
     <Compile Include="CustomControls\ColorCheckBoxs.cs" />
@@ -458,6 +460,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="ControlsDictionaries\TabControlWithScrollBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ControlsDictionaries\TextBoxDefaultStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

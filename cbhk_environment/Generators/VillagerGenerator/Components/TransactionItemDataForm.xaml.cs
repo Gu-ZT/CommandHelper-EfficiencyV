@@ -34,7 +34,7 @@ namespace cbhk_environment.Generators.VillagerGenerator.Components
         //{
         //    TextComboBoxs textComboBoxs = sender as TextComboBoxs;
         //    TextBox box = textComboBoxs.Template.FindName("EditableTextBox", textComboBoxs) as TextBox;
-        //    box.Text = (textComboBoxs.SelectedItem as ControlsDataContexts.TextSource).ItemText;
+        //    box.Text = (textComboBoxs.SelectedItem as ControlsDataContexts.string).ItemText;
         //}
 
         /// <summary>

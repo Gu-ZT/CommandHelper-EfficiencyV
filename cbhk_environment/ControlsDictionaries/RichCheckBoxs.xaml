@@ -3,6 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:CustomControls="clr-namespace:cbhk_environment.CustomControls">
 
+    <ImageBrush x:Key="UnChecked" ImageSource="/cbhk_environment;component/resources/common/images/CheckboxEmpty.png" />
+    <ImageBrush x:Key="Checked" ImageSource="/cbhk_environment;component/resources/common/images/CheckboxChecked.png" />
     <SolidColorBrush x:Key="OptionMark.Static.Background" Color="#FFFFFFFF" />
     <SolidColorBrush x:Key="OptionMark.Static.Border" Color="#FF707070" />
     <SolidColorBrush x:Key="OptionMark.Static.Glyph" Color="#FF212121" />
@@ -15,13 +17,13 @@
     <SolidColorBrush x:Key="OptionMark.Disabled.Background" Color="#FFE6E6E6" />
     <SolidColorBrush x:Key="OptionMark.Disabled.Border" Color="#FFBCBCBC" />
     <SolidColorBrush x:Key="OptionMark.Disabled.Glyph" Color="Gray" />
-    <Style x:Key="RichCheckBox" TargetType="{x:Type CustomControls:RichCheckBoxs}">
+    <Style TargetType="{x:Type CustomControls:RichCheckBoxs}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="Cursor" Value="Hand" />
-        <Setter Property="Background" Value="{StaticResource OptionMark.Static.Background}" />
+        <!--<Setter Property="Background" Value="{StaticResource OptionMark.Static.Background}" />-->
         <Setter Property="BorderBrush" Value="{StaticResource OptionMark.Static.Border}" />
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <!--<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />-->
+        <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type CustomControls:RichCheckBoxs}">
@@ -44,11 +46,10 @@
                             Height="{TemplateBinding HeaderHeight}"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
-                            Background="{TemplateBinding Background}"
+                            Background="{StaticResource UnChecked}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="5">
-                            <Viewbox HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                            <!--<Viewbox HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <Viewbox.RenderTransform>
                                     <RotateTransform Angle="-45" />
                                 </Viewbox.RenderTransform>
@@ -67,7 +68,7 @@
                                         Fill="{StaticResource OptionMark.Static.Glyph}"
                                         Opacity="0" />
                                 </Grid>
-                            </Viewbox>
+                            </Viewbox>-->
                         </Border>
                         <Image
                             x:Name="ConentImage"
@@ -127,7 +128,7 @@
                         <Trigger Property="ImageVisibility" Value="Visible">
                             <Setter TargetName="ConentImage" Property="Visibility" Value="Visible" />
                         </Trigger>
-                        <Trigger Property="HasContent" Value="true">
+                        <!--<Trigger Property="HasContent" Value="true">
                             <Setter Property="FocusVisualStyle" Value="{x:Null}" />
                             <Setter Property="Padding" Value="4,-1,0,0" />
                         </Trigger>
@@ -148,15 +149,15 @@
                             <Setter TargetName="checkBoxBorder" Property="BorderBrush" Value="{StaticResource OptionMark.Pressed.Border}" />
                             <Setter TargetName="optionMark" Property="Fill" Value="{StaticResource OptionMark.Pressed.Glyph}" />
                             <Setter TargetName="indeterminateMark" Property="Fill" Value="{StaticResource OptionMark.Pressed.Glyph}" />
-                        </Trigger>
+                        </Trigger>-->
                         <Trigger Property="IsChecked" Value="true">
-                            <Setter TargetName="optionMark" Property="Opacity" Value="1" />
-                            <Setter TargetName="indeterminateMark" Property="Opacity" Value="0" />
+                            <Setter TargetName="checkBoxBorder" Property="Background" Value="{StaticResource Checked}" />
+                            <!--<Setter TargetName="indeterminateMark" Property="Opacity" Value="0" />-->
                         </Trigger>
-                        <Trigger Property="IsChecked" Value="{x:Null}">
-                            <Setter TargetName="optionMark" Property="Opacity" Value="0" />
-                            <Setter TargetName="indeterminateMark" Property="Opacity" Value="1" />
-                        </Trigger>
+                        <!--<Trigger Property="IsChecked" Value="{x:Null}">-->
+                        <!--<Setter TargetName="checkBoxBorder" Property="Background" Value="{StaticResource UnChecked}" />-->
+                        <!--<Setter TargetName="indeterminateMark" Property="Opacity" Value="1" />-->
+                        <!--</Trigger>-->
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

@@ -149,7 +149,7 @@
                 </CustomControls:TextButtons>
             </DockPanel>
             <DockPanel Margin="0,0,0,20">
-                <CustomControls:TextComboBoxs
+                <ComboBox
                     Width="140"
                     Height="30"
                     Margin="0,0,25,0"
@@ -157,10 +157,9 @@
                     VerticalAlignment="Center"
                     Background="#1F1F1F"
                     FontSize="20"
-                    Foreground="White"
                     ItemsSource="{Binding VersionList, Mode=OneWay}"
                     SelectedItem="{Binding SelectedVersion, Mode=OneWayToSource}"
-                    Style="{DynamicResource TextComboBox}">
+                    Style="{DynamicResource TextComboBoxStyle}">
                     <ity:Interaction.Triggers>
                         <ity:EventTrigger EventName="SelectionChanged">
                             <itn:CallMethodAction MethodName="TemplateVersionChanged" TargetObject="{Binding}" />
@@ -169,8 +168,8 @@
                             <itn:CallMethodAction MethodName="VersionSelectorLoaded" TargetObject="{Binding}" />
                         </ity:EventTrigger>
                     </ity:Interaction.Triggers>
-                </CustomControls:TextComboBoxs>
-                <CustomControls:TextComboBoxs
+                </ComboBox>
+                <ComboBox
                     Width="140"
                     Height="30"
                     Margin="0,0,25,0"
@@ -181,7 +180,7 @@
                     Foreground="White"
                     ItemsSource="{Binding FileTypeList, Mode=OneWay}"
                     SelectedItem="{Binding SelectedFileType, Mode=OneWayToSource}"
-                    Style="{DynamicResource TextComboBox}">
+                    Style="{DynamicResource TextComboBoxStyle}">
                     <ity:Interaction.Triggers>
                         <ity:EventTrigger EventName="SelectionChanged">
                             <itn:CallMethodAction MethodName="TemplateFileTypeChanged" TargetObject="{Binding}" />
@@ -190,8 +189,8 @@
                             <itn:CallMethodAction MethodName="FileTypeSelectorLoaded" TargetObject="{Binding}" />
                         </ity:EventTrigger>
                     </ity:Interaction.Triggers>
-                </CustomControls:TextComboBoxs>
-                <CustomControls:TextComboBoxs
+                </ComboBox>
+                <ComboBox
                     Width="140"
                     Height="30"
                     HorizontalAlignment="Left"
@@ -200,7 +199,7 @@
                     FontSize="20"
                     Foreground="White"
                     ItemsSource="{Binding FunctionTypeList, Mode=OneWay}"
-                    Style="{DynamicResource TextComboBox}">
+                    Style="{DynamicResource TextComboBoxStyle}">
                     <ity:Interaction.Triggers>
                         <ity:EventTrigger EventName="SelectionChanged">
                             <itn:CallMethodAction MethodName="TemplateFunctionTypeChanged" TargetObject="{Binding}" />
@@ -209,7 +208,7 @@
                             <itn:CallMethodAction MethodName="FunctionSelectorLoaded" TargetObject="{Binding}" />
                         </ity:EventTrigger>
                     </ity:Interaction.Triggers>
-                </CustomControls:TextComboBoxs>
+                </ComboBox>
             </DockPanel>
             <DockPanel Margin="0,0,0,10">
                 <CustomControls:TextCheckBoxs

@@ -18,9 +18,6 @@
         MouseEnter="WhiteBorder"
         MouseLeave="BlackBorder">
         <Grid Loaded="BackgroundButtonLoaded" MouseLeftButtonDown="CloseNumberModifyMouseLeftButtonDown">
-            <Grid.Background>
-                <ImageBrush ImageSource="/cbhk_environment;component/resources/common/images/background_button.png" />
-            </Grid.Background>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
@@ -177,8 +174,7 @@
                 Height="95"
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
-                Loaded="ArrowLoaded"
-                Source="/cbhk_environment;component/resources/common/images/arrow.png" />
+                Loaded="ArrowLoaded" />
             <Image
                 x:Name="Sell"
                 Grid.Row="0"

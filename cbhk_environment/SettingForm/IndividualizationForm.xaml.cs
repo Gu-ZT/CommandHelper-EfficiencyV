@@ -19,7 +19,11 @@ namespace cbhk_environment.SettingForm
         /// <param name="e"></param>
         private void SetLinks(object sender, RoutedEventArgs e)
         {
+            SetRoatationChart setRoatationChart = new SetRoatationChart();
+            if(setRoatationChart.ShowDialog() == true)
+            {
 
+            }
         }
 
         private void SettingForm_Closing(object sender, System.ComponentModel.CancelEventArgs e)

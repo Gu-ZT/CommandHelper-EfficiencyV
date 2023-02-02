@@ -168,6 +168,7 @@
     <Compile Include="CustomControls\RichRun.cs" />
     <Compile Include="CustomControls\RichTabItems.cs" />
     <Compile Include="CustomControls\RichTreeViewItems.cs" />
+    <Compile Include="CustomControls\RotationChartSetItem.cs" />
     <Compile Include="CustomControls\RotationChart\ImageWithBorder.xaml.cs">
       <DependentUpon>ImageWithBorder.xaml</DependentUpon>
     </Compile>
@@ -365,6 +366,9 @@
     <Compile Include="GenerateResultDisplayer\Displayer.xaml.cs">
       <DependentUpon>Displayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SettingForm\SetRoatationChart.xaml.cs">
+      <DependentUpon>SetRoatationChart.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WindowDictionaries\CommonWindow.cs" />
     <Compile Include="WindowDictionaries\TransitioningContentControl.cs" />
     <Compile Include="WindowDictionaries\VisualStates.cs" />
@@ -463,6 +467,10 @@
     <Page Include="ControlsDictionaries\RichTreeViewItems.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ControlsDictionaries\RotationChartSetItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ControlsDictionaries\SimpaleScrollViewers.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -674,6 +682,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SettingForm\IndividualizationForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingForm\SetRoatationChart.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

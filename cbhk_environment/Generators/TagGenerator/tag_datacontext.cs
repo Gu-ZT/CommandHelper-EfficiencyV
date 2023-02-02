@@ -1,27 +1,19 @@
-﻿using cbhk_environment.ControlsDataContexts;
-using cbhk_environment.CustomControls;
+﻿using cbhk_environment.CustomControls;
 using cbhk_environment.GeneralTools;
-using cbhk_environment.Generators.ItemGenerator;
 using cbhk_environment.WindowDictionaries;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MSScriptControl;
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Management.Instrumentation;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Windows.Services.Maps;
 using WK.Libraries.BetterFolderBrowserNS;
 
 namespace cbhk_environment.Generators.TagGenerator
@@ -73,32 +65,43 @@ namespace cbhk_environment.Generators.TagGenerator
         }
         #endregion
 
-        //需要被动态定位的RichCheckBox
-        private RichCheckBoxs TargetBox;
-        //存储复选框样式
-        Style icon_box_style = null;
         //存储最终生成的列表
         List<string> BlocksAndItems = new List<string> { };
+        List<string> Entities = new List<string>();
         //保存复选框所在父级栈表
-        StackPanel checkbox_parent = null;
-        //保存搜索框引用
-        TextBox search_box = null;
+        ItemsControl checkbox_parent = null;
+        //保存搜索框的值引用
+        private string searchText = "";
+        public string SearchText
+        {
+            get
+            {
+                return searchText;
+            }
+            set
+            {
+                searchText = value;
+                OnPropertyChanged();
+            }
+        }
         //保存所有RichCheckBox的键
         List<string> BlockAndItemKeys = new List<string> { };
         //保存所有可视化成员
         List<RichCheckBoxs> VisibleCheckBoxs = new List<RichCheckBoxs> { };
-        //已加载类型过滤列表
-        bool TypeLoaded = false;
-        //异步执行数据读取逻辑
-        BackgroundWorker DataSourceReader = new BackgroundWorker();
-        //骨架屏所在的容器
-        Grid SkeletionGrid = null;
-        //模板样式载体
-        RichCheckBoxs style_template = null;
-        //物品加载标记
-        bool ItemLoaded = false;
-        //实体加载标记
-        bool EntityLoaded = false;
+
+        private ObservableCollection<RichCheckBoxs> tagItems = new ObservableCollection<RichCheckBoxs> { };
+        public ObservableCollection<RichCheckBoxs> TagItems
+        {
+            get
+            {
+                return tagItems;
+            }
+            set
+            {
+                tagItems = value;
+                OnPropertyChanged();
+            }
+        }
 
         public tag_datacontext()
         {
@@ -115,121 +118,37 @@ namespace cbhk_environment.Generators.TagGenerator
         /// <param name="e"></param>
         public void TagStackPanelLoaded(object sender, RoutedEventArgs e)
         {
-            checkbox_parent = sender as StackPanel;
-
-            #region 保存复选框样式
-            style_template = checkbox_parent.Children[1] as RichCheckBoxs;
-            icon_box_style = style_template.Style;
-            SkeletionGrid = checkbox_parent.Children[0] as Grid;
-            #endregion
-
-            checkbox_parent.Children.RemoveAt(1);
-            //开始读取数据
-            InitializeBackgroundWorker();
-            DataSourceReader.RunWorkerAsync();
-        }
-
-        /// <summary>
-        /// 初始化加载进程
-        /// </summary>
-        private void InitializeBackgroundWorker()
-        {
-            //bool类型，指示DataSourceReader是否可以报告进度更新。当该属性值为True时，将可以成功调用ReportProgress方法
-            DataSourceReader.WorkerReportsProgress = true;
-            //bool类型，指示DataSourceReader是否支持异步取消操作。当该属性值为True是，将可以成功调用CancelAsync方法
-            DataSourceReader.WorkerSupportsCancellation = true;
-            //执行RunWorkerAsync方法后触发DoWork，将异步执行backgroundWorker_DoWork方法中的代码
-            DataSourceReader.DoWork += new DoWorkEventHandler(ReadDataSource);
-            //执行ReportProgress方法后触发ProgressChanged，将执行ProgressChanged方法中的代码
-            DataSourceReader.ProgressChanged += InitUIData;//object sender, ProgressChangedEventArgs e
-            //异步操作完成或取消时执行的操作，当调用DoWork事件执行完成时触发
-            DataSourceReader.RunWorkerCompleted += new RunWorkerCompletedEventHandler(DataSourceLoadCompleted);
-        }
-
-        /// <summary>
-        /// 加载UI
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void InitUIData(object sender, ProgressChangedEventArgs e)
-        {
-            SolidColorBrush white_brush = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-            BitmapImage bitmapImage = null;
-            string image_path = AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + e.UserState.ToString().Split(' ')[0] + ".png";
-            if (File.Exists(image_path))
-                bitmapImage = new BitmapImage(new Uri(image_path, UriKind.Absolute));
-            else
-                bitmapImage = new BitmapImage();
-
-            //Style = icon_box_style,
-            RichCheckBoxs iconCheckBoxs = new RichCheckBoxs()
+            checkbox_parent = sender as ItemsControl;
+            foreach (var item in MainWindow.TagSpawnerItemCheckBoxList)
             {
-                HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Top,
-                Cursor = Cursors.Hand,
-                Height = 30,
-                Margin = new Thickness(10,0,0,0),
-                FontSize = 15,
-                Foreground = white_brush,
-                HeaderHeight = 20,
-                HeaderWidth = 20,
-                ImageWidth = 40,
-                ImageHeight = 40,
-                ContentImage = bitmapImage,
-                HeaderText = e.UserState.ToString(),
-                TextMargin = new Thickness(40, 0, 0, 0)
-            };
-            iconCheckBoxs.Click += ItemSelected;
-            iconCheckBoxs.Checked += ItemChecked;
-            iconCheckBoxs.Unchecked += ItemUnChecked;
-            checkbox_parent.Children.Add(iconCheckBoxs);
-            Panel.SetZIndex(iconCheckBoxs, 0);
-        }
-
-        /// <summary>
-        /// 加载完毕后删除骨架屏
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void DataSourceLoadCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            checkbox_parent.Children.Remove(SkeletionGrid);
-            (checkbox_parent.Parent as ScrollViewer).IsEnabled = true;
-        }
-
-        /// <summary>
-        /// 加载数据
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ReadDataSource(object sender, DoWorkEventArgs e)
-        {
-            #region 加载物品
-            foreach (var item in MainWindow.item_database)
-            {
-                string id_and_name = item.Key.Replace(".", " ");
-                if (!BlockAndItemKeys.Contains(id_and_name))
-                {
-                    Thread.Sleep(5);
-                    BlockAndItemKeys.Add(id_and_name);
-                    DataSourceReader.ReportProgress(0, id_and_name);
-                }
+                item.Checked += ItemChecked;
+                item.Unchecked += ItemUnChecked;
+                item.MouseEnter += ItemMouseEnter;
+                TagItems.Add(item);
+                BlockAndItemKeys.Add(item.HeaderText);
             }
-            ItemLoaded = true;
-            #endregion
-
-            #region 加载实体
-            foreach (var item in MainWindow.entity_database)
+            foreach (var item in MainWindow.EntityCheckBoxList)
             {
-                string id_and_name = item.Key.Replace(".", " ");
-                if (!BlockAndItemKeys.Contains(id_and_name))
-                {
-                    BlockAndItemKeys.Add(id_and_name);
-                    DataSourceReader.ReportProgress(0, id_and_name);
-                }
+                item.Checked += ItemChecked;
+                item.Unchecked += ItemUnChecked;
+                item.MouseEnter += ItemMouseEnter;
+                TagItems.Add(item);
+                BlockAndItemKeys.Add(item.HeaderText);
             }
-            EntityLoaded = true;
-            #endregion
+            checkbox_parent.ItemsSource = TagItems;
+        }
+
+        /// <summary>
+        /// 鼠标移入时加载图像
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ItemMouseEnter(object sender, MouseEventArgs e)
+        {
+            RichCheckBoxs richCheckBoxs = sender as RichCheckBoxs;
+            string imagePath = richCheckBoxs.Tag.ToString();
+            if (File.Exists(imagePath) && richCheckBoxs.ContentImage == null)
+            richCheckBoxs.ContentImage = new BitmapImage(new Uri(imagePath, UriKind.Absolute));
         }
 
         /// <summary>
@@ -241,8 +160,6 @@ namespace cbhk_environment.Generators.TagGenerator
         {
             ComboBox comboBoxs = sender as ComboBox;
             comboBoxs.ItemsSource = MainWindow.TypeItemSource;
-            TypeLoaded = true;
-            TypeSelectionChanged(comboBoxs, null);
         }
 
         /// <summary>
@@ -252,10 +169,6 @@ namespace cbhk_environment.Generators.TagGenerator
         /// <param name="e"></param>
         public void TypeSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (TypeLoaded)
-            {
-
-            }
         }
 
         /// <summary>
@@ -266,7 +179,11 @@ namespace cbhk_environment.Generators.TagGenerator
         private void ItemUnChecked(object sender, RoutedEventArgs e)
         {
             RichCheckBoxs richCheckBoxs = sender as RichCheckBoxs;
+            if(richCheckBoxs.Uid == "Item")
             BlocksAndItems.Remove("\"minecraft:" + Regex.Match(richCheckBoxs.HeaderText.Trim(), "[a-zA-z_]+").ToString() + "\",");
+            else
+                if (richCheckBoxs.Uid == "Entity")
+                Entities.Remove("\"minecraft:" + Regex.Match(richCheckBoxs.HeaderText.Trim(), "[a-zA-z_]+").ToString() + "\",");
         }
 
         /// <summary>
@@ -277,21 +194,12 @@ namespace cbhk_environment.Generators.TagGenerator
         private void ItemChecked(object sender, RoutedEventArgs e)
         {
             RichCheckBoxs richCheckBoxs = sender as RichCheckBoxs;
-            BlocksAndItems.Add("\"minecraft:" + Regex.Match(richCheckBoxs.HeaderText.Trim(), "[a-zA-z_]+").ToString() + "\",");
-        }
 
-        /// <summary>
-        /// 成员选择事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ItemSelected(object sender, RoutedEventArgs e)
-        {
-            RichCheckBoxs richCheckBoxs = sender as RichCheckBoxs;
-            if(richCheckBoxs.IsChecked.Value)
-            BlocksAndItems.Add("\"minecraft:"+Regex.Match(richCheckBoxs.HeaderText.Trim(), "[a-zA-z_]+").ToString()+"\",");
+            if (richCheckBoxs.Uid == "Item")
+                BlocksAndItems.Add("\"minecraft:" + Regex.Match(richCheckBoxs.HeaderText.Trim(), "[a-zA-z_]+").ToString() + "\",");
             else
-                BlocksAndItems.Remove("\"minecraft:" + Regex.Match(richCheckBoxs.HeaderText.Trim(), "[a-zA-z_]+").ToString()+"\",");
+                if (richCheckBoxs.Uid == "Entity")
+                Entities.Add("\"minecraft:" + Regex.Match(richCheckBoxs.HeaderText.Trim(), "[a-zA-z_]+").ToString() + "\",");
         }
 
         /// <summary>
@@ -313,7 +221,8 @@ namespace cbhk_environment.Generators.TagGenerator
         /// </summary>
         private void run_command()
         {
-            string result = string.Join("\r\n",BlocksAndItems).TrimEnd(',');
+            MessageBox.Show(SearchText);
+            string result = string.Join("\r\n",BlocksAndItems) + string.Join("\r\n",Entities).TrimEnd(',');
             result = "{\r\n  \"replace\": " + Replace.ToString().ToLower() + ",\r\n\"values\": [\r\n" + result + "  \r\n]\r\n}";
             BetterFolderBrowser folderBrowser = new BetterFolderBrowser()
             {
@@ -353,9 +262,9 @@ namespace cbhk_environment.Generators.TagGenerator
 
             if (VisibleCheckBoxs.Count == 0)
             {
-                for (int i = 0; i < checkbox_parent.Children.Count; i++)
+                foreach (RichCheckBoxs item in checkbox_parent.Items)
                 {
-                    (checkbox_parent.Children[i] as RichCheckBoxs).IsChecked = value;
+                    item.IsChecked = true;
                 }
             }
             else
@@ -374,9 +283,9 @@ namespace cbhk_environment.Generators.TagGenerator
         {
             if (VisibleCheckBoxs.Count == 0)
             {
-                foreach (RichCheckBoxs item in checkbox_parent.Children)
+                foreach (RichCheckBoxs item in checkbox_parent.Items)
                 {
-                    item.IsChecked = !item.IsChecked;
+                    item.IsChecked = !item.IsChecked.Value;
                 }
             }
             else
@@ -386,17 +295,17 @@ namespace cbhk_environment.Generators.TagGenerator
                 }
         }
 
-        public void SearchBoxLoaded(object sender, RoutedEventArgs e)
-        {
-            search_box = sender as TextBox;
-        }
-
-        public void SearchBoxKeyUp(object sender, KeyEventArgs e)
+        /// <summary>
+        /// 搜索服务
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void SearchBoxKeyUp(object sender, TextChangedEventArgs e)
         {
             #region 为空则恢复所有RichCheckBox的可见性
-            if (search_box.Text.Trim() == "")
+            if (SearchText.Trim() == "")
             {
-                foreach (RichCheckBoxs item in checkbox_parent.Children)
+                foreach (RichCheckBoxs item in checkbox_parent.Items)
                 {
                     item.Visibility = Visibility.Visible;
                 }
@@ -406,19 +315,18 @@ namespace cbhk_environment.Generators.TagGenerator
             #endregion
 
             //暂时全部隐藏
-            foreach (RichCheckBoxs item in checkbox_parent.Children)
+            foreach (RichCheckBoxs item in checkbox_parent.Items)
             {
                 item.Visibility = Visibility.Collapsed;
             }
-
-            List<string> result = BlockAndItemKeys.Where(item => item.Contains(search_box.Text) || search_box.Text.Contains(item)).Distinct().ToList();
-            //更当前新可视化成员列表
+            List<string> result = BlockAndItemKeys.Where(item => item.StartsWith(SearchText)).Distinct().ToList();
+            //更新当前新可视化成员列表
             VisibleCheckBoxs.Clear();
 
             foreach (string item in result)
             {
-                RichCheckBoxs box = checkbox_parent.Children[BlockAndItemKeys.IndexOf(item)] as RichCheckBoxs;
-                if(box.HeaderText.Contains(item) || item.Contains(box.HeaderText))
+                RichCheckBoxs box = checkbox_parent.Items[BlockAndItemKeys.IndexOf(item)] as RichCheckBoxs;
+                if (box.HeaderText.Contains(item) || item.Contains(box.HeaderText))
                 {
                     box.Visibility = Visibility.Visible;
                     VisibleCheckBoxs.Add(box);

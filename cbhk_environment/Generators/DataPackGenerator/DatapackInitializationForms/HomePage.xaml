@@ -21,13 +21,6 @@
                 </ity:EventTrigger>
             </ity:Interaction.Triggers>
         </CustomControls:RichTreeViewItems>
-        <CustomControls:RichTabItems Style="{DynamicResource RichTabItem}" Visibility="Collapsed">
-            <ity:Interaction.Triggers>
-                <ity:EventTrigger EventName="Loaded">
-                    <itn:CallMethodAction MethodName="RichTabItemStyleLoaded" TargetObject="{Binding}" />
-                </ity:EventTrigger>
-            </ity:Interaction.Triggers>
-        </CustomControls:RichTabItems>
 
         <Grid Panel.ZIndex="1">
             <Grid.ColumnDefinitions>
@@ -116,7 +109,7 @@
                     MaxHeight="420"
                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                     ScrollViewer.VerticalScrollBarVisibility="Auto"
-                    Style="{DynamicResource for_scrollviewer}"
+                    Style="{DynamicResource DefaultScrollViewer}"
                     Visibility="{Binding RecentItemSearchPanelVisibility, Mode=OneWay}">
                     <ItemsControl
                         MaxHeight="420"

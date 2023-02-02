@@ -161,14 +161,14 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="9*" />
             </Grid.ColumnDefinitions>
-            <ScrollViewer Grid.Column="0" Style="{DynamicResource for_scrollviewer}">
+            <ScrollViewer Grid.Column="0" Style="{DynamicResource DefaultScrollViewer}">
                 <StackPanel Orientation="Vertical">
                     <ity:Interaction.Triggers>
                         <ity:EventTrigger EventName="Loaded">
                             <itn:CallMethodAction MethodName="IconViewerLoaded" TargetObject="{Binding}" />
                         </ity:EventTrigger>
                     </ity:Interaction.Triggers>
-                    <CustomControls:TextButtons Style="{DynamicResource TextButtonsStyle}" Visibility="Collapsed" />
+                    <CustomControls:IconTextButtons Style="{DynamicResource IconTextButton}" Visibility="Collapsed" />
                 </StackPanel>
             </ScrollViewer>
             <Grid Grid.Column="1" Background="#C6C6C6">
@@ -231,10 +231,9 @@
                     Foreground="White"
                     Text="ID列表" />
                 <TextBox
-                    Width="90"
+                    Width="110"
                     Height="30"
                     HorizontalAlignment="Left"
-                    Background="Transparent"
                     BorderBrush="Black"
                     FontSize="20"
                     Foreground="White"
@@ -245,7 +244,7 @@
             <ScrollViewer
                 Grid.Row="1"
                 HorizontalAlignment="Stretch"
-                Style="{DynamicResource for_scrollviewer}"
+                Style="{DynamicResource DefaultScrollViewer}"
                 VerticalScrollBarVisibility="Auto">
                 <UniformGrid
                     Grid.Row="1"

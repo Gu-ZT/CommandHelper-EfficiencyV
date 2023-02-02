@@ -59,7 +59,7 @@ namespace cbhk_environment.Generators.RecipeGenerator
         {
             get
             {
-                string key = MainWindow.item_database.Where(item => Regex.Match(item.Key, @"[\u4e00-\u9fa5]+").ToString() == SelectItemIdSource.ComboBoxItemText).First().Key;
+                string key = MainWindow.ItemDataBase.Where(item => Regex.Match(item.Key, @"[\u4e00-\u9fa5]+").ToString() == SelectItemIdSource.ComboBoxItemText).First().Key;
                 string result = key != "" ? Regex.Match(key, @"[a-zA-Z_]+").ToString() : "";
                 return result;
             }
@@ -193,7 +193,7 @@ namespace cbhk_environment.Generators.RecipeGenerator
         public void IconViewerLoaded(object sender, RoutedEventArgs e)
         {
             StackPanel parent = sender as StackPanel;
-            Style btn_style = (parent.Children[0] as TextButtons).Style;
+            Style btn_style = (parent.Children[0] as IconTextButtons).Style;
             //获取所有配方图标文件
             string[] icon_files = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\Recipe\\images");
             for (int i = 0; i < icon_files.Length; i++)
@@ -201,16 +201,17 @@ namespace cbhk_environment.Generators.RecipeGenerator
                 string current_file_name = Path.GetFileName(icon_files[i]);
                 if (current_file_name.Contains("icon.png") && current_file_name.Length > 8)
                 {
-                    TextButtons iconTextButtons = new TextButtons
+                    IconTextButtons iconTextButtons = new IconTextButtons
                     {
-                        ThicknessBackground = new BitmapImage(new Uri(icon_files[i], UriKind.Absolute)),
+                        Background = new ImageBrush(new BitmapImage(new Uri(icon_files[i], UriKind.Absolute))),
+                        PressedBackground = new ImageBrush(new BitmapImage(new Uri(icon_files[i], UriKind.Absolute))),
                         Tag = icon_files[i],
                         Height = 50,
                         Width = 50,
                         BorderBrush = new SolidColorBrush(Color.FromRgb(0, 0, 0)),
                         BorderThickness = new Thickness(1),
                         Style = btn_style,
-                        ClickMode = ClickMode.Press
+                        ClickMode = ClickMode.Release
                     };
                     iconTextButtons.Click += RecipeTyleSwitcher;
                     parent.Children.Add(iconTextButtons);
@@ -225,7 +226,7 @@ namespace cbhk_environment.Generators.RecipeGenerator
         /// <param name="e"></param>
         private void RecipeTyleSwitcher(object sender, RoutedEventArgs e)
         {
-            TextButtons textButtons = sender as TextButtons;
+            IconTextButtons textButtons = sender as IconTextButtons;
             foreach (var item in RecipeTypes)
             {
                 if (Path.GetFileNameWithoutExtension(textButtons.Tag.ToString()).Replace("_icon","") == item.Tag.ToString())
@@ -250,8 +251,8 @@ namespace cbhk_environment.Generators.RecipeGenerator
         /// <param name="e"></param>
         public void ItemIdsLoaded(object sender, RoutedEventArgs e)
         {
-            IconComboBoxs iconComboBoxs = sender as IconComboBoxs;
-            iconComboBoxs.ItemsSource = MainWindow.ItemIdSource;
+            ComboBox comboBoxs = sender as ComboBox;
+            comboBoxs.ItemsSource = MainWindow.ItemIdSource;
         }
 
         /// <summary>
@@ -330,7 +331,7 @@ namespace cbhk_environment.Generators.RecipeGenerator
             {
                 ComboBox box = sender as ComboBox;
                 IconComboBoxItem dataGroup = box.SelectedItem as IconComboBoxItem;
-                KeyValuePair<string, BitmapImage> a_item = MainWindow.item_database.Where(item => item.Key.Contains(dataGroup.ComboBoxItemText)).First();
+                KeyValuePair<string, BitmapImage> a_item = MainWindow.ItemDataBase.Where(item => item.Key.Contains(dataGroup.ComboBoxItemText)).First();
                 string image_name = Regex.Match(a_item.Key, @"[a-zA-Z_]+").ToString();
                 System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + image_name + ".png");
                 bitmap = ChangeBitmapSize.Magnifier(bitmap, 10);

@@ -9,9 +9,9 @@ using cbhk_environment.Generators.ItemGenerator.Components;
 using System;
 using cbhk_environment.ControlsDataContexts;
 using System.Linq;
-using cbhk_environment.GeneralTools;
 using System.Text.RegularExpressions;
 using cbhk_environment.GenerateResultDisplayer;
+using PotionTypeItems = cbhk_environment.Generators.ItemGenerator.Components.PotionTypeItems;
 
 namespace cbhk_environment.Generators.ItemGenerator
 {
@@ -22,27 +22,169 @@ namespace cbhk_environment.Generators.ItemGenerator
         public RelayCommand RunCommand { get; set; }
         #endregion
 
+        #region 编辑可破坏方块、附魔、属性等交互指令
+        public RelayCommand<FrameworkElement> AddCanDestroyBlock { get; set; }
+        public RelayCommand<FrameworkElement> AddCanPlaceOnBlock { get; set; }
+        public RelayCommand<FrameworkElement> AddEnchantment { get; set; }
+        public RelayCommand<FrameworkElement> AddAttribute { get; set; }
+        public RelayCommand<FrameworkElement> AddSpecial { get; set; }
+        public RelayCommand<FrameworkElement> ClearCanDestroyBlocks { get; set; }
+        public RelayCommand<FrameworkElement> ClearCanPlaceOnBlocks { get; set; }
+        public RelayCommand<FrameworkElement> ClearEnchantments { get; set; }
+        public RelayCommand<FrameworkElement> ClearAttributes { get; set; }
+        public RelayCommand<FrameworkElement> ClearSpecials { get; set; }
+        #endregion
+
+        #region 附魔、属性、可破坏可放置等面板引用
+        StackPanel EnchantmentPanel = null;
+        StackPanel AttributePanel = null;
+        StackPanel CanDestroyBlocksPanel = null;
+        StackPanel CanPlaceOnBlocksPanel = null;
+        StackPanel SpecialPanel = null;
+        #endregion
+
         public item_datacontext()
         {
             #region 连接指令
             ReturnCommand = new RelayCommand<CommonWindow>(return_command);
             RunCommand = new RelayCommand(run_command);
+
+            AddCanDestroyBlock = new RelayCommand<FrameworkElement>(AddCanDestroyBlockClick);
+            AddCanPlaceOnBlock = new RelayCommand<FrameworkElement>(AddCanPlaceOnBlockClick);
+            AddEnchantment = new RelayCommand<FrameworkElement>(AddEnchantmentClick);
+            AddAttribute = new RelayCommand<FrameworkElement>(AddAttributeClick);
+            AddSpecial = new RelayCommand<FrameworkElement>(AddSpecialClick);
+
+            ClearCanDestroyBlocks = new RelayCommand<FrameworkElement>(ClearCanDestroyBlockClick);
+            ClearCanPlaceOnBlocks = new RelayCommand<FrameworkElement>(ClearCanPlaceOnBlockClick);
+            ClearEnchantments = new RelayCommand<FrameworkElement>(ClearEnchantmentClick);
+            ClearAttributes = new RelayCommand<FrameworkElement>(ClearAttributeClick);
+            ClearSpecials = new RelayCommand<FrameworkElement>(ClearSpecialClick);
             #endregion
 
             #region 清除所有数据
-            CanDestroyBlocks.Clear();
-            CanPlaceOnBlocks.Clear();
-            EnchantmentIDs.Clear();
-            EnchantmentLevels.Clear();
-            MobEffectIDs.Clear();
-            MobEffectDurations.Clear();
-            MobEffectLevels.Clear();
-            AttributeIDs.Clear();
-            AttributeNames.Clear();
-            AttributeValues.Clear();
-            AttributeValueTypes.Clear();
-            AttributeSlots.Clear();
             #endregion
+        }
+
+        /// <summary>
+        /// 清空数据成员
+        /// </summary>
+        /// <param name="obj"></param>
+        private void ClearItemClick(FrameworkElement obj)
+        {
+            Accordion Accordion = obj as Accordion;
+            StackPanel stackPanel = Accordion.Content as StackPanel;
+            stackPanel.Children.Clear();
+        }
+
+        /// <summary>
+        /// 清空特殊数据
+        /// </summary>
+        /// <param name="obj"></param>
+        private void ClearSpecialClick(FrameworkElement obj)
+        {
+            ClearItemClick(obj);
+        }
+
+        /// <summary>
+        /// 清空属性数据
+        /// </summary>
+        /// <param name="obj"></param>
+        private void ClearAttributeClick(FrameworkElement obj)
+        {
+            ClearItemClick(obj);
+        }
+
+        /// <summary>
+        /// 清空附魔数据
+        /// </summary>
+        /// <param name="obj"></param>
+        private void ClearEnchantmentClick(FrameworkElement obj)
+        {
+            ClearItemClick(obj);
+        }
+
+        /// <summary>
+        /// 清空可放置方块数据
+        /// </summary>
+        /// <param name="obj"></param>
+        private void ClearCanPlaceOnBlockClick(FrameworkElement obj)
+        {
+            ClearItemClick(obj);
+        }
+
+        /// <summary>
+        /// 清空可破坏方块数据
+        /// </summary>
+        /// <param name="obj"></param>
+        private void ClearCanDestroyBlockClick(FrameworkElement obj)
+        {
+            ClearItemClick(obj);
+        }
+
+        /// <summary>
+        /// 增加特殊数据成员
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AddSpecialClick(FrameworkElement obj)
+        {
+            PotionTypeItems potionTypeItems = new PotionTypeItems();
+            Accordion Accordion = obj as Accordion;
+            StackPanel stackPanel = Accordion.Content as StackPanel;
+            stackPanel.Children.Add(potionTypeItems);
+        }
+
+        /// <summary>
+        /// 增加属性列表成员
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AddAttributeClick(FrameworkElement obj)
+        {
+            AttributeItems attributeItems = new AttributeItems();
+            Accordion Accordion = obj as Accordion;
+            StackPanel stackPanel = Accordion.Content as StackPanel;
+            stackPanel.Children.Add(attributeItems);
+        }
+
+        /// <summary>
+        /// 增加附魔列表成员
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AddEnchantmentClick(FrameworkElement obj)
+        {
+            Accordion Accordion = obj as Accordion;
+            EnchantmentItems enchantmentItems = new EnchantmentItems();
+            StackPanel stackPanel = Accordion.Content as StackPanel;
+            stackPanel.Children.Add(enchantmentItems);
+        }
+
+        /// <summary>
+        /// 增加可放置方块列表成员
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AddCanPlaceOnBlockClick(FrameworkElement obj)
+        {
+            Accordion Accordion = obj as Accordion;
+            CanPlaceOnItems canPlaceOnItems = new CanPlaceOnItems();
+            StackPanel stackPanel = Accordion.Content as StackPanel;
+            stackPanel.Children.Add(canPlaceOnItems);
+        }
+
+        /// <summary>
+        /// 增加可破坏方块列表成员
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AddCanDestroyBlockClick(FrameworkElement obj)
+        {
+            Accordion Accordion = obj as Accordion;
+            CanDestroyItems canDestroyItems = new CanDestroyItems();
+            StackPanel stackPanel = Accordion.Content as StackPanel;
+            stackPanel.Children.Add(canDestroyItems);
         }
 
         #region 覆盖生成
@@ -109,7 +251,7 @@ namespace cbhk_environment.Generators.ItemGenerator
         private void run_command()
         {
             string result = "";
-            result += UnbreakableString+ ItemDamageString + ItemDisplay + ItemHideFlags + CustomTag + CanDestroyBlockList + CanPlaceOnBlockList + EnchantmentString + AttributeModifiers + MobEffect;
+            result += UnbreakableString+ ItemDamageString + ItemDisplay + ItemHideFlags + CustomTag + CanDestroyBlockList + CanPlaceOnBlockList + EnchantmentList + AttributeModifiers + MobEffectList;
             result = result.Trim() != "" ? "give @p minecraft:" + ItemId + "{" + result.TrimEnd(',') + "} " + ItemCount : (ItemId.Trim() != "" ? "give @p minecraft:" + ItemId + " "+ (ItemCount.Trim() == "1" || ItemCount.Trim() == "0" ? "" : ItemCount) : "");
             Displayer displayer = Displayer.GetContentDisplayer();
             displayer.GeneratorResult(OverLying, new string[] { result }, new string[] { DisplayName.Trim() != "" ? DisplayName : "" }, new string[] { icon_path }, new System.Windows.Media.Media3D.Vector3D() { X = 30, Y = 30 });
@@ -117,31 +259,6 @@ namespace cbhk_environment.Generators.ItemGenerator
         }
 
         #region 运行与使用
-        //保存可放置方块列表
-        public static List<string> CanPlaceOnBlocks = new List<string> { };
-        //保存可破坏方块列表
-        public static List<string> CanDestroyBlocks = new List<string> { };
-        //保存附魔ID列表
-        public static List<string> EnchantmentIDs = new List<string> { };
-        //保存附魔等级列表
-        public static List<string> EnchantmentLevels = new List<string> { };
-        //保存药水效果ID列表
-        public static List<string> MobEffectIDs = new List<string> { };
-        //保存药水效果持续时间列表
-        public static List<string> MobEffectDurations = new List<string> { };
-        //保存药水效果等级列表
-        public static List<string> MobEffectLevels = new List<string> { };
-        //保存属性ID列表
-        public static List<string> AttributeIDs = new List<string> { };
-        //保存属性name列表
-        public static List<string> AttributeNames = new List<string> { };
-        //保存属性值列表
-        public static List<string> AttributeValues = new List<string> { };
-        //保存属性值类型列表
-        public static List<string> AttributeValueTypes = new List<string> { };
-        //保存属性生效槽位列表
-        public static List<string> AttributeSlots = new List<string> { };
-
         #region 无法破坏
         private bool unbreakable;
         public bool Unbreakable
@@ -201,7 +318,7 @@ namespace cbhk_environment.Generators.ItemGenerator
         {
             get
             {
-                string key = MainWindow.hide_infomation_database.Where(item => item.Value == HideInfomationOption).First().Key;
+                string key = MainWindow.HideInfomationDataBase.Where(item => item.Value == HideInfomationOption).First().Key;
                 string result = key!="0"? "HideFlags:"+key+"b," : "";
                 return result;
             }
@@ -223,7 +340,7 @@ namespace cbhk_environment.Generators.ItemGenerator
         {
             get
             {
-                string key = MainWindow.item_database.Where(item => Regex.Match(item.Key, @"[\u4e00-\u9fa5]+").ToString() == SelectItemIdSource.ComboBoxItemText).First().Key;
+                string key = MainWindow.ItemDataBase.Where(item => Regex.Match(item.Key, @"[\u4e00-\u9fa5]+").ToString() == SelectItemIdSource.ComboBoxItemText).First().Key;
                 string result = key != "" ? Regex.Match(key,@"[a-zA-Z_]+").ToString() : "";
                 return result;
             }
@@ -266,15 +383,18 @@ namespace cbhk_environment.Generators.ItemGenerator
         {
             get
             {
-                string result = "CanDestroy:[";
-                foreach (string item in CanDestroyBlocks)
+                if (CanDestroyBlocksPanel.Children.Count > 0)
                 {
-                    string key = MainWindow.item_database.Where(obj=>Regex.Match(obj.Key, "[\u4e00-\u9fa5]+").ToString() == item).First().Key;
-                    key = Regex.Match(key,"[a-zA-Z_]+").ToString();
-                    result += "\""+ key + "\",";
+                    string result = "CanDestroy:[";
+                    foreach (CanDestroyItems item in CanDestroyBlocksPanel.Children)
+                    {
+                        result += item.Result;
+                    }
+                    result = result.Trim(',')+"],";
+                    return result;
                 }
-                result = result.Trim() != "CanDestroy:[" ? result + "]," : "";
-                return result;
+                else
+                    return "";
             }
         }
         #endregion
@@ -284,36 +404,39 @@ namespace cbhk_environment.Generators.ItemGenerator
         {
             get
             {
-                string result = "CanPlaceOn:[";
-                foreach (string item in CanPlaceOnBlocks)
+                if (CanPlaceOnBlocksPanel.Children.Count > 0)
                 {
-                    string key = MainWindow.item_database.Where(obj => Regex.Match(obj.Key, "[\u4e00-\u9fa5]+").ToString() == item).First().Key;
-                    key = Regex.Match(key, "[a-zA-Z_]+").ToString();
-                    result += "\"" + key + "\",";
+                    string result = "CanPlaceOn:[";
+                    foreach (CanPlaceOnItems item in CanPlaceOnBlocksPanel.Children)
+                    {
+                        result += item.Result;
+                    }
+                    result = result.Trim(',') + "],";
+                    return result;
                 }
-                result = result.Trim()!= "CanPlaceOn:[" ? result+ "],":"";
-                return result;
+                else
+                    return "";
             }
         }
         #endregion
 
         #region 保存附魔信息列表
-        private string EnchantmentString
+        private string EnchantmentList
         {
             get
             {
-                string result = "Enchantments:[";
-                for (int i = 0; i < EnchantmentIDs.Count; i++)
+                if (EnchantmentPanel.Children.Count > 0)
                 {
-                    string enchantment_level = "lvl:";
-                    if ((EnchantmentLevels.Count - 1) >= i)
-                        enchantment_level += EnchantmentLevels[i]+"s";
-                    else
-                        enchantment_level += "1s";
-                    result += "{id:\"minecraft:" + EnchantmentIDs[i] +"\","+enchantment_level+"},";
+                    string result = "Enchantments:[";
+                    foreach (EnchantmentItems item in EnchantmentPanel.Children)
+                    {
+                        result += item.Result;
+                    }
+                    result = result.Trim(',') + "],";
+                    return result;
                 }
-                result = result.Trim()!= "Enchantments:["?result.Trim(',')+"],":"";
-                return result;
+                else
+                    return "";
             }
         }
         #endregion
@@ -323,59 +446,39 @@ namespace cbhk_environment.Generators.ItemGenerator
         {
             get
             {
-                string result = "AttributeModifiers:[";
-                for (int i = 0; i < AttributeIDs.Count; i++)
+                if (AttributePanel.Children.Count > 0)
                 {
-                    string uid = Uid_spawner.NewUuidString();
-                    string first_uid = Regex.Match(uid, "(\\d){4}").ToString();
-                    uid = Uid_spawner.NewUuidString();
-                    string second_uid = Regex.Match(uid, "(\\d){4}").ToString();
-                    uid = Uid_spawner.NewUuidString();
-                    string third_uid = Regex.Match(uid, "(\\d){4}").ToString();
-                    uid = Uid_spawner.NewUuidString();
-                    string fourth_uid = Regex.Match(uid, "(\\d){4}").ToString();
-                    string UUID = "[I;"+first_uid+","+second_uid+","+third_uid+","+fourth_uid+"],";
-                    string attribute_name = "AttributeName:\"" + AttributeIDs[i] +"\",";
-                    string name = "Name:\"null\"";
-                    if((AttributeNames.Count - 1) >= i)
-                    name = "Name:\"" + AttributeNames[i] +"\",";
-                    string amount = "Amount:0d,";
-                    if ((AttributeValues.Count - 1) >= i)
-                        amount = "Amount:"+ AttributeValues[i] +"d,";
-                    string operation = "Operation:0,";
-                    if ((AttributeValueTypes.Count - 1) >= i)
-                        operation = "Operation:" + AttributeValueTypes[i]+",";
-                    string slot = "";
-                    if ((AttributeSlots.Count - 1) >= i)
-                        if (AttributeSlots[i]!="all")
-                        slot = ",Slot:" + AttributeSlots[i];
-                    result += "{"+ attribute_name+amount+operation+name+ UUID+slot +"},";
+                    string result = "AttributeModifiers:[";
+                    foreach (AttributeItems item in AttributePanel.Children)
+                    {
+                        result += item.Result;
+                    }
+                    result = result.Trim(',') + "],";
+                    return result;
                 }
-                result = result.Trim() != "AttributeModifiers:[" ? result + "]," : "";
-                return result;
+                else
+                    return "";
             }
         }
         #endregion
 
         #region 保存药水效果列表
-        private string MobEffect
+        private string MobEffectList
         {
             get
             {
-                string result = "CustomPotionEffects:[";
-                for (int i = 0; i < MobEffectIDs.Count; i++)
+                if (SpecialPanel.Children.Count > 0)
                 {
-                    string id = "Id:" + MobEffectIDs[i] +"b,";
-                    string duration = "Duration:0";
-                    if ((MobEffectDurations.Count - 1) >= i)
-                        duration = "Duration:" + MobEffectDurations[i]+",";
-                    string amplifier = "Amplifier:0b";
-                    if ((MobEffectLevels.Count - 1) >= i)
-                        amplifier = "Amplifier:" + MobEffectLevels[i]+",";
-                    result += "{"+id+duration+amplifier+ "ShowParticles:0b},";
+                    string result = "CustomPotionEffects:[";
+                    foreach (PotionTypeItems item in SpecialPanel.Children)
+                    {
+                        result += item.Result;
+                    }
+                    result = result.Trim(',') + "],";
+                    return result;
                 }
-                result = result != "CustomPotionEffects:[" ? result.TrimEnd(',') + "]," :"";
-                return result;
+                else
+                    return "";
             }
         }
         #endregion
@@ -423,10 +526,6 @@ namespace cbhk_environment.Generators.ItemGenerator
         }
         #endregion
 
-        #region 保存滚动视图样式
-        public static Style scrollbarStyle;
-        #endregion
-
         #endregion
 
         /// <summary>
@@ -448,93 +547,57 @@ namespace cbhk_environment.Generators.ItemGenerator
         public void HideFlagsLoaded(object sender, RoutedEventArgs e)
         {
             ComboBox textComboBox = sender as ComboBox;
-            textComboBox.ItemsSource = MainWindow.hide_flags_source;
+            textComboBox.ItemsSource = MainWindow.HideFlagsSource;
         }
 
         /// <summary>
-        /// 滚动视图载入事件,获取样式引用
+        /// 载入可破坏方块面板
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void ScrollViewerLoaded(object sender, RoutedEventArgs e)
+        public void CanDestroyBlockPanelLoaded(object sender, RoutedEventArgs e)
         {
-            ScrollViewer viewer = sender as ScrollViewer;
-            scrollbarStyle = viewer.Style;
+            CanDestroyBlocksPanel = (sender as Accordion).Content as StackPanel;
         }
 
         /// <summary>
-        /// 增加可破坏方块列表成员
+        /// 载入可放置方块面板
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void AddCanDestoryBlockClick(object sender, RoutedEventArgs e)
+        public void CanPlaceBlockPanelLoaded(object sender, RoutedEventArgs e)
         {
-            IconTextButtons iconTextButtons = sender as IconTextButtons;
-            Grid parent = iconTextButtons.Parent as Grid;
-            CollapsableGrids collapsableGrids = parent.Children[0] as CollapsableGrids;
-            CanDestroyItems canDestroyItems = new CanDestroyItems();
-            StackPanel stackPanel = collapsableGrids.Content as StackPanel;
-            stackPanel.Children.Add(canDestroyItems);
+            CanPlaceOnBlocksPanel = (sender as Accordion).Content as StackPanel;
         }
 
         /// <summary>
-        /// 增加可放置方块列表成员
+        /// 载入属性面板
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void AddCanPlaceOnBlockClick(object sender, RoutedEventArgs e)
+        public void AttributePanelLoaded(object sender, RoutedEventArgs e)
         {
-            IconTextButtons iconTextButtons = sender as IconTextButtons;
-            Grid parent = iconTextButtons.Parent as Grid;
-            CollapsableGrids collapsableGrids = parent.Children[0] as CollapsableGrids;
-            CanPlaceOnItems canPlaceOnItems = new CanPlaceOnItems();
-            StackPanel stackPanel = collapsableGrids.Content as StackPanel;
-            stackPanel.Children.Add(canPlaceOnItems);
+            AttributePanel = (sender as Accordion).Content as StackPanel;
         }
 
         /// <summary>
-        /// 增加附魔列表成员
+        /// 载入附魔面板
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void AddEnchantmentsClick(object sender, RoutedEventArgs e)
+        public void EnchantmentPanelLoaded(object sender, RoutedEventArgs e)
         {
-            IconTextButtons iconTextButtons = sender as IconTextButtons;
-            Grid parent = iconTextButtons.Parent as Grid;
-            CollapsableGrids collapsableGrids = parent.Children[0] as CollapsableGrids;
-            EnchantmentItems enchantmentItems = new EnchantmentItems();
-            StackPanel stackPanel = collapsableGrids.Content as StackPanel;
-            stackPanel.Children.Add(enchantmentItems);
+            EnchantmentPanel = (sender as Accordion).Content as StackPanel;
         }
 
         /// <summary>
-        /// 增加属性列表成员
+        /// 载入特殊面板
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void AddAttributesClick(object sender, RoutedEventArgs e)
+        public void SpecialPanelLoaded(object sender, RoutedEventArgs e)
         {
-            IconTextButtons iconTextButtons = sender as IconTextButtons;
-            AttributeItems attributeItems = new AttributeItems();
-            Grid parent = iconTextButtons.Parent as Grid;
-            CollapsableGrids collapsableGrids = parent.Children[0] as CollapsableGrids;
-            StackPanel stackPanel = collapsableGrids.Content as StackPanel;
-            stackPanel.Children.Add(attributeItems);
-        }
-
-        /// <summary>
-        /// 增加特殊数据成员
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void AddSpecialDataClick(object sender, RoutedEventArgs e)
-        {
-            IconTextButtons iconTextButtons = sender as IconTextButtons;
-            PotionTypeItems potionTypeItems = new PotionTypeItems();
-            Grid parent = iconTextButtons.Parent as Grid;
-            CollapsableGrids collapsableGrids = parent.Children[0] as CollapsableGrids;
-            StackPanel stackPanel = collapsableGrids.Content as StackPanel;
-            stackPanel.Children.Add(potionTypeItems);
+            SpecialPanel = (sender as Accordion).Content as StackPanel;
         }
     }
 }

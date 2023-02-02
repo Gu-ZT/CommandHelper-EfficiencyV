@@ -82,7 +82,7 @@
             Grid.Row="2"
             Grid.Column="0"
             HorizontalAlignment="Stretch"
-            Style="{DynamicResource for_scrollviewer}"
+            Style="{DynamicResource DefaultScrollViewer}"
             VerticalScrollBarVisibility="Auto">
             <UniformGrid
                 Name="CurrentItemInfomation"

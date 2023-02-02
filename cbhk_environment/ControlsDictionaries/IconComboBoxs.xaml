@@ -7,15 +7,18 @@
     xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
 
     <SolidColorBrush x:Key="TextBox.Static.Background" Color="#FFFFFFFF" />
+    <ImageBrush x:Key="TextEditBox" ImageSource="/cbhk_environment;component/resources/common/images/TextEditBox.png" />
+    <ImageBrush x:Key="Frame" ImageSource="/cbhk_environment;component/resources/common/images/Frame.png" />
 
     <ControlDataContexts:ConvertIconComboBoxItemImage x:Key="IconComboBoxImageConverter" />
     <ControlDataContexts:ConvertIconComboBoxItemText x:Key="IconComboBoxTextConverter" />
     <ControlDataContexts:ComboBoxSearchDataContext x:Key="SearcherDataContext" />
 
-    <Style x:Key="ComboBoxEditableTextBox" TargetType="{x:Type TextBox}">
-        <Setter Property="OverridesDefaultStyle" Value="true" />
+    <!--<Style x:Key="ComboBoxEditableTextBox" TargetType="{x:Type TextBox}">
         <Setter Property="AllowDrop" Value="true" />
         <Setter Property="MinWidth" Value="0" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Background" Value="{StaticResource TextEditBox}" />
         <Setter Property="MinHeight" Value="0" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst" />
@@ -32,7 +35,7 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
+    </Style>-->
 
     <ItemsPanelTemplate x:Key="ItemVirtualizingTemplate">
         <VirtualizingStackPanel />
@@ -44,7 +47,11 @@
                 Width="60"
                 Height="60"
                 Source="{Binding ComboBoxItemIcon}" />
-            <TextBlock Foreground="White" Text="{Binding ComboBoxItemText}" />
+            <TextBlock
+                VerticalAlignment="Center"
+                Foreground="White"
+                Text="{Binding ComboBoxItemText}"
+                TextAlignment="Center" />
         </DockPanel>
     </DataTemplate>
 
@@ -59,7 +66,7 @@
                     <!--  {StaticResource ComboBox.Static.Border}  -->
                     <Border
                         x:Name="templateRoot"
-                        Background="Transparent"
+                        Background="Black"
                         BorderBrush="Transparent"
                         BorderThickness="{TemplateBinding BorderThickness}"
                         SnapsToDevicePixels="true">
@@ -181,13 +188,14 @@
                     Color="Transparent">
                     <Border
                         x:Name="dropDownBorder"
-                        Background="Black"
+                        Background="{StaticResource Frame}"
                         BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}"
                         BorderThickness="1">
                         <ScrollViewer
                             x:Name="DropDownScrollViewer"
-                            Width="400"
-                            Background="Transparent">
+                            Width="{TemplateBinding Width}"
+                            Height="200"
+                            Style="{DynamicResource DefaultScrollViewer}">
                             <Grid x:Name="grid" RenderOptions.ClearTypeHint="Enabled">
                                 <Canvas
                                     x:Name="canvas"
@@ -221,17 +229,18 @@
             <DockPanel
                 x:Name="border"
                 Margin="{TemplateBinding BorderThickness}"
-                Background="#2F2F2F">
+                Background="Transparent">
                 <Image
-                    Width="40"
+                    Width="30"
                     Height="{TemplateBinding Height}"
                     Source="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Path=SelectedItem, Converter={StaticResource IconComboBoxImageConverter}}" />
                 <TextBox
                     x:Name="EditableTextBox"
                     Margin="{TemplateBinding Padding}"
+                    Padding="5,5,0,0"
                     HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                     VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                    Background="Transparent"
+                    Background="{StaticResource TextEditBox}"
                     BorderThickness="0"
                     DataContext="{StaticResource SearcherDataContext}"
                     Foreground="White"
@@ -266,10 +275,10 @@
                 </MultiTrigger.Conditions>
                 <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
             </MultiTrigger>
-            <Trigger SourceName="DropDownScrollViewer" Property="ScrollViewer.CanContentScroll" Value="false">
+            <!--<Trigger SourceName="DropDownScrollViewer" Property="ScrollViewer.CanContentScroll" Value="false">
                 <Setter TargetName="opaqueRect" Property="Canvas.Top" Value="{Binding VerticalOffset, ElementName=DropDownScrollViewer}" />
                 <Setter TargetName="opaqueRect" Property="Canvas.Left" Value="{Binding HorizontalOffset, ElementName=DropDownScrollViewer}" />
-            </Trigger>
+            </Trigger>-->
         </ControlTemplate.Triggers>
     </ControlTemplate>
 

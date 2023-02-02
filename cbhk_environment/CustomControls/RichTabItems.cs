@@ -4,6 +4,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media;
 using System.Windows.Input;
 using System.IO;
+using System.Windows.Data;
+using System;
+using System.Globalization;
 
 namespace cbhk_environment.CustomControls
 {
@@ -18,15 +21,6 @@ namespace cbhk_environment.CustomControls
 
         public static readonly DependencyProperty HeaderImageProperty =
             DependencyProperty.Register("HeaderImage", typeof(BitmapImage), typeof(RichTabItems), new PropertyMetadata(default(BitmapImage)));
-
-        public string HeaderText
-        {
-            get { return (string)GetValue(HeaderTextProperty); }
-            set { SetValue(HeaderTextProperty, value); }
-        }
-
-        public static readonly DependencyProperty HeaderTextProperty =
-            DependencyProperty.Register("HeaderText", typeof(string), typeof(RichTabItems), new PropertyMetadata(default(string)));
 
         public Brush CloseButtonBackground
         {
@@ -73,6 +67,16 @@ namespace cbhk_environment.CustomControls
         public static readonly DependencyProperty CloseButtonVisibilityProperty =
             DependencyProperty.Register("CloseButtonVisibility", typeof(Visibility), typeof(RichTabItems), new PropertyMetadata(default(Visibility)));
 
+        public bool IsContentSaved
+        {
+            get { return (bool)GetValue(IsContentSavedProperty); }
+            set { SetValue(IsContentSavedProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IsSaved.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsContentSavedProperty =
+            DependencyProperty.Register("IsContentSaved", typeof(bool), typeof(RichTabItems), new PropertyMetadata(default(bool)));
+
 
         #endregion
 
@@ -89,11 +93,11 @@ namespace cbhk_environment.CustomControls
             MouseEnter += TabItem_MouseEnter;
         }
 
-        public void RichTabItems_Click(object sender, RoutedEventArgs e)
+        public void CloseRichTabItemsClick(object sender, RoutedEventArgs e)
         {
             RichTabItems item = (sender as Button).TemplatedParent as RichTabItems;
             TabControl parent = item.Parent as TabControl;
-            parent.Items.RemoveAt(parent.SelectedIndex);
+            parent.Items.Remove(item);
         }
 
         #region 处理拖拽互换位置
@@ -115,8 +119,8 @@ namespace cbhk_environment.CustomControls
                 SolidColorBrush currentItemForeground = current_item.Foreground as SolidColorBrush;
                 Style currentItemStyle = current_item.Style;
                 Style selectedItemStyle = select_item.Style;
-                string selectedItemHeaderText = select_item.HeaderText;
-                string currentItemHeaderText = current_item.HeaderText;
+                string selectedItemHeaderText = select_item.Header.ToString();
+                string currentItemHeaderText = current_item.Header.ToString();
                 if (select_index != current_index && select_index != -1 && current_index != -1)
                 {
                     TabControl current_parent = (sender as RichTabItems).Parent as TabControl;
@@ -124,7 +128,8 @@ namespace cbhk_environment.CustomControls
                     {
                         RichTabItems new_select_item = new RichTabItems()
                         {
-                            HeaderText = selectedItemHeaderText,
+                            Header = selectedItemHeaderText,
+                            IsContentSaved = true,
                             Content = select_item.Content,
                             Foreground = selectedItemForeground,
                             Background = selectedItemBackground,
@@ -132,7 +137,8 @@ namespace cbhk_environment.CustomControls
                         };
                         RichTabItems new_current_item = new RichTabItems()
                         {
-                            HeaderText = currentItemHeaderText,
+                            Header = currentItemHeaderText,
+                            IsContentSaved = true,
                             Content = current_item.Content,
                             Foreground = currentItemForeground,
                             Background = currentItemBackground,
@@ -179,5 +185,23 @@ namespace cbhk_environment.CustomControls
             }
         }
         #endregion
+    }
+
+    public class RichTabItemsSaveMarkVisibilityController : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null) return null;
+            bool state = bool.Parse(value.ToString());
+            if (state)
+                return Visibility.Hidden;
+            else 
+                return Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
     }
 }

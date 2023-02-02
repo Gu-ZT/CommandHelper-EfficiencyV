@@ -144,7 +144,7 @@
     <Compile Include="ControlsDataContexts\StringToFloat.cs" />
     <Compile Include="ControlsDataContexts\TextComboBoxSearchDataContext.cs" />
     <Compile Include="ControlsDataContexts\TreeViewLineConverter.cs" />
-    <Compile Include="CustomControls\CollapsableGrids.cs" />
+    <Compile Include="CustomControls\Accordion.cs" />
     <Compile Include="CustomControls\ColorCheckBoxs.cs" />
     <Compile Include="CustomControls\ColorNumbericUpDowns.cs" />
     <Compile Include="CustomControls\ColorPickers\ColorPickers.xaml.cs">
@@ -159,8 +159,6 @@
     <Compile Include="CustomControls\ColorToolBars.cs" />
     <Compile Include="CustomControls\EnabledFlowDocument.cs" />
     <Compile Include="CustomControls\IconCheckBoxs.cs" />
-    <Compile Include="CustomControls\IconComboBoxItems.cs" />
-    <Compile Include="CustomControls\IconComboBoxs.cs" />
     <Compile Include="CustomControls\IconTabItems.cs" />
     <Compile Include="CustomControls\IconTextButtons.cs" />
     <Compile Include="CustomControls\RadiusToggleButtons.cs" />
@@ -170,6 +168,12 @@
     <Compile Include="CustomControls\RichRun.cs" />
     <Compile Include="CustomControls\RichTabItems.cs" />
     <Compile Include="CustomControls\RichTreeViewItems.cs" />
+    <Compile Include="CustomControls\RotationChart\ImageWithBorder.xaml.cs">
+      <DependentUpon>ImageWithBorder.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\RotationChart\RotationChartBody.xaml.cs">
+      <DependentUpon>RotationChartBody.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CustomControls\SkeletonScreen\Blocks.xaml.cs">
       <DependentUpon>Blocks.xaml</DependentUpon>
     </Compile>
@@ -239,7 +243,6 @@
     <Compile Include="Generators\DataPackGenerator\Components\TemplateTypeTag.xaml.cs">
       <DependentUpon>TemplateTypeTag.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Generators\DataPackGenerator\Components\TextColorManager.cs" />
     <Compile Include="Generators\DataPackGenerator\DataPack.xaml.cs">
       <DependentUpon>DataPack.xaml</DependentUpon>
     </Compile>
@@ -258,6 +261,9 @@
     <Compile Include="Generators\DataPackGenerator\EditDataContext.cs" />
     <Compile Include="Generators\DataPackGenerator\EditPage.xaml.cs">
       <DependentUpon>EditPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Generators\EntityGenerator\Components\PassengerItems.xaml.cs">
+      <DependentUpon>PassengerItems.xaml</DependentUpon>
     </Compile>
     <Compile Include="Generators\VillagerGenerator\Components\GossipsItems.xaml.cs">
       <DependentUpon>GossipsItems.xaml</DependentUpon>
@@ -379,17 +385,12 @@
     <Compile Include="SettingForm\IndividualizationForm.xaml.cs">
       <DependentUpon>IndividualizationForm.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SettingForm\InitCircularBanner.cs" />
-    <Compile Include="SettingForm\LinkButtonAnimation.cs" />
-    <Compile Include="SettingForm\LinkForm.xaml.cs">
-      <DependentUpon>LinkForm.xaml</DependentUpon>
-    </Compile>
     <Compile Include="SettingForm\StartupItemForm.xaml.cs">
       <DependentUpon>StartupItemForm.xaml</DependentUpon>
     </Compile>
-    <Page Include="ControlsDictionaries\CollapsableGrids.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="ControlsDictionaries\Accordion.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ControlsDictionaries\ColorCheckBoxs.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -411,6 +412,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="ControlsDictionaries\FluentItemsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ControlsDictionaries\IconCheckBoxs.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -426,6 +431,10 @@
     <Page Include="ControlsDictionaries\IconTextButtons.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ControlsDictionaries\ListBoxWithScrollViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ControlsDictionaries\RadiusToggleButtons.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -492,6 +501,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="CustomControls\ColorPickers\ColorPickers.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomControls\RotationChart\ImageWithBorder.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomControls\RotationChart\RotationChartBody.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -583,6 +600,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Generators\EntityGenerator\Components\PassengerItems.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Generators\VillagerGenerator\Components\GossipsItems.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -630,7 +651,7 @@
     <Compile Include="GeneralTools\DispatcherHelper.cs" />
     <Compile Include="GeneralTools\JsonTypeSetting.cs" />
     <Compile Include="GeneralTools\RotateImage.cs" />
-    <Compile Include="GeneralTools\uid_spawner.cs" />
+    <Compile Include="GeneralTools\UidSpawner.cs" />
     <Compile Include="GeneralTools\Zip.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -653,10 +674,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SettingForm\IndividualizationForm.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="SettingForm\LinkForm.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -781,15 +798,7 @@
     <Resource Include="resources\cbhk_form\images\special_thanks.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="resources\cbhk_form\images\link.png" />
-    <Resource Include="resources\cbhk_form\images\toolbox.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="cb.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="resources\cbhk_form\images\creeper_icon1.png" />
-    <Resource Include="resources\cbhk_form\images\creeper_icon2.png" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="IWshRuntimeLibrary">
@@ -843,13 +852,10 @@
       <Version>1.2.0</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Mvvm">
-      <Version>8.0.0</Version>
+      <Version>8.1.0</Version>
     </PackageReference>
     <PackageReference Include="Extended.Wpf.Toolkit">
-      <Version>4.4.0</Version>
-    </PackageReference>
-    <PackageReference Include="HandyControl">
-      <Version>3.3.0</Version>
+      <Version>4.5.0</Version>
     </PackageReference>
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf">
       <Version>1.1.0</Version>
@@ -860,16 +866,16 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications">
-      <Version>7.1.2</Version>
+      <Version>7.1.3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Windows.SDK.Contracts">
-      <Version>10.0.22621.2</Version>
+      <Version>10.0.22621.755</Version>
     </PackageReference>
     <PackageReference Include="MicrosoftExpressionInteractions">
       <Version>3.0.40218</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
-      <Version>13.0.1</Version>
+      <Version>13.0.2</Version>
     </PackageReference>
     <PackageReference Include="System.Runtime.WindowsRuntime.UI.Xaml">
       <Version>4.7.0</Version>
@@ -902,8 +908,65 @@
     <Resource Include="resources\common\images\TextToggleButtonPressed.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="resources\common\images\issue.png" />
-    <Resource Include="resources\common\images\switch.png" />
+    <Resource Include="resources\common\images\Switch.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\common\images\AccordionArrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\common\images\Close.png" />
+    <Resource Include="resources\common\images\CloseHover.png" />
+    <Resource Include="resources\common\images\Edit.png" />
+    <Resource Include="resources\common\images\Maxmize.png" />
+    <Resource Include="resources\common\images\MaxmizeHover.png" />
+    <Resource Include="resources\common\images\Minimize.png" />
+    <Resource Include="resources\common\images\MinimizeHover.png" />
+    <Resource Include="resources\common\images\Remove.png" />
+    <Resource Include="resources\common\images\RightArrow.png" />
+    <Resource Include="resources\common\images\Window.png" />
+    <Resource Include="resources\common\images\WindowHover.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\common\images\AccordionArrowHightLight.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\common\images\CloseWhite.png" />
+    <Resource Include="resources\common\images\CloseWhiteHover.png" />
+    <Resource Include="resources\common\images\Divide.png" />
+    <Resource Include="resources\common\images\TabBack.png" />
+    <Resource Include="resources\common\images\TabFront.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\common\images\LeftArrow.png" />
+    <Resource Include="resources\common\images\TradeRightArrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\common\images\spawnerIcons\IconAdvancements.png" />
+    <Resource Include="resources\common\images\spawnerIcons\IconArmorStand.png" />
+    <Resource Include="resources\common\images\spawnerIcons\IconBiome.png" />
+    <Resource Include="resources\common\images\spawnerIcons\IconCommandBlock.png" />
+    <Resource Include="resources\common\images\spawnerIcons\IconDimensions.png" />
+    <Resource Include="resources\common\images\spawnerIcons\IconEntities.png" />
+    <Resource Include="resources\common\images\spawnerIcons\IconFireworks.png" />
+    <Resource Include="resources\common\images\spawnerIcons\IconItems.png" />
+    <Resource Include="resources\common\images\spawnerIcons\IconRecipes.png" />
+    <Resource Include="resources\common\images\spawnerIcons\IconSpawner.png" />
+    <Resource Include="resources\common\images\spawnerIcons\IconTags.png" />
+    <Resource Include="resources\common\images\spawnerIcons\IconVillagers.png" />
+    <Resource Include="resources\common\images\spawnerIcons\IconWrittenBook.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\common\images\Issue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\cbhk_form\images\Bottom.png" />
+    <Resource Include="resources\cbhk_form\images\BottomLeft.png" />
+    <Resource Include="resources\cbhk_form\images\BottomRight.png" />
+    <Resource Include="resources\cbhk_form\images\Left.png" />
+    <Resource Include="resources\cbhk_form\images\Right.png" />
+    <Resource Include="resources\cbhk_form\images\Top.png" />
+    <Resource Include="resources\cbhk_form\images\TopLeft.png" />
+    <Resource Include="resources\cbhk_form\images\TopRight.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

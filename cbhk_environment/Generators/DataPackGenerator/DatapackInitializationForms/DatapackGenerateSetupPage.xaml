@@ -361,7 +361,7 @@
             BorderThickness="0"
             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
             ScrollViewer.VerticalScrollBarVisibility="Auto"
-            Style="{DynamicResource for_scrollviewer}">
+            Style="{DynamicResource DefaultScrollViewer}">
             <ItemsControl ItemsSource="{Binding DatapackFilterSource}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>

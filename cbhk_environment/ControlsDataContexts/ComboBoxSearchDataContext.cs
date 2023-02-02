@@ -24,25 +24,29 @@ namespace cbhk_environment.ControlsDataContexts
                 pop.IsOpen = false;
                 return;
             }
-            current_box = box.TemplatedParent as ComboBox;
-            current_box.IsDropDownOpen = false;
 
-            #region 打开下拉框
-            ObservableCollection<IconComboBoxItem> dataGroup = current_box.ItemsSource as ObservableCollection<IconComboBoxItem>;
-            var target_data_groups = dataGroup.Where(item => item.ComboBoxItemText.StartsWith(box.Text.Trim()));
-            if (target_data_groups.Count() > 1 && box.Text.Trim().Length > 0)
+            if(box.TemplatedParent != null)
             {
-                pop = CreatePop(pop, target_data_groups, current_box, current_box.ItemTemplate);
-                pop.IsOpen = true;
-            }
-            #endregion
+                current_box = box.TemplatedParent as ComboBox;
+                current_box.IsDropDownOpen = false;
 
-            #region 搜索目标成员
-            IEnumerable<IconComboBoxItem> item_source = current_box.ItemsSource as IEnumerable<IconComboBoxItem>;
-            IEnumerable<IconComboBoxItem> select_item = item_source.Where(item => item.ComboBoxItemText == box.Text);
-            if (select_item.Count() == 1)
-                current_box.SelectedItem = select_item.First();
-            #endregion
+                #region 打开下拉框
+                ObservableCollection<IconComboBoxItem> dataGroup = current_box.ItemsSource as ObservableCollection<IconComboBoxItem>;
+                var target_data_groups = dataGroup.Where(item => item.ComboBoxItemText.StartsWith(box.Text.Trim()));
+                if (target_data_groups.Count() > 1 && box.Text.Trim().Length > 0)
+                {
+                    pop = CreatePop(pop, target_data_groups, current_box, current_box.ItemTemplate);
+                    pop.IsOpen = true;
+                }
+                #endregion
+
+                #region 搜索目标成员
+                IEnumerable<IconComboBoxItem> item_source = current_box.ItemsSource as IEnumerable<IconComboBoxItem>;
+                IEnumerable<IconComboBoxItem> select_item = item_source.Where(item => item.ComboBoxItemText == box.Text);
+                if (select_item.Count() == 1)
+                    current_box.SelectedItem = select_item.First();
+                #endregion
+            }
         }
 
         public Popup CreatePop(Popup pop, IEnumerable<IconComboBoxItem> listSource, FrameworkElement element, DataTemplate display_template)
@@ -59,7 +63,6 @@ namespace cbhk_environment.ControlsDataContexts
 
             ScrollViewer viewer = new ScrollViewer()
             {
-                //Style = item_datacontext.scrollbarStyle,
                 VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
                 HorizontalScrollBarVisibility = ScrollBarVisibility.Auto
             };

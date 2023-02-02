@@ -1,4 +1,6 @@
 ﻿using cbhk_environment.CustomControls;
+using cbhk_environment.GeneralTools.ScrollViewerHelper;
+using cbhk_environment.Properties;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -350,21 +352,40 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
             string FileName = Path.GetFileName(FilePath);
             string extension = Path.GetExtension(FilePath);
 
-            if(File.Exists(FilePath))
+            #region 优化FileName的内容长度
+            string CurrentFileName = FileName.Substring(0, FileName.LastIndexOf("."));
+            if (CurrentFileName.Length > 20)
+            {
+                FileName = CurrentFileName;
+                string StartPart = FileName.Substring(0, 10);
+                string EndPart = FileName.Substring(FileName.Length - 10);
+                FileName = StartPart + "..." + EndPart + extension;
+            }
+            #endregion
+
+            if (File.Exists(FilePath))
             {
                 if(extension == ".mcfunction")
                 {
                     TabControl fileZone = EditDataContext.FileModifyZone;
+                    ScrollViewer scrollViewer = new ScrollViewer();
+                    scrollViewer.SetValue(FrameworkElement.StyleProperty, Application.Current.Resources["DefaultScrollViewer"]);
                     RichTextBox richTextBox = new RichTextBox()
                     {
                         Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#A8A8A8")),
-                        Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("Transparent")),
+                        Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1A1A1A")),
                         BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3D3D3D")),
                         BorderThickness = new Thickness(1),
                         FontFamily = new FontFamily("Minecraft"),
-                        FontSize = 25,
+                        FontWeight = FontWeights.Normal,
+                        FontSize = 20,
                         CaretBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"))
                     };
+                    scrollViewer.Content = richTextBox;
+                    //文本内容更新时通知标签页显示未保存标记
+                    richTextBox.TextChanged += RichTextBoxTextChanged;
+                    //执行保存操作时通知标签页隐藏未保存标记
+                    richTextBox.KeyDown += RichTextBoxKeyDown;
 
                     #region 更新当前选中的.mcfunction文件的内容
                     string[] FunctionContents = File.ReadAllLines(FilePath);
@@ -380,16 +401,14 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                     RichTabItems richTabItems = new RichTabItems
                     {
                         Uid = FilePath,
-                        HeaderText = FileName,
+                        Header = FileName,
+                        Padding = new Thickness(10,2,0,0),
                         Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")),
-                        Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("Transparent")),
-                        CloseButtonForeground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")),
-                        CloseButtonBackground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("Transparent")),
-                        CloseButtonBorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")),
-                        CloseButtonBorderThickness = new Thickness(1),
-                        Content = richTextBox,
-                        Style = datapack_datacontext.RichTabItemStyle
+                        Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#323232")),
+                        Content = scrollViewer,
+                        IsContentSaved = true
                     };
+                    richTabItems.SetValue(FrameworkElement.StyleProperty, Application.Current.Resources["RichTabItemStyle"]);
                     fileZone.Items.Add(richTabItems);
                 }
 
@@ -398,6 +417,23 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                     //识别该json文件所属的功能类型并打开对应的生成器
                 }
             }
+        }
+
+        private static void RichTextBoxKeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyboardDevice.Modifiers == ModifierKeys.Control && e.Key == Key.S)
+            {
+                RichTabItems CurrentItem = (sender as RichTextBox).FindParent<RichTabItems>();
+                if(CurrentItem != null)
+                CurrentItem.IsContentSaved = true;
+            }
+        }
+
+        private static void RichTextBoxTextChanged(object sender, TextChangedEventArgs e)
+        {
+            RichTabItems CurrentItem = (sender as RichTextBox).FindParent<RichTabItems>();
+            if (CurrentItem != null)
+                CurrentItem.IsContentSaved = false;
         }
 
         /// <summary>

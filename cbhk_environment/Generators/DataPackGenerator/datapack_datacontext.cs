@@ -49,8 +49,6 @@ namespace cbhk_environment.Generators.DataPackGenerator
 
         //树视图样式引用
         public static Style RichTreeViewItemStyle = null;
-        //标签页样式引用
-        public static Style RichTabItemStyle = null;
 
         //指定新建内容成员的类型
         static ContentReader.ContentType contentType = ContentReader.ContentType.DataPack;
@@ -196,12 +194,6 @@ namespace cbhk_environment.Generators.DataPackGenerator
         }
         #endregion
 
-        #region 生成与返回
-        public RelayCommand RunCommand { get; set; }
-
-        public RelayCommand<CommonWindow> ReturnCommand { get; set; }
-        #endregion
-
         #region 覆盖生成
         private bool overLying;
         public bool OverLying
@@ -218,8 +210,6 @@ namespace cbhk_environment.Generators.DataPackGenerator
         public datapack_datacontext()
         {
             #region 链接指令
-            RunCommand = new RelayCommand(run_command);
-            ReturnCommand = new RelayCommand<CommonWindow>(return_command);
             OpenLocalProject = new RelayCommand(OpenLocalProjectCommand);
             OpenLocalFolder = new RelayCommand(OpenLocalFolderCommand);
             CreateLocalDataPack = new RelayCommand(CreateLocalDataPackCommand);
@@ -284,31 +274,6 @@ namespace cbhk_environment.Generators.DataPackGenerator
             homePage.DataContext = this;
             PageFrame.Content = homePage;
             contentControl.Content = PageFrame;
-        }
-
-        /// <summary>
-        /// 返回主页
-        /// </summary>
-        /// <param name="win"></param>
-        private void return_command(CommonWindow win)
-        {
-            DataPack.cbhk.Topmost = true;
-            DataPack.cbhk.WindowState = WindowState.Normal;
-            DataPack.cbhk.Show();
-            DataPack.cbhk.Topmost = false;
-            DataPack.cbhk.ShowInTaskbar = true;
-            win.Close();
-        }
-
-        /// <summary>
-        /// 执行生成
-        /// </summary>
-        private void run_command()
-        {
-            RichTabItems CurrentItem = EditDataContext.FileModifyZone.SelectedItem as RichTabItems;
-            RichTextBox CurrentTextBox = CurrentItem.Content as RichTextBox;
-            TextRange CurrentContent = new TextRange(CurrentTextBox.Document.ContentStart, CurrentTextBox.Document.ContentEnd);
-            File.WriteAllText(CurrentItem.Uid,CurrentContent.Text);
         }
 
         /// <summary>
@@ -460,16 +425,6 @@ namespace cbhk_environment.Generators.DataPackGenerator
         public void RichTreeViewItemStyleLoaded(object sender, RoutedEventArgs e)
         {
             RichTreeViewItemStyle = (sender as RichTreeViewItems).Style;
-        }
-
-        /// <summary>
-        /// 获取标签页样式引用
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void RichTabItemStyleLoaded(object sender, RoutedEventArgs e)
-        {
-            RichTabItemStyle = (sender as RichTabItems).Style;
         }
 
         /// <summary>

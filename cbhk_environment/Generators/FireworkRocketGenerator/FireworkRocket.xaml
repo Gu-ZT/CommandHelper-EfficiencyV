@@ -23,6 +23,11 @@
         <local_context:firework_rocket_datacontext />
     </Window.DataContext>
 
+    <Window.Resources>
+        <ImageBrush x:Key="ButtonNormal" ImageSource="/cbhk_environment;component/resources/common/images/ButtonNormal.png" />
+        <ImageBrush x:Key="ButtonPressed" ImageSource="/cbhk_environment;component/resources/common/images/ButtonPressed.png" />
+    </Window.Resources>
+
     <Window.InputBindings>
         <KeyBinding Key="F5" Command="{Binding RunCommand}" />
         <KeyBinding
@@ -99,9 +104,9 @@
                 Style="{DynamicResource IconCheckBox}" />
             <Menu Background="Transparent">
                 <MenuItem
-                    Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DockPanel}, Path=ActualHeight}"
-                    Padding="5,0,5,5"
-                    Background="#2F2F2F"
+                    Width="20"
+                    Height="18"
+                    Margin="5"
                     BorderBrush="{x:Null}"
                     BorderThickness="0"
                     Cursor="Hand"
@@ -109,22 +114,9 @@
                     Foreground="White"
                     ToolTip="切换版本"
                     ToolTipService.InitialShowDelay="0">
-                    <MenuItem.Header>
-                        <Viewbox
-                            Width="25"
-                            Height="25"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center">
-                            <Path
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Fill="White">
-                                <Path.Data>
-                                    M234.666667 430.933333H128l85.333333-81.066666L345.6 213.333333l51.2 51.2-81.066667 81.066667H896V426.666667H234.666667v4.266666zM793.6 554.666667H896l-85.333333 81.066666-132.266667 132.266667-51.2-51.2 81.066667-81.066667H128V554.666667h665.6z
-                                </Path.Data>
-                            </Path>
-                        </Viewbox>
-                    </MenuItem.Header>
+                    <MenuItem.Background>
+                        <ImageBrush ImageSource="/cbhk_environment;component/resources/common/images/Switch.png" />
+                    </MenuItem.Background>
                     <CustomControls:TextToggleButtons
                         HorizontalAlignment="Stretch"
                         Background="Transparent"
@@ -176,22 +168,24 @@
                 Style="{DynamicResource TextToggleButtonsStyle}" />
         </DockPanel>
         <DockPanel Grid.Row="1">
-            <ScrollViewer Style="{DynamicResource for_scrollviewer}">
+            <ScrollViewer Style="{DynamicResource DefaultScrollViewer}">
                 <StackPanel
                     Width="350"
                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                     ScrollViewer.VerticalScrollBarVisibility="Disabled">
-                    <CustomControls:CollapsableGrids
+                    <CustomControls:Accordion
+                        Title="颜色"
                         Margin="2,0"
-                        Background="#FF00B3FF"
+                        Background="#FFE5B663"
                         BorderThickness="0"
                         Cursor="Hand"
                         ExpandDirection="Down"
                         FontSize="15"
-                        Foreground="White"
-                        Header="颜色"
+                        FreshVisibility="Collapsed"
                         IsExpanded="True"
-                        Style="{DynamicResource CollapsableGrid}">
+                        ModifyVisibility="Collapsed"
+                        Style="{DynamicResource AccordionStyle}"
+                        TitleForeground="Black">
                         <StackPanel>
                             <Border Background="#2F2F2F">
                                 <DockPanel>
@@ -211,6 +205,7 @@
                                                 Grid.Column="0"
                                                 HorizontalAlignment="Center"
                                                 VerticalAlignment="Center"
+                                                Foreground="White"
                                                 Text="颜色库" />
                                             <Button
                                                 Grid.Row="0"
@@ -243,7 +238,7 @@
                                             <ScrollViewer
                                                 Grid.Row="1"
                                                 Grid.Column="0"
-                                                Style="{DynamicResource for_scrollviewer}">
+                                                Style="{DynamicResource DefaultScrollViewer}">
                                                 <StackPanel ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled">
                                                     <CustomControls:ColorCheckBoxs
                                                         ContentColor="Red"
@@ -260,7 +255,7 @@
                                             <ScrollViewer
                                                 Grid.Row="1"
                                                 Grid.Column="1"
-                                                Style="{DynamicResource for_scrollviewer}">
+                                                Style="{DynamicResource DefaultScrollViewer}">
                                                 <StackPanel ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled">
                                                     <ity:Interaction.Triggers>
                                                         <ity:EventTrigger EventName="Loaded">
@@ -272,7 +267,7 @@
                                             <ScrollViewer
                                                 Grid.Row="1"
                                                 Grid.Column="2"
-                                                Style="{DynamicResource for_scrollviewer}">
+                                                Style="{DynamicResource DefaultScrollViewer}">
                                                 <StackPanel ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled">
                                                     <ity:Interaction.Triggers>
                                                         <ity:EventTrigger EventName="Loaded">
@@ -307,34 +302,38 @@
                                             Cursor="Hand"
                                             Foreground="White"
                                             Style="{DynamicResource TextToggleButtonsStyle}" />
-                                        <Button
+                                        <CustomControls:IconTextButtons
                                             HorizontalAlignment="Stretch"
                                             VerticalAlignment="Top"
-                                            Background="Transparent"
+                                            Background="{StaticResource ButtonNormal}"
                                             BorderBrush="Black"
                                             Command="{Binding AddToColors}"
                                             CommandTarget="{Binding RelativeSource={RelativeSource Mode=Self}}"
                                             Content="添加到颜色"
-                                            Cursor="Hand"
-                                            Foreground="White" />
-                                        <Button
+                                            Foreground="Black"
+                                            PressedBackground="{StaticResource ButtonPressed}"
+                                            Style="{DynamicResource IconTextButton}" />
+                                        <CustomControls:IconTextButtons
                                             HorizontalAlignment="Stretch"
                                             VerticalAlignment="Top"
-                                            Background="Transparent"
+                                            Background="{StaticResource ButtonNormal}"
                                             BorderBrush="Black"
                                             Command="{Binding AddToFadeColors}"
                                             CommandTarget="{Binding RelativeSource={RelativeSource Mode=Self}}"
                                             Content="添加到备用颜色"
                                             Cursor="Hand"
-                                            Foreground="White" />
+                                            Foreground="Black"
+                                            PressedBackground="{StaticResource ButtonPressed}"
+                                            Style="{DynamicResource IconTextButton}" />
                                         <DockPanel>
                                             <TextBlock
                                                 Grid.Row="0"
                                                 Grid.Column="2"
                                                 HorizontalAlignment="Left"
                                                 VerticalAlignment="Center"
+                                                Foreground="White"
                                                 Text="自定义颜色" />
-                                            <ColorPicker:ColorPickers SelectColor="Black">
+                                            <ColorPicker:ColorPickers Background="Red" SelectColor="Red">
                                                 <ity:Interaction.Triggers>
                                                     <ity:EventTrigger EventName="Loaded">
                                                         <itn:CallMethodAction MethodName="CustomColorSelectorLoaded" TargetObject="{Binding}" />
@@ -346,30 +345,32 @@
                                 </DockPanel>
                             </Border>
                         </StackPanel>
-                    </CustomControls:CollapsableGrids>
+                    </CustomControls:Accordion>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <CustomControls:CollapsableGrids
+                        <CustomControls:Accordion
+                            Title="爆炸形状"
                             Grid.Column="0"
                             Margin="2,0,0,0"
-                            Background="#FF00B3FF"
+                            Background="#FFE5B663"
                             BorderThickness="0"
                             Cursor="Hand"
                             ExpandDirection="Down"
                             FontSize="15"
-                            Foreground="White"
-                            Header="爆炸形状"
+                            FreshVisibility="Collapsed"
                             IsExpanded="True"
-                            Style="{DynamicResource CollapsableGrid}">
+                            ModifyVisibility="Collapsed"
+                            Style="{DynamicResource AccordionStyle}"
+                            TitleForeground="Black">
                             <ScrollViewer
                                 Height="45"
                                 Background="#2F2F2F"
                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                Style="{DynamicResource for_scrollviewer}">
+                                Style="{DynamicResource DefaultScrollViewer}">
                                 <StackPanel ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled">
                                     <ity:Interaction.Triggers>
                                         <ity:EventTrigger EventName="Loaded">
@@ -384,23 +385,25 @@
                                         Style="{DynamicResource TextToggleButtonsStyle}" />
                                 </StackPanel>
                             </ScrollViewer>
-                        </CustomControls:CollapsableGrids>
-                        <CustomControls:CollapsableGrids
+                        </CustomControls:Accordion>
+                        <CustomControls:Accordion
+                            Title="爆炸轨迹"
                             Grid.Column="1"
                             Margin="0,0,2,0"
-                            Background="#FF00B3FF"
+                            Background="#FFE5B663"
                             BorderThickness="0"
                             Cursor="Hand"
                             ExpandDirection="Down"
                             FontSize="15"
-                            Foreground="White"
-                            Header="爆炸轨迹"
+                            FreshVisibility="Collapsed"
                             IsExpanded="True"
-                            Style="{DynamicResource CollapsableGrid}">
+                            ModifyVisibility="Collapsed"
+                            Style="{DynamicResource AccordionStyle}"
+                            TitleForeground="Black">
                             <ScrollViewer
                                 Height="45"
                                 Background="#2F2F2F"
-                                Style="{DynamicResource for_scrollviewer}">
+                                Style="{DynamicResource DefaultScrollViewer}">
                                 <StackPanel ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled">
                                     <ity:Interaction.Triggers>
                                         <ity:EventTrigger EventName="Loaded">
@@ -416,20 +419,21 @@
                                         Style="{DynamicResource TextToggleButtonsStyle}" />
                                 </StackPanel>
                             </ScrollViewer>
-                        </CustomControls:CollapsableGrids>
+                        </CustomControls:Accordion>
                     </Grid>
-                    <CustomControls:CollapsableGrids
+                    <CustomControls:Accordion
+                        Title="飞行时长"
                         Grid.Column="0"
                         Margin="2,0,0,0"
-                        Background="#FF00B3FF"
+                        Background="#FFE5B663"
                         BorderThickness="0"
-                        Cursor="Hand"
                         ExpandDirection="Down"
                         FontSize="15"
-                        Foreground="White"
-                        Header="飞行时长"
+                        FreshVisibility="Collapsed"
                         IsExpanded="True"
-                        Style="{DynamicResource CollapsableGrid}">
+                        ModifyVisibility="Collapsed"
+                        Style="{DynamicResource AccordionStyle}"
+                        TitleForeground="Black">
                         <Grid Height="25" Background="#2F2F2F">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -461,7 +465,7 @@
                                 IsChecked="{Binding LongDuration, Mode=TwoWay}"
                                 Style="{DynamicResource TextToggleButtonsStyle}" />
                         </Grid>
-                    </CustomControls:CollapsableGrids>
+                    </CustomControls:Accordion>
                 </StackPanel>
             </ScrollViewer>
             <Canvas

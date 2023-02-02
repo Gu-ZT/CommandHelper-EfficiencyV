@@ -1,6 +1,5 @@
 ﻿using cbhk_environment.ControlsDataContexts;
-using cbhk_environment.CustomControls;
-using cbhk_environment.GeneralTools.ScrollViewerHelper;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -11,9 +10,31 @@ namespace cbhk_environment.Generators.ItemGenerator.Components
     /// </summary>
     public partial class CanDestroyItems : UserControl
     {
+        private IconComboBoxItem block;
+        public IconComboBoxItem Block
+        {
+            get
+            {
+                return block;
+            }
+            set
+            {
+                block = value;
+            }
+        }
+
+        public string Result
+        {
+            get
+            {
+                string result = "\"" + MainWindow.ItemDataBase.Where(item => item.Key.Split(':')[1] == Block.ComboBoxItemText).Select(item=>item.Key).First().Split(':')[0]+"\",";
+                return result;
+            }
+        }
         public CanDestroyItems()
         {
             InitializeComponent();
+            DataContext = this;
         }
 
         /// <summary>
@@ -23,19 +44,10 @@ namespace cbhk_environment.Generators.ItemGenerator.Components
         /// <param name="e"></param>
         private void IconTextButtons_Click(object sender, RoutedEventArgs e)
         {
-            IconTextButtons button = sender as IconTextButtons;
-            CanDestroyItems canDestroyItems = button.FindParent<CanDestroyItems>();
-            StackPanel parent = canDestroyItems.FindParent<StackPanel>();
-            #region 删除对应数据
-            int index = parent.Children.IndexOf(canDestroyItems);
-            item_datacontext.CanDestroyBlocks.RemoveAt(index);
-            #endregion
-
+            StackPanel parent = Parent as StackPanel;
             //删除自己
-            parent.Children.Remove(canDestroyItems);
+            parent.Children.Remove(this);
         }
-
-        bool ItemLoaded = false;
 
         /// <summary>
         /// 加载所有子级成员
@@ -44,41 +56,8 @@ namespace cbhk_environment.Generators.ItemGenerator.Components
         /// <param name="e"></param>
         private void CanDestroyItemLoaded(object sender, RoutedEventArgs e)
         {
-            IconComboBoxs iconComboBoxs = sender as IconComboBoxs;
-            iconComboBoxs.ItemsSource = MainWindow.ItemIdSource;
-            iconComboBoxs.SelectedIndex = 0;
-            ItemLoaded = true;
-            CanDestroyItemSelectionChanged(iconComboBoxs,null);
-        }
-
-        /// <summary>
-        /// 更新已选中的成员
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void CanDestroyItemSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if(ItemLoaded)
-            {
-                ComboBox current_box = sender as ComboBox;
-                IconComboBoxItem current_data = current_box.SelectedItem as IconComboBoxItem;
-                CanDestroyItems canDestroyItems = current_box.FindParent<CanDestroyItems>();
-                StackPanel parent = canDestroyItems.FindParent<StackPanel>();
-                int index = parent.Children.IndexOf(canDestroyItems);
-                #region 删除上一条数据
-                if (item_datacontext.CanDestroyBlocks.Count > 0 && (item_datacontext.CanDestroyBlocks.Count - 1) >= index)
-                {
-                    item_datacontext.CanDestroyBlocks.RemoveAt(index);
-                }
-                #endregion
-
-                #region 添加当前选中的成员
-                if ((item_datacontext.CanDestroyBlocks.Count - 1) >= 0)
-                    item_datacontext.CanDestroyBlocks.Insert(index, current_data.ComboBoxItemText);
-                else
-                    item_datacontext.CanDestroyBlocks.Add(current_data.ComboBoxItemText);
-                #endregion
-            }
+            ComboBox comboBoxs = sender as ComboBox;
+            comboBoxs.ItemsSource = MainWindow.ItemIdSource;
         }
     }
 }

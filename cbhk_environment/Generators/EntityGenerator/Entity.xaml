@@ -34,7 +34,7 @@
     <Window.Resources>
         <ImageBrush x:Key="ButtonNormal" ImageSource="/cbhk_environment;component/resources/common/images/ButtonNormal.png" />
         <ImageBrush x:Key="ButtonPressed" ImageSource="/cbhk_environment;component/resources/common/images/ButtonPressed.png" />
-        <ImageBrush x:Key="IssueIcon" ImageSource="/cbhk_environment;component/resources/common/images/issue.png" />
+        <ImageBrush x:Key="IssueIcon" ImageSource="/cbhk_environment;component/resources/common/images/Issue.png" />
         <ImageBrush x:Key="TextBoxBackground" ImageSource="/cbhk_environment;component/resources/common/images/TextEditBox.png" />
         <ImageBrush x:Key="DataButtonBackground" ImageSource="/cbhk_environment;component/resources/common/images/TextToggleButtonNormal.png" />
         <ImageBrush x:Key="DataButtonPressedBackground" ImageSource="/cbhk_environment;component/resources/common/images/TextToggleButtonPressed.png" />
@@ -105,40 +105,36 @@
                 HeaderWidth="20"
                 IsChecked="{Binding OverLying, Mode=OneWayToSource}"
                 Style="{DynamicResource IconCheckBox}" />
-            <Menu Background="Transparent">
+            <CustomControls:IconTextButtons
+                Width="18"
+                Height="18"
+                Margin="5,0"
+                Background="{StaticResource IssueIcon}"
+                PressedBackground="{StaticResource IssueIcon}"
+                Style="{DynamicResource IconTextButton}"
+                ToolTip="开启生成覆盖后生成结果将覆盖掉上一次的记录"
+                ToolTipService.InitialShowDelay="0"
+                ToolTipService.ShowDuration="3000" />
+            <Menu Margin="0,0,5,0" Background="Transparent">
                 <MenuItem
-                    Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DockPanel}, Path=ActualHeight}"
-                    Padding="5,0,5,5"
-                    Background="#2F2F2F"
+                    Width="20"
+                    Height="20"
+                    Margin="0,2.5,0,0"
+                    VerticalAlignment="Center"
                     BorderBrush="{x:Null}"
                     BorderThickness="0"
-                    Cursor="Hand"
                     FlowDirection="LeftToRight"
                     Foreground="White"
                     ToolTip="切换版本"
                     ToolTipService.InitialShowDelay="0">
-                    <MenuItem.Header>
-                        <Viewbox
-                            Width="25"
-                            Height="25"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center">
-                            <Path
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Fill="White">
-                                <Path.Data>
-                                    M234.666667 430.933333H128l85.333333-81.066666L345.6 213.333333l51.2 51.2-81.066667 81.066667H896V426.666667H234.666667v4.266666zM793.6 554.666667H896l-85.333333 81.066666-132.266667 132.266667-51.2-51.2 81.066667-81.066667H128V554.666667h665.6z
-                                </Path.Data>
-                            </Path>
-                        </Viewbox>
-                    </MenuItem.Header>
+                    <MenuItem.Background>
+                        <ImageBrush ImageSource="/cbhk_environment;component/resources/common/images/Switch.png" />
+                    </MenuItem.Background>
                     <CustomControls:TextToggleButtons
                         HorizontalAlignment="Stretch"
                         Background="Transparent"
                         BorderThickness="0"
                         Content="1.12-"
-                        Cursor="Hand"
                         FontSize="20"
                         Foreground="White"
                         Style="{StaticResource TextToggleButtonsStyle}" />
@@ -147,7 +143,6 @@
                         Background="Transparent"
                         BorderThickness="0"
                         Content="1.13+"
-                        Cursor="Hand"
                         FontSize="20"
                         Foreground="White"
                         IsChecked="{Binding Version1_13, Mode=TwoWay}"
@@ -178,18 +173,20 @@
         <ScrollViewer
             Grid.Row="1"
             HorizontalScrollBarVisibility="Disabled"
-            Style="{DynamicResource for_scrollviewer}"
+            Style="{DynamicResource DefaultScrollViewer}"
             VerticalScrollBarVisibility="Auto">
             <StackPanel>
-                <CustomControls:CollapsableGrids
-                    Margin="2,0"
-                    Background="#FF00B3FF"
-                    Cursor="Hand"
+                <CustomControls:Accordion
+                    Title="通用"
+                    Margin="2,2.5"
+                    Background="#FFE5B663"
                     FontSize="15"
                     Foreground="White"
-                    Header="通用"
+                    FreshVisibility="Collapsed"
                     IsExpanded="True"
-                    Style="{DynamicResource CollapsableGrid}">
+                    ModifyVisibility="Collapsed"
+                    Style="{DynamicResource AccordionStyle}"
+                    TitleForeground="Black">
                     <StackPanel>
                         <DockPanel Background="#2F2F2F">
                             <TextBlock
@@ -203,7 +200,7 @@
                                 Margin="5,0"
                                 HorizontalAlignment="Left"
                                 BorderBrush="Black"
-                                BorderThickness="0"
+                                BorderThickness="1"
                                 CaretBrush="White"
                                 FontSize="15"
                                 Foreground="White"
@@ -244,10 +241,10 @@
                                 Foreground="White"
                                 Text="Tags" />
                             <TextBox
-                                Width="100"
                                 Margin="5,0"
-                                HorizontalAlignment="Left"
+                                HorizontalAlignment="Stretch"
                                 BorderBrush="Black"
+                                BorderThickness="1"
                                 FontSize="15"
                                 Foreground="White"
                                 Text="{Binding Tags, Mode=TwoWay}" />
@@ -296,10 +293,10 @@
                                 Foreground="White"
                                 Text="队伍" />
                             <TextBox
-                                Width="140"
                                 Margin="5,0"
-                                HorizontalAlignment="Left"
+                                HorizontalAlignment="Stretch"
                                 BorderBrush="Black"
+                                BorderThickness="1"
                                 FontSize="15"
                                 Foreground="White"
                                 Text="{Binding Team, Mode=TwoWay}" />
@@ -402,30 +399,32 @@
                                 Style="{DynamicResource TextCheckBox}" />
                         </DockPanel>
                     </StackPanel>
-                </CustomControls:CollapsableGrids>
-                <CustomControls:CollapsableGrids
-                    Margin="2,0"
-                    Background="#FF00B3FF"
-                    Cursor="Hand"
+                </CustomControls:Accordion>
+                <CustomControls:Accordion
+                    Title="特殊"
+                    Margin="2,2.5"
+                    Background="#FFE5B663"
                     FontSize="15"
-                    Foreground="White"
-                    Header="特殊"
+                    FreshVisibility="Collapsed"
                     IsExpanded="False"
-                    Style="{DynamicResource CollapsableGrid}">
+                    ModifyVisibility="Collapsed"
+                    Style="{DynamicResource AccordionStyle}"
+                    TitleForeground="Black">
                     <StackPanel />
-                </CustomControls:CollapsableGrids>
-                <CustomControls:CollapsableGrids
-                    Margin="2,0"
-                    Background="#FF00B3FF"
-                    Cursor="Hand"
+                </CustomControls:Accordion>
+                <CustomControls:Accordion
+                    Title="数据"
+                    Margin="2,2.5"
+                    Background="#FFE5B663"
                     FontSize="15"
-                    Foreground="White"
-                    Header="数据"
+                    FreshVisibility="Collapsed"
                     IsExpanded="True"
-                    Style="{DynamicResource CollapsableGrid}">
+                    ModifyVisibility="Collapsed"
+                    Style="{DynamicResource AccordionStyle}"
+                    TitleForeground="Black">
                     <Border Background="#2F2F2F">
                         <StackPanel>
-                            <DockPanel>
+                            <DockPanel Margin="10,0,0,0">
                                 <TextBlock
                                     Margin="2.5,0"
                                     HorizontalAlignment="Left"
@@ -447,16 +446,17 @@
                                     </ity:Interaction.Triggers>
                                 </ComboBox>
                             </DockPanel>
-                            <CustomControls:CollapsableGrids
-                                Margin="2,0"
-                                Background="#FF00B3FF"
-                                Cursor="Hand"
+                            <CustomControls:Accordion
+                                Title="属性"
+                                Margin="10,2.5"
+                                Background="#FFE5B663"
                                 FontSize="15"
-                                Foreground="White"
-                                Header="属性"
+                                FreshVisibility="Collapsed"
                                 IsExpanded="True"
-                                Style="{DynamicResource CollapsableGrid}">
-                                <Border Background="#2F2F2F">
+                                ModifyVisibility="Collapsed"
+                                Style="{DynamicResource AccordionStyle}"
+                                TitleForeground="Black">
+                                <Border Margin="5,0" Background="#2F2F2F">
                                     <StackPanel>
                                         <DockPanel>
                                             <TextBlock
@@ -482,9 +482,8 @@
                                                 Foreground="White"
                                                 Text="抗击退" />
                                             <CustomControls:ColorNumbericUpDowns
-                                                Width="200"
                                                 Height="25"
-                                                HorizontalAlignment="Left"
+                                                HorizontalAlignment="Stretch"
                                                 ArrowHeight="25"
                                                 ArrowWidth="25"
                                                 MaxValue="2147483647"
@@ -510,14 +509,15 @@
                                                 Template="{DynamicResource ColorNumbericUpDown}"
                                                 Text="{Binding MovementSpeed, Mode=TwoWay}" />
                                             <TextBlock
-                                                Margin="5,0"
+                                                Margin="5,0,0,0"
                                                 HorizontalAlignment="Left"
                                                 VerticalAlignment="Center"
                                                 Foreground="White"
                                                 Text="跟踪距离" />
                                             <CustomControls:ColorNumbericUpDowns
-                                                Width="200"
+                                                Width="177"
                                                 Height="25"
+                                                Margin="5,0,0,0"
                                                 HorizontalAlignment="Left"
                                                 ArrowHeight="25"
                                                 ArrowWidth="25"
@@ -550,7 +550,7 @@
                                                 Foreground="White"
                                                 Text="攻击速度" />
                                             <CustomControls:ColorNumbericUpDowns
-                                                Width="200"
+                                                Width="177"
                                                 Height="25"
                                                 HorizontalAlignment="Left"
                                                 ArrowHeight="25"
@@ -584,7 +584,7 @@
                                                 Foreground="White"
                                                 Text="护甲韧性" />
                                             <CustomControls:ColorNumbericUpDowns
-                                                Width="200"
+                                                Width="177"
                                                 Height="25"
                                                 HorizontalAlignment="Left"
                                                 ArrowHeight="25"
@@ -596,506 +596,470 @@
                                         </DockPanel>
                                     </StackPanel>
                                 </Border>
-                            </CustomControls:CollapsableGrids>
+                            </CustomControls:Accordion>
                         </StackPanel>
                     </Border>
-                </CustomControls:CollapsableGrids>
-                <CustomControls:CollapsableGrids
-                    Margin="2,0"
-                    Background="#FF00B3FF"
-                    Cursor="Hand"
+                </CustomControls:Accordion>
+                <CustomControls:Accordion
+                    Title="外观"
+                    Margin="2,2.5"
+                    Background="#FFE5B663"
                     FontSize="15"
-                    Foreground="White"
-                    Header="外观"
+                    FreshVisibility="Collapsed"
                     IsExpanded="False"
-                    Style="{DynamicResource CollapsableGrid}">
-                    <Border Background="#2F2F2F">
-                        <StackPanel Margin="2,0,0,0">
-                            <CustomControls:CollapsableGrids
-                                Margin="4,0"
-                                Background="#FF00B3FF"
-                                Cursor="Hand"
-                                FontSize="15"
-                                Foreground="White"
-                                Header="手持"
-                                IsExpanded="True"
-                                Style="{DynamicResource CollapsableGrid}">
-                                <Border Background="#2F2F2F">
-                                    <StackPanel>
+                    ModifyVisibility="Collapsed"
+                    Style="{DynamicResource AccordionStyle}"
+                    TitleForeground="Black">
+                    <StackPanel Margin="5,0,0,0">
+                        <CustomControls:Accordion
+                            Title="手持"
+                            Margin="10,2.5"
+                            Background="#FFE5B663"
+                            FontSize="15"
+                            FreshVisibility="Collapsed"
+                            IsExpanded="True"
+                            ModifyVisibility="Collapsed"
+                            Style="{DynamicResource AccordionStyle}"
+                            TitleForeground="Black">
+                            <Border Background="#2F2F2F">
+                                <StackPanel>
+                                    <TextBlock
+                                        Margin="30,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Foreground="White"
+                                        Text="主手" />
+                                    <DockPanel>
+                                        <CustomControls:IconTextButtons
+                                            Width="80"
+                                            Height="30"
+                                            Margin="5,0"
+                                            Padding="0,0,0,2"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Background="{StaticResource ButtonNormal}"
+                                            BorderThickness="0"
+                                            Content="选择物品"
+                                            Foreground="Black"
+                                            PressedBackground="{StaticResource ButtonPressed}"
+                                            Style="{DynamicResource IconTextButton}"
+                                            Tag="{Binding MainHand, Mode=TwoWay}" />
                                         <TextBlock
                                             Margin="20,0,0,0"
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Center"
                                             Foreground="White"
-                                            Text="主手" />
-                                        <DockPanel>
-                                            <Border
-                                                HorizontalAlignment="Left"
-                                                Background="#FF00E2FF"
-                                                BorderBrush="Black"
-                                                BorderThickness="1"
-                                                CornerRadius="10">
-                                                <Button
-                                                    Margin="5,0"
-                                                    HorizontalAlignment="Left"
-                                                    VerticalAlignment="Center"
-                                                    Background="Transparent"
-                                                    BorderThickness="0"
-                                                    Content="选择物品"
-                                                    Foreground="White"
-                                                    Tag="{Binding MainHand, Mode=TwoWay}" />
-                                            </Border>
-                                            <TextBlock
-                                                Margin="20,0,0,0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Center"
-                                                Foreground="White"
-                                                Text="掉落概率" />
-                                            <CustomControls:ColorSliders
-                                                Width="200"
-                                                Height="20"
-                                                Margin="5,0,0,0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Center"
-                                                BackgroundColor="Gray"
-                                                BackgroundHeight="10"
-                                                BackgroundWidth="190"
-                                                BorderThickness="0"
-                                                Foreground="Black"
-                                                HanderHeight="20"
-                                                HanderWidth="20"
-                                                Maximum="100"
-                                                Minimum="0"
-                                                Style="{DynamicResource ColorSlider}"
-                                                ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Value}"
-                                                ToolTipService.InitialShowDelay="0"
-                                                ToolTipService.ShowDuration="1000"
-                                                Value="{Binding MainHandDropChance, Mode=TwoWay}" />
-                                            <CustomControls:ColorNumbericUpDowns
-                                                Width="180"
-                                                Height="25"
-                                                HorizontalAlignment="Left"
-                                                ArrowForeground="White"
-                                                ArrowHeight="25"
-                                                ArrowWidth="25"
-                                                Background="Transparent"
-                                                Foreground="White"
-                                                MaxValue="100"
-                                                MinValue="0"
-                                                Template="{DynamicResource ColorNumbericUpDown}"
-                                                Text="{Binding MainHandDropChance, Mode=TwoWay}" />
-                                        </DockPanel>
+                                            Text="掉落概率" />
+                                        <CustomControls:ColorSliders
+                                            Width="200"
+                                            Height="20"
+                                            Margin="5,0,0,0"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            BackgroundColor="Gray"
+                                            BackgroundHeight="10"
+                                            BackgroundWidth="190"
+                                            BorderThickness="0"
+                                            Foreground="Black"
+                                            HanderHeight="20"
+                                            HanderWidth="20"
+                                            Maximum="100"
+                                            Minimum="0"
+                                            Style="{DynamicResource ColorSlider}"
+                                            ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Value}"
+                                            ToolTipService.InitialShowDelay="0"
+                                            ToolTipService.ShowDuration="1000"
+                                            Value="{Binding MainHandDropChance, Mode=TwoWay}" />
+                                        <CustomControls:ColorNumbericUpDowns
+                                            Width="145"
+                                            Height="25"
+                                            HorizontalAlignment="Left"
+                                            ArrowForeground="White"
+                                            ArrowHeight="25"
+                                            ArrowWidth="25"
+                                            Background="Transparent"
+                                            Foreground="White"
+                                            MaxValue="100"
+                                            MinValue="0"
+                                            Template="{DynamicResource ColorNumbericUpDown}"
+                                            Text="{Binding MainHandDropChance, Mode=TwoWay}" />
+                                    </DockPanel>
+                                    <TextBlock
+                                        Margin="30,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Foreground="White"
+                                        Text="副手" />
+                                    <DockPanel>
+                                        <CustomControls:IconTextButtons
+                                            Width="80"
+                                            Height="30"
+                                            Margin="5,0"
+                                            Padding="0,0,0,2"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Background="{StaticResource ButtonNormal}"
+                                            BorderThickness="0"
+                                            Content="选择物品"
+                                            Foreground="Black"
+                                            PressedBackground="{StaticResource ButtonPressed}"
+                                            Style="{DynamicResource IconTextButton}"
+                                            Tag="{Binding OffHand, Mode=TwoWay}" />
                                         <TextBlock
                                             Margin="20,0,0,0"
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Center"
                                             Foreground="White"
-                                            Text="副手" />
-                                        <DockPanel>
-                                            <Border
-                                                HorizontalAlignment="Left"
-                                                Background="#FF00E2FF"
-                                                BorderBrush="Black"
-                                                BorderThickness="1"
-                                                CornerRadius="10">
-                                                <Button
-                                                    Margin="5,0"
-                                                    HorizontalAlignment="Left"
-                                                    VerticalAlignment="Center"
-                                                    Background="Transparent"
-                                                    BorderThickness="0"
-                                                    Content="选择物品"
-                                                    Foreground="White"
-                                                    Tag="{Binding OffHand, Mode=TwoWay}" />
-                                            </Border>
-                                            <TextBlock
-                                                Margin="20,0,0,0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Center"
-                                                Foreground="White"
-                                                Text="掉落概率" />
-                                            <CustomControls:ColorSliders
-                                                Width="200"
-                                                Height="20"
-                                                Margin="5,0,0,0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Center"
-                                                BackgroundColor="Gray"
-                                                BackgroundHeight="10"
-                                                BackgroundWidth="190"
-                                                BorderThickness="0"
-                                                Foreground="Black"
-                                                HanderHeight="20"
-                                                HanderWidth="20"
-                                                Maximum="100"
-                                                Minimum="0"
-                                                Style="{DynamicResource ColorSlider}"
-                                                ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Value}"
-                                                ToolTipService.InitialShowDelay="0"
-                                                ToolTipService.ShowDuration="1000"
-                                                Value="{Binding OffHandDropChance, Mode=TwoWay}" />
-                                            <CustomControls:ColorNumbericUpDowns
-                                                Width="180"
-                                                Height="25"
-                                                HorizontalAlignment="Left"
-                                                ArrowForeground="White"
-                                                ArrowHeight="25"
-                                                ArrowWidth="25"
-                                                Background="Transparent"
-                                                Foreground="White"
-                                                MaxValue="100"
-                                                MinValue="0"
-                                                Template="{DynamicResource ColorNumbericUpDown}"
-                                                Text="{Binding OffHandDropChance, Mode=TwoWay}" />
-                                        </DockPanel>
-                                    </StackPanel>
-                                </Border>
-                            </CustomControls:CollapsableGrids>
-                            <CustomControls:CollapsableGrids
-                                Margin="4,0"
-                                Background="#FF00B3FF"
-                                Cursor="Hand"
-                                FontSize="15"
-                                Foreground="White"
-                                Header="装备"
-                                IsExpanded="True"
-                                Style="{DynamicResource CollapsableGrid}">
-                                <Border Background="#2F2F2F">
-                                    <StackPanel>
+                                            Text="掉落概率" />
+                                        <CustomControls:ColorSliders
+                                            Width="200"
+                                            Height="20"
+                                            Margin="5,0,0,0"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            BackgroundColor="Gray"
+                                            BackgroundHeight="10"
+                                            BackgroundWidth="190"
+                                            BorderThickness="0"
+                                            Foreground="Black"
+                                            HanderHeight="20"
+                                            HanderWidth="20"
+                                            Maximum="100"
+                                            Minimum="0"
+                                            Style="{DynamicResource ColorSlider}"
+                                            ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Value}"
+                                            ToolTipService.InitialShowDelay="0"
+                                            ToolTipService.ShowDuration="1000"
+                                            Value="{Binding OffHandDropChance, Mode=TwoWay}" />
+                                        <CustomControls:ColorNumbericUpDowns
+                                            Width="145"
+                                            Height="25"
+                                            HorizontalAlignment="Left"
+                                            ArrowForeground="White"
+                                            ArrowHeight="25"
+                                            ArrowWidth="25"
+                                            Background="Transparent"
+                                            Foreground="White"
+                                            MaxValue="100"
+                                            MinValue="0"
+                                            Template="{DynamicResource ColorNumbericUpDown}"
+                                            Text="{Binding OffHandDropChance, Mode=TwoWay}" />
+                                    </DockPanel>
+                                </StackPanel>
+                            </Border>
+                        </CustomControls:Accordion>
+                        <CustomControls:Accordion
+                            Title="装备"
+                            Margin="10,2.5"
+                            Background="#FFE5B663"
+                            FontSize="15"
+                            FreshVisibility="Collapsed"
+                            IsExpanded="True"
+                            ModifyVisibility="Collapsed"
+                            Style="{DynamicResource AccordionStyle}"
+                            TitleForeground="Black">
+                            <Border Background="#2F2F2F">
+                                <StackPanel>
+                                    <TextBlock
+                                        Margin="30,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Foreground="White"
+                                        Text="头部" />
+                                    <DockPanel>
+                                        <CustomControls:IconTextButtons
+                                            Width="80"
+                                            Height="30"
+                                            Margin="5,0"
+                                            Padding="0,0,0,2"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Background="{StaticResource ButtonNormal}"
+                                            BorderThickness="0"
+                                            Content="选择物品"
+                                            Foreground="Black"
+                                            PressedBackground="{StaticResource ButtonPressed}"
+                                            Style="{DynamicResource IconTextButton}"
+                                            Tag="{Binding HeadItem, Mode=TwoWay}" />
                                         <TextBlock
                                             Margin="20,0,0,0"
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Center"
                                             Foreground="White"
-                                            Text="头部" />
-                                        <DockPanel>
-                                            <Border
-                                                HorizontalAlignment="Left"
-                                                Background="#FF00E2FF"
-                                                BorderBrush="Black"
-                                                BorderThickness="1"
-                                                CornerRadius="10">
-                                                <Button
-                                                    Margin="5,0"
-                                                    HorizontalAlignment="Left"
-                                                    VerticalAlignment="Center"
-                                                    Background="Transparent"
-                                                    BorderThickness="0"
-                                                    Content="选择物品"
-                                                    Foreground="White"
-                                                    Tag="{Binding HeadItem, Mode=TwoWay}" />
-                                            </Border>
-                                            <TextBlock
-                                                Margin="20,0,0,0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Center"
-                                                Foreground="White"
-                                                Text="掉落概率" />
-                                            <CustomControls:ColorSliders
-                                                Width="200"
-                                                Height="20"
-                                                Margin="5,0,0,0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Center"
-                                                BackgroundColor="Gray"
-                                                BackgroundHeight="10"
-                                                BackgroundWidth="190"
-                                                BorderThickness="0"
-                                                Foreground="Black"
-                                                HanderHeight="20"
-                                                HanderWidth="20"
-                                                Maximum="100"
-                                                Minimum="0"
-                                                Style="{DynamicResource ColorSlider}"
-                                                ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Value}"
-                                                ToolTipService.InitialShowDelay="0"
-                                                ToolTipService.ShowDuration="1000"
-                                                Value="{Binding HeadItemDropChance, Mode=TwoWay}" />
-                                            <CustomControls:ColorNumbericUpDowns
-                                                Width="180"
-                                                Height="25"
-                                                HorizontalAlignment="Left"
-                                                ArrowForeground="White"
-                                                ArrowHeight="25"
-                                                ArrowWidth="25"
-                                                Background="Transparent"
-                                                Foreground="White"
-                                                MaxValue="100"
-                                                MinValue="0"
-                                                Template="{DynamicResource ColorNumbericUpDown}"
-                                                Text="{Binding HeadItemDropChance, Mode=TwoWay}" />
-                                        </DockPanel>
+                                            Text="掉落概率" />
+                                        <CustomControls:ColorSliders
+                                            Width="200"
+                                            Height="20"
+                                            Margin="5,0,0,0"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            BackgroundColor="Gray"
+                                            BackgroundHeight="10"
+                                            BackgroundWidth="190"
+                                            BorderThickness="0"
+                                            Foreground="Black"
+                                            HanderHeight="20"
+                                            HanderWidth="20"
+                                            Maximum="100"
+                                            Minimum="0"
+                                            Style="{DynamicResource ColorSlider}"
+                                            ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Value}"
+                                            ToolTipService.InitialShowDelay="0"
+                                            ToolTipService.ShowDuration="1000"
+                                            Value="{Binding HeadItemDropChance, Mode=TwoWay}" />
+                                        <CustomControls:ColorNumbericUpDowns
+                                            Width="145"
+                                            Height="25"
+                                            HorizontalAlignment="Left"
+                                            ArrowForeground="White"
+                                            ArrowHeight="25"
+                                            ArrowWidth="25"
+                                            Background="Transparent"
+                                            Foreground="White"
+                                            MaxValue="100"
+                                            MinValue="0"
+                                            Template="{DynamicResource ColorNumbericUpDown}"
+                                            Text="{Binding HeadItemDropChance, Mode=TwoWay}" />
+                                    </DockPanel>
+                                    <TextBlock
+                                        Margin="30,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Foreground="White"
+                                        Text="胸部" />
+                                    <DockPanel>
+                                        <CustomControls:IconTextButtons
+                                            Width="80"
+                                            Height="30"
+                                            Margin="5,0"
+                                            Padding="0,0,0,2"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Background="{StaticResource ButtonNormal}"
+                                            BorderThickness="0"
+                                            Content="选择物品"
+                                            Foreground="Black"
+                                            PressedBackground="{StaticResource ButtonPressed}"
+                                            Style="{DynamicResource IconTextButton}"
+                                            Tag="{Binding ChestItem, Mode=TwoWay}" />
                                         <TextBlock
                                             Margin="20,0,0,0"
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Center"
                                             Foreground="White"
-                                            Text="胸部" />
-                                        <DockPanel>
-                                            <Border
-                                                HorizontalAlignment="Left"
-                                                Background="#FF00E2FF"
-                                                BorderBrush="Black"
-                                                BorderThickness="1"
-                                                CornerRadius="10">
-                                                <Button
-                                                    Margin="5,0"
-                                                    HorizontalAlignment="Left"
-                                                    VerticalAlignment="Center"
-                                                    Background="Transparent"
-                                                    BorderThickness="0"
-                                                    Content="选择物品"
-                                                    Foreground="White"
-                                                    Tag="{Binding ChestItem, Mode=TwoWay}" />
-                                            </Border>
-                                            <TextBlock
-                                                Margin="20,0,0,0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Center"
-                                                Foreground="White"
-                                                Text="掉落概率" />
-                                            <CustomControls:ColorSliders
-                                                Width="200"
-                                                Height="20"
-                                                Margin="5,0,0,0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Center"
-                                                BackgroundColor="Gray"
-                                                BackgroundHeight="10"
-                                                BackgroundWidth="190"
-                                                BorderThickness="0"
-                                                Foreground="Black"
-                                                HanderHeight="20"
-                                                HanderWidth="20"
-                                                Maximum="100"
-                                                Minimum="0"
-                                                Style="{DynamicResource ColorSlider}"
-                                                ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Value}"
-                                                ToolTipService.InitialShowDelay="0"
-                                                ToolTipService.ShowDuration="1000"
-                                                Value="{Binding ChestItemDropChance, Mode=TwoWay}" />
-                                            <CustomControls:ColorNumbericUpDowns
-                                                Width="180"
-                                                Height="25"
-                                                HorizontalAlignment="Left"
-                                                ArrowForeground="White"
-                                                ArrowHeight="25"
-                                                ArrowWidth="25"
-                                                Background="Transparent"
-                                                Foreground="White"
-                                                MaxValue="100"
-                                                MinValue="0"
-                                                Template="{DynamicResource ColorNumbericUpDown}"
-                                                Text="{Binding ChestItemDropChance, Mode=TwoWay}" />
-                                        </DockPanel>
+                                            Text="掉落概率" />
+                                        <CustomControls:ColorSliders
+                                            Width="200"
+                                            Height="20"
+                                            Margin="5,0,0,0"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            BackgroundColor="Gray"
+                                            BackgroundHeight="10"
+                                            BackgroundWidth="190"
+                                            BorderThickness="0"
+                                            Foreground="Black"
+                                            HanderHeight="20"
+                                            HanderWidth="20"
+                                            Maximum="100"
+                                            Minimum="0"
+                                            Style="{DynamicResource ColorSlider}"
+                                            ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Value}"
+                                            ToolTipService.InitialShowDelay="0"
+                                            ToolTipService.ShowDuration="1000"
+                                            Value="{Binding ChestItemDropChance, Mode=TwoWay}" />
+                                        <CustomControls:ColorNumbericUpDowns
+                                            Width="145"
+                                            Height="25"
+                                            HorizontalAlignment="Left"
+                                            ArrowForeground="White"
+                                            ArrowHeight="25"
+                                            ArrowWidth="25"
+                                            Background="Transparent"
+                                            Foreground="White"
+                                            MaxValue="100"
+                                            MinValue="0"
+                                            Template="{DynamicResource ColorNumbericUpDown}"
+                                            Text="{Binding ChestItemDropChance, Mode=TwoWay}" />
+                                    </DockPanel>
+                                    <TextBlock
+                                        Margin="30,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Foreground="White"
+                                        Text="腿部" />
+                                    <DockPanel>
+                                        <CustomControls:IconTextButtons
+                                            Width="80"
+                                            Height="30"
+                                            Margin="5,0"
+                                            Padding="0,0,0,2"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Background="{StaticResource ButtonNormal}"
+                                            BorderThickness="0"
+                                            Content="选择物品"
+                                            Foreground="Black"
+                                            PressedBackground="{StaticResource ButtonPressed}"
+                                            Style="{DynamicResource IconTextButton}"
+                                            Tag="{Binding LegItem, Mode=TwoWay}" />
                                         <TextBlock
                                             Margin="20,0,0,0"
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Center"
                                             Foreground="White"
-                                            Text="腿部" />
-                                        <DockPanel>
-                                            <Border
-                                                HorizontalAlignment="Left"
-                                                Background="#FF00E2FF"
-                                                BorderBrush="Black"
-                                                BorderThickness="1"
-                                                CornerRadius="10">
-                                                <Button
-                                                    Margin="5,0"
-                                                    HorizontalAlignment="Left"
-                                                    VerticalAlignment="Center"
-                                                    Background="Transparent"
-                                                    BorderThickness="0"
-                                                    Content="选择物品"
-                                                    Foreground="White"
-                                                    Tag="{Binding LegItem, Mode=TwoWay}" />
-                                            </Border>
-                                            <TextBlock
-                                                Margin="20,0,0,0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Center"
-                                                Foreground="White"
-                                                Text="掉落概率" />
-                                            <CustomControls:ColorSliders
-                                                Width="200"
-                                                Height="20"
-                                                Margin="5,0,0,0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Center"
-                                                BackgroundColor="Gray"
-                                                BackgroundHeight="10"
-                                                BackgroundWidth="190"
-                                                BorderThickness="0"
-                                                Foreground="Black"
-                                                HanderHeight="20"
-                                                HanderWidth="20"
-                                                Maximum="100"
-                                                Minimum="0"
-                                                Style="{DynamicResource ColorSlider}"
-                                                ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Value}"
-                                                ToolTipService.InitialShowDelay="0"
-                                                ToolTipService.ShowDuration="1000"
-                                                Value="{Binding LegItemDropChance, Mode=TwoWay}" />
-                                            <CustomControls:ColorNumbericUpDowns
-                                                Width="180"
-                                                Height="25"
-                                                HorizontalAlignment="Left"
-                                                ArrowForeground="White"
-                                                ArrowHeight="25"
-                                                ArrowWidth="25"
-                                                Background="Transparent"
-                                                Foreground="White"
-                                                MaxValue="100"
-                                                MinValue="0"
-                                                Template="{DynamicResource ColorNumbericUpDown}"
-                                                Text="{Binding LegItemDropChance, Mode=TwoWay}" />
-                                        </DockPanel>
+                                            Text="掉落概率" />
+                                        <CustomControls:ColorSliders
+                                            Width="200"
+                                            Height="20"
+                                            Margin="5,0,0,0"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            BackgroundColor="Gray"
+                                            BackgroundHeight="10"
+                                            BackgroundWidth="190"
+                                            BorderThickness="0"
+                                            Foreground="Black"
+                                            HanderHeight="20"
+                                            HanderWidth="20"
+                                            Maximum="100"
+                                            Minimum="0"
+                                            Style="{DynamicResource ColorSlider}"
+                                            ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Value}"
+                                            ToolTipService.InitialShowDelay="0"
+                                            ToolTipService.ShowDuration="1000"
+                                            Value="{Binding LegItemDropChance, Mode=TwoWay}" />
+                                        <CustomControls:ColorNumbericUpDowns
+                                            Width="145"
+                                            Height="25"
+                                            HorizontalAlignment="Left"
+                                            ArrowForeground="White"
+                                            ArrowHeight="25"
+                                            ArrowWidth="25"
+                                            Background="Transparent"
+                                            Foreground="White"
+                                            MaxValue="100"
+                                            MinValue="0"
+                                            Template="{DynamicResource ColorNumbericUpDown}"
+                                            Text="{Binding LegItemDropChance, Mode=TwoWay}" />
+                                    </DockPanel>
+                                    <TextBlock
+                                        Margin="30,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Foreground="White"
+                                        Text="脚部" />
+                                    <DockPanel>
+                                        <CustomControls:IconTextButtons
+                                            Width="80"
+                                            Height="30"
+                                            Margin="5,0"
+                                            Padding="0,0,0,2"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Background="{StaticResource ButtonNormal}"
+                                            BorderThickness="0"
+                                            Content="选择物品"
+                                            Foreground="Black"
+                                            PressedBackground="{StaticResource ButtonPressed}"
+                                            Style="{DynamicResource IconTextButton}"
+                                            Tag="{Binding BootItem, Mode=TwoWay}" />
                                         <TextBlock
                                             Margin="20,0,0,0"
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Center"
                                             Foreground="White"
-                                            Text="脚部" />
-                                        <DockPanel>
-                                            <Border
-                                                HorizontalAlignment="Left"
-                                                Background="#FF00E2FF"
-                                                BorderBrush="Black"
-                                                BorderThickness="1"
-                                                CornerRadius="10">
-                                                <Button
-                                                    Margin="5,0"
-                                                    HorizontalAlignment="Left"
-                                                    VerticalAlignment="Center"
-                                                    Background="Transparent"
-                                                    BorderThickness="0"
-                                                    Content="选择物品"
-                                                    Foreground="White"
-                                                    Tag="{Binding BootItem, Mode=TwoWay}" />
-                                            </Border>
-                                            <TextBlock
-                                                Margin="20,0,0,0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Center"
-                                                Foreground="White"
-                                                Text="掉落概率" />
-                                            <CustomControls:ColorSliders
-                                                Width="200"
-                                                Height="20"
-                                                Margin="5,0,0,0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Center"
-                                                BackgroundColor="Gray"
-                                                BackgroundHeight="10"
-                                                BackgroundWidth="190"
-                                                BorderThickness="0"
-                                                Foreground="Black"
-                                                HanderHeight="20"
-                                                HanderWidth="20"
-                                                Maximum="100"
-                                                Minimum="0"
-                                                Style="{DynamicResource ColorSlider}"
-                                                ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Value}"
-                                                ToolTipService.InitialShowDelay="0"
-                                                ToolTipService.ShowDuration="1000"
-                                                Value="{Binding BootItemDropChance, Mode=TwoWay}" />
-                                            <CustomControls:ColorNumbericUpDowns
-                                                Width="180"
-                                                Height="25"
-                                                HorizontalAlignment="Left"
-                                                ArrowForeground="White"
-                                                ArrowHeight="25"
-                                                ArrowWidth="25"
-                                                Background="Transparent"
-                                                Foreground="White"
-                                                MaxValue="100"
-                                                MinValue="0"
-                                                Template="{DynamicResource ColorNumbericUpDown}"
-                                                Text="{Binding BootItemDropChance, Mode=TwoWay}" />
-                                        </DockPanel>
-                                    </StackPanel>
-                                </Border>
-                            </CustomControls:CollapsableGrids>
-                            <Grid>
-                                <CustomControls:CollapsableGrids
-                                    Margin="4,0"
-                                    Background="#FF00B3FF"
-                                    Cursor="Hand"
-                                    FontSize="15"
-                                    Foreground="White"
-                                    Header="骑乘"
-                                    IsExpanded="True"
-                                    Style="{DynamicResource CollapsableGrid}">
-                                    <Border Background="#2F2F2F" />
-                                </CustomControls:CollapsableGrids>
-                                <CustomControls:IconTextButtons
-                                    Width="20"
-                                    Height="19"
-                                    Margin="50,0,0,0"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Top"
-                                    Panel.ZIndex="1"
-                                    Background="#FF00E2FF"
-                                    BorderThickness="0"
-                                    Content="+"
-                                    Foreground="White"
-                                    Style="{DynamicResource IconTextButton}">
-                                    <!--<ity:Interaction.Triggers>
-                                    <ity:EventTrigger EventName="Click">
-                                        <itn:CallMethodAction MethodName="" TargetObject="{Binding}" />
-                                    </ity:EventTrigger>
-                                </ity:Interaction.Triggers>-->
-                                </CustomControls:IconTextButtons>
-                            </Grid>
-                        </StackPanel>
-                    </Border>
-                </CustomControls:CollapsableGrids>
-                <CustomControls:CollapsableGrids
-                    Margin="2,0"
-                    Background="#FF00B3FF"
-                    Cursor="Hand"
+                                            Text="掉落概率" />
+                                        <CustomControls:ColorSliders
+                                            Width="200"
+                                            Height="20"
+                                            Margin="5,0,0,0"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            BackgroundColor="Gray"
+                                            BackgroundHeight="10"
+                                            BackgroundWidth="190"
+                                            BorderThickness="0"
+                                            Foreground="Black"
+                                            HanderHeight="20"
+                                            HanderWidth="20"
+                                            Maximum="100"
+                                            Minimum="0"
+                                            Style="{DynamicResource ColorSlider}"
+                                            ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Value}"
+                                            ToolTipService.InitialShowDelay="0"
+                                            ToolTipService.ShowDuration="1000"
+                                            Value="{Binding BootItemDropChance, Mode=TwoWay}" />
+                                        <CustomControls:ColorNumbericUpDowns
+                                            Width="145"
+                                            Height="25"
+                                            HorizontalAlignment="Left"
+                                            ArrowForeground="White"
+                                            ArrowHeight="25"
+                                            ArrowWidth="25"
+                                            Background="Transparent"
+                                            Foreground="White"
+                                            MaxValue="100"
+                                            MinValue="0"
+                                            Template="{DynamicResource ColorNumbericUpDown}"
+                                            Text="{Binding BootItemDropChance, Mode=TwoWay}" />
+                                    </DockPanel>
+                                </StackPanel>
+                            </Border>
+                        </CustomControls:Accordion>
+                        <CustomControls:Accordion
+                            Title="骑乘"
+                            Margin="10,2.5"
+                            Background="#FFE5B663"
+                            FontSize="15"
+                            Fresh="{Binding ClearPassenger}"
+                            FreshName="×"
+                            FreshVisibility="Visible"
+                            ModifyName="+"
+                            ModifyVisibility="Visible"
+                            Style="{DynamicResource AccordionStyle}"
+                            TitleForeground="Black">
+                            <ity:Interaction.Triggers>
+                                <ity:EventTrigger EventName="Loaded">
+                                    <itn:CallMethodAction MethodName="MobPassengerStackPanelLoaded" TargetObject="{Binding}" />
+                                </ity:EventTrigger>
+                            </ity:Interaction.Triggers>
+                            <StackPanel />
+                        </CustomControls:Accordion>
+                    </StackPanel>
+                </CustomControls:Accordion>
+                <CustomControls:Accordion
+                    Title="功能"
+                    Margin="2,2.5"
+                    Background="#FFE5B663"
                     FontSize="15"
-                    Foreground="White"
-                    Header="功能"
+                    FreshVisibility="Collapsed"
                     IsExpanded="False"
-                    Style="{DynamicResource CollapsableGrid}">
-                    <Border Background="#2F2F2F">
-                        <StackPanel>
-                            <Grid>
-                                <CustomControls:CollapsableGrids
-                                    Margin="5,0,0,0"
-                                    Background="#FF00B3FF"
-                                    Cursor="Hand"
-                                    FontSize="15"
-                                    Foreground="White"
-                                    Header="药水"
-                                    IsExpanded="True"
-                                    Style="{DynamicResource CollapsableGrid}">
-                                    <StackPanel />
-                                </CustomControls:CollapsableGrids>
-                                <CustomControls:IconTextButtons
-                                    Width="20"
-                                    Height="19"
-                                    Margin="50,0,0,0"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Top"
-                                    Panel.ZIndex="1"
-                                    Background="#FF00E2FF"
-                                    BorderThickness="0"
-                                    Content="+"
-                                    Foreground="White"
-                                    Style="{DynamicResource IconTextButton}">
-                                    <ity:Interaction.Triggers>
-                                        <ity:EventTrigger EventName="Click">
-                                            <itn:CallMethodAction MethodName="AddPotionClick" TargetObject="{Binding}" />
-                                        </ity:EventTrigger>
-                                    </ity:Interaction.Triggers>
-                                </CustomControls:IconTextButtons>
-                            </Grid>
-                        </StackPanel>
-                    </Border>
-                </CustomControls:CollapsableGrids>
+                    ModifyVisibility="Collapsed"
+                    Style="{DynamicResource AccordionStyle}"
+                    TitleForeground="Black">
+                    <CustomControls:Accordion
+                        Title="药水"
+                        Margin="10,2.5"
+                        Background="#FFE5B663"
+                        FontSize="15"
+                        Fresh="{Binding ClearPotions}"
+                        FreshName="×"
+                        FreshVisibility="Visible"
+                        IsExpanded="True"
+                        Modify="{Binding AddPotion}"
+                        ModifyName="+"
+                        ModifyVisibility="Visible"
+                        Style="{DynamicResource AccordionStyle}"
+                        TitleForeground="Black">
+                        <ity:Interaction.Triggers>
+                            <ity:EventTrigger EventName="Loaded">
+                                <itn:CallMethodAction MethodName="MobEffectStackPanelLoaded" TargetObject="{Binding}" />
+                            </ity:EventTrigger>
+                        </ity:Interaction.Triggers>
+                        <StackPanel />
+                    </CustomControls:Accordion>
+                </CustomControls:Accordion>
             </StackPanel>
         </ScrollViewer>
     </Grid>

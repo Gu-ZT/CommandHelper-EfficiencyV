@@ -155,20 +155,6 @@ namespace cbhk_environment.Generators.VillagerGenerator.Components
         }
 
         /// <summary>
-        /// 载入按钮背景图
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void BackgroundButtonLoaded(object sender, RoutedEventArgs e)
-        {
-            Grid current_grid = sender as Grid;
-            System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(background_button_path);
-            bitmap = GeneralTools.ChangeBitmapSize.Magnifier(bitmap,10);
-            BitmapImage bitmapImage = GeneralTools.BitmapImageConverter.ToBitmapImage(bitmap);
-            current_grid.Background = new ImageBrush(bitmapImage);
-        }
-
-        /// <summary>
         /// 鼠标进入后边框变白
         /// </summary>
         /// <param name="sender"></param>

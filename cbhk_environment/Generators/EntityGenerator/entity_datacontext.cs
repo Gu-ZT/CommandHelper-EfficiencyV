@@ -1,5 +1,4 @@
 ﻿using cbhk_environment.ControlsDataContexts;
-using cbhk_environment.CustomControls;
 using cbhk_environment.Generators.EntityGenerator.Components;
 using cbhk_environment.GenerateResultDisplayer;
 using cbhk_environment.WindowDictionaries;
@@ -11,6 +10,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using cbhk_environment.CustomControls;
+using Windows.ApplicationModel.Chat;
 
 namespace cbhk_environment.Generators.EntityGenerator
 {
@@ -435,7 +436,7 @@ namespace cbhk_environment.Generators.EntityGenerator
             get
             {
                 string result = "";
-                result = MainWindow.entity_database.Where(item=>item.Key.Contains(EntityId.ComboBoxItemText)).First().Key;
+                result = MainWindow.EntityDataBase.Where(item=>item.Key.Contains(EntityId.ComboBoxItemText)).First().Key;
                 result = Regex.Match(result, @"[a-zA-Z_]+").ToString();
                 return result.Trim() != ""? result:"";
             }
@@ -604,22 +605,18 @@ namespace cbhk_environment.Generators.EntityGenerator
         {
             get
             {
-                if(MobEffectDurations.Count == MobEffectIDs.Count)
+                if (MobEffectStackPanel.Children.Count > 0)
                 {
-                    string result = "ActiveEffects:[";
-                    for (int i = 0; i < MobEffectIDs.Count; i++)
+                    string result = "CustomPotionEffects:[";
+                    foreach (PotionTypeItems item in MobEffectStackPanel.Children)
                     {
-                        result += "{Id:" + MobEffectIDs[i] + "b,Duration:" + MobEffectDurations[i] + ",Amplifier:" + MobEffectLevels[i] + "b,Ambient:0b,ShowParticles:0b},";
+                        result += item.Result;
                     }
-                    result = result.Trim() != "ActiveEffects:[" ? result.TrimEnd(',') + "]," : "";
+                    result = result.Trim(',') + "],";
                     return result;
                 }
                 else
-                {
-                    MobEffectDurations.Clear();
-                    MobEffectIDs.Clear();
                     return "";
-                }
             }
         }
         #endregion
@@ -853,18 +850,37 @@ namespace cbhk_environment.Generators.EntityGenerator
         }
         #endregion
 
-        //保存药水效果ID列表
-        public static List<string> MobEffectIDs = new List<string> { };
-        //保存药水效果持续时间列表
-        public static List<string> MobEffectDurations = new List<string> { };
-        //保存药水效果等级列表
-        public static List<string> MobEffectLevels = new List<string> { };
+        //实体药水效果栈面板
+        StackPanel MobEffectStackPanel = null;
+        //实体骑乘成员栈面板
+        StackPanel MobPassengerStackPanel = null;
+
+        /// <summary>
+        /// 添加药水
+        /// </summary>
+        public RelayCommand<FrameworkElement> AddPotion { get; set; }
+        /// <summary>
+        /// 清空药水
+        /// </summary>
+        public RelayCommand<FrameworkElement> ClearPotions { get; set; }
+        /// <summary>
+        /// 添加乘客
+        /// </summary>
+        public RelayCommand<FrameworkElement> AddPassenger { get; set; }
+        /// <summary>
+        /// 清空乘客
+        /// </summary>
+        public RelayCommand<FrameworkElement> ClearPassenger { get; set; }
 
         public entity_datacontext()
         {
             #region 连接指令
             ReturnCommand = new RelayCommand<CommonWindow>(return_command);
             RunCommand = new RelayCommand(run_command);
+            AddPotion = new RelayCommand<FrameworkElement>(AddPotionClick);
+            ClearPotions = new RelayCommand<FrameworkElement>(ClearPotionClick);
+            AddPassenger = new RelayCommand<FrameworkElement>(AddPassengerClick);
+            ClearPassenger = new RelayCommand<FrameworkElement>(ClearPassengerClick);
             #endregion
         }
 
@@ -882,15 +898,39 @@ namespace cbhk_environment.Generators.EntityGenerator
         }
         private void run_command()
         {
-            string result;
+            if (EntityIdString.Length > 0)
+            {
+                string result;
+                result = CustomNameString + CustomNameVisibleString + Health + Tags + Motion + Team + Fire + InvulnerableString + NoAIString + GlowingString + NoGravityString + CanPickUpLootString + SilentString + PersistenceRequiredString + Attributes + HandItems + HandDropChances + ArmorItems + ArmorDropChances + ActiveEffects;
 
-            result = CustomNameString + CustomNameVisibleString + Health + Tags + Motion + Team + Fire + InvulnerableString + NoAIString + GlowingString + NoGravityString + CanPickUpLootString + SilentString + PersistenceRequiredString + Attributes + HandItems + HandDropChances + ArmorItems + ArmorDropChances + ActiveEffects;
+                result = result.Trim() != "" ? "summon minecraft:" + EntityIdString + " ~ ~1 ~ {" + result.TrimEnd(',') + "}" : "summon minecraft:" + EntityIdString + " ~ ~1 ~";
 
-            result = result.Trim()!= ""? "summon minecraft:"+EntityIdString + " ~ ~1 ~ {"+result.TrimEnd(',')+"}":"summon minecraft:"+EntityIdString+ " ~ ~1 ~";
+                Displayer displayer = Displayer.GetContentDisplayer();
+                displayer.GeneratorResult(OverLying, new string[] { result }, new string[] { custom_name.Trim() != "" ? custom_name : "" }, new string[] { icon_path }, new System.Windows.Media.Media3D.Vector3D() { X = 30, Y = 30 });
+                displayer.Show();
+            }
+            else
+                MessageBox.Show("缺少必要参数","生成失败",MessageBoxButton.OK,MessageBoxImage.Information);
+        }
 
-            Displayer displayer = Displayer.GetContentDisplayer();
-            displayer.GeneratorResult(OverLying, new string[] { result }, new string[] { custom_name.Trim() != "" ? custom_name : "" }, new string[] { icon_path }, new System.Windows.Media.Media3D.Vector3D() { X = 30, Y = 30 });
-            displayer.Show();
+        /// <summary>
+        /// 实体药水效果栈载入
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void MobEffectStackPanelLoaded(object sender, RoutedEventArgs e)
+        {
+            MobEffectStackPanel = (sender as Accordion).Content as StackPanel;
+        }
+
+        /// <summary>
+        /// 实体骑乘成员栈载入
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void MobPassengerStackPanelLoaded(object sender, RoutedEventArgs e)
+        {
+            MobPassengerStackPanel = (sender as Accordion).Content as StackPanel;
         }
 
         /// <summary>
@@ -898,13 +938,40 @@ namespace cbhk_environment.Generators.EntityGenerator
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void AddPotionClick(object sender, RoutedEventArgs e)
+        private void AddPotionClick(FrameworkElement sender)
         {
+            Accordion potionAccordion = sender as Accordion;
             PotionTypeItems potionTypeItems = new PotionTypeItems();
-            Grid parent = (sender as IconTextButtons).Parent as Grid;
-            CollapsableGrids collapsableGrids = parent.Children[0] as CollapsableGrids;
-            StackPanel stackPanel = collapsableGrids.Content as StackPanel;
+            StackPanel stackPanel = potionAccordion.Content as StackPanel;
             stackPanel.Children.Add(potionTypeItems);
+        }
+
+        /// <summary>
+        /// 清空药水效果
+        /// </summary>
+        /// <param name="sender"></param>
+        private void ClearPotionClick(FrameworkElement sender)
+        {
+            Accordion potionAccordion = sender as Accordion;
+            StackPanel stackPanel = potionAccordion.Content as StackPanel;
+            stackPanel.Children.Clear();
+        }
+
+        /// <summary>
+        /// 添加乘客
+        /// </summary>
+        /// <param name="sender"></param>
+        private void AddPassengerClick(FrameworkElement sender)
+        {
+
+        }
+
+        /// <summary>
+        /// 清空乘客
+        /// </summary>
+        /// <param name="sender"></param>
+        private void ClearPassengerClick(FrameworkElement sender)
+        {
         }
 
         /// <summary>

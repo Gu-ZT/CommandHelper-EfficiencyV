@@ -13,30 +13,36 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
 
+    <UserControl.Resources>
+        <ImageBrush x:Key="ButtonNormal" ImageSource="/cbhk_environment;component/resources/common/images/ButtonNormal.png" />
+        <ImageBrush x:Key="ButtonPressed" ImageSource="/cbhk_environment;component/resources/common/images/ButtonPressed.png" />
+    </UserControl.Resources>
+
     <DockPanel Height="30">
         <TextBlock
             Margin="5,0"
             VerticalAlignment="Center"
             Foreground="White"
-            Text="方块ID:" />
+            Text="方块ID" />
         <ComboBox
             Width="250"
             HorizontalAlignment="Left"
             Background="Transparent"
             Loaded="CanPlaceOnItemLoaded"
             SelectedIndex="0"
-            SelectionChanged="CanPlaceOnItemSelectionChanged"
+            SelectedItem="{Binding Block, Mode=TwoWay}"
             Style="{DynamicResource IconComboBoxStyle}" />
         <CustomControls:IconTextButtons
-            Width="50"
+            Width="25"
             Margin="10,0"
-            Padding="0,-5,0,0"
+            Padding="0,-8,0,0"
             HorizontalAlignment="Left"
-            Background="Transparent"
+            Background="{StaticResource ButtonNormal}"
             Click="IconTextButtons_Click"
             Content="×"
             FontSize="30"
-            Foreground="Red"
+            Foreground="Black"
+            PressedBackground="{StaticResource ButtonPressed}"
             Style="{DynamicResource IconTextButton}" />
     </DockPanel>
 </UserControl>

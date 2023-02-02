@@ -9,11 +9,12 @@
     <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="#FF7EB4EA" />
     <SolidColorBrush x:Key="TextBox.Focus.Border" Color="#FF569DE5" />
     <SolidColorBrush x:Key="ResizeGripBackgroundColorBrush" Color="Transparent" />
+    <ImageBrush x:Key="BoxBackground" ImageSource="/cbhk_environment;component/resources/common/images/TextEditBox.png" />
 
     <local_context:ResizableTextBoxHander x:Key="ResizableTextBoxHander" />
 
     <Style x:Key="ResizableTextBoxStyle" TargetType="{x:Type TextBox}">
-        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Background" Value="{StaticResource BoxBackground}" />
         <Setter Property="BorderBrush" Value="{StaticResource TextBox.Static.Border}" />
         <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
         <Setter Property="BorderThickness" Value="1" />
@@ -43,7 +44,7 @@
                                 x:Name="PART_ContentHost"
                                 Focusable="false"
                                 HorizontalScrollBarVisibility="Hidden"
-                                Style="{StaticResource for_scrollviewer}"
+                                Style="{StaticResource DefaultScrollViewer}"
                                 VerticalScrollBarVisibility="Hidden" />
                             <Grid
                                 x:Name="resizeGripGrid"

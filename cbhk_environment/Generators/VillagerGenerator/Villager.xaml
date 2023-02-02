@@ -15,12 +15,17 @@
     Height="700"
     MinWidth="1100"
     MinHeight="700"
-    Background="#2F2F2F"
+    Background="#323232"
     mc:Ignorable="d">
 
     <Window.DataContext>
         <local_datacontext:villager_datacontext />
     </Window.DataContext>
+
+    <Window.Resources>
+        <ImageBrush x:Key="ButtonNormal" ImageSource="/cbhk_environment;component/resources/common/images/ButtonNormal.png" />
+        <ImageBrush x:Key="ButtonPressed" ImageSource="/cbhk_environment;component/resources/common/images/ButtonPressed.png" />
+    </Window.Resources>
 
     <Window.InputBindings>
         <KeyBinding Key="F5" Command="{Binding RunCommand}" />
@@ -97,9 +102,9 @@
                 Style="{DynamicResource IconCheckBox}" />
             <Menu Background="Transparent">
                 <MenuItem
-                    Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DockPanel}, Path=ActualHeight}"
-                    Padding="5,0,5,5"
-                    Background="#2F2F2F"
+                    Width="20"
+                    Height="18"
+                    Margin="5,8,0,0"
                     BorderBrush="{x:Null}"
                     BorderThickness="0"
                     Cursor="Hand"
@@ -107,22 +112,9 @@
                     Foreground="White"
                     ToolTip="切换版本"
                     ToolTipService.InitialShowDelay="0">
-                    <MenuItem.Header>
-                        <Viewbox
-                            Width="25"
-                            Height="25"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center">
-                            <Path
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Fill="White">
-                                <Path.Data>
-                                    M234.666667 430.933333H128l85.333333-81.066666L345.6 213.333333l51.2 51.2-81.066667 81.066667H896V426.666667H234.666667v4.266666zM793.6 554.666667H896l-85.333333 81.066666-132.266667 132.266667-51.2-51.2 81.066667-81.066667H128V554.666667h665.6z
-                                </Path.Data>
-                            </Path>
-                        </Viewbox>
-                    </MenuItem.Header>
+                    <MenuItem.Background>
+                        <ImageBrush ImageSource="/cbhk_environment;component/resources/common/images/Switch.png" />
+                    </MenuItem.Background>
                     <CustomControls:TextToggleButtons
                         HorizontalAlignment="Stretch"
                         Background="Transparent"
@@ -151,7 +143,8 @@
                 Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Viewbox}, Path=ActualWidth}"
                 Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Viewbox}, Path=ActualHeight}"
                 MinWidth="1800"
-                MinHeight="1050">
+                MinHeight="1050"
+                Background="#323232">
                 <ity:Interaction.Triggers>
                     <ity:EventTrigger EventName="Loaded">
                         <itn:CallMethodAction MethodName="TransactionBackgroundLoaded" TargetObject="{Binding}" />
@@ -168,22 +161,27 @@
                     Grid.Column="0"
                     Panel.ZIndex="1"
                     LastChildFill="True">
-                    <DockPanel Margin="280,20,0,0" DockPanel.Dock="Top">
+                    <DockPanel Margin="0,20,0,0" DockPanel.Dock="Top">
                         <TextBlock
+                            Margin="30,0,0,0"
                             HorizontalAlignment="Center"
                             Background="Transparent"
+                            DockPanel.Dock="Left"
                             FontSize="50"
-                            Foreground="Black"
+                            FontWeight="Bold"
+                            Foreground="White"
                             Text="交易" />
                         <CustomControls:IconTextButtons
-                            Width="50"
-                            Height="50"
-                            Margin="-100,10,0,0"
-                            Background="Transparent"
+                            Width="60"
+                            Height="60"
+                            Padding="0,-15,0,0"
+                            HorizontalAlignment="Right"
+                            Background="{StaticResource ButtonNormal}"
+                            Content="+"
+                            DockPanel.Dock="Right"
+                            FontSize="50"
                             IconColor="Black"
-                            IconData="M469.333333 469.333333V170.666667h85.333334v298.666666h298.666666v85.333334h-298.666666v298.666666h-85.333334v-298.666666H170.666667v-85.333334h298.666666z"
-                            IconHeight="50"
-                            IconWidth="50"
+                            PressedBackground="{StaticResource ButtonPressed}"
                             Style="{DynamicResource IconTextButton}">
                             <ity:Interaction.Triggers>
                                 <ity:EventTrigger EventName="Click">
@@ -196,11 +194,12 @@
                     <ScrollViewer
                         Margin="30,25,0,50"
                         VerticalAlignment="Stretch"
+                        Background="#555956"
                         DockPanel.Dock="Top"
                         HorizontalScrollBarVisibility="Disabled"
-                        Style="{DynamicResource for_scrollviewer}"
+                        Style="{DynamicResource DefaultScrollViewer}"
                         VerticalScrollBarVisibility="Auto">
-                        <ItemsControl ItemsSource="{Binding transactionItems}">
+                        <ItemsControl Background="Transparent" ItemsSource="{Binding transactionItems}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <VirtualizingStackPanel ScrollViewer.VerticalScrollBarVisibility="Disabled" />
@@ -216,17 +215,17 @@
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Top"
                     Panel.ZIndex="1"
-                    Background="#C6C6C6"
+                    Background="Transparent"
                     LastChildFill="True">
                     <DockPanel DockPanel.Dock="Top" LastChildFill="True">
                         <TextBlock
                             Margin="0,0,5,0"
                             VerticalAlignment="Center"
                             FontSize="30"
+                            Foreground="White"
                             Text="种类" />
                         <ComboBox
-                            Width="250"
-                            Height="35"
+                            Width="200"
                             Margin="0,0,5,0"
                             HorizontalAlignment="Left"
                             AllowDrop="False"
@@ -243,10 +242,10 @@
                             Margin="0,0,5,0"
                             VerticalAlignment="Center"
                             FontSize="30"
+                            Foreground="White"
                             Text="职业" />
                         <ComboBox
-                            Width="250"
-                            Height="35"
+                            Width="200"
                             Margin="0,0,5,0"
                             HorizontalAlignment="Left"
                             AllowDrop="False"
@@ -263,10 +262,10 @@
                             Margin="0,0,5,0"
                             VerticalAlignment="Center"
                             FontSize="30"
+                            Foreground="White"
                             Text="交易等级" />
                         <ComboBox
-                            Width="80"
-                            Height="35"
+                            Width="100"
                             Margin="0,0,5,0"
                             HorizontalAlignment="Left"
                             AllowDrop="False"
@@ -280,32 +279,35 @@
                             </ity:Interaction.Triggers>
                         </ComboBox>
                         <CustomControls:TextToggleButtons
-                            Height="35"
+                            Height="50"
+                            Margin="5,0"
+                            Padding="10,0"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Center"
                             Background="Transparent"
                             Content="愿意交配"
-                            Cursor="Hand"
                             FontSize="20"
                             IsChecked="{Binding Willing, Mode=TwoWay}"
                             Style="{DynamicResource TextToggleButtonsStyle}" />
                         <CustomControls:TextToggleButtons
-                            Height="35"
+                            Height="50"
+                            Margin="5,0"
+                            Padding="10,0"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
                             Background="Transparent"
                             Content="开启言论"
-                            Cursor="Hand"
                             FontSize="20"
                             IsChecked="{Binding CanEditGossips, Mode=TwoWay}"
                             Style="{DynamicResource TextToggleButtonsStyle}" />
                         <CustomControls:TextToggleButtons
-                            Height="35"
+                            Height="50"
+                            Margin="5,0"
+                            Padding="10,0"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
                             Background="Transparent"
                             Content="开启记忆"
-                            Cursor="Hand"
                             FontSize="20"
                             IsChecked="{Binding CanEditBrain, Mode=TwoWay}"
                             Style="{DynamicResource TextToggleButtonsStyle}" />
@@ -315,6 +317,7 @@
                         Margin="0,35,0,0"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
+                        Background="#555956"
                         DockPanel.Dock="Top"
                         Visibility="{Binding OnlyEditItem, Mode=TwoWay}">
                         <DockPanel
@@ -330,18 +333,17 @@
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
                                     FontSize="25"
-                                    Foreground="Black"
+                                    FontWeight="Bold"
+                                    Foreground="White"
                                     Text="言论" />
                                 <CustomControls:IconTextButtons
-                                    Width="50"
-                                    Height="50"
-                                    Margin="0,0,0,0"
-                                    HorizontalAlignment="Left"
-                                    Background="Transparent"
-                                    IconColor="Black"
-                                    IconData="M469.333333 469.333333V170.666667h85.333334v298.666666h298.666666v85.333334h-298.666666v298.666666h-85.333334v-298.666666H170.666667v-85.333334h298.666666z"
-                                    IconHeight="50"
-                                    IconWidth="50"
+                                    Width="40"
+                                    Height="40"
+                                    Padding="0,-10,0,0"
+                                    Background="{StaticResource ButtonNormal}"
+                                    Content="+"
+                                    FontSize="40"
+                                    PressedBackground="{StaticResource ButtonPressed}"
                                     Style="{DynamicResource IconTextButton}">
                                     <ity:Interaction.Triggers>
                                         <ity:EventTrigger EventName="Click">
@@ -352,7 +354,7 @@
                             </DockPanel>
                             <ScrollViewer
                                 HorizontalScrollBarVisibility="Disabled"
-                                Style="{DynamicResource for_scrollviewer}"
+                                Style="{DynamicResource DefaultScrollViewer}"
                                 VerticalScrollBarVisibility="Auto">
                                 <ity:Interaction.Triggers>
                                     <ity:EventTrigger EventName="Loaded">
@@ -376,9 +378,10 @@
                                 HorizontalAlignment="Center"
                                 DockPanel.Dock="Top"
                                 FontSize="25"
-                                Foreground="Black"
+                                FontWeight="Bold"
+                                Foreground="White"
                                 Text="记忆" />
-                            <ScrollViewer Style="{DynamicResource for_scrollviewer}" VerticalScrollBarVisibility="Disabled">
+                            <ScrollViewer Style="{DynamicResource DefaultScrollViewer}" VerticalScrollBarVisibility="Disabled">
                                 <StackPanel ScrollViewer.VerticalScrollBarVisibility="Disabled">
                                     <TextBlock
                                         Margin="20,0,0,0"
@@ -483,7 +486,7 @@
                                                 FontSize="20"
                                                 Text="维度"
                                                 ToolTip="维度" />
-                                            <CustomControls:TextComboBoxs
+                                            <ComboBox
                                                 Height="35"
                                                 HorizontalAlignment="Stretch"
                                                 AllowDrop="False"
@@ -491,13 +494,15 @@
                                                 BorderThickness="0"
                                                 FontSize="15"
                                                 Foreground="White"
-                                                SelectedItem="{Binding MeetingPointDimension, Mode=TwoWay}">
+                                                SelectedIndex="0"
+                                                SelectedItem="{Binding MeetingPointDimension, Mode=TwoWay}"
+                                                Style="{DynamicResource TextComboBoxStyle}">
                                                 <ity:Interaction.Triggers>
                                                     <ity:EventTrigger EventName="Loaded">
                                                         <itn:CallMethodAction MethodName="DimensionTypeLoaded" TargetObject="{Binding}" />
                                                     </ity:EventTrigger>
                                                 </ity:Interaction.Triggers>
-                                            </CustomControls:TextComboBoxs>
+                                            </ComboBox>
                                         </DockPanel>
                                     </Grid>
                                     <TextBlock
@@ -603,7 +608,7 @@
                                                 FontSize="20"
                                                 Text="维度"
                                                 ToolTip="维度" />
-                                            <CustomControls:TextComboBoxs
+                                            <ComboBox
                                                 Height="35"
                                                 HorizontalAlignment="Stretch"
                                                 AllowDrop="False"
@@ -611,13 +616,15 @@
                                                 BorderThickness="0"
                                                 FontSize="15"
                                                 Foreground="White"
-                                                SelectedItem="{Binding HomeDimension, Mode=TwoWay}">
+                                                SelectedIndex="0"
+                                                SelectedItem="{Binding HomeDimension, Mode=TwoWay}"
+                                                Style="{DynamicResource TextComboBoxStyle}">
                                                 <ity:Interaction.Triggers>
                                                     <ity:EventTrigger EventName="Loaded">
                                                         <itn:CallMethodAction MethodName="DimensionTypeLoaded" TargetObject="{Binding}" />
                                                     </ity:EventTrigger>
                                                 </ity:Interaction.Triggers>
-                                            </CustomControls:TextComboBoxs>
+                                            </ComboBox>
                                         </DockPanel>
                                     </Grid>
                                     <TextBlock
@@ -718,7 +725,7 @@
                                                 VerticalAlignment="Center"
                                                 FontSize="20"
                                                 Text="维度" />
-                                            <CustomControls:TextComboBoxs
+                                            <ComboBox
                                                 Height="35"
                                                 HorizontalAlignment="Stretch"
                                                 AllowDrop="False"
@@ -726,13 +733,15 @@
                                                 BorderThickness="0"
                                                 FontSize="15"
                                                 Foreground="White"
-                                                SelectedItem="{Binding JobSiteDimension, Mode=TwoWay}">
+                                                SelectedIndex="0"
+                                                SelectedItem="{Binding JobSiteDimension, Mode=TwoWay}"
+                                                Style="{DynamicResource TextComboBoxStyle}">
                                                 <ity:Interaction.Triggers>
                                                     <ity:EventTrigger EventName="Loaded">
                                                         <itn:CallMethodAction MethodName="DimensionTypeLoaded" TargetObject="{Binding}" />
                                                     </ity:EventTrigger>
                                                 </ity:Interaction.Triggers>
-                                            </CustomControls:TextComboBoxs>
+                                            </ComboBox>
                                         </DockPanel>
                                     </Grid>
                                 </StackPanel>
@@ -742,12 +751,13 @@
                     <ScrollViewer
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
-                        Background="#C6C6C6"
+                        Background="#555956"
                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                         ScrollViewer.VerticalScrollBarVisibility="Auto"
-                        Style="{DynamicResource for_scrollviewer}">
+                        Style="{DynamicResource DefaultScrollViewer}">
                         <ItemsControl
                             HorizontalAlignment="Stretch"
+                            Background="Transparent"
                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                             ScrollViewer.VerticalScrollBarVisibility="Disabled">
                             <ity:Interaction.Triggers>
@@ -770,31 +780,37 @@
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Bottom"
                     Panel.ZIndex="1"
-                    Background="#C6C6C6"
+                    Background="Transparent"
                     LastChildFill="False">
                     <TextBlock
                         VerticalAlignment="Center"
                         FontSize="25"
+                        Foreground="White"
                         Text="搜索言论类型" />
-                    <CustomControls:TextComboBoxs
-                        Width="150"
+                    <ComboBox
+                        Width="225"
                         Height="35"
-                        FontSize="25">
+                        Margin="10,0"
+                        FontSize="25"
+                        Foreground="White"
+                        Style="{DynamicResource TextComboBoxStyle}">
                         <ity:Interaction.Triggers>
                             <ity:EventTrigger EventName="Loaded">
                                 <itn:CallMethodAction MethodName="GossipSearchTypeLoaded" TargetObject="{Binding}" />
                             </ity:EventTrigger>
                         </ity:Interaction.Triggers>
-                    </CustomControls:TextComboBoxs>
+                    </ComboBox>
                     <TextBlock
                         VerticalAlignment="Center"
                         FontSize="25"
+                        Foreground="White"
                         Text="搜索言论目标" />
                     <TextBox
-                        Width="200"
+                        Width="150"
                         Height="35"
-                        Margin="5,0,0,0"
+                        Margin="10,0"
                         BorderBrush="Black"
+                        BorderThickness="1"
                         FontSize="25"
                         Foreground="White">
                         <ity:Interaction.Triggers>
@@ -809,12 +825,14 @@
                     <TextBlock
                         VerticalAlignment="Center"
                         FontSize="25"
+                        Foreground="White"
                         Text="搜索物品" />
                     <TextBox
-                        Width="300"
+                        Width="250"
                         Height="35"
-                        Margin="10,0,0,0"
+                        Margin="10,0"
                         BorderBrush="Black"
+                        BorderThickness="1"
                         FontSize="25"
                         Foreground="White">
                         <ity:Interaction.Triggers>
@@ -835,12 +853,12 @@
                     VerticalAlignment="Bottom"
                     Panel.ZIndex="1"
                     AllowDrop="False"
-                    Background="#C6C6C6">
+                    Background="Transparent">
                     <TextBlock
                         Margin="0,0,5,0"
                         VerticalAlignment="Center"
                         FontSize="25"
-                        Foreground="Black"
+                        Foreground="White"
                         Text="LastRestock"
                         ToolTip="此村民最后一次前往工作站点重新供应交易的刻。"
                         ToolTipService.InitialShowDelay="0"
@@ -848,7 +866,7 @@
                     <CustomControls:ColorNumbericUpDowns
                         Width="450"
                         Height="50"
-                        Margin="0,0,5,0"
+                        Margin="10,0"
                         HorizontalAlignment="Left"
                         AllowDrop="False"
                         ArrowBackground="Transparent"
@@ -859,7 +877,7 @@
                         BorderThickness="0"
                         CaretBrush="White"
                         FontSize="25"
-                        Foreground="Black"
+                        Foreground="White"
                         MaxValue="2147483647"
                         MinValue="-2147483648"
                         Template="{DynamicResource ColorNumbericUpDown}"
@@ -868,7 +886,7 @@
                         Margin="0,0,5,0"
                         VerticalAlignment="Center"
                         FontSize="25"
-                        Foreground="Black"
+                        Foreground="White"
                         Text="Xp"
                         ToolTip="此村民当前的经验值。"
                         ToolTipService.InitialShowDelay="0"
@@ -876,6 +894,7 @@
                     <CustomControls:ColorNumbericUpDowns
                         Width="450"
                         Height="50"
+                        Margin="10,0,0,0"
                         HorizontalAlignment="Left"
                         AllowDrop="False"
                         ArrowBackground="Transparent"
@@ -886,20 +905,12 @@
                         BorderThickness="0"
                         CaretBrush="White"
                         FontSize="25"
-                        Foreground="Black"
+                        Foreground="White"
                         MaxValue="2147483647"
                         MinValue="-2147483648"
                         Template="{DynamicResource ColorNumbericUpDown}"
                         Text="{Binding Xp, Mode=TwoWay}" />
                 </DockPanel>
-                <Grid
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Width="1085"
-                    Height="720"
-                    Margin="40,0,0,0"
-                    Panel.ZIndex="0"
-                    Background="#C6C6C6" />
             </Grid>
         </Viewbox>
     </Grid>

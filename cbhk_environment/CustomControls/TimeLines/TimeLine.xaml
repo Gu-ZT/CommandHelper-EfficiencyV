@@ -17,13 +17,14 @@
         <ScrollViewer
             Background="Transparent"
             HorizontalScrollBarVisibility="Visible"
-            Style="{DynamicResource for_scrollviewer}"
+            Style="{DynamicResource DefaultScrollViewer}"
             VerticalScrollBarVisibility="Hidden">
             <Canvas
                 x:Name="mainCanvas"
                 Height="200"
                 Margin="5,0"
-                Background="Transparent" />
+                Background="Transparent"
+                MouseLeftButtonDown="SynchronizationTimelineMouseLeftButtonDown" />
         </ScrollViewer>
     </Border>
 </UserControl>

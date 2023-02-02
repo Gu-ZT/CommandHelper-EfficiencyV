@@ -203,7 +203,7 @@
                 Height="{TemplateBinding Height}"
                 Padding="{TemplateBinding Padding}"
                 Focusable="false"
-                Style="{DynamicResource for_scrollviewer}"
+                Style="{DynamicResource DefaultScrollViewer}"
                 VerticalScrollBarVisibility="Auto">
                 <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
             </ScrollViewer>

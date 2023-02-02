@@ -11,6 +11,11 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
 
+    <UserControl.Resources>
+        <ImageBrush x:Key="ButtonNormal" ImageSource="/cbhk_environment;component/resources/common/images/ButtonNormal.png" />
+        <ImageBrush x:Key="ButtonPressed" ImageSource="/cbhk_environment;component/resources/common/images/ButtonPressed.png" />
+    </UserControl.Resources>
+
     <Border Background="#2F2F2F">
         <DockPanel Height="30">
             <TextBlock
@@ -20,10 +25,12 @@
                 Foreground="White"
                 Text="药水类型:" />
             <ComboBox
+                x:Name="EffectID"
                 Width="100"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Loaded="MobEffectIdLoaded"
+                SelectedIndex="0"
                 SelectionChanged="MobEffectIdSelectionChanged"
                 Style="{DynamicResource IconComboBoxStyle}" />
             <TextBlock
@@ -33,6 +40,7 @@
                 Foreground="White"
                 Text="持续时间:" />
             <CustomControls:ColorNumbericUpDowns
+                x:Name="EffectDuration"
                 Width="100"
                 HorizontalAlignment="Left"
                 ArrowBackground="Transparent"
@@ -43,11 +51,11 @@
                 BorderThickness="0"
                 CaretBrush="White"
                 Foreground="White"
-                Loaded="MobEffectDurationLoaded"
                 MaxValue="10000000"
                 MinValue="0"
                 SelectionChanged="MobEffectDurationSelectionChanged"
-                Template="{DynamicResource ColorNumbericUpDown}" />
+                Template="{DynamicResource ColorNumbericUpDown}"
+                Text="0" />
             <TextBlock
                 Margin="5,0"
                 HorizontalAlignment="Left"
@@ -55,6 +63,7 @@
                 Foreground="White"
                 Text="效果等级:" />
             <CustomControls:ColorNumbericUpDowns
+                x:Name="EffectLevel"
                 Width="50"
                 HorizontalAlignment="Left"
                 ArrowBackground="Transparent"
@@ -65,21 +74,23 @@
                 BorderThickness="0"
                 CaretBrush="White"
                 Foreground="White"
-                Loaded="MobEffectLevelLoaded"
                 MaxValue="255"
                 MinValue="0"
                 SelectionChanged="MobEffectLevelSelectionChanged"
-                Template="{DynamicResource ColorNumbericUpDown}" />
+                Template="{DynamicResource ColorNumbericUpDown}"
+                Text="0" />
             <CustomControls:IconTextButtons
-                Width="50"
-                Margin="10,0"
+                Width="25"
+                Height="25"
+                Margin="5,0"
                 Padding="0,-5,0,0"
                 HorizontalAlignment="Left"
-                Background="Transparent"
+                Background="{StaticResource ButtonNormal}"
                 Click="IconTextButtons_Click"
                 Content="×"
-                FontSize="30"
-                Foreground="Red"
+                FontSize="20"
+                Foreground="Black"
+                PressedBackground="{StaticResource ButtonPressed}"
                 Style="{DynamicResource IconTextButton}" />
         </DockPanel>
     </Border>

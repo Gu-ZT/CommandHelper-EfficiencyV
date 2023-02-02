@@ -13,14 +13,13 @@ namespace cbhk_environment.SettingForm
         }
 
         /// <summary>
-        /// 引用设置好的轮播图字典
+        /// 打开轮播图设置窗体
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void SetLinks(object sender, RoutedEventArgs e)
         {
-            LinkForm lf = new LinkForm();
-            if (lf.ShowDialog() == true){ }
+
         }
 
         private void SettingForm_Closing(object sender, System.ComponentModel.CancelEventArgs e)

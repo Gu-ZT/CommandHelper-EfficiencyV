@@ -19,6 +19,7 @@ using MSScriptControl;
 using System.Drawing;
 using Image = System.Windows.Controls.Image;
 using System.Text.RegularExpressions;
+using cbhk_environment.CustomControls;
 
 namespace cbhk_environment
 {
@@ -56,69 +57,6 @@ namespace cbhk_environment
         /// 用户头像
         /// </summary>
         private string user_frame_source = "";
-        /// <summary>
-        /// 装载网址按钮
-        /// </summary>
-        private List<Button> LinkButtons = new List<Button> { };
-
-        /// <summary>
-        /// 切换按钮预览图像源
-        /// </summary>
-        private BitmapImage preview_image_source;
-
-        /// <summary>
-        /// 切换按钮预览图像渲染器
-        /// </summary>
-        private Image preview_image = new Image();
-
-        /// <summary>
-        /// 切换按钮预览内容
-        /// </summary>
-        private Grid preview_grid = new Grid();
-
-        /// <summary>
-        /// 切换按钮预览视图
-        /// </summary>
-        private Window preview_image_window = new Window 
-        {
-            WindowStartupLocation = WindowStartupLocation.Manual,
-            WindowStyle = WindowStyle.None,
-            WindowState = WindowState.Normal,
-            BorderBrush = null,
-            Width = 100,
-            Height = 100,
-            Topmost = true,
-            BorderThickness = new Thickness(0)
-        };
-
-        /// <summary>
-        /// 轮播图动画
-        /// </summary>
-        private LinkButtonAnimation lba;
-
-        /// <summary>
-        /// 主页轮播图公共数据库
-        /// </summary>
-        public static Dictionary<string, string> CircularBanner = new Dictionary<string, string> { };
-
-        /// <summary>
-        /// 保存当前图片的索引
-        /// </summary>
-        public static int current_image_index = 1;
-
-        /// <summary>
-        /// 保存上一个图片的索引
-        /// </summary>
-        public static int last_image_index = 0;
-
-        /// <summary>
-        /// 轮播图计时器
-        /// </summary>
-        public static DispatcherTimer LinkButtonAnimator = new DispatcherTimer()
-        {
-            Interval = TimeSpan.FromSeconds(MainWindowProperties.LinkAnimationDelay),
-            IsEnabled = false
-        };
 
         //骨架屏计时器
         System.Windows.Forms.Timer SkeletonTimer = new System.Windows.Forms.Timer()
@@ -126,11 +64,6 @@ namespace cbhk_environment
             Interval = 1000,
             Enabled = false
         };
-
-        /// <summary>
-        /// 表示轮播图状态
-        /// </summary>
-        public static bool CircularBannerState = false;
 
         public TaskbarIcon taskbar_icon;
 
@@ -164,46 +97,58 @@ namespace cbhk_environment
         public static ObservableCollection<string> AttributeValueTypeSource = new ObservableCollection<string> { };
         //物品id数据源
         public static ObservableCollection<IconComboBoxItem> ItemIdSource = new ObservableCollection<IconComboBoxItem> { };
+        //方块id数据源
+        public static ObservableCollection<IconComboBoxItem> BlockIDSource = new ObservableCollection<IconComboBoxItem> { };
         //附魔id数据源
         public static ObservableCollection<string> EnchantmentIdSource = new ObservableCollection<string> { };
         //保存id与name
-        public static Dictionary<string, BitmapImage> entity_database = new Dictionary<string, BitmapImage> { };
+        public static Dictionary<string, BitmapImage> EntityDataBase = new Dictionary<string, BitmapImage> { };
         //物品id数据源
         public static ObservableCollection<IconComboBoxItem> EntityIdSource = new ObservableCollection<IconComboBoxItem> { };
         //保存药水id与name
-        public static Dictionary<string, string> mob_effect_database = new Dictionary<string, string> { };
+        public static Dictionary<string, string> MobEffectDataBase = new Dictionary<string, string> { };
         //药水id数据源
         public static ObservableCollection<IconComboBoxItem> MobEffectIdSource = new ObservableCollection<IconComboBoxItem> { };
-        //保存id与name
-        public static Dictionary<string, BitmapImage> item_database = new Dictionary<string, BitmapImage> { };
+        //保存物品id与name
+        public static Dictionary<string, BitmapImage> ItemDataBase = new Dictionary<string, BitmapImage> { };
+        //保存方块id与name
+        public static Dictionary<string, BitmapImage> BlockDataBase = new Dictionary<string, BitmapImage> { };
         //保存附魔id与name
-        public static Dictionary<string, string> enchantment_databse = new Dictionary<string, string> { };
+        public static Dictionary<string, string> EnchantmentDataBase = new Dictionary<string, string> { };
         //保存属性id与name
-        public static Dictionary<string, string> attribute_database = new Dictionary<string, string> { };
+        public static Dictionary<string, string> AttribuiteDataBase = new Dictionary<string, string> { };
+        //保存属性的生效槽位
+        public static Dictionary<string, string> AttributeSlotDataBase = new Dictionary<string, string> { };
+        //保存属性值类型
+        public static Dictionary<string, string> AttributeValueTypeDatabase = new Dictionary<string, string> { };
         //保存隐藏信息id与name
-        public static Dictionary<string, string> hide_infomation_database = new Dictionary<string, string> { };
+        public static Dictionary<string, string> HideInfomationDataBase = new Dictionary<string, string> { };
         //信息隐藏标记
-        public static ObservableCollection<string> hide_flags_source = new ObservableCollection<string> { };
-        public static ObservableCollection<string> hide_flags_collection = new ObservableCollection<string>();
+        public static ObservableCollection<string> HideFlagsSource = new ObservableCollection<string> { };
 
         //标签生成器的过滤类型数据源
         public static ObservableCollection<string> TypeItemSource = new ObservableCollection<string> { };
-        public static ObservableCollection<string> TagTypeCollection = new ObservableCollection<string>();
+
+        //标签生成器的复选框列表
+        public static ObservableCollection<RichCheckBoxs> TagSpawnerItemCheckBoxList = new ObservableCollection<RichCheckBoxs> { };
+        public static ObservableCollection<RichCheckBoxs> BlockCheckBoxList = new ObservableCollection<RichCheckBoxs> { };
+        public static ObservableCollection<RichCheckBoxs> TagSpawnerBiomeCheckBoxList = new ObservableCollection<RichCheckBoxs> { };
+        public static ObservableCollection<RichCheckBoxs> EntityCheckBoxList = new ObservableCollection<RichCheckBoxs> { };
 
         //粒子列表数据源
-        public static ObservableCollection<string> particle_database = new ObservableCollection<string> { };
+        public static ObservableCollection<string> ParticleDataBase = new ObservableCollection<string> { };
 
         //音效列表数据源
-        public static ObservableCollection<string> sound_database = new ObservableCollection<string> { };
+        public static ObservableCollection<string> SoundDataBase = new ObservableCollection<string> { };
 
         //音效列表id名称字典
-        public static Dictionary<string,string> soundIdNameSource = new Dictionary<string,string> { };
+        public static Dictionary<string,string> SoundIdNameSource = new Dictionary<string,string> { };
 
         //记分板判据类型数据源
-        public static ObservableCollection<string> scoreboardType_database = new ObservableCollection<string> { };
+        public static ObservableCollection<string> ScoreboardTypeDataBase = new ObservableCollection<string> { };
 
         //队伍颜色列表
-        public static ObservableCollection<string> teamColor_database = new ObservableCollection<string> { };
+        public static ObservableCollection<string> TeamColorDataBase = new ObservableCollection<string> { };
         #endregion
 
         //异步执行数据读取逻辑
@@ -215,9 +160,6 @@ namespace cbhk_environment
         {
             InitializeComponent();
             UserData = user_info;
-            //InitializeBackgroundWorker();
-            //执行数据源加载进程
-            //DataSourceReader.RunWorkerAsync();
             ReadDataSource();
             InitUIData();
             SkeletonTimer.Tick += SkeletonScreenShowDuration;
@@ -236,34 +178,14 @@ namespace cbhk_environment
         }
 
         /// <summary>
-        /// 初始化加载进程
-        /// </summary>
-        //private void InitializeBackgroundWorker()
-        //{
-        //    #region
-        //    if (DataSourceReader == null)
-        //        DataSourceReader = new BackgroundWorker();
-        //    //bool类型，指示DataSourceReader是否可以报告进度更新。当该属性值为True时，将可以成功调用ReportProgress方法
-        //    DataSourceReader.WorkerReportsProgress = true;
-        //    //bool类型，指示DataSourceReader是否支持异步取消操作。当该属性值为True是，将可以成功调用CancelAsync方法
-        //    DataSourceReader.WorkerSupportsCancellation = true;
-        //    //执行RunWorkerAsync方法后触发DoWork，将异步执行backgroundWorker_DoWork方法中的代码
-        //    DataSourceReader.DoWork += new DoWorkEventHandler(ReadDataSource);
-        //    //执行ReportProgress方法后触发ProgressChanged，将执行ProgressChanged方法中的代码
-        //    //DataSourceReader.ProgressChanged += InitUIData;//object sender, ProgressChangedEventArgs e
-        //    //异步操作完成或取消时执行的操作，当调用DoWork事件执行完成时触发
-        //    DataSourceReader.RunWorkerCompleted += new RunWorkerCompletedEventHandler(DataSourceLoadCompleted);
-        //    #endregion
-        //}
-
-        /// <summary>
         /// 读取所有数据源,提供给所有生成器使用
         /// </summary>
         private void ReadDataSource()
         {
             #region 获取所有物品的id和对应的中文
+            SolidColorBrush white_brush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 255, 255));
             if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\items.json") &&
-               File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js") && item_database.Count == 0)
+               File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js") && ItemDataBase.Count == 0)
             {
                 string items_json = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\items.json");
                 string js_file = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js");
@@ -284,20 +206,77 @@ namespace cbhk_environment
                         image = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + item_id + ".png", UriKind.Relative));
                         ItemIdSource.Add(new IconComboBoxItem() { ComboBoxItemText = item_name, ComboBoxItemIcon = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + item_id + ".png", UriKind.Absolute)) });
                     }
-                    if (!item_database.ContainsKey(item_id + "." + item_name))
-                        item_database.Add(item_id + "." + item_name, image);
+                    if (!ItemDataBase.ContainsKey(item_id + ":" + item_name))
+                        ItemDataBase.Add(item_id + ":" + item_name, image);
+
+                    TagSpawnerItemCheckBoxList.Add(new RichCheckBoxs()
+                    {
+                        Uid = "Item",
+                        Height = 50,
+                        Margin = new Thickness(10, 0, 0, 0),
+                        FontSize = 15,
+                        Foreground = white_brush,
+                        Tag = AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + item_id + ".png",
+                        HeaderHeight = 20,
+                        HeaderWidth = 20,
+                        ContentImage = null,
+                        ImageWidth = 50,
+                        ImageHeight = 50,
+                        HeaderText = item_id + " " + item_name,
+                        TextMargin = new Thickness(40, 0, 0, 0)
+                    });
+                }
+            }
+            #endregion
+
+            #region 获取所有方块的id和对应中文
+            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\blocks.json") &&
+                File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js") && BlockDataBase.Count == 0)
+            {
+                string blocks_json = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\blocks.json");
+                string block_id;
+                string block_name;
+
+                JsonScript("parseJSON(" + blocks_json + ");");
+                int block_count = int.Parse(JsonScript("getLength();").ToString());
+                for (int i = 0; i < block_count; i++)
+                {
+                    block_id = JsonScript("getJSON('[" + i + "].id');").ToString();
+                    block_name = JsonScript("getJSON('[" + i + "].name');").ToString();
+                    BitmapImage image = null;
+                    if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\block_and_block_images\\" + block_id + ".png"))
+                    {
+                        image = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + block_id + ".png", UriKind.Relative));
+                        BlockIDSource.Add(new IconComboBoxItem() { ComboBoxItemText = block_name, ComboBoxItemIcon = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\block_and_block_images\\" + block_id + ".png", UriKind.Absolute)) });
+                    }
+                    if (!BlockDataBase.ContainsKey(block_id + ":" + block_name))
+                        BlockDataBase.Add(block_id + ":" + block_name, image);
+
+                    BlockCheckBoxList.Add(new RichCheckBoxs()
+                    {
+                        Uid = "Block",
+                        Height = 50,
+                        Margin = new Thickness(10, 0, 0, 0),
+                        FontSize = 15,
+                        Foreground = white_brush,
+                        Tag = AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\block_and_block_images\\" + block_id + ".png",
+                        HeaderHeight = 20,
+                        HeaderWidth = 20,
+                        ContentImage = null,
+                        ImageWidth = 50,
+                        ImageHeight = 50,
+                        HeaderText = block_id + " " + block_name,
+                        TextMargin = new Thickness(40, 0, 0, 0)
+                    });
                 }
             }
             #endregion
 
             #region 获取所有附魔id和描述
             if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\enchantments.json") &&
-                File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js") && enchantment_databse.Count == 0)
+                File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js") && EnchantmentDataBase.Count == 0)
             {
                 string enchantments_json = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\enchantments.json");
-                string js_file = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js");
-
-                JsonScript(js_file);
 
                 ObservableCollection<string> itemDataGroups = new ObservableCollection<string>();
                 string enchantment_id = "";
@@ -312,7 +291,7 @@ namespace cbhk_environment
                     enchantment_id = JsonScript("getJSON('[" + i + "].id');").ToString();
                     enchantment_name = JsonScript("getJSON('[" + i + "].name');").ToString();
                     enchantment_num = JsonScript("getJSON('[" + i + "].num');").ToString();
-                    enchantment_databse.Add(enchantment_id, enchantment_name + enchantment_num);
+                    EnchantmentDataBase.Add(enchantment_id, enchantment_name + enchantment_num);
                     itemDataGroups.Add(enchantment_name);
                 }
                 EnchantmentIdSource = itemDataGroups;
@@ -321,12 +300,9 @@ namespace cbhk_environment
 
             #region 获取所有药水效果和描述
             if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\mob_effects.json") &&
-                File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js") && mob_effect_database.Count == 0)
+                File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js") && MobEffectDataBase.Count == 0)
             {
                 string potion_json = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\mob_effects.json");
-                string js_file = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js");
-
-                JsonScript(js_file);
 
                 string potion_id = "";
                 string potion_name = "";
@@ -341,7 +317,7 @@ namespace cbhk_environment
                     potion_name = JsonScript("getJSON('[" + i + "].name');").ToString();
                     potion_num = JsonScript("getJSON('[" + i + "].num');").ToString();
 
-                    mob_effect_database.Add(potion_id, potion_name + potion_num);
+                    MobEffectDataBase.Add(potion_id, potion_name + potion_num);
                     if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\mob_effects_images\\" + potion_id + ".png"))
                     {
                         MobEffectIdSource.Add(new IconComboBoxItem() { ComboBoxItemText = potion_name, ComboBoxItemIcon = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\mob_effects_images\\" + potion_id + ".png", UriKind.Absolute)) });
@@ -353,8 +329,6 @@ namespace cbhk_environment
             #region 获取属性列表
             if (AttributeSource.Count == 0)
             {
-                ObservableCollection<string> attribbuteSource = new ObservableCollection<string>();
-
                 if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\Item\\data\\AttributeIds.ini"))
                 {
                     string[] attribute = File.ReadAllLines(AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\Item\\data\\AttributeIds.ini");
@@ -363,11 +337,10 @@ namespace cbhk_environment
                         string[] attribute_info = attribute[i].Split(':');
                         string attribue_id = attribute_info[0];
                         string attribute_name = attribute_info[1];
-                        if (!attribute_database.ContainsKey(attribue_id))
-                            attribute_database.Add(attribue_id, attribute_name);
-                        attribbuteSource.Add(attribute_name);
+                        if (!AttribuiteDataBase.ContainsKey(attribue_id))
+                            AttribuiteDataBase.Add(attribue_id, attribute_name);
+                        AttributeSource.Add(attribute_name);
                     }
-                    AttributeSource = attribbuteSource;
                 }
             }
             #endregion
@@ -375,68 +348,54 @@ namespace cbhk_environment
             #region 获取属性生效槽位列表
             if (AttributeSlotSource.Count == 0)
             {
-                ObservableCollection<string> attributeSlotSource = new ObservableCollection<string>();
-
                 if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\Item\\data\\Slots.ini"))
                 {
                     string[] attribute = File.ReadAllLines(AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\Item\\data\\Slots.ini");
                     for (int i = 0; i < attribute.Length; i++)
                     {
-                        string[] attribute_info = attribute[i].Split(':');
-                        string attribue_id = attribute_info[0];
-                        string attribute_name = attribute_info[1];
-                        if (!attribute_database.ContainsKey(attribue_id))
-                            attribute_database.Add(attribue_id, attribute_name);
-                        attributeSlotSource.Add(attribute_name);
+                        string[] attributes = attribute[i].Split(':');
+                        AttributeSlotDataBase.Add(attributes[0], attributes[1]);
+                        AttributeSlotSource.Add(attributes[1]);
                     }
-                    AttributeSlotSource = attributeSlotSource;
                 }
             }
             #endregion
 
-            #region 获取属性类型列表
+            #region 获取属性值类型列表
             if (AttributeValueTypeSource.Count == 0)
             {
-                ObservableCollection<string> attributeValueTypeSource = new ObservableCollection<string>();
                 if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\Item\\data\\ValueTypes.ini"))
                 {
                     string[] attribute = File.ReadAllLines(AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\Item\\data\\ValueTypes.ini");
                     for (int i = 0; i < attribute.Length; i++)
                     {
-                        string[] attribute_info = attribute[i].Split(':');
-                        string attribue_id = attribute_info[0];
-                        string attribute_name = attribute_info[1];
-                        if (!attribute_database.ContainsKey(attribue_id))
-                            attribute_database.Add(attribue_id, attribute_name);
-                        attributeValueTypeSource.Add(attribute_name);
+                        string[] attributes = attribute[i].Split(':');
+                        AttributeValueTypeDatabase.Add(attributes[0], attributes[1]);
+                        AttributeValueTypeSource.Add(attributes[1]);
                     }
-                    AttributeValueTypeSource = attributeValueTypeSource;
                 }
             }
             #endregion
 
             #region 获取信息隐藏标记
-            hide_flags_source = hide_flags_collection;
             if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\Item\\data\\HideInfomationOptions.ini"))
             {
                 string[] hide_flag = File.ReadAllLines(AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\Item\\data\\HideInfomationOptions.ini");
                 foreach (string item in hide_flag)
                 {
                     string[] hide_info = item.Split(':');
-                    hide_infomation_database.Add(hide_info[0], hide_info[1]);
-                    hide_flags_collection.Add(hide_info[1]);
+                    if (!HideInfomationDataBase.ContainsKey(hide_info[0]))
+                    HideInfomationDataBase.Add(hide_info[0], hide_info[1]);
+                    HideFlagsSource.Add(hide_info[1]);
                 }
             }
             #endregion
 
             #region 获取所有实体的id和对应的中文
             if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\entities.json") &&
-               File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js") && entity_database.Count == 0)
+               File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js") && EntityDataBase.Count == 0)
             {
                 string entities_json = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\entities.json");
-                string js_file = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js");
-
-                JsonScript(js_file);
                 string entity_id = "";
                 string entity_name = "";
                 BitmapImage image = new BitmapImage();
@@ -462,37 +421,48 @@ namespace cbhk_environment
                         image = GeneralTools.BitmapImageConverter.ToBitmapImage(bitmap);
                         EntityIdSource.Add(new IconComboBoxItem() { ComboBoxItemText = entity_name, ComboBoxItemIcon = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + entity_id + ".png", UriKind.Absolute)) });
                     }
-                    if (!entity_database.ContainsKey(entity_id + "." + entity_name))
-                        entity_database.Add(entity_id + "." + entity_name, image);
+                    if (!EntityDataBase.ContainsKey(entity_id + ":" + entity_name))
+                        EntityDataBase.Add(entity_id + ":" + entity_name, image);
+
+                    EntityCheckBoxList.Add(new RichCheckBoxs()
+                    {
+                        Uid = "Entity",
+                        Height = 50,
+                        Margin = new Thickness(10, 0, 0, 0),
+                        FontSize = 15,
+                        Foreground = white_brush,
+                        Tag = AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + entity_id + "_spawn_egg.png",
+                        HeaderHeight = 20,
+                        HeaderWidth = 20,
+                        ContentImage = null,
+                        ImageWidth = 50,
+                        ImageHeight = 50,
+                        HeaderText = entity_id + " " + entity_name,
+                        TextMargin = new Thickness(40, 0, 0, 0)
+                    });
                 }
             }
             #endregion
 
             #region 获取所有粒子id
-            if(File.Exists(AppDomain.CurrentDomain.BaseDirectory+ "resources\\data_sources\\particles.json") && File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js") && particle_database.Count == 0)
+            if(File.Exists(AppDomain.CurrentDomain.BaseDirectory+ "resources\\data_sources\\particles.json") && File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js") && ParticleDataBase.Count == 0)
             {
                 string particle_json = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\particles.json");
-                string js_file = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js");
-
-                JsonScript(js_file);
                 string particle_id = "";
                 JsonScript("parseJSON(" + particle_json + ");");
                 int item_count = int.Parse(JsonScript("getLength();").ToString());
                 for (int i = 0; i < item_count; i++)
                 {
                     particle_id = JsonScript("getJSON('[" + i + "]');").ToString();
-                    particle_database.Add(particle_id);
+                    ParticleDataBase.Add(particle_id);
                 }
             }
             #endregion
 
             #region 获取所有音效id
-            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\sounds.json") && File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js") && sound_database.Count == 0)
+            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\sounds.json") && File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js") && SoundDataBase.Count == 0)
             {
                 string sound_json = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\sounds.json");
-                string js_file = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js");
-
-                JsonScript(js_file);
                 string sound_id = "";
                 string sound_name = "";
                 JsonScript("parseJSON(" + sound_json + ");");
@@ -502,8 +472,8 @@ namespace cbhk_environment
                     sound_id = JsonScript("getJSON('[" + i + "].id');").ToString();
                     sound_name = JsonScript("getJSON('[" + i + "].name');").ToString();
 
-                    soundIdNameSource.Add(sound_id, sound_name);
-                    sound_database.Add(sound_id);
+                    SoundIdNameSource.Add(sound_id, sound_name);
+                    SoundDataBase.Add(sound_id);
                 }
             }
             #endregion
@@ -514,18 +484,15 @@ namespace cbhk_environment
                 string[] team_colors = File.ReadAllLines(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\teamColor.ini");
                 for (int i = 0; i < team_colors.Length; i++)
                 {
-                    teamColor_database.Add(team_colors[i]);
+                    TeamColorDataBase.Add(team_colors[i]);
                 }
             }
             #endregion
 
             #region 获取所有记分板判据类型
-            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\scoreboardType.json") && File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js") && scoreboardType_database.Count == 0)
+            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\scoreboardType.json") && File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js") && ScoreboardTypeDataBase.Count == 0)
             {
                 string scoreboardType_json = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\scoreboardType.json");
-                string js_file = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js");
-
-                JsonScript(js_file);
                 string scoreboard_type;
                 JsonScript("parseJSON(" + scoreboardType_json + ");");
                 int item_count = int.Parse(JsonScript("getLength();").ToString());
@@ -541,29 +508,29 @@ namespace cbhk_environment
                         switch (item)
                         {
                             case "teamColor":
-                                foreach (var color in teamColor_database)
+                                foreach (var color in TeamColorDataBase)
                                 {
-                                    scoreboardType_database.Add(type_head + color);
+                                    ScoreboardTypeDataBase.Add(type_head + color);
                                 }
                                 break;
                             case "itemName":
-                                foreach (var an_item in item_database)
+                                foreach (var an_item in ItemDataBase)
                                 {
                                     string item_key = an_item.Key.Split('.')[0];
-                                    scoreboardType_database.Add(type_head + item_key);
+                                    ScoreboardTypeDataBase.Add(type_head + item_key);
                                 }
                                 break;
                             case "entityName":
-                                foreach (var an_entity in entity_database)
+                                foreach (var an_entity in EntityDataBase)
                                 {
                                     string item_key = an_entity.Key.Split('.')[0];
-                                    scoreboardType_database.Add(type_head + item_key);
+                                    ScoreboardTypeDataBase.Add(type_head + item_key);
                                 }
                                 break;
                         }
                     }
                     else
-                    scoreboardType_database.Add(scoreboard_type);
+                    ScoreboardTypeDataBase.Add(scoreboard_type);
                 }
             }
             #endregion
@@ -574,9 +541,8 @@ namespace cbhk_environment
                 string[] Types = File.ReadAllLines(AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\Tag\\TypeFilter.ini");
                 for (int i = 0; i < Types.Length; i++)
                 {
-                    TagTypeCollection.Add(Types[i]);
+                    TypeItemSource.Add(Types[i]);
                 }
-                TypeItemSource = TagTypeCollection;
             }
             #endregion
         }
@@ -651,7 +617,7 @@ namespace cbhk_environment
             #region 加载用户数据
             UserData.TryGetValue("user_frame", out user_frame_source);
             //没有头像就加载默认头像
-            if (user_frame_source.Trim() != "")
+            if (user_frame_source != null && user_frame_source.Trim() != "")
             {
                 user_frame.ImageSource = new BitmapImage(new Uri(user_frame_source, UriKind.Absolute));
             }
@@ -663,27 +629,15 @@ namespace cbhk_environment
             #endregion
 
             #region 加载轮播图数据
-            //初始化切换按钮预览图
-            preview_image_window.Content = preview_grid;
-            preview_grid.Children.Add(preview_image);
-            lba = new LinkButtonAnimation(LinkButtons);
-
             //读取本地现有轮播图数据
-            string current_value = "";
+            List<string> TargetUrlList = new List<string> { };
             if(Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\link_data"))
             {
-                foreach (string data in Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory + "resources\\link_data"))
+                foreach (string data in Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory + "resources\\link_data","*.png"))
                 {
-                    if (Path.GetExtension(data) == ".png")
-                    {
-                        current_value = Path.GetFileNameWithoutExtension(data);
-                        current_value = Path.GetDirectoryName(data) + "\\" + current_value + ".txt";
-                        current_value = File.Exists(current_value) ? current_value : "";
-                        CircularBanner.Add(data, current_value);
-                    }
+                    TargetUrlList.Add(data);
                 }
-                CircularBannerLoader(false);
-                LinkButtonAnimator.Tick += AnimatorBehavior;
+                rotationChartBody.SetAll(TargetUrlList);
             }
             #endregion
 
@@ -733,7 +687,7 @@ namespace cbhk_environment
                 current_column = current_column > spawner_button_column ? 0 : current_column;
 
                 #region 实例化生成器按钮
-                Button spawner_btn = new Button
+                IconTextButtons spawner_btn = new IconTextButtons
                 {
                     DataContext = sf,
                     Width = 188,
@@ -741,8 +695,8 @@ namespace cbhk_environment
                     BorderBrush = null,
                     BorderThickness = new Thickness(0),
                     Cursor = Cursors.Hand,
-                    Style = Resources["GeneratorButtonStyle"] as Style
                 };
+                spawner_btn.SetValue(StyleProperty, Application.Current.Resources["IconTextButton"]);
 
                 if (spawner_background[i] != null)
                 {
@@ -773,271 +727,16 @@ namespace cbhk_environment
             #endregion
         }
 
-        private void CircularBannerStartEvent(object sender, SelectionChangedEventArgs e)
-        {
-            TabControl this_tabcontrol = e.Source as TabControl;
-            LinkButtonAnimator.IsEnabled = this_tabcontrol.SelectedIndex == 1;
-        }
-
         /// <summary>
         /// 个性化设置
         /// </summary>
         private void IndividualizationForm(object sender, EventArgs e)
         {
             IndividualizationForm indivi_form = new IndividualizationForm();
-
-            LinkButtonAnimator.IsEnabled = false;
             if(indivi_form.ShowDialog() == true)
             {
-                if (CircularBanner == null)
-                {
-                    #region 清空当前网址页的所有功能性成员
-                    LinkSwitchPanel.Children.Clear();
-                    LinkButtons.Clear();
 
-                    for (int i = 0; i < LinkGrid.Children.Count; i++)
-                    {
-                        if (LinkGrid.Children[i] is Button)
-                            LinkGrid.Children.Remove(LinkGrid.Children[i]);
-                    }
-                    #endregion
-                    return;
-                }
-
-                //更新轮播图播放延迟
-                LinkButtonAnimator.Interval = TimeSpan.FromSeconds(MainWindowProperties.LinkAnimationDelay);
-                // 处理轮播图
-                CircularBannerLoader(true);
             }
-            //设置网址按钮的层级
-            for (int i = 0; i < LinkButtons.Count; i++)
-            {
-                Panel.SetZIndex(LinkButtons[i],LinkButtons.Count - (i+1));
-            }
-        }
-
-        /// <summary>
-        /// 轮播图加载器
-        /// </summary>
-        /// <param name="IsInit">是否为初始化</param>
-        private void CircularBannerLoader(bool IsIndividualizationForm)
-        {
-            #region 清空当前网址页的所有功能性成员
-            LinkSwitchPanel.Children.Clear();
-            LinkButtons.Clear();
-
-            for (int i = 0; i < LinkGrid.Children.Count; i++)
-            {
-                if (LinkGrid.Children[i] is Button)
-                    LinkGrid.Children.Remove(LinkGrid.Children[i]);
-            }
-            last_image_index = 0;
-            current_image_index = 1;
-            #endregion
-
-            //选中第一张图片
-            bool SelectFirst = true;
-            //标记切换按钮索引
-            int switch_button_index = 0;
-            //标记图片按钮索引
-            int image_button_index = CircularBanner.Count-1;
-            //搜索字典中的最后一个键
-            string last_key = CircularBanner.ElementAt(CircularBanner.Keys.Count - 1).Key;
-            if (CircularBanner != null && CircularBanner.Count > 0)
-            {
-                #region 载入图片
-                foreach (var a_link in CircularBanner.Keys)
-                {
-                    ImageBrush LinkBrush = new ImageBrush(new BitmapImage(new Uri(a_link, UriKind.Absolute)))
-                    {
-                        Stretch = Stretch.UniformToFill
-                    };
-                    //读取目标路径的网址
-                    string target_link = File.Exists(CircularBanner[a_link])? File.ReadAllText(CircularBanner[a_link]):"";
-                    //复制一份到管家目录
-                    if (IsIndividualizationForm && File.Exists(a_link) && (Path.GetDirectoryName(a_link) != AppDomain.CurrentDomain.BaseDirectory + "resources\\link_data"))//文件依然存在且不同源
-                    {
-                        File.Copy(a_link, AppDomain.CurrentDomain.BaseDirectory + "resources\\link_data\\" + Path.GetFileName(a_link), true);
-                        File.Copy(CircularBanner[a_link], AppDomain.CurrentDomain.BaseDirectory + "resources\\link_data\\" + Path.GetFileNameWithoutExtension(a_link) + ".txt", true);
-                    }
-                    //生成网址跳转按钮
-                    Button DisplayLinkButton = new Button()
-                    {
-                        Background = LinkBrush,
-                        Style = Resources["LinkImageButtonStyle"] as Style,
-                        Width = ActualWidth + 30,
-                        HorizontalAlignment = HorizontalAlignment.Stretch,
-                        DataContext = new InitCircularBanner(),
-                        Name = "index"+ image_button_index--,
-                        Margin = new Thickness(0),
-                        CommandParameter = target_link,
-                        Tag = target_link,
-                        ToolTip = target_link
-                    };
-                    LinkGrid.Children.Add(DisplayLinkButton);
-                    //装载网址按钮链表
-                    LinkButtons.Add(DisplayLinkButton);
-
-                    #region 生成切换管理器
-                    //生成切换按钮
-                    Button switch_button = new Button()
-                    {
-                        Style = SelectFirst ? (Resources["SelectedSwitchButtonStyle"] as Style) : (Resources["SelectSwitchButtonStyle"] as Style),
-                        CommandParameter = switch_button_index++
-                    };
-                    switch_button.MouseEnter += Switch_button_MouseEnter;
-                    switch_button.MouseMove += SwitchButtonMouseMove;
-                    switch_button.MouseLeave += Switch_button_MouseLeave;
-                    #endregion
-
-                    #region 更新UI属性和细节
-                    //绑定切换按钮的点击事件
-                    switch_button.Click += SwitchImageCommand;
-                    //如果是最后一个元素,那么取消按钮的右边距
-                    switch_button.Margin = last_key == a_link ? new Thickness(0, 0, 0, 0) : switch_button.Margin;
-                    SelectFirst = false;
-                    LinkSwitchPanel.Children.Add(switch_button);
-                    //将宽拉长指定量，否则最后一个按钮一部分会被遮挡
-                    LinkSwitchPanel.Width = last_key == a_link ? LinkSwitchPanel.Children.Count * switch_button.Width + (switch_button.Width/2+5) : 0;
-                    #endregion
-                }
-
-                #region 重排列网址链接按钮的层级
-                image_button_index = CircularBanner.Count - 1;
-                for (int i = 0; i < LinkButtons.Count; i++)
-                {
-                    Panel.SetZIndex(LinkButtons[i], image_button_index--);
-                }
-                #endregion
-                #endregion
-
-                //初始化坐标属性(否则无法移动)
-                lba = new LinkButtonAnimation(LinkButtons);
-                //设置控制按钮管理器为最高层
-                Panel.SetZIndex(LinkSwitchPanel, LinkGrid.Children.Count + 1);
-                //若当前在网址页则开启计时器
-                LinkButtonAnimator.IsEnabled = TaskTabControl.SelectedIndex == 1;
-                //更新层级和索引
-                SwitchImageCommand(LinkSwitchPanel.Children[0], null);
-            }
-        }
-
-        /// <summary>
-        /// 加载预览图像
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Switch_button_MouseEnter(object sender, MouseEventArgs e)
-        {
-            Button this_btn = e.Source as Button;
-            preview_image_source = new BitmapImage(new Uri(CircularBanner.Keys.ElementAt(int.Parse(this_btn.CommandParameter.ToString())), UriKind.Absolute));
-            preview_image.Source = preview_image_source;
-            preview_image_window.Show();
-        }
-
-        /// <summary>
-        /// 隐藏预览图像
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Switch_button_MouseLeave(object sender, MouseEventArgs e)
-        {
-            preview_image_window.Hide();
-        }
-
-        /// <summary>
-        /// 显示预览图像
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void SwitchButtonMouseMove(object sender, MouseEventArgs e)
-        {
-            //获取鼠标当前相对于屏幕的位置
-            Point form_p = Mouse.GetPosition(e.Source as FrameworkElement);
-            Point screen_point = (e.Source as FrameworkElement).PointToScreen(form_p);
-            //设置窗体坐标
-            preview_image_window.Left = screen_point.X - 50;
-            preview_image_window.Top = screen_point.Y-100;
-        }
-
-        /// <summary>
-        /// 切换按钮指令
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void SwitchImageCommand(object sender, EventArgs e)
-        {
-            Button this_btn = sender as Button;
-            current_image_index = int.Parse(this_btn.CommandParameter.ToString());
-
-            //如果触发本事件时动画正在播放则历史索引向前推进一个单位
-            if (CircularBannerState)
-                last_image_index--;
-            if (last_image_index > (LinkSwitchPanel.Children.Count - 1))
-                last_image_index = LinkSwitchPanel.Children.Count - 1;
-            if (last_image_index == current_image_index)
-                last_image_index--;
-            if(last_image_index < 0)
-                last_image_index = LinkSwitchPanel.Children.Count - 1;
-
-            lba.storyboard.Stop();
-            LinkButtonAnimator.IsEnabled = false;
-            int current_index = Panel.GetZIndex(LinkButtons[int.Parse(this_btn.CommandParameter.ToString())]);
-            Panel.SetZIndex(LinkButtons[int.Parse(this_btn.CommandParameter.ToString())], -1);
-
-            #region 处理当前层的上层所有按钮层级
-            for (int i = 0; i < LinkButtons.Count; i++)
-            {
-                int compare_index = Panel.GetZIndex(LinkButtons[i]);
-                if (compare_index > current_index /*&& compare_index >=0*/)
-                {
-                    LinkButtons[i].Name = "index" + (compare_index - 1);
-                    Panel.SetZIndex(LinkButtons[i], compare_index - 1);
-                }
-            }
-            Panel.SetZIndex(LinkButtons[int.Parse(this_btn.CommandParameter.ToString())], LinkButtons.Count-1);
-            #endregion
-
-            //处理上一组
-            last_image_index = last_image_index > LinkButtons.Count - 1 ? LinkButtons.Count - 1 :last_image_index;
-            try
-            {
-                (LinkSwitchPanel.Children[last_image_index] as Button).Style = Resources["SelectSwitchButtonStyle"] as Style;
-            }
-            catch { /*MessageBox.Show(last_image_index+"");*/ }
-
-            //处理当前组
-            (LinkSwitchPanel.Children[current_image_index] as Button).Style = Resources["SelectedSwitchButtonStyle"] as Style;
-
-            #region 索引同步
-            last_image_index = current_image_index = int.Parse(this_btn.CommandParameter.ToString());
-            current_image_index+=1;
-            current_image_index = current_image_index > (LinkButtons.Count - 1) ? 0 : current_image_index;
-            #endregion
-
-            //延迟三秒开启轮播
-            System.Threading.Tasks.Task.Delay(TimeSpan.FromSeconds(MainWindowProperties.LinkAnimationDelay)).ContinueWith(_ => { LinkButtonAnimator.IsEnabled = true; });
-        }
-
-        /// <summary>
-        /// 轮播图管理器
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void AnimatorBehavior(object sender, EventArgs e)
-        {
-            DispatcherTimer this_timer = sender as DispatcherTimer;
-
-            #region 判断两组按钮是否超出数据索引范围
-            current_image_index = current_image_index > (LinkButtons.Count - 1) ? 0 : current_image_index;
-            last_image_index = last_image_index > (LinkButtons.Count - 1) ? 0 : last_image_index;
-            #endregion
-
-            this_timer.IsEnabled = false;
-            lba.SwitchOpacityAndTranslate(LinkButtons[last_image_index], LinkButtons[current_image_index],LinkButtons,new List<Button> { LinkSwitchPanel.Children[last_image_index] as Button, LinkSwitchPanel.Children[current_image_index] as Button },new List<Style> { Resources["SelectSwitchButtonStyle"] as Style, Resources["SelectedSwitchButtonStyle"] as Style });
-
-            //两组按钮索引迭代一个单位
-            current_image_index++; last_image_index++;
         }
 
         /// <summary>
@@ -1186,14 +885,6 @@ namespace cbhk_environment
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //设置所有按钮的宽为实际长度+30
-            foreach (Button btn in LinkButtons)
-                btn.Width = ActualWidth + 30;
-            //设置网址管理器宽为实际长度+100
-            LinkSwitchPanel.Width += 50;
-            ////绑定轮播图开启事件
-            TaskTabControl.SelectionChanged += CircularBannerStartEvent;
-
             SkeletonTimer.Enabled = true;
         }
     }

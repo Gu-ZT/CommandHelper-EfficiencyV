@@ -12,12 +12,17 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
 
+    <UserControl.Resources>
+        <ImageBrush x:Key="ButtonNormal" ImageSource="/cbhk_environment;component/resources/common/images/ButtonNormal.png" />
+        <ImageBrush x:Key="ButtonPressed" ImageSource="/cbhk_environment;component/resources/common/images/ButtonPressed.png" />
+    </UserControl.Resources>
+
     <Border
         BorderBrush="Black"
-        BorderThickness="4"
+        BorderThickness="0"
         MouseEnter="WhiteBorder"
         MouseLeave="BlackBorder">
-        <Grid Loaded="BackgroundButtonLoaded" MouseLeftButtonDown="CloseNumberModifyMouseLeftButtonDown">
+        <Grid Background="{StaticResource ButtonNormal}" MouseLeftButtonDown="CloseNumberModifyMouseLeftButtonDown">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
@@ -68,7 +73,7 @@
                 VerticalAlignment="Bottom"
                 Panel.ZIndex="0"
                 FontSize="25"
-                Foreground="White"
+                Foreground="Black"
                 MouseLeftButtonUp="BuyItemCountMouseLeftButtonUp"
                 Text="1"
                 TextAlignment="Center" />
@@ -86,11 +91,10 @@
                 Panel.ZIndex="1"
                 ArrowBackground="Transparent"
                 ArrowForeground="White"
-                Background="Transparent"
                 BorderThickness="0"
                 CaretBrush="White"
                 FontSize="25"
-                Foreground="White"
+                Foreground="Black"
                 MaxValue="64"
                 MinValue="1"
                 Template="{DynamicResource ColorNumbericUpDown}"
@@ -110,7 +114,7 @@
                 VerticalAlignment="Bottom"
                 Panel.ZIndex="1"
                 FontSize="25"
-                Foreground="White"
+                Foreground="Black"
                 TextAlignment="Center" />
             <Image
                 x:Name="BuyB"
@@ -138,7 +142,7 @@
                 VerticalAlignment="Bottom"
                 Panel.ZIndex="0"
                 FontSize="25"
-                Foreground="White"
+                Foreground="Black"
                 MouseLeftButtonUp="BuyBItemCountMouseLeftButtonUp"
                 Text="1"
                 TextAlignment="Center" />
@@ -200,7 +204,7 @@
                 VerticalAlignment="Center"
                 Panel.ZIndex="0"
                 FontSize="25"
-                Foreground="White"
+                Foreground="Black"
                 MouseLeftButtonUp="SellItemCountMouseLeftButtonUp"
                 Text="1"
                 TextAlignment="Center" />
@@ -232,14 +236,16 @@
             <CustomControls:IconTextButtons
                 Grid.Row="0"
                 Grid.Column="4"
-                Margin="0,0,20,0"
+                Height="50"
+                Margin="0,0,0,0"
+                Padding="0,-10,0,0"
                 HorizontalAlignment="Right"
-                Background="Transparent"
+                Background="{StaticResource ButtonNormal}"
                 Click="DeleteClick"
-                IconColor="Red"
-                IconData="M617.92 516.096l272 272-101.824 101.824-272-272-272 272-101.856-101.824 272-272-275.008-275.04L241.056 139.2l275.04 275.04 275.04-275.04 101.824 101.824-275.04 275.04z"
-                IconHeight="40"
-                IconWidth="40"
+                Content="🗙"
+                FontSize="40"
+                Foreground="Black"
+                PressedBackground="{StaticResource ButtonPressed}"
                 Style="{DynamicResource IconTextButton}" />
         </Grid>
     </Border>

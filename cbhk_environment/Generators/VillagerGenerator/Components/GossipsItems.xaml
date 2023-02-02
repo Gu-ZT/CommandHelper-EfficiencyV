@@ -29,7 +29,7 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
             FontSize="25"
-            Foreground="Black"
+            Foreground="White"
             Text="Value"
             ToolTip="此言论的强度。"
             ToolTipService.InitialShowDelay="0"
@@ -60,7 +60,7 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
             FontSize="25"
-            Foreground="Black"
+            Foreground="White"
             Text="Target"
             ToolTip="引发言论的玩家的UUID。"
             ToolTipService.InitialShowDelay="0"
@@ -71,8 +71,8 @@
             Grid.Column="1"
             Height="35"
             HorizontalAlignment="Stretch"
-            Background="Transparent"
             BorderBrush="Black"
+            BorderThickness="1"
             CaretBrush="White"
             FontSize="25"
             Foreground="Black" />
@@ -83,7 +83,7 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
             FontSize="25"
-            Foreground="Black"
+            Foreground="White"
             Text="Type"
             ToolTip="一个ID值，指示此言论的类型。"
             ToolTipService.InitialShowDelay="0"
@@ -96,7 +96,7 @@
             HorizontalAlignment="Stretch"
             FontSize="25"
             Loaded="TypeLoaded"
-            Style="{DynamicResource TextComboBox}" />
+            Style="{DynamicResource TextComboBoxStyle}" />
     </Grid>
 
 </UserControl>

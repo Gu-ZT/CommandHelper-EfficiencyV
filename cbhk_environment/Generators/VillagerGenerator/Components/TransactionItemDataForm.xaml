@@ -19,17 +19,18 @@
     WindowStartupLocation="Manual"
     mc:Ignorable="d">
 
-    <ScrollViewer Style="{DynamicResource for_scrollviewer}">
+    <ScrollViewer Style="{DynamicResource DefaultScrollViewer}">
         <StackPanel>
             <CustomControls:RadiusToggleButtons
                 x:Name="rewardExp"
                 Height="30"
-                Margin="0,3,0,0"
-                HorizontalAlignment="Stretch"
+                HorizontalAlignment="Center"
                 FontSize="20"
                 Foreground="White"
                 SelectedToggleText="rewardExp√"
                 Style="{DynamicResource RadiusToggleButton}"
+                ToggleHeight="30"
+                ToggleWidth="50"
                 ToolTip="1 或 0 (true/false) - true代表交易会提供经验球。Java版中所有自然生成的村民的交易都会给予经验球。"
                 ToolTipService.InitialShowDelay="0"
                 ToolTipService.ShowDuration="1500"

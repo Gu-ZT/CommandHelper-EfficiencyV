@@ -77,7 +77,10 @@
                     Foreground="White"
                     HeaderText="Tab"
                     Style="{DynamicResource IconTabItems}">
-                    <ScrollViewer x:Name="item_scrollviewer" Style="{DynamicResource for_scrollviewer}" />
+                    <ScrollViewer
+                        x:Name="item_scrollviewer"
+                        Style="{DynamicResource DefaultScrollViewer}"
+                        VerticalScrollBarVisibility="Auto" />
                 </CustomControls:IconTabItems>
             </TabControl>
         </DockPanel>

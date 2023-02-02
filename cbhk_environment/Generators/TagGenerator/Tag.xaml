@@ -24,6 +24,10 @@
         <local_datacontext:tag_datacontext />
     </Window.DataContext>
 
+    <Window.Resources>
+        <DataTemplate x:Key="Test" />
+    </Window.Resources>
+
     <Window.InputBindings>
         <KeyBinding Key="F5" Command="{Binding RunCommand}" />
         <KeyBinding
@@ -182,7 +186,6 @@
                 Height="25"
                 Margin="10,0"
                 VerticalAlignment="Center"
-                Background="Transparent"
                 BorderBrush="Black"
                 Foreground="White"
                 SelectedIndex="0"
@@ -211,6 +214,7 @@
                 BorderBrush="Black"
                 CaretBrush="White"
                 FontSize="15"
+                Foreground="White"
                 Text="{Binding CurrentFileName, Mode=OneWayToSource}"
                 TextAlignment="Left" />
             <TextBlock
@@ -231,203 +235,32 @@
                 BorderBrush="Black"
                 CaretBrush="White"
                 FontSize="15"
+                Foreground="White"
+                Text="{Binding SearchText, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
                 TextAlignment="Left">
                 <ity:Interaction.Triggers>
-                    <ity:EventTrigger EventName="KeyUp">
+                    <ity:EventTrigger EventName="TextChanged">
                         <itn:CallMethodAction MethodName="SearchBoxKeyUp" TargetObject="{Binding}" />
-                    </ity:EventTrigger>
-                    <ity:EventTrigger EventName="Loaded">
-                        <itn:CallMethodAction MethodName="SearchBoxLoaded" TargetObject="{Binding}" />
                     </ity:EventTrigger>
                 </ity:Interaction.Triggers>
             </TextBox>
         </DockPanel>
         <ScrollViewer
             Grid.Row="2"
-            Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Grid}, Path=Width, Mode=OneWay}"
             HorizontalContentAlignment="Stretch"
             VerticalContentAlignment="Stretch"
             Background="Transparent"
-            IsEnabled="False"
-            Style="{DynamicResource for_scrollviewer}">
-            <StackPanel
-                Background="Transparent"
-                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                ScrollViewer.VerticalScrollBarVisibility="Disabled">
+            Style="{DynamicResource DefaultScrollViewer}"
+            VirtualizingPanel.IsVirtualizing="True"
+            VirtualizingPanel.ScrollUnit="Pixel"
+            VirtualizingPanel.VirtualizationMode="Recycling">
+            <ItemsControl Background="Transparent">
                 <ity:Interaction.Triggers>
                     <ity:EventTrigger EventName="Loaded">
                         <itn:CallMethodAction MethodName="TagStackPanelLoaded" TargetObject="{Binding}" />
                     </ity:EventTrigger>
                 </ity:Interaction.Triggers>
-                <Grid HorizontalAlignment="Stretch" Panel.ZIndex="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="9*" />
-                    </Grid.ColumnDefinitions>
-                    <SkeletionScreen:Blocks
-                        Grid.Row="0"
-                        Grid.Column="0"
-                        Width="20"
-                        Height="20"
-                        Margin="25,0,0,0"
-                        HorizontalAlignment="Left" />
-                    <SkeletionScreen:Lines
-                        Grid.Row="0"
-                        Grid.Column="1"
-                        Width="530"
-                        Height="20"
-                        Margin="0,2"
-                        HorizontalAlignment="Left" />
-                    <SkeletionScreen:Blocks
-                        Grid.Row="1"
-                        Grid.Column="0"
-                        Width="20"
-                        Height="20"
-                        Margin="25,0,0,0"
-                        HorizontalAlignment="Left" />
-                    <SkeletionScreen:Lines
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        Width="530"
-                        Height="20"
-                        Margin="0,2"
-                        HorizontalAlignment="Left" />
-                    <SkeletionScreen:Blocks
-                        Grid.Row="2"
-                        Grid.Column="0"
-                        Width="20"
-                        Height="20"
-                        Margin="25,0,0,0"
-                        HorizontalAlignment="Left" />
-                    <SkeletionScreen:Lines
-                        Grid.Row="2"
-                        Grid.Column="1"
-                        Width="530"
-                        Height="20"
-                        Margin="0,2"
-                        HorizontalAlignment="Left" />
-                    <SkeletionScreen:Blocks
-                        Grid.Row="3"
-                        Grid.Column="0"
-                        Width="20"
-                        Height="20"
-                        Margin="25,0,0,0"
-                        HorizontalAlignment="Left" />
-                    <SkeletionScreen:Lines
-                        Grid.Row="3"
-                        Grid.Column="1"
-                        Width="530"
-                        Height="20"
-                        Margin="0,2"
-                        HorizontalAlignment="Left" />
-                    <SkeletionScreen:Blocks
-                        Grid.Row="4"
-                        Grid.Column="0"
-                        Width="20"
-                        Height="20"
-                        Margin="25,0,0,0"
-                        HorizontalAlignment="Left" />
-                    <SkeletionScreen:Lines
-                        Grid.Row="4"
-                        Grid.Column="1"
-                        Width="530"
-                        Height="20"
-                        Margin="0,2"
-                        HorizontalAlignment="Left" />
-                    <SkeletionScreen:Blocks
-                        Grid.Row="5"
-                        Grid.Column="0"
-                        Width="20"
-                        Height="20"
-                        Margin="25,0,0,0"
-                        HorizontalAlignment="Left" />
-                    <SkeletionScreen:Lines
-                        Grid.Row="5"
-                        Grid.Column="1"
-                        Width="530"
-                        Height="20"
-                        Margin="0,2"
-                        HorizontalAlignment="Left" />
-                    <SkeletionScreen:Blocks
-                        Grid.Row="6"
-                        Grid.Column="0"
-                        Width="20"
-                        Height="20"
-                        Margin="25,0,0,0"
-                        HorizontalAlignment="Left" />
-                    <SkeletionScreen:Lines
-                        Grid.Row="6"
-                        Grid.Column="1"
-                        Width="530"
-                        Height="20"
-                        Margin="0,2"
-                        HorizontalAlignment="Left" />
-                    <SkeletionScreen:Blocks
-                        Grid.Row="7"
-                        Grid.Column="0"
-                        Width="20"
-                        Height="20"
-                        Margin="25,0,0,0"
-                        HorizontalAlignment="Left" />
-                    <SkeletionScreen:Lines
-                        Grid.Row="7"
-                        Grid.Column="1"
-                        Width="530"
-                        Height="20"
-                        Margin="0,2"
-                        HorizontalAlignment="Left" />
-                    <SkeletionScreen:Blocks
-                        Grid.Row="8"
-                        Grid.Column="0"
-                        Width="20"
-                        Height="20"
-                        Margin="25,0,0,0"
-                        HorizontalAlignment="Left" />
-                    <SkeletionScreen:Lines
-                        Grid.Row="8"
-                        Grid.Column="1"
-                        Width="530"
-                        Height="20"
-                        Margin="0,2"
-                        HorizontalAlignment="Left" />
-                    <SkeletionScreen:Blocks
-                        Grid.Row="9"
-                        Grid.Column="0"
-                        Width="20"
-                        Height="20"
-                        Margin="25,0,0,0"
-                        HorizontalAlignment="Left" />
-                    <SkeletionScreen:Lines
-                        Grid.Row="9"
-                        Grid.Column="1"
-                        Width="530"
-                        Height="20"
-                        Margin="0,2"
-                        HorizontalAlignment="Left" />
-                </Grid>
-                <CustomControls:RichCheckBoxs
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Top"
-                    Cursor="Hand"
-                    FontSize="15"
-                    Foreground="White"
-                    HeaderHeight="20"
-                    HeaderWidth="20"
-                    Style="{DynamicResource RichCheckBox}"
-                    Visibility="Collapsed" />
-            </StackPanel>
+            </ItemsControl>
         </ScrollViewer>
     </Grid>
 </local_window:CommonWindow>

@@ -13,26 +13,32 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
 
+    <UserControl.Resources>
+        <ImageBrush x:Key="ButtonNormal" ImageSource="/cbhk_environment;component/resources/common/images/ButtonNormal.png" />
+        <ImageBrush x:Key="ButtonPressed" ImageSource="/cbhk_environment;component/resources/common/images/ButtonPressed.png" />
+    </UserControl.Resources>
+
     <DockPanel Height="30">
         <TextBlock
             Margin="5,0"
             VerticalAlignment="Center"
             Foreground="White"
-            Text="附魔ID:" />
+            Text="附魔ID" />
         <ComboBox
             Width="100"
             Height="30"
             HorizontalAlignment="Left"
             IsEditable="True"
             Loaded="EnchantmentIdLoaded"
-            SelectionChanged="EnchantmentIdSelectionChanged"
+            SelectedIndex="0"
+            SelectedItem="{Binding EnchantmentId, Mode=TwoWay}"
             Style="{DynamicResource TextComboBoxStyle}" />
         <TextBlock
             Margin="5,0"
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
             Foreground="White"
-            Text="附魔等级:" />
+            Text="附魔等级" />
         <CustomControls:ColorNumbericUpDowns
             Width="80"
             HorizontalAlignment="Left"
@@ -44,21 +50,21 @@
             BorderThickness="0"
             CaretBrush="White"
             Foreground="White"
-            Loaded="EnchantmentLevelLoaded"
             MaxValue="32767"
             MinValue="1"
-            SelectionChanged="EnchantmentLevelSelectionChanged"
-            Template="{DynamicResource ColorNumbericUpDown}" />
+            Template="{DynamicResource ColorNumbericUpDown}"
+            Text="{Binding EnchantmentLevel, Mode=TwoWay}" />
         <CustomControls:IconTextButtons
-            Width="50"
+            Width="25"
             Margin="10,0"
-            Padding="0,-5,0,0"
+            Padding="0,-8,0,0"
             HorizontalAlignment="Left"
-            Background="Transparent"
+            Background="{StaticResource ButtonNormal}"
             Click="IconTextButtons_Click"
             Content="×"
             FontSize="30"
-            Foreground="Red"
+            Foreground="Black"
+            PressedBackground="{StaticResource ButtonPressed}"
             Style="{DynamicResource IconTextButton}" />
     </DockPanel>
 </UserControl>

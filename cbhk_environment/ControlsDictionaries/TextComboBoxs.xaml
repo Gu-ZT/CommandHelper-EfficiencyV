@@ -7,9 +7,13 @@
     xmlns:local_context="clr-namespace:cbhk_environment.ControlsDataContexts"
     xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
 
-    <Style x:Key="ComboBoxEditableTextBox" TargetType="{x:Type TextBox}">
+    <ImageBrush x:Key="TextEditBox" ImageSource="/cbhk_environment;component/resources/common/images/TextEditBox.png" />
+    <ImageBrush x:Key="Frame" ImageSource="/cbhk_environment;component/resources/common/images/Frame.png" />
+
+    <!--<Style x:Key="ComboBoxEditableTextBox" TargetType="{x:Type TextBox}">
         <Setter Property="OverridesDefaultStyle" Value="true" />
         <Setter Property="AllowDrop" Value="true" />
+        <Setter Property="Background" Value="{StaticResource TextEditBox}" />
         <Setter Property="MinWidth" Value="0" />
         <Setter Property="MinHeight" Value="0" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
@@ -27,7 +31,7 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
+    </Style>-->
 
     <Style x:Key="ComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
         <Setter Property="OverridesDefaultStyle" Value="true" />
@@ -39,7 +43,7 @@
                 <ControlTemplate TargetType="{x:Type ToggleButton}">
                     <Border
                         x:Name="templateRoot"
-                        Background="Transparent"
+                        Background="Black"
                         BorderBrush="Transparent"
                         BorderThickness="{TemplateBinding BorderThickness}"
                         SnapsToDevicePixels="true">
@@ -166,13 +170,13 @@
                     Color="Transparent">
                     <Border
                         x:Name="dropDownBorder"
-                        Background="Black"
+                        Background="{StaticResource Frame}"
                         BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}"
                         BorderThickness="1">
                         <ScrollViewer
                             x:Name="DropDownScrollViewer"
-                            Width="400"
-                            Background="Transparent">
+                            Width="{TemplateBinding Width}"
+                            Style="{DynamicResource DefaultScrollViewer}">
                             <Grid x:Name="grid" RenderOptions.ClearTypeHint="Enabled">
                                 <Canvas
                                     x:Name="canvas"
@@ -206,16 +210,17 @@
             <Border
                 x:Name="border"
                 Margin="{TemplateBinding BorderThickness}"
-                Background="#2F2F2F">
+                Background="Transparent">
                 <TextBox
                     x:Name="EditableTextBox"
                     Margin="{TemplateBinding Padding}"
+                    Padding="5,0,0,0"
                     HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                     VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                    BorderThickness="0"
                     DataContext="{StaticResource TextSearcherDataContext}"
                     Foreground="White"
                     IsReadOnly="{Binding IsReadOnly, RelativeSource={RelativeSource TemplatedParent}}"
-                    Style="{StaticResource ComboBoxEditableTextBox}"
                     Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Path=SelectedItem}">
                     <ity:Interaction.Triggers>
                         <ity:EventTrigger EventName="KeyUp">

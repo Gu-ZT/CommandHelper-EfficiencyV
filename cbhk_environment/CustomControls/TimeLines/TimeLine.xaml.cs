@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace cbhk_environment.CustomControls.TimeLines
 {
@@ -114,6 +116,21 @@ namespace cbhk_environment.CustomControls.TimeLines
 
             pixelDistance = (int)border.Width - 1; // Region of the border aka the timeline's length in pixels
             mainCanvas.Width = (spacing * (TMarks.Count - 1)) + (int)tmEnd.ActualWidth; // Set the canvas's width so the ScrollViewer knows how big it is
+        }
+
+        /// <summary>
+        /// 左击按下后同步时间线位置和盔甲架数据
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void SynchronizationTimelineMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            Canvas.SetLeft(TElements[0], Mouse.GetPosition(this).X);
+            if (Canvas.GetLeft(TElements[0]) > pixelDistance - 2)
+                Canvas.SetLeft(TElements[0], pixelDistance - 2);
+            if (Canvas.GetLeft(TElements[0]) < -2)
+                Canvas.SetLeft(TElements[0], -2);
+            RefreshElement(TElements[0]);
         }
     }
 }

@@ -9,6 +9,11 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
 
+    <UserControl.Resources>
+        <ImageBrush x:Key="ButtonNormal" ImageSource="/cbhk_environment;component/resources/common/images/ButtonNormal.png" />
+        <ImageBrush x:Key="ButtonPressed" ImageSource="/cbhk_environment;component/resources/common/images/ButtonPressed.png" />
+    </UserControl.Resources>
+
     <Border Background="#2F2F2F">
         <DockPanel Height="30">
             <TextBlock
@@ -16,13 +21,14 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Foreground="White"
-                Text="药水类型:" />
+                Text="药水类型" />
             <ComboBox
                 Width="100"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Loaded="MobEffectIdLoaded"
-                SelectionChanged="MobEffectIdSelectionChanged"
+                SelectedIndex="0"
+                SelectedItem="{Binding PotionType, Mode=TwoWay}"
                 Style="{DynamicResource IconComboBoxStyle}" />
             <TextBlock
                 Margin="5,0"
@@ -41,11 +47,10 @@
                 BorderThickness="0"
                 CaretBrush="White"
                 Foreground="White"
-                Loaded="MobEffectDurationLoaded"
                 MaxValue="10000000"
-                MinValue="0"
-                SelectionChanged="MobEffectDurationSelectionChanged"
-                Template="{DynamicResource ColorNumbericUpDown}" />
+                MinValue="-10000000"
+                Template="{DynamicResource ColorNumbericUpDown}"
+                Text="{Binding PotionDuration, Mode=TwoWay}" />
             <TextBlock
                 Margin="5,0"
                 HorizontalAlignment="Left"
@@ -63,21 +68,21 @@
                 BorderThickness="0"
                 CaretBrush="White"
                 Foreground="White"
-                Loaded="MobEffectLevelLoaded"
                 MaxValue="255"
-                MinValue="0"
-                SelectionChanged="MobEffectLevelSelectionChanged"
-                Template="{DynamicResource ColorNumbericUpDown}" />
+                MinValue="-255"
+                Template="{DynamicResource ColorNumbericUpDown}"
+                Text="{Binding PotionLevel, Mode=TwoWay}" />
             <CustomControls:IconTextButtons
-                Width="50"
-                Margin="10,0"
+                Width="25"
+                Margin="5,0"
                 Padding="0,-5,0,0"
                 HorizontalAlignment="Left"
-                Background="Transparent"
+                Background="{StaticResource ButtonNormal}"
                 Click="IconTextButtons_Click"
                 Content="×"
                 FontSize="30"
-                Foreground="Red"
+                Foreground="Black"
+                PressedBackground="{StaticResource ButtonPressed}"
                 Style="{DynamicResource IconTextButton}" />
         </DockPanel>
     </Border>

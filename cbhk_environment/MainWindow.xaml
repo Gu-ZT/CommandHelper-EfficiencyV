@@ -3,16 +3,18 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:SkeletonScreen="clr-namespace:cbhk_environment.CustomControls.SkeletonScreen"
+    xmlns:customcontrols="clr-namespace:cbhk_environment.CustomControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:main_form_data_context="clr-namespace:cbhk_environment.resources.MainFormDataContext"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:rotationchart="clr-namespace:cbhk_environment.CustomControls.RotationChart"
     Title="命令管家"
     Width="800"
     Height="600"
     MinWidth="740"
     MinHeight="560"
     Background="{x:Null}"
-    Icon="resources/cbhk_form/images/cb.ico"
+    Icon="/cbhk_environment;component/resources/cbhk_form/images/cb.ico"
     Loaded="Window_Loaded"
     MouseLeftButtonDown="Window_MouseLeftButtonDown"
     MouseMove="Window_MouseMove"
@@ -114,12 +116,6 @@
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="Foreground" Value="White" />
-        </Style>
-        <!--  窗体菜单按钮样式  -->
-        <Style x:Key="cbhk_sub_menuitem" TargetType="{x:Type MenuItem}">
-            <Setter Property="Background" Value="#2F2F2F" />
-            <Setter Property="BorderBrush" Value="{x:Null}" />
-            <Setter Property="BorderThickness" Value="0" />
         </Style>
         <!--  生成器按钮样式  -->
         <Style x:Key="GeneratorButtonStyle" TargetType="{x:Type Button}">
@@ -232,7 +228,7 @@
         <DockPanel
             Width="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=ActualWidth}"
             Height="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=ActualHeight}"
-            Background="#FF1A1A1A">
+            Background="Transparent">
             <StackPanel
                 x:Name="TitleStack"
                 Height="30"
@@ -257,7 +253,7 @@
                     x:Name="user_frame_border"
                     Width="30"
                     Height="30"
-                    Margin="10,0,0,0"
+                    Margin="10,0"
                     BorderThickness="2"
                     Cursor="Hand"
                     FlowDirection="LeftToRight">
@@ -265,7 +261,7 @@
                         <ImageBrush x:Name="user_frame" ImageSource="resources/cbhk_form/images/cb.ico" />
                     </Border.Background>
                 </Border>
-                <Menu Padding="0,10,0,0" Background="Transparent">
+                <Menu Padding="0,6,0,0" Background="Transparent">
                     <MenuItem>
                         <MenuItem.Header>
                             <TextBlock Foreground="White" Text="设置" />
@@ -331,35 +327,24 @@
             </StackPanel>
             <TabControl
                 x:Name="TaskTabControl"
-                Background="#FF1A1A1A"
-                BorderBrush="{x:Null}"
+                Background="Transparent"
                 BorderThickness="0"
+                Style="{DynamicResource TabControlWithScrollBar}"
                 TabStripPlacement="Left">
-                <TabItem
+                <customcontrols:IconTabItems
                     Width="40"
                     Height="40"
                     Padding="-6,0,-9,0"
-                    Background="#2F2F2F">
+                    Background="#2F2F2F"
+                    BorderThickness="0"
+                    Style="{DynamicResource IconTabItems}">
                     <TabItem.HeaderTemplate>
                         <ItemContainerTemplate>
-                            <Border
-                                Width="40"
-                                Height="40"
-                                Margin="0,0,0,0"
-                                Background="#2F2F2F">
-                                <Grid
-                                    Width="40"
-                                    Height="40"
-                                    Margin="-5,0,0,0"
-                                    Background="#2F2F2F"
-                                    Cursor="Hand">
-                                    <Image
-                                        Width="40"
-                                        Height="40"
-                                        Margin="0,0,0,0"
-                                        Source="resources/cbhk_form/images/toolbox.png" />
-                                </Grid>
-                            </Border>
+                            <Grid Background="Transparent">
+                                <Viewbox Margin="8">
+                                    <Path Data="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.2c0 2.7-.2 5.4-.5 8.1V472c0 22.1-17.9 40-40 40H456c-1.1 0-2.2 0-3.3-.1c-1.4 .1-2.8 .1-4.2 .1H416 392c-22.1 0-40-17.9-40-40V448 384c0-17.7-14.3-32-32-32H256c-17.7 0-32 14.3-32 32v64 24c0 22.1-17.9 40-40 40H160 128.1c-1.5 0-3-.1-4.5-.2c-1.2 .1-2.4 .2-3.6 .2H104c-22.1 0-40-17.9-40-40V360c0-.9 0-1.9 .1-2.8V287.6H32c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7L564.8 231.5c8 7 12 15 11 24z" Fill="White" />
+                                </Viewbox>
+                            </Grid>
                         </ItemContainerTemplate>
                     </TabItem.HeaderTemplate>
                     <Viewbox
@@ -982,53 +967,26 @@
                             </Grid>
                         </Grid>
                     </Viewbox>
-                </TabItem>
-                <TabItem
+                </customcontrols:IconTabItems>
+                <customcontrols:IconTabItems
                     x:Name="LinkPage"
                     Width="40"
                     Height="40"
                     Padding="-6,0,-9,0"
-                    Background="#2F2F2F">
+                    Background="#2F2F2F"
+                    BorderThickness="0"
+                    Style="{DynamicResource IconTabItems}">
                     <TabItem.HeaderTemplate>
                         <ItemContainerTemplate>
-                            <Border
-                                Width="40"
-                                Height="40"
-                                Margin="0,0,0,0"
-                                Background="#2F2F2F">
-                                <Grid
-                                    Width="40"
-                                    Height="40"
-                                    Margin="-5,0,0,0"
-                                    Background="#2F2F2F"
-                                    Cursor="Hand">
-                                    <Image
-                                        Width="40"
-                                        Height="40"
-                                        Margin="0,0,0,0"
-                                        Source="resources/cbhk_form/images/link.png" />
-                                </Grid>
+                            <Border Background="Transparent" BorderThickness="0">
+                                <Viewbox Margin="10">
+                                    <Path Data="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z" Fill="White" />
+                                </Viewbox>
                             </Border>
                         </ItemContainerTemplate>
                     </TabItem.HeaderTemplate>
-                    <Viewbox HorizontalAlignment="Stretch" VerticalAlignment="Top">
-                        <Grid x:Name="LinkGrid">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="9*" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <StackPanel
-                                x:Name="LinkSwitchPanel"
-                                Grid.Row="1"
-                                Width="60"
-                                Height="30"
-                                Margin="0,600,0,0"
-                                HorizontalAlignment="Center"
-                                Background="Transparent"
-                                Orientation="Horizontal" />
-                        </Grid>
-                    </Viewbox>
-                </TabItem>
+                    <rotationchart:RotationChartBody x:Name="rotationChartBody" />
+                </customcontrols:IconTabItems>
             </TabControl>
         </DockPanel>
     </Viewbox>

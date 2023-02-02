@@ -167,7 +167,7 @@
                     ToolTip="切换版本"
                     ToolTipService.InitialShowDelay="0">
                     <MenuItem.Background>
-                        <ImageBrush ImageSource="/cbhk_environment;component/resources/common/images/switch.png" />
+                        <ImageBrush ImageSource="/cbhk_environment;component/resources/common/images/Switch.png" />
                     </MenuItem.Background>
                     <CustomControls:TextToggleButtons
                         HorizontalAlignment="Stretch"
@@ -2049,7 +2049,7 @@
                         <ScrollViewer
                             Background="#2F2F2F"
                             HorizontalScrollBarVisibility="Disabled"
-                            Style="{DynamicResource for_scrollviewer}"
+                            Style="{DynamicResource DefaultScrollViewer}"
                             VerticalScrollBarVisibility="Auto">
                             <StackPanel>
                                 <ity:Interaction.Triggers>

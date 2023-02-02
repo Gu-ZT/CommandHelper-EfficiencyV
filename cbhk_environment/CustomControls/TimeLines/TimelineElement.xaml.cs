@@ -86,7 +86,7 @@ namespace cbhk_environment.CustomControls.TimeLines
                 mouseXInitial = Mouse.GetPosition(parent).X;
                 parent.MouseMove += Parent_MouseMove;
                 parent.MouseLeftButtonUp += Parent_MouseLeftButtonUp;
-                this.ToolTip = "";
+                ToolTip = "";
             }
         }
 

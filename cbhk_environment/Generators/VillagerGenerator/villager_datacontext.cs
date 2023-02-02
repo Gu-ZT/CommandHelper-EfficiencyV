@@ -52,8 +52,6 @@ namespace cbhk_environment.Generators.VillagerGenerator
 
         //拖拽响应范围
         Grid VillagerGridZone = null;
-        //交易背景图文件路径
-        string TransactionBackgroundPath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\Villager\\images\\transaction_ui.png";
         //左侧交易项数据源
         public static ObservableCollection<TransactionItems> transactionItems { get; set; } = new ObservableCollection<TransactionItems> { };
         //言论数据源
@@ -147,7 +145,7 @@ namespace cbhk_environment.Generators.VillagerGenerator
         //言论搜索目标引用
         TextBox GossipSearchTarget = null;
         //言论搜索类型引用
-        TextComboBoxs GossipSearchType = null;
+        ComboBox GossipSearchType = null;
         //言论数据源所在视图引用
         ScrollViewer GossipViewer = null;
 
@@ -559,10 +557,6 @@ namespace cbhk_environment.Generators.VillagerGenerator
         public void TransactionBackgroundLoaded(object sender, RoutedEventArgs e)
         {
             VillagerGridZone = sender as Grid;
-            System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(TransactionBackgroundPath);
-            bitmap = GeneralTools.ChangeBitmapSize.Magnifier(bitmap,10);
-            BitmapImage background = GeneralTools.BitmapImageConverter.ToBitmapImage(bitmap);
-            VillagerGridZone.Background = new ImageBrush(background);
             VillagerGridZone.MouseMove += SelectItemMove;
         }
 
@@ -573,7 +567,7 @@ namespace cbhk_environment.Generators.VillagerGenerator
         /// <param name="e"></param>
         public void VillagerTypeLoaded(object sender, RoutedEventArgs e)
         {
-            TextComboBoxs box = sender as TextComboBoxs;
+            ComboBox box = sender as ComboBox;
 
             if(File.Exists(VillagerTypeSourceFilePath))
             {
@@ -590,7 +584,7 @@ namespace cbhk_environment.Generators.VillagerGenerator
                     VillagerTypeSource.Add(name);
                 }
                 box.ItemsSource = VillagerTypeSource;
-                box.SelectedItem = VillagerTypeSource[0];
+                box.SelectedIndex = 0;
             }
         }
 
@@ -601,7 +595,7 @@ namespace cbhk_environment.Generators.VillagerGenerator
         /// <param name="e"></param>
         public void VillagerProfessionTypeLoaded(object sender, RoutedEventArgs e)
         {
-            TextComboBoxs box = sender as TextComboBoxs;
+            ComboBox box = sender as ComboBox;
 
             if (File.Exists(VillagerProfessionsSourceFilePath))
             {
@@ -618,7 +612,7 @@ namespace cbhk_environment.Generators.VillagerGenerator
                     VillagerProfessionTypeSource.Add(name);
                 }
                 box.ItemsSource = VillagerProfessionTypeSource;
-                box.SelectedItem = VillagerProfessionTypeSource[0];
+                box.SelectedIndex = 0;
             }
         }
 
@@ -629,7 +623,7 @@ namespace cbhk_environment.Generators.VillagerGenerator
         /// <param name="e"></param>
         public void VillagerLevelLoaded(object sender, RoutedEventArgs e)
         {
-            TextComboBoxs box = sender as TextComboBoxs;
+            ComboBox box = sender as ComboBox;
 
             if (File.Exists(VillagerLevelSourceFilePath))
             {
@@ -639,7 +633,7 @@ namespace cbhk_environment.Generators.VillagerGenerator
                     VillagerLevelSource.Add(i.ToString());
                 }
                 box.ItemsSource = VillagerLevelSource;
-                box.SelectedItem = VillagerLevelSource[0];
+                box.SelectedIndex = 0;
             }
         }
 
@@ -650,7 +644,7 @@ namespace cbhk_environment.Generators.VillagerGenerator
         /// <param name="e"></param>
         public void DimensionTypeLoaded(object sender, RoutedEventArgs e)
         {
-            TextComboBoxs box = sender as TextComboBoxs;
+            ComboBox box = sender as ComboBox;
 
             if (File.Exists(dimensionTypeFilePath))
             {
@@ -667,7 +661,7 @@ namespace cbhk_environment.Generators.VillagerGenerator
                     DimensionTypeSource.Add(name);
                 }
                 box.ItemsSource = DimensionTypeSource;
-                box.SelectedItem = DimensionTypeSource[0];
+                box.SelectedIndex = 0;
             }
         }
 
@@ -719,10 +713,10 @@ namespace cbhk_environment.Generators.VillagerGenerator
         public void ItemZoneLoaded(object sender, RoutedEventArgs e)
         {
             ItemList = sender as ItemsControl;
-            foreach (KeyValuePair<string, BitmapImage> item in MainWindow.item_database)
+            foreach (KeyValuePair<string, BitmapImage> item in MainWindow.ItemDataBase)
             {
-                string[] image_name = item.Key.Split('.');
-                if(File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + image_name[0]+".png"))
+                string[] image_name = item.Key.Split(':');
+                if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + image_name[0] + ".png"))
                 {
                     BitmapImage bitmapImage = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + image_name[0] + ".png", UriKind.Absolute));
                     Image a_item = new Image()
@@ -731,8 +725,7 @@ namespace cbhk_environment.Generators.VillagerGenerator
                         ToolTip = image_name[0] + " " + image_name[1],
                         HorizontalAlignment = HorizontalAlignment.Left,
                         VerticalAlignment = VerticalAlignment.Top,
-                        Source = bitmapImage,
-                        Cursor = Cursors.Hand,
+                        Source = bitmapImage
                     };
                     a_item.MouseLeftButtonDown += SelectItemClickDown;
                     ToolTipService.SetShowDuration(a_item, 1500);
@@ -925,7 +918,7 @@ namespace cbhk_environment.Generators.VillagerGenerator
         /// <param name="e"></param>
         public void GossipSearchTypeLoaded(object sender, RoutedEventArgs e)
         {
-            GossipSearchType = sender as TextComboBoxs;
+            GossipSearchType = sender as ComboBox;
             if(File.Exists(gossipSearchTypeFilePath))
             {
                 string[] types = File.ReadAllLines(gossipSearchTypeFilePath);
@@ -935,6 +928,7 @@ namespace cbhk_environment.Generators.VillagerGenerator
                 }
             }
             GossipSearchType.ItemsSource = gossipSearchType;
+            GossipSearchType.SelectedIndex = 0;
         }
 
         /// <summary>

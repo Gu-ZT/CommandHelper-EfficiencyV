@@ -12,7 +12,10 @@
     Cursor="Hand"
     mc:Ignorable="d">
 
-    <Grid Width="390" Height="120">
+    <Grid
+        Width="390"
+        Height="120"
+        MouseRightButtonUp="Grid_MouseRightButtonUp">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
@@ -75,7 +78,7 @@
             BorderThickness="1"
             CaretBrush="White"
             FontSize="25"
-            Foreground="Black" />
+            Foreground="White" />
         <TextBlock
             Grid.Row="2"
             Grid.Column="0"

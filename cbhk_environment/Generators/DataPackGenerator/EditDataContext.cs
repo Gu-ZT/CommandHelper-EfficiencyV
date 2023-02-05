@@ -22,9 +22,8 @@ namespace cbhk_environment.Generators.DataPackGenerator
         public RelayCommand<FrameworkElement> ReturnCommand { get; set; }
         #endregion
 
-        public EditDataContext(/*RichTreeViewItems result*/)
+        public EditDataContext()
         {
-            //initItems = result;
             #region 链接指令
             RunCommand = new RelayCommand(run_command);
             ReturnCommand = new RelayCommand<FrameworkElement>(return_command);

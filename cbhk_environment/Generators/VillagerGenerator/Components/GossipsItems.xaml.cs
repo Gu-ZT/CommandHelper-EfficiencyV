@@ -58,5 +58,15 @@ namespace cbhk_environment.Generators.VillagerGenerator.Components
                 box.Text = TypeList.First();
             }
         }
+
+        /// <summary>
+        /// 右击后删除
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Grid_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            villager_datacontext.gossipItems.Remove(this);
+        }
     }
 }

@@ -36,6 +36,7 @@
                     BorderBrush="Black"
                     FontFamily="Minecraft AE Pixel"
                     FontSize="18"
+                    Foreground="White"
                     Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <TextBox
                     Width="150"
@@ -49,6 +50,7 @@
                     BorderBrush="Black"
                     FontFamily="Minecraft AE Pixel"
                     FontSize="20"
+                    Foreground="White"
                     Text="{Binding Author, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
         </Border>

@@ -159,17 +159,21 @@ namespace cbhk_environment.CustomControls
             get
             {
                 Paragraph CurrentParagraph = Parent as RichParagraph;
-                bool IsFirstParagraph = Equals((CurrentParagraph.Parent as FlowDocument).Blocks.FirstBlock as Paragraph, CurrentParagraph);
-                bool IsLastRun = Equals(CurrentParagraph.Inlines.LastInline,this);
-                string result = "";
-                string textString = ObfuscateTimer.Enabled ? UID : Text;
-                textString = textString.Replace("\\","\\\\\\\\").Replace("\"","\\\\\"");
-                if (textString.Length > 0)
+                if (CurrentParagraph != null)
                 {
-                    string colorString = Foreground.ToString().Remove(1, 2);
-                    result = "{\"text\":\"" + textString + (IsLastRun ? "\\\\n" : "") + "\"" + (colorString != "#000000" ? ",\"color\":\"" + colorString + "\"" : "") + (FontStyle == FontStyles.Italic ? ",\"italic\":true" : "") + (FontWeight == FontWeights.Bold ? ",\"bold\":true" : "") + (TextDecorations.Contains(underlined_style) ? ",\"underlined\":true" : "") + (TextDecorations.Contains(strikethrough_style) ? ",\"strikethrough\":true" : "") + (IsObfuscated && ObfuscateTimer.Enabled ? ",\"obfuscated\":true" : "") + EventData + "},";
+                    string result = "";
+                    bool IsLastRun = Equals(CurrentParagraph.Inlines.LastInline, this);
+                    string textString = ObfuscateTimer.Enabled ? UID : Text;
+                    textString = textString.Replace("\\", "\\\\\\\\").Replace("\"", "\\\\\"");
+                    if (textString.Length > 0)
+                    {
+                        string colorString = Foreground.ToString().Remove(1, 2);
+                        result = "{\"text\":\"" + textString + (IsLastRun ? "\\\\n" : "") + "\"" + (colorString != "#000000" ? ",\"color\":\"" + colorString + "\"" : "") + (FontStyle == FontStyles.Italic ? ",\"italic\":true" : "") + (FontWeight == FontWeights.Bold ? ",\"bold\":true" : "") + (TextDecorations.Contains(underlined_style) ? ",\"underlined\":true" : "") + (TextDecorations.Contains(strikethrough_style) ? ",\"strikethrough\":true" : "") + (IsObfuscated && ObfuscateTimer.Enabled ? ",\"obfuscated\":true" : "") + EventData + "},";
+                    }
+                    return result;
                 }
-                return result;
+                else
+                    return "";
             }
         }
         #endregion

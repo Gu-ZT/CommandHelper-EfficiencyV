@@ -104,7 +104,7 @@
                     BorderThickness="1"
                     CaretBrush="White"
                     FontSize="20"
-                    Foreground="Black"
+                    Foreground="White"
                     KeyUp="RemoveIllegalCharacter"
                     Loaded="RecipeFileNameLoaded" />
             </DockPanel>
@@ -169,6 +169,7 @@
                     Background="Transparent"
                     BorderThickness="0"
                     CaretBrush="White"
+                    FontSize="20"
                     Foreground="Black"
                     Loaded="RecipeExpLoaded"
                     MaxValue="2147483647"
@@ -203,7 +204,8 @@
                     Background="Transparent"
                     BorderThickness="0"
                     CaretBrush="White"
-                    Foreground="Black"
+                    FontSize="20"
+                    Foreground="White"
                     Loaded="RecipeCookingTimeLoaded"
                     MaxValue="2147483647"
                     MinValue="0"

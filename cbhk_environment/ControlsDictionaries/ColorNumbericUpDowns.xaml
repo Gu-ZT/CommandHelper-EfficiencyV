@@ -55,9 +55,9 @@
                     BorderThickness="0"
                     CaretBrush="{TemplateBinding CaretBrush}"
                     FontSize="{TemplateBinding FontSize}"
-                    FontWeight="Medium"
+                    FontWeight="{TemplateBinding FontWeight}"
                     Foreground="White"
-                    Text="{TemplateBinding Text}">
+                    Text="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <TextBox.DataContext>
                         <local_contexts:ColorNumbericUpDownHander />
                     </TextBox.DataContext>

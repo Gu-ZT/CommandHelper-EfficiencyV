@@ -1,5 +1,4 @@
-﻿using cbhk_environment.ControlsDataContexts;
-using cbhk_environment.CustomControls;
+﻿using cbhk_environment.CustomControls;
 using cbhk_environment.Generators.DataPackGenerator.Components;
 using cbhk_environment.Generators.WrittenBookGenerator;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -203,9 +202,9 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         #endregion
 
         #region 存储数据包简介类型键入控件父级容器、布尔类型、切换控件的引用
-        TextComboBoxs DescriptionBoolBox = null;
+        ComboBox DescriptionBoolBox = null;
         DockPanel DescriptionContainer = null;
-        TextComboBoxs DescriptionTypeSwitcher = null;
+        ComboBox DescriptionTypeSwitcher = null;
         #endregion
 
         #region 版本、生成路径、描述等数据
@@ -248,7 +247,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         /// <param name="e"></param>
         public void DatapackDescriptionTypeLoaded(object sender, RoutedEventArgs e)
         {
-            DescriptionTypeSwitcher = sender as TextComboBoxs;
+            DescriptionTypeSwitcher = sender as ComboBox;
 
             if (File.Exists(DatapackDescriptionTypeFilePath) && DescriptionTypeSwitcher.ItemsSource == null)
             {
@@ -273,7 +272,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         /// <param name="e"></param>
         public void DatapackVersionLoaded(object sender, RoutedEventArgs e)
         {
-            TextComboBoxs VersionBox = sender as TextComboBoxs;
+            ComboBox VersionBox = sender as ComboBox;
 
             if (File.Exists(DatapackVersionFilePath) && DatapackVersionDatabase.Count == 0)
             {
@@ -317,7 +316,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         public void DatapackDescriptionBoolTypeLoaded(object sender, RoutedEventArgs e)
         {
             //获取引用
-            DescriptionBoolBox = sender as TextComboBoxs;
+            DescriptionBoolBox = sender as ComboBox;
 
             if(DescriptionBoolBox.Items.Count == 0)
             {

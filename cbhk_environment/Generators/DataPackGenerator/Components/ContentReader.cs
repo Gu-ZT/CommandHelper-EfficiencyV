@@ -1,10 +1,10 @@
 ﻿using cbhk_environment.CustomControls;
 using cbhk_environment.GeneralTools.ScrollViewerHelper;
-using cbhk_environment.Properties;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -199,9 +199,9 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
             int descriptionCount = -1;
 
             #region 判断该包是否有简介和过滤器
-            bool HasDescription = bool.Parse(datapack_datacontext.JsonScript("hasPath('.pack.description');").ToString());
-            bool HasFilter = bool.Parse(datapack_datacontext.JsonScript("hasPath('.filter');").ToString());
-            bool HasBlock = bool.Parse(datapack_datacontext.JsonScript("hasPath('.filter.block');").ToString());
+            bool.TryParse(datapack_datacontext.JsonScript("hasPath('.pack.description');").ToString(),out bool HasDescription);
+            bool.TryParse(datapack_datacontext.JsonScript("hasPath('.filter');").ToString(),out bool HasFilter);
+            bool.TryParse(datapack_datacontext.JsonScript("hasPath('.filter.block');").ToString(),out bool HasBlock);
             #endregion
 
             //检查简介内容
@@ -253,6 +253,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
             //清空初始化的子级
             CurrentNode.Items.Clear();
             string currentPath = CurrentNode.Uid;
+            //AddSecurity(currentPath);
             switch (type)
             {
                 //当前内容节点类型为数据包
@@ -434,6 +435,28 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
             RichTabItems CurrentItem = (sender as RichTextBox).FindParent<RichTabItems>();
             if (CurrentItem != null)
                 CurrentItem.IsContentSaved = false;
+        }
+
+        /// <summary>
+        ///为文件夹添加users，everyone用户组的完全控制权限
+        /// </summary>
+        /// <param name="dirPath"></param>
+        private static void AddSecurity(string dirPath)
+        {
+            //获取文件夹信息
+            var dir = new DirectoryInfo(dirPath);
+            //获得该文件夹的所有访问权限
+            var dirSecurity = dir.GetAccessControl(AccessControlSections.All);
+            //设定文件ACL继承
+            var inherits = InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit;
+            //添加ereryone用户组的访问权限规则 完全控制权限
+            var everyoneFileSystemAccessRule = new FileSystemAccessRule("Everyone", FileSystemRights.FullControl, inherits, PropagationFlags.None, AccessControlType.Allow);
+            //添加Users用户组的访问权限规则 完全控制权限
+            var usersFileSystemAccessRule = new FileSystemAccessRule("Users", FileSystemRights.FullControl, inherits, PropagationFlags.None, AccessControlType.Allow);
+            dirSecurity.ModifyAccessRule(AccessControlModification.Add, everyoneFileSystemAccessRule, out var isModified);
+            dirSecurity.ModifyAccessRule(AccessControlModification.Add, usersFileSystemAccessRule, out isModified);
+            //设置访问权限
+            dir.SetAccessControl(dirSecurity);
         }
 
         /// <summary>

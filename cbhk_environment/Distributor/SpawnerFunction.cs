@@ -1,13 +1,14 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.Generic;
-using System.Management.Instrumentation;
 using System.Windows;
 
 namespace cbhk_environment.Distributor
 {
     public class GeneratorFunction: ObservableObject
     {
+        //启动OOC生成器
+        public RelayCommand StartOnlyOneCommandGenerator { get; set; }
         //启动数据包生成器
         public RelayCommand StartDatapacksGenerator { get; set; }
         //启动盔甲架生成器
@@ -44,6 +45,8 @@ namespace cbhk_environment.Distributor
         {
             cbhk = win;
             #region 绑定命令
+            //OOC
+            StartOnlyOneCommandGenerator = new RelayCommand(StartOnlyOneCommandGeneratorCommand);
             //盔甲架
             StartArmorStandsGenerator = new RelayCommand(StartArmorStandsGeneratorCommand);
             //标签
@@ -65,11 +68,23 @@ namespace cbhk_environment.Distributor
             #endregion
 
             //为外界提供索引形式的访问渠道
-            spawner_functions = new List<RelayCommand>() {StartDatapacksGenerator,StartArmorStandsGenerator,
+            spawner_functions = new List<RelayCommand>() {StartOnlyOneCommandGenerator,StartDatapacksGenerator,StartArmorStandsGenerator,
                                                           StartWrittenBooksGenerator,StartLootTablesGenerator,StartGeneratorsGenerator,
                                                           StartRecipesGenerator, StartVillagersGenerator,StartAdvancementsGenerator,
                                                           StartTagsGenerator,StartItemsGenerator,StartFireworksGenerator,
                                                           StartEntitiesGenerator,StartDimensionsGenerator,StartBiomesGenerator };
+        }
+
+        /// <summary>
+        /// 启动ooc生成器
+        /// </summary>
+        private void StartOnlyOneCommandGeneratorCommand()
+        {
+            Generators.OnlyOneCommandGenerator.OnlyOneCommand ooc_window = new Generators.OnlyOneCommandGenerator.OnlyOneCommand(cbhk);
+            SetCBHKState();
+            ooc_window.Topmost = true;
+            ooc_window.Show();
+            ooc_window.Topmost = false;
         }
 
         /// <summary>

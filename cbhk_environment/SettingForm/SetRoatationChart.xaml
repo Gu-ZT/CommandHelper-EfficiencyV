@@ -21,11 +21,13 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="10*" />
+            <RowDefinition Height="5*" />
         </Grid.RowDefinitions>
         <DockPanel Grid.Row="0">
             <customcontrols:IconTextButtons
-                Width="50"
+                Width="25"
+                Height="20"
+                Padding="0,0,0,5"
                 HorizontalAlignment="Left"
                 Background="{StaticResource ButtonNormal}"
                 Command="{Binding AddItem}"
@@ -34,7 +36,9 @@
                 PressedBackground="{StaticResource ButtonPressed}"
                 Style="{DynamicResource IconTextButton}" />
             <customcontrols:IconTextButtons
-                Width="50"
+                Width="25"
+                Height="20"
+                Padding="0,0,0,5"
                 HorizontalAlignment="Left"
                 Background="{StaticResource ButtonNormal}"
                 Command="{Binding ClearItems}"

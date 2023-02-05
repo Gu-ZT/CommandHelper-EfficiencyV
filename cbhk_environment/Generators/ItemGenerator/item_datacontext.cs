@@ -1,7 +1,6 @@
 ﻿using cbhk_environment.WindowDictionaries;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Collections.Generic;
 using System.Windows;
 using cbhk_environment.CustomControls;
 using System.Windows.Controls;
@@ -12,6 +11,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using cbhk_environment.GenerateResultDisplayer;
 using PotionTypeItems = cbhk_environment.Generators.ItemGenerator.Components.PotionTypeItems;
+using System.Collections.ObjectModel;
 
 namespace cbhk_environment.Generators.ItemGenerator
 {
@@ -41,6 +41,22 @@ namespace cbhk_environment.Generators.ItemGenerator
         StackPanel CanDestroyBlocksPanel = null;
         StackPanel CanPlaceOnBlocksPanel = null;
         StackPanel SpecialPanel = null;
+        #endregion
+
+        #region 版本
+        private string selectedVersion = "";
+        public string SelectedVersion
+        {
+            get
+            {
+                return selectedVersion;
+            }
+            set
+            {
+                selectedVersion = value;
+            }
+        }
+        private ObservableCollection<string> VersionSource = new ObservableCollection<string> { "1.12-","1.13+" };
         #endregion
 
         public item_datacontext()
@@ -201,7 +217,7 @@ namespace cbhk_environment.Generators.ItemGenerator
         #endregion
 
         #region 版本
-        private bool behavior_lock;
+        private bool behavior_lock = true;
         private bool version1_12 = false;
         public bool Version1_12
         {
@@ -212,7 +228,7 @@ namespace cbhk_environment.Generators.ItemGenerator
                 if (behavior_lock)
                 {
                     behavior_lock = false;
-                    Version1_13 = !Version1_12;
+                    Version1_13 = !version1_12;
                     behavior_lock = true;
                 }
                 OnPropertyChanged();
@@ -228,7 +244,7 @@ namespace cbhk_environment.Generators.ItemGenerator
                 if (behavior_lock)
                 {
                     behavior_lock = false;
-                    Version1_12 = !Version1_13;
+                    Version1_12 = !version1_13;
                     behavior_lock = true;
                 }
                 OnPropertyChanged();
@@ -527,6 +543,12 @@ namespace cbhk_environment.Generators.ItemGenerator
         #endregion
 
         #endregion
+
+        public void VersionLoaded(object sender,RoutedEventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            comboBox.ItemsSource = VersionSource;
+        }
 
         /// <summary>
         /// 载入物品id列表

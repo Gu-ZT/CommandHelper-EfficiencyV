@@ -13,6 +13,11 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
 
+    <Page.Resources>
+        <ImageBrush x:Key="LeftArrow" ImageSource="/cbhk_environment;component/resources/common/images/IconArrowLeft.png" />
+        <ImageBrush x:Key="RightArrow" ImageSource="/cbhk_environment;component/resources/common/images/IconArrowRight.png" />
+    </Page.Resources>
+
     <Grid Panel.ZIndex="1">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -32,50 +37,31 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Top">
             <CustomControls:IconTextButtons
-                Width="55"
-                Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DockPanel}, Path=ActualHeight}"
+                Width="16"
+                Height="16"
                 Margin="5,0"
                 HorizontalAlignment="Left"
                 HorizontalContentAlignment="Center"
                 VerticalContentAlignment="Center"
-                Background="Transparent"
+                Background="{StaticResource LeftArrow}"
                 BorderThickness="0"
                 Command="{Binding ReturnCommand}"
                 CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"
-                ContentColor="White"
-                ContentData="ESC"
-                ContentHeight="20"
-                ContentWidth="30"
-                Cursor="Hand"
                 FontSize="15"
-                IconColor="White"
-                IconData="M268.8 480L633.6 149.333333c17.066667-14.933333 44.8-14.933333 59.733333 2.133334 6.4 8.533333 10.666667 19.2 10.666667 29.866666v661.333334c0 23.466667-19.2 42.666667-42.666667 42.666666-10.666667 0-21.333333-4.266667-27.733333-10.666666l-362.666667-330.666667c-17.066667-14.933333-19.2-42.666667-2.133333-59.733333-2.133333-2.133333 0-2.133333 0-4.266667z"
-                IconHeight="20"
-                IconWidth="20"
                 Style="{DynamicResource IconTextButton}"
-                ToolTip="返回主页"
+                ToolTip="ESC:返回主页"
                 ToolTipService.InitialShowDelay="0" />
             <CustomControls:IconTextButtons
-                Width="50"
-                Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DockPanel}, Path=ActualHeight}"
+                Width="16"
+                Height="16"
                 Margin="0,0,0,0"
                 HorizontalAlignment="Left"
                 HorizontalContentAlignment="Center"
                 VerticalContentAlignment="Center"
-                Background="Transparent"
+                Background="{StaticResource RightArrow}"
                 BorderThickness="0"
                 Command="{Binding RunCommand}"
-                ContentColor="White"
-                ContentData="F5"
-                ContentHeight="20"
-                ContentWidth="20"
-                Cursor="Hand"
                 FontSize="15"
-                IconColor="White"
-                IconData="M755.2 544L390.4 874.666667c-17.066667 14.933333-44.8 14.933333-59.733333-2.133334-6.4-8.533333-10.666667-19.2-10.666667-29.866666v-661.333334c0-23.466667 19.2-42.666667 42.666667-42.666666 10.666667 0 21.333333 4.266667 27.733333 10.666666l362.666667 330.666667c17.066667 14.933333 19.2 42.666667 2.133333 59.733333 2.133333 2.133333 0 2.133333 0 4.266667z"
-                IconHeight="20"
-                IconMargin="0,0,0,0"
-                IconWidth="20"
                 Style="{DynamicResource IconTextButton}"
                 ToolTip="保存"
                 ToolTipService.InitialShowDelay="0" />
@@ -107,9 +93,6 @@
                 Style="{DynamicResource RichTabItemStyle}">
                 <ScrollViewer Style="{DynamicResource DefaultScrollViewer}">
                     <RichTextBox
-                        Grid.Row="1"
-                        Grid.Column="0"
-                        Grid.ColumnSpan="2"
                         Height="Auto"
                         HorizontalAlignment="Stretch"
                         Background="#1A1A1A"
@@ -760,7 +743,6 @@
         <TreeView
             Grid.Row="1"
             Grid.Column="2"
-            MinWidth="200"
             Background="#1F1F1F"
             BorderBrush="#3D3D3D"
             ScrollViewer.HorizontalScrollBarVisibility="Auto"

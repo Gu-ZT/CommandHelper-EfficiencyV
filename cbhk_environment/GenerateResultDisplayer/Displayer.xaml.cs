@@ -23,10 +23,6 @@ namespace cbhk_environment.GenerateResultDisplayer
         /// </summary>
         private static object obj = new object();
 
-        private Style TabItemStyle = null;
-
-        private Style ScrollViewerStyle = null;
-
         /// <summary>
         /// 单例模式,用于显示生成结果
         /// </summary>
@@ -49,11 +45,6 @@ namespace cbhk_environment.GenerateResultDisplayer
                     if (content_displayer == null)
                     {
                         content_displayer = new Displayer();
-                        int tab_count = content_displayer.ResultTabControl.Items.Count;
-                        IconTabItems iconTabItems = content_displayer.ResultTabControl.Items[tab_count - 1] as IconTabItems;
-                        content_displayer.TabItemStyle = iconTabItems.Style;
-                        content_displayer.ScrollViewerStyle = content_displayer.item_scrollviewer.Style;
-                        content_displayer.ResultTabControl.Items.Clear();
                     }
                 }
             }
@@ -84,34 +75,37 @@ namespace cbhk_environment.GenerateResultDisplayer
                     }
                 if (have_data)
                     continue;
+                TextBox result_box = new TextBox()
+                {
+                    Text = spawn_result[i],
+                    Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255)),
+                    Background = null,
+                    FontSize = 15,
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    VerticalAlignment = VerticalAlignment.Stretch,
+                    TextWrapping = TextWrapping.Wrap,
+                    HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+                    VerticalScrollBarVisibility = ScrollBarVisibility.Disabled,
+                    CaretBrush = new SolidColorBrush(Colors.White)
+                };
+                ScrollViewer scrollViewer = new ScrollViewer
+                {
+                    Style = Application.Current.Resources["DefaultScrollViewer"] as Style,
+                    Content = result_box,
+                    VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+                    HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled
+                };
                 IconTabItems itt = new IconTabItems()
                 {
                     ImageWidth = ImageSize.X,
                     ImageHeight = ImageSize.Y,
+                    Content = scrollViewer,
                     TextMargin = new Thickness(0, 30, 0, 0),
-                    Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255)),
+                    Foreground = new SolidColorBrush(Colors.White),
                     HeaderText = header_text[i],
-                    Style = content_displayer.TabItemStyle,
+                    Style = Application.Current.Resources["IconTabItems"] as Style,
                     HeaderImage = new System.Windows.Media.Imaging.BitmapImage(new Uri(head_image_pathes[i], UriKind.RelativeOrAbsolute)),
                 };
-                TextBox result_box = new TextBox()
-                {
-                    Text = spawn_result[i],
-                    FontFamily = new FontFamily("Minecraft AE Pixel"),
-                    Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255)),
-                    Background = null,
-                    FontSize = 15,
-                    TextWrapping = TextWrapping.Wrap,
-                    HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
-                    VerticalScrollBarVisibility = ScrollBarVisibility.Disabled,
-                    CaretBrush = new SolidColorBrush(Color.FromRgb(255, 255, 255))
-                };
-
-                ScrollViewer scrollViewer = new ScrollViewer();
-
-                scrollViewer.Style = content_displayer.ScrollViewerStyle;
-                scrollViewer.Content = result_box;
-                itt.Content = scrollViewer;
                 content_displayer.ResultTabControl.Items.Add(itt);
                 content_displayer.ResultTabControl.SelectedItem = itt;
             }
@@ -189,9 +183,9 @@ namespace cbhk_environment.GenerateResultDisplayer
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            StackPanel this_Panel = null;
+            Grid this_Panel = null;
             if (Equals(typeof(StackPanel), e.Source.GetType()))
-                this_Panel = e.Source as StackPanel;
+                this_Panel = e.Source as Grid;
             else
                 return;
             if (e.ClickCount == 2 && this_Panel.Name == "TitleStack")

@@ -11,11 +11,11 @@
     MinWidth="530"
     MinHeight="300"
     Background="#2F2F2F"
-    MouseLeftButtonDown="Window_MouseLeftButtonDown"
     MouseMove="Window_MouseMove"
-    ResizeMode="CanResize"
+    ResizeMode="CanResizeWithGrip"
     WindowChrome.WindowChrome="{DynamicResource WindowChromeKey}"
     WindowStartupLocation="CenterScreen"
+    WindowStyle="None"
     mc:Ignorable="d">
 
     <Window.Resources>
@@ -41,49 +41,158 @@
         </Style>
     </Window.Resources>
 
-    <Viewbox Width="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=ActualWidth}" Height="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=ActualHeight}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="8*" />
+            <RowDefinition Height="2*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.5*" />
+            <ColumnDefinition Width="10*" />
+            <ColumnDefinition Width="0.5*" />
+        </Grid.ColumnDefinitions>
         <DockPanel
-            Width="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=ActualWidth}"
-            Height="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=ActualHeight}"
-            Background="#FF1A1A1A">
-            <StackPanel
+            Grid.Row="0"
+            Grid.RowSpan="3"
+            Grid.Column="0"
+            Grid.ColumnSpan="3"
+            Panel.ZIndex="0"
+            Background="Transparent">
+            <Grid
+                Width="75"
+                Height="52"
+                Margin="0,0,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Panel.ZIndex="1"
+                DockPanel.Dock="Left">
+                <Grid.Background>
+                    <ImageBrush ImageSource="/cbhk_environment;component/resources/cbhk_form/images/TopLeft.png" />
+                </Grid.Background>
+            </Grid>
+            <Grid
                 x:Name="TitleStack"
-                Height="30"
-                VerticalAlignment="Stretch"
-                Background="#7F323232"
+                Height="24"
+                Margin="0,0,20,0"
+                VerticalAlignment="Top"
+                Panel.ZIndex="0"
                 DockPanel.Dock="Top"
-                FlowDirection="RightToLeft"
-                Orientation="Horizontal">
-                <Button
-                    Click="Window_Closed"
-                    Content="×"
-                    Style="{StaticResource cbhk_form_btn}" />
-                <Button
-                    Click="Window_StateChanged"
-                    Content="□"
-                    Style="{StaticResource cbhk_form_btn}" />
-                <Button
-                    Click="MinFormSize"
-                    Content="-"
-                    Style="{StaticResource cbhk_form_btn}" />
-            </StackPanel>
-            <TabControl
-                x:Name="ResultTabControl"
-                Background="Transparent"
-                BorderThickness="0">
-                <CustomControls:IconTabItems
+                MouseLeftButtonDown="Window_MouseLeftButtonDown">
+                <Grid.Background>
+                    <ImageBrush ImageSource="/cbhk_environment;component/resources/cbhk_form/images/Top.png" />
+                </Grid.Background>
+            </Grid>
+            <Grid
+                Width="97"
+                Height="49"
+                Margin="0,-24,0,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Panel.ZIndex="1"
+                DockPanel.Dock="Top">
+                <Grid.Background>
+                    <ImageBrush ImageSource="/cbhk_environment;component/resources/cbhk_form/images/TopRight.png" />
+                </Grid.Background>
+                <DockPanel
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Height="30"
+                    Margin="0,20,25,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Stretch"
+                    Background="Transparent"
+                    DockPanel.Dock="Top">
+                    <Button
+                        Margin="0,0,-8,0"
+                        Click="MinFormSize"
+                        Content="-"
+                        Style="{StaticResource cbhk_form_btn}" />
+                    <Button
+                        Click="Window_StateChanged"
+                        Content="□"
+                        Style="{StaticResource cbhk_form_btn}" />
+                    <Button
+                        Margin="0,0,-4,0"
+                        Click="Window_Closed"
+                        Content="×"
+                        Style="{StaticResource cbhk_form_btn}" />
+                </DockPanel>
+            </Grid>
+            <Grid
+                Width="23.4"
+                Margin="-75,0,0,30"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Stretch"
+                Panel.ZIndex="0"
+                DockPanel.Dock="Left">
+                <Grid.Background>
+                    <ImageBrush ImageSource="/cbhk_environment;component/resources/cbhk_form/images/Left.png" />
+                </Grid.Background>
+            </Grid>
+            <Grid
+                Width="43.7"
+                Height="45"
+                Margin="-75,0,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Panel.ZIndex="1">
+                <Grid.Background>
+                    <ImageBrush ImageSource="/cbhk_environment;component/resources/cbhk_form/images/BottomLeft.png" />
+                </Grid.Background>
+            </Grid>
+            <Grid
+                Height="24"
+                MinWidth="725"
+                Margin="-32,0,0,0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Bottom"
+                Panel.ZIndex="0">
+                <Grid.Background>
+                    <ImageBrush ImageSource="/cbhk_environment;component/resources/cbhk_form/images/Bottom.png" />
+                </Grid.Background>
+            </Grid>
+            <Grid
+                Width="23.4"
+                Margin="-21,0,0,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Stretch"
+                Panel.ZIndex="0"
+                DockPanel.Dock="Right">
+                <Grid.Background>
+                    <ImageBrush ImageSource="/cbhk_environment;component/resources/cbhk_form/images/Right.png" />
+                </Grid.Background>
+            </Grid>
+            <Grid
+                Width="43.7"
+                Height="45"
+                Margin="-100,0,0,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Panel.ZIndex="1"
+                DockPanel.Dock="Right">
+                <Grid.Background>
+                    <ImageBrush ImageSource="/cbhk_environment;component/resources/cbhk_form/images/BottomRight.png" />
+                </Grid.Background>
+            </Grid>
+        </DockPanel>
+        <TabControl
+            x:Name="ResultTabControl"
+            Grid.Row="1"
+            Grid.Column="1"
+            Panel.ZIndex="1"
+            Background="Transparent"
+            BorderThickness="0"
+            Style="{DynamicResource TabControlWithScrollBar}">
+            <!--<CustomControls:IconTabItems
                     Width="30"
                     Height="25"
                     Foreground="White"
                     HeaderText="Tab"
                     Style="{DynamicResource IconTabItems}">
-                    <ScrollViewer
-                        x:Name="item_scrollviewer"
-                        Style="{DynamicResource DefaultScrollViewer}"
-                        VerticalScrollBarVisibility="Auto" />
-                </CustomControls:IconTabItems>
-            </TabControl>
-        </DockPanel>
-    </Viewbox>
+                    <ScrollViewer Style="{DynamicResource DefaultScrollViewer}" VerticalScrollBarVisibility="Auto" />
+                </CustomControls:IconTabItems>-->
+        </TabControl>
+    </Grid>
 
 </Window>

@@ -13,8 +13,13 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
 
+    <Page.Resources>
+        <ImageBrush x:Key="ButtonNormal" ImageSource="/cbhk_environment;component/resources/common/images/ButtonNormal.png" />
+        <ImageBrush x:Key="ButtonPressed" ImageSource="/cbhk_environment;component/resources/common/images/ButtonPressed.png" />
+    </Page.Resources>
+
     <StackPanel
-        Width="1080"
+        Width="1050"
         Height="571"
         Margin="30,10,0,0">
         <TextBlock
@@ -29,7 +34,7 @@
                 </ity:EventTrigger>
             </ity:Interaction.Triggers>
         </DockPanel>
-        <DockPanel Margin="0,0,0,10">
+        <DockPanel Margin="0,0,0,5">
             <DockPanel Margin="0,0,0,0">
                 <TextBlock
                     Margin="0,0,20,0"
@@ -108,7 +113,7 @@
                 IsEnabled="{Binding CanModifyNameSpace, Mode=OneWay}"
                 Text="{Binding DatapackMainNameSpace, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         </DockPanel>
-        <DockPanel Margin="0,0,0,10" Visibility="{Binding DatapackNameIsNull, Mode=OneWay}">
+        <DockPanel Margin="0,0,0,0" Visibility="{Binding DatapackNameIsNull, Mode=OneWay}">
             <CustomControls:IconTextButtons
                 Width="15"
                 Height="15"
@@ -172,26 +177,24 @@
                 ItemsSource="{Binding HistoryDatapackGeneratorPathList}"
                 SelectedItem="{Binding SelectedDatapackPath, Mode=TwoWay}"
                 Style="{DynamicResource TextComboBoxStyle}" />
-            <CustomControls:TextButtons
+            <CustomControls:IconTextButtons
                 Width="35"
                 Height="25"
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
-                Background="#3D3D3D"
+                Background="{StaticResource ButtonNormal}"
                 Command="{Binding SetDatapackPath}"
                 Content="..."
-                Foreground="White"
-                MouseLeftDownBackground="#3D3D3D"
-                MouseOverBackground="#4D4D4D"
-                Style="{DynamicResource TextButtonsStyle}" />
+                Foreground="Black"
+                PressedBackground="{StaticResource ButtonPressed}"
+                Style="{DynamicResource IconTextButton}" />
             <ComboBox
                 Width="400"
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
                 Background="Transparent"
                 Foreground="White"
-                IsEditable="False"
-                IsReadOnly="True"
+                IsEditable="True"
                 SelectedItem="{Binding SelectedDatapackVersion, Mode=TwoWay}"
                 Style="{DynamicResource TextComboBoxStyle}">
                 <ity:Interaction.Triggers>
@@ -241,8 +244,7 @@
                 VerticalAlignment="Center"
                 Background="Transparent"
                 Foreground="White"
-                IsEditable="False"
-                IsReadOnly="True"
+                IsEditable="True"
                 SelectedItem="{Binding SelectedDatapackDescriptionType, Mode=TwoWay}"
                 Style="{DynamicResource TextComboBoxStyle}">
                 <ity:Interaction.Triggers>
@@ -254,7 +256,7 @@
                     </ity:EventTrigger>
                 </ity:Interaction.Triggers>
             </ComboBox>
-            <CustomControls:TextComboBoxs
+            <ComboBox
                 Uid="Bool"
                 Width="100"
                 Height="30"
@@ -262,17 +264,18 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Background="Transparent"
+                FontSize="20"
                 Foreground="White"
-                IsEditable="False"
+                IsEditable="True"
                 IsReadOnly="True"
-                Style="{DynamicResource TextComboBox}"
+                Style="{DynamicResource TextComboBoxStyle}"
                 Visibility="Collapsed">
                 <ity:Interaction.Triggers>
                     <ity:EventTrigger EventName="Loaded">
                         <itn:CallMethodAction MethodName="DatapackDescriptionBoolTypeLoaded" TargetObject="{Binding}" />
                     </ity:EventTrigger>
                 </ity:Interaction.Triggers>
-            </CustomControls:TextComboBoxs>
+            </ComboBox>
             <CustomControls:ColorNumbericUpDowns
                 Uid="Number"
                 Width="150"
@@ -327,31 +330,29 @@
                 FontSize="15"
                 Foreground="White"
                 Text="过滤器" />
-            <CustomControls:TextButtons
+            <CustomControls:IconTextButtons
                 Height="30"
                 Margin="0,0,10,0"
                 Padding="5"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Background="#3D3D3D"
+                Background="{StaticResource ButtonNormal}"
                 Command="{Binding AddDatapackFilter}"
                 Content="添加过滤器"
-                Foreground="White"
-                MouseLeftDownBackground="#3D3D3D"
-                MouseOverBackground="#4D4D4D"
-                Style="{DynamicResource TextButtonsStyle}" />
-            <CustomControls:TextButtons
+                Foreground="Black"
+                PressedBackground="{StaticResource ButtonPressed}"
+                Style="{DynamicResource IconTextButton}" />
+            <CustomControls:IconTextButtons
                 Height="30"
                 Padding="5"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Background="#3D3D3D"
+                Background="{StaticResource ButtonNormal}"
                 Command="{Binding ClearDatapackFilter}"
                 Content="清空过滤器"
-                Foreground="White"
-                MouseLeftDownBackground="#3D3D3D"
-                MouseOverBackground="#4D4D4D"
-                Style="{DynamicResource TextButtonsStyle}" />
+                Foreground="Black"
+                PressedBackground="{StaticResource ButtonPressed}"
+                Style="{DynamicResource IconTextButton}" />
         </DockPanel>
         <ScrollViewer
             Width="1000"
@@ -374,31 +375,29 @@
             Margin="0,20,50,0"
             HorizontalAlignment="Right"
             LastChildFill="False">
-            <CustomControls:TextButtons
+            <CustomControls:IconTextButtons
                 Width="92"
                 Height="32"
-                Background="#3D3D3D"
+                Background="{StaticResource ButtonNormal}"
                 BorderThickness="0"
                 Command="{Binding AttributeLastStep}"
                 CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}}"
                 Content="上一步"
-                Foreground="White"
-                MouseLeftDownBackground="#333333"
-                MouseOverBackground="#4D4D4D"
-                Style="{DynamicResource TextButtonsStyle}" />
-            <CustomControls:TextButtons
+                Foreground="Black"
+                PressedBackground="{StaticResource ButtonPressed}"
+                Style="{DynamicResource IconTextButton}" />
+            <CustomControls:IconTextButtons
                 Width="92"
                 Height="32"
                 Margin="6,0,0,0"
-                Background="#403582"
+                Background="{StaticResource ButtonNormal}"
                 BorderThickness="0"
                 Command="{Binding AttributeNextStep}"
                 CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}}"
                 Content="下一步"
-                Foreground="White"
-                MouseLeftDownBackground="#333333"
-                MouseOverBackground="#4D4D4D"
-                Style="{StaticResource TextButtonsStyle}" />
+                Foreground="Black"
+                PressedBackground="{StaticResource ButtonPressed}"
+                Style="{StaticResource IconTextButton}" />
         </DockPanel>
     </StackPanel>
 </Page>

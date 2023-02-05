@@ -616,6 +616,11 @@ namespace cbhk_environment.Generators.DataPackGenerator
                     newTreeViewItems.Add(contentItem);
                     InitPageVisibility = Visibility.Collapsed;
                     FunctionEditorZoneVisibility = Visibility.Visible;
+                    editPage = new EditPage
+                    {
+                        DataContext = new EditDataContext()
+                    };
+                    PageFrame.Content = editPage;
                 }
                 else
                 if (MessageBox.Show("当前所选内容不存在或无法识别,是否删除引用?", "警告", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
@@ -626,12 +631,6 @@ namespace cbhk_environment.Generators.DataPackGenerator
                     dateItem.Visibility = dateItem.Items.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
                     File.Delete(CurrentContentFilePath);
                 }
-
-                editPage = new EditPage
-                {
-                    DataContext = new EditDataContext()
-                };
-                PageFrame.Content = editPage;
             }
         }
     }

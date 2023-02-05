@@ -18,10 +18,9 @@
     </UserControl.Resources>
 
     <Border
+        x:Name="border"
         BorderBrush="Black"
-        BorderThickness="0"
-        MouseEnter="WhiteBorder"
-        MouseLeave="BlackBorder">
+        BorderThickness="2">
         <Grid Background="{StaticResource ButtonNormal}" MouseLeftButtonDown="CloseNumberModifyMouseLeftButtonDown">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
@@ -65,8 +64,8 @@
                 Grid.Row="0"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
-                Width="50"
-                Height="50"
+                Width="55"
+                Height="55"
                 Margin="70,0,0,0"
                 Padding="0,5,0,0"
                 HorizontalAlignment="Left"
@@ -134,8 +133,8 @@
                 Grid.Row="0"
                 Grid.Column="1"
                 Grid.ColumnSpan="2"
-                Width="50"
-                Height="50"
+                Width="55"
+                Height="55"
                 Margin="80,0,0,0"
                 Padding="0,5,0,0"
                 HorizontalAlignment="Left"
@@ -172,13 +171,14 @@
                 TextAlignment="Center"
                 Visibility="Collapsed" />
             <Image
+                x:Name="TradeArrow"
                 Grid.Row="0"
                 Grid.Column="2"
                 Width="95"
                 Height="95"
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
-                Loaded="ArrowLoaded" />
+                Source="/cbhk_environment;component/resources/common/images/TradeRightArrow.png" />
             <Image
                 x:Name="Sell"
                 Grid.Row="0"
@@ -196,8 +196,8 @@
                 Grid.Row="0"
                 Grid.Column="3"
                 Grid.ColumnSpan="2"
-                Width="50"
-                Height="50"
+                Width="55"
+                Height="55"
                 Margin="80,65,0,0"
                 Padding="0,5,0,0"
                 HorizontalAlignment="Left"
@@ -237,15 +237,14 @@
                 Grid.Row="0"
                 Grid.Column="4"
                 Height="50"
-                Margin="0,0,0,0"
+                Margin="0,0,30,0"
                 Padding="0,-10,0,0"
                 HorizontalAlignment="Right"
-                Background="{StaticResource ButtonNormal}"
+                Background="Transparent"
                 Click="DeleteClick"
                 Content="🗙"
                 FontSize="40"
                 Foreground="Black"
-                PressedBackground="{StaticResource ButtonPressed}"
                 Style="{DynamicResource IconTextButton}" />
         </Grid>
     </Border>

@@ -14,7 +14,7 @@ namespace cbhk_environment.Generators.VillagerGenerator.Components
     public partial class TransactionItems : UserControl
     {
         //箭头图像背景文件路径
-        string arrow_path = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\Villager\\images\\arrow.png";
+        //string arrow_path = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\Villager\\images\\arrow.png";
         //按钮图像背景文件路径
         string background_button_path = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\Villager\\images\\background_button.png";
         //黑边框
@@ -148,33 +148,11 @@ namespace cbhk_environment.Generators.VillagerGenerator.Components
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ArrowLoaded(object sender, RoutedEventArgs e)
-        {
-            Image current_image = sender as Image;
-            current_image.Source = new BitmapImage(new Uri(arrow_path,UriKind.Absolute));
-        }
-
-        /// <summary>
-        /// 鼠标进入后边框变白
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void WhiteBorder(object sender, MouseEventArgs e)
-        {
-            Border border = sender as Border;
-            border.BorderBrush = WhiteBrush;
-        }
-
-        /// <summary>
-        /// 鼠标离开后边框变黑
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void BlackBorder(object sender, MouseEventArgs e)
-        {
-            Border border = sender as Border;
-            border.BorderBrush = BlackBrush;
-        }
+        //private void ArrowLoaded(object sender, RoutedEventArgs e)
+        //{
+        //    Image current_image = sender as Image;
+        //    current_image.Source = new BitmapImage(new Uri(arrow_path,UriKind.Absolute));
+        //}
 
         /// <summary>
         /// 更新物品显示图像以及文本提示
@@ -274,18 +252,6 @@ namespace cbhk_environment.Generators.VillagerGenerator.Components
                 BuyItemCount.TextDecorations = DiscountStyle.TextDecorations;
                 DisCount.Visibility = Visibility.Visible;
             }
-        }
-
-        /// <summary>
-        /// 设置物品信息窗体显示位置
-        /// </summary>
-        public void SetInfomationWindowPosition()
-        {
-            Window window = Window.GetWindow(this);
-            Point point = TransformToAncestor(window).Transform(new Point(0, 0));
-            point = PointToScreen(point);
-            villager_datacontext.transactionItemDataForm.Left = point.X;
-            villager_datacontext.transactionItemDataForm.Top = point.Y;
         }
 
         /// <summary>

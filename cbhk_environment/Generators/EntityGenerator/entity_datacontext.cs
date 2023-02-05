@@ -12,6 +12,7 @@ using System.Windows;
 using System.Windows.Controls;
 using cbhk_environment.CustomControls;
 using Windows.ApplicationModel.Chat;
+using System.Collections.ObjectModel;
 
 namespace cbhk_environment.Generators.EntityGenerator
 {
@@ -607,7 +608,7 @@ namespace cbhk_environment.Generators.EntityGenerator
             {
                 if (MobEffectStackPanel.Children.Count > 0)
                 {
-                    string result = "CustomPotionEffects:[";
+                    string result = "ActiveEffects:[";
                     foreach (PotionTypeItems item in MobEffectStackPanel.Children)
                     {
                         result += item.Result;
@@ -816,38 +817,20 @@ namespace cbhk_environment.Generators.EntityGenerator
         #endregion
 
         #region 版本
-        private bool version1_12 = false;
-        public bool Version1_12
+        private string selectedVersion = "";
+        public string SelectedVersion
         {
-            get { return version1_12; }
+            get
+            {
+                return selectedVersion;
+            }
             set
             {
-                version1_12 = value;
-                if(behavior_lock)
-                {
-                    behavior_lock = false;
-                    Version1_13 = !Version1_12;
-                    behavior_lock = true;
-                }
-                OnPropertyChanged();
+                selectedVersion = value;
             }
         }
-        private bool version1_13 = true;
-        public bool Version1_13
-        {
-            get { return version1_13; }
-            set
-            {
-                version1_13 = value;
-                if (behavior_lock)
-                {
-                    behavior_lock = false;
-                    Version1_12 = !Version1_13;
-                    behavior_lock = true;
-                }
-                OnPropertyChanged();
-            }
-        }
+
+        private ObservableCollection<string> VersionSource = new ObservableCollection<string> { "1.12-","1.13+" };
         #endregion
 
         //实体药水效果栈面板
@@ -911,6 +894,12 @@ namespace cbhk_environment.Generators.EntityGenerator
             }
             else
                 MessageBox.Show("缺少必要参数","生成失败",MessageBoxButton.OK,MessageBoxImage.Information);
+        }
+
+        public void VersionLoaded(object sender, RoutedEventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            comboBox.ItemsSource = VersionSource;
         }
 
         /// <summary>

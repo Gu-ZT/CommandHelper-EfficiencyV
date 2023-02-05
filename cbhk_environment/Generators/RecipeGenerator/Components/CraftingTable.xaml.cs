@@ -250,7 +250,7 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
         {
             TextBox current_box = sender as TextBox;
             current_box.Text = Regex.Replace(current_box.Text, @"[\\/:*?" + "\"" + "<>|]", "").ToString();
-            current_box.Text = Regex.Replace(current_box.Text, @"^\d+", "").ToString();
+            //current_box.Text = Regex.Replace(current_box.Text, @"^\d+", "").ToString();
         }
 
         /// <summary>

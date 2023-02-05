@@ -38,6 +38,8 @@ namespace cbhk_environment
         /// </summary>
         private string spawner_image_path =  AppDomain.CurrentDomain.BaseDirectory+ "resources\\spawner_button_images";
 
+        private string spawner_highlight_image_path = AppDomain.CurrentDomain.BaseDirectory + "resources\\spawner_button_images\\highlight";
+
         /// <summary>
         /// 生成器视图列数
         /// </summary>
@@ -619,12 +621,12 @@ namespace cbhk_environment
             //没有头像就加载默认头像
             if (user_frame_source != null && user_frame_source.Trim() != "")
             {
-                user_frame.ImageSource = new BitmapImage(new Uri(user_frame_source, UriKind.Absolute));
+                user_frame.Source = new BitmapImage(new Uri(user_frame_source, UriKind.Absolute));
             }
             else
             if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\command_block.png"))
             {
-                user_frame.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\command_block.png", UriKind.RelativeOrAbsolute));
+                user_frame.Source = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\command_block.png", UriKind.RelativeOrAbsolute));
             }
             #endregion
 
@@ -635,6 +637,7 @@ namespace cbhk_environment
             {
                 foreach (string data in Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory + "resources\\link_data","*.png"))
                 {
+                    if(!Path.GetFileNameWithoutExtension(data).EndsWith("Icon"))
                     TargetUrlList.Add(data);
                 }
                 rotationChartBody.SetAll(TargetUrlList);
@@ -647,17 +650,18 @@ namespace cbhk_environment
             List<BitmapImage> spawner_background = new List<BitmapImage> { };
             //获取生成器图片列表
             string[] spawn_background_list = null;
-            
-            if(Directory.Exists(spawner_image_path))
-            spawn_background_list = Directory.GetFiles(spawner_image_path);
+
+            if (Directory.Exists(spawner_image_path))
+                spawn_background_list = Directory.GetFiles(spawner_image_path);
             List<FileNameString> spawnerBgPathSorter = new List<FileNameString> { };
+
             //分配值给比较器
             if(spawn_background_list != null && spawn_background_list.Length > 0)
-            for (int i = 0; i < spawn_background_list.Length; i++)
-            {
-                string current_path = Path.GetFileNameWithoutExtension(spawn_background_list[i]);
-                spawnerBgPathSorter.Add(new FileNameString() { FileName = current_path, FilePath = spawn_background_list[i], FileIndex = i });
-            }
+                for (int i = 0; i < spawn_background_list.Length; i++)
+                {
+                    string current_path = Path.GetFileNameWithoutExtension(spawn_background_list[i]);
+                    spawnerBgPathSorter.Add(new FileNameString() { FileName = current_path, FilePath = spawn_background_list[i], FileIndex = i });
+                }
             FileNameComparer fileNameComparer = new FileNameComparer { };
             //比较器开始排序
             spawnerBgPathSorter.Sort(fileNameComparer);
@@ -702,6 +706,7 @@ namespace cbhk_environment
                 {
                     int function_index = int.Parse(Path.GetFileNameWithoutExtension(spawner_background[i].UriSource.ToString()));
                     spawner_btn.Background = new ImageBrush(spawner_background[i]);
+                    spawner_btn.PressedBackground = new ImageBrush(new BitmapImage(new Uri(spawner_highlight_image_path+"\\"+function_index+".png",UriKind.Absolute)));
                     spawner_btn.Command = sf.spawner_functions[function_index];
                     spawner_btn.CommandParameter = this;
                 }
@@ -750,16 +755,20 @@ namespace cbhk_environment
 
             #region 把当前的启动数据传递给启动项设置窗体
             //sif.AutoStartup.IsChecked = MainWindowProperties.AutoStart;
-            sif.CloseToTray.IsChecked = sif.CloseForm.IsChecked = MainWindowProperties.CloseToTray;
-            sif.CloseForm.IsChecked = !sif.CloseToTray.IsChecked;
-            sif.KeepState.IsChecked = cbhk_visibility == MainWindowProperties.Visibility.KeepState;
-            sif.MinSize.IsChecked = cbhk_visibility == MainWindowProperties.Visibility.MinState;
+
+            sif.CloseToTray.IsChecked = MainWindowProperties.CloseToTray;
+            sif.StateComboBox.SelectedIndex = 0;
+            if (cbhk_visibility == MainWindowProperties.Visibility.MinState)
+                sif.StateComboBox.SelectedIndex = 1;
+            else
+                if (cbhk_visibility == MainWindowProperties.Visibility.Close)
+                sif.StateComboBox.SelectedIndex = 2;
             #endregion
 
             if (sif.ShowDialog() == true)
             {
                 //主页可见性
-                cbhk_visibility = sif.KeepState.IsChecked.Value? MainWindowProperties.Visibility.KeepState:(sif.MinSize.IsChecked.Value?MainWindowProperties.Visibility.MinState:MainWindowProperties.Visibility.Close);
+                cbhk_visibility = sif.StateComboBox.SelectedIndex == 0? MainWindowProperties.Visibility.KeepState:(sif.StateComboBox.SelectedIndex == 1?MainWindowProperties.Visibility.MinState:MainWindowProperties.Visibility.Close);
                 //是否开机自启
                 //MainWindowProperties.AutoStart = sif.AutoStartup.IsChecked.Value;
                 //是否关闭后缩小到托盘
@@ -843,13 +852,14 @@ namespace cbhk_environment
                     WindowState = WindowState.Normal;
                     MaxWidth = SystemParameters.WorkArea.Width+16;
                     MaxHeight = SystemParameters.WorkArea.Height+16;
-                    BorderThickness = new Thickness(5); //最大化后需要调整
-                    Margin = new Thickness(0);
+                    //BorderThickness = new Thickness(5); //最大化后需要调整
+                    //Margin = new Thickness(0);
                     break;
                 case WindowState.Normal:
                     WindowState = WindowState.Maximized;
-                    BorderThickness = new Thickness(5);
-                    Margin = new Thickness(10);
+                    TitleStack.Margin = new Thickness(100, 0, 0, 0);
+                    //BorderThickness = new Thickness(5);
+                    //Margin = new Thickness(10);
                     break;
             }
 
@@ -886,6 +896,17 @@ namespace cbhk_environment
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             SkeletonTimer.Enabled = true;
+        }
+
+        /// <summary>
+        /// 切换标签页
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            TabControl tabControl = sender as TabControl;
+            rotationChartBody.SwitchTimer.IsEnabled = tabControl.SelectedIndex == 1;
         }
     }
 

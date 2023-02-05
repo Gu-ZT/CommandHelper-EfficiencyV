@@ -4,18 +4,16 @@ using System.Linq;
 using System.Windows.Input;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using cbhk_environment.Generators.VillagerGenerator.Components;
-using cbhk_environment.CustomControls;
 using cbhk_environment.WindowDictionaries;
 using CommunityToolkit.Mvvm.Input;
 using System.IO;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Windows.Data;
-using cbhk_environment.ControlsDataContexts;
 using System.Windows.Controls.Primitives;
+using System.Windows.Media;
 
 namespace cbhk_environment.Generators.VillagerGenerator
 {
@@ -44,6 +42,23 @@ namespace cbhk_environment.Generators.VillagerGenerator
         }
         #endregion
 
+        #region 版本源
+        private string selectedVersion = "";
+        public string SelectedVersion
+        {
+            get
+            {
+                return selectedVersion;
+            }
+            set
+            {
+                selectedVersion = value;
+            }
+        }
+
+        private ObservableCollection<string> VersionSource = new ObservableCollection<string> { "1.13-","1.14+" };
+        #endregion
+
         //图标路径
         string icon_path = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\Villager\\images\\icon.png";
 
@@ -61,9 +76,15 @@ namespace cbhk_environment.Generators.VillagerGenerator
         bool IsDisplayItemInfoWindow = false;
         //物品数据页
         public static TransactionItemDataForm transactionItemDataForm = new TransactionItemDataForm();
+        //物品数据页容器
+        public static Popup popup = new Popup
+        {
+            AllowDrop = false,
+            IsOpen = false
+        };
 
         //当前选中的物品
-        private TransactionItems CurrentItem = null;
+        public static TransactionItems CurrentItem = null;
 
         //物品搜索框引用
         TextBox ItemSearcher = null;
@@ -537,16 +558,39 @@ namespace cbhk_environment.Generators.VillagerGenerator
         }
         #endregion
 
+        #region 黑白画刷
+        private SolidColorBrush whiteBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+        private SolidColorBrush blackBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#000000"));
+        #endregion
+
+        #region 添加与清空交易项
+        public RelayCommand AddTransactionItem { get; set; }
+        public RelayCommand ClearTransactionItem { get; set; }
+        #endregion
+
         public villager_datacontext()
         {
             #region 链接指令
             RunCommand = new RelayCommand(run_command);
             ReturnCommand = new RelayCommand<CommonWindow>(return_command);
+            AddTransactionItem = new RelayCommand(AddTransactionItemCommand);
+            ClearTransactionItem = new RelayCommand(ClearTransactionItemCommand);
             #endregion
 
             #region 初始化网格的列
             BagItems[0].Columns = MaxColumnCount;
             #endregion
+
+            //把交易数据页放入容器中，用于定位出现位置
+            popup.Child = transactionItemDataForm;
+            popup.Placement = PlacementMode.Bottom;
+            popup.PlacementTarget = CurrentItem;
+        }
+
+        public void VersionLoaded(object sender, RoutedEventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            comboBox.ItemsSource = VersionSource;
         }
 
         /// <summary>
@@ -645,24 +689,25 @@ namespace cbhk_environment.Generators.VillagerGenerator
         public void DimensionTypeLoaded(object sender, RoutedEventArgs e)
         {
             ComboBox box = sender as ComboBox;
-
-            if (File.Exists(dimensionTypeFilePath))
+            if (DimensionTypeSource.Count == 0)
             {
-                string[] data = File.ReadAllLines(dimensionTypeFilePath);
-                for (int i = 0; i < data.Length; i++)
+                if (File.Exists(dimensionTypeFilePath))
                 {
-                    string[] item = data[i].Split('.');
-                    string id = item[0];
-                    string name = item[1];
+                    string[] data = File.ReadAllLines(dimensionTypeFilePath);
+                    for (int i = 0; i < data.Length; i++)
+                    {
+                        string[] item = data[i].Split('.');
+                        string id = item[0];
+                        string name = item[1];
 
-                    if(!DimensionDataBase.ContainsKey(id))
-                    DimensionDataBase.Add(id, name);
+                        if (!DimensionDataBase.ContainsKey(id))
+                            DimensionDataBase.Add(id, name);
 
-                    DimensionTypeSource.Add(name);
+                        DimensionTypeSource.Add(name);
+                    }
                 }
-                box.ItemsSource = DimensionTypeSource;
-                box.SelectedIndex = 0;
             }
+            box.ItemsSource = DimensionTypeSource;
         }
 
         /// <summary>
@@ -809,7 +854,7 @@ namespace cbhk_environment.Generators.VillagerGenerator
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void AddTransactionItemClick(object sender, RoutedEventArgs e)
+        private void AddTransactionItemCommand()
         {
             TransactionItems transaction = new TransactionItems()
             {
@@ -821,28 +866,41 @@ namespace cbhk_environment.Generators.VillagerGenerator
         }
 
         /// <summary>
+        /// 清空交易项控件
+        /// </summary>
+        private void ClearTransactionItemCommand()
+        {
+            transactionItems.Clear();
+            popup.IsOpen = false;
+        }
+
+        /// <summary>
         /// 弹出物品数据更新窗体
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void BuyItemDataUpdater(object sender, MouseButtonEventArgs e)
         {
-            IsDisplayItemInfoWindow = !IsDisplayItemInfoWindow;
             TransactionItems item = sender as TransactionItems;
+            IsDisplayItemInfoWindow = !IsDisplayItemInfoWindow;
             if (CurrentItem != item && CurrentItem != null)
-            {
                 IsDisplayItemInfoWindow = true;
-            }
             CurrentItem = item;
+
+            //绑定交易项数据
+            transactionItemDataForm.DataContext = CurrentItem;
             ValueBinder();
-            transactionItemDataForm.DataContext = item;
+
             if (IsDisplayItemInfoWindow)
             {
-                item.SetInfomationWindowPosition();
-                transactionItemDataForm.Show();
+                popup.IsOpen = true;
+                item.border.BorderBrush = whiteBrush;
             }
             else
-                transactionItemDataForm.Hide();
+            {
+                popup.IsOpen = false;
+                item.border.BorderBrush = blackBrush;
+            }
         }
 
         /// <summary>

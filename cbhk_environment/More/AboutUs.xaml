@@ -11,7 +11,9 @@
     Height="600"
     MinWidth="400"
     MinHeight="600"
+    ResizeMode="CanResizeWithGrip"
     WindowStartupLocation="CenterScreen"
+    WindowStyle="None"
     mc:Ignorable="d">
-    <Image Source="pack://application:,,,/cbhk_environment;component/resources/cbhk_form/images/more/thanks_list.png" Stretch="Fill" />
+    <Image Source="/cbhk_environment;component/resources/cbhk_form/images/more/thanks_list.png" Stretch="Uniform" />
 </local_window:CommonWindow>

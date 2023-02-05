@@ -21,6 +21,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using WK.Libraries.BetterFolderBrowserNS;
+using Windows.ApplicationModel.VoiceCommands;
 
 namespace cbhk_environment.Generators.RecipeGenerator
 {
@@ -91,6 +92,8 @@ namespace cbhk_environment.Generators.RecipeGenerator
         private UniformGrid CacheZone = null;
         //拖拽源
         public static Image drag_source = null;
+        
+        //private ObservableCollection<string> VersionSource = new ObservableCollection<string> { "1.12-","1.13+" };
 
         /// <summary>
         /// 配方操作类型
@@ -184,6 +187,12 @@ namespace cbhk_environment.Generators.RecipeGenerator
             //displayer.GeneratorResult(OverLying, new string[] { result }, new string[] { "" }, new string[] { icon_path }, new System.Windows.Media.Media3D.Vector3D() { X = 30, Y = 30 });
             //displayer.Show();
         }
+
+        //public void VersionLoaded(object sender, RoutedEventArgs e)
+        //{
+        //    ComboBox comboBox = sender as ComboBox;
+        //    comboBox.ItemsSource = VersionSource;
+        //}
 
         /// <summary>
         /// 载入左侧切换栏图标

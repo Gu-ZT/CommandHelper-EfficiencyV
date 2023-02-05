@@ -109,7 +109,7 @@
                             <Setter TargetName="ArrowPanel" Property="Visibility" Value="Collapsed" />
                         </Trigger>
                         <Trigger Property="IsHighlighted" Value="true">
-                            <Setter TargetName="Border" Property="Background" Value="Transparent" />
+                            <Setter TargetName="Border" Property="Background" Value="#CC6B23" />
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>

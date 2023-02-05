@@ -42,17 +42,16 @@
                 CaretBrush="White"
                 FontSize="15"
                 Foreground="White" />
-            <CustomControls:TextButtons
+            <CustomControls:IconTextButtons
                 Width="35"
                 Height="25"
                 HorizontalAlignment="Left"
-                Background="#3D3D3D"
+                Background="{StaticResource ButtonNormal}"
                 Click="SetNameSpaceClick"
                 Content="..."
-                Foreground="White"
-                MouseLeftDownBackground="#3D3D3D"
-                MouseOverBackground="#4D4D4D"
-                Style="{DynamicResource TextButtonsStyle}"
+                Foreground="Black"
+                PressedBackground="{StaticResource ButtonPressed}"
+                Style="{DynamicResource IconTextButton}"
                 ToolTip="点击设置文本样式"
                 ToolTipService.InitialShowDelay="0"
                 ToolTipService.ShowDuration="1000" />
@@ -73,17 +72,16 @@
                 CaretBrush="White"
                 FontSize="15"
                 Foreground="White" />
-            <CustomControls:TextButtons
+            <CustomControls:IconTextButtons
                 Width="35"
                 Height="25"
                 HorizontalAlignment="Left"
-                Background="#3D3D3D"
+                Background="{StaticResource ButtonNormal}"
                 Click="SetPathClick"
                 Content="..."
-                Foreground="White"
-                MouseLeftDownBackground="#3D3D3D"
-                MouseOverBackground="#4D4D4D"
-                Style="{DynamicResource TextButtonsStyle}"
+                Foreground="Black"
+                PressedBackground="{StaticResource ButtonPressed}"
+                Style="{DynamicResource IconTextButton}"
                 ToolTip="点击设置文本样式"
                 ToolTipService.InitialShowDelay="0"
                 ToolTipService.ShowDuration="1000" />

@@ -15,7 +15,6 @@ using CommunityToolkit.Mvvm.Input;
 using System.Windows.Media;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using System.IO.Ports;
 
 namespace cbhk_signin
 {
@@ -118,6 +117,9 @@ namespace cbhk_signin
         }
         #endregion
 
+        //忘记密码
+        RelayCommand ForgotPassword { get; set; }
+
         //载入前台窗体引用
         Window FrontWindow = null;
 
@@ -135,12 +137,17 @@ namespace cbhk_signin
         {
             //登录功能
             SignIn = new RelayCommand(SignInCommand);
+            //忘记密码
+            ForgotPassword = new RelayCommand(ForgotPasswordCommand);
             //初始化用户设置
-            //ReadUserSettings();
+            ReadUserData();
         }
 
         #region 用户服务
-        private void ReadUserSettings()
+        /// <summary>
+        /// 读取用户数据
+        /// </summary>
+        private void ReadUserData()
         {
             Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + "resources\\signin_configs");
             if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\signin_configs\\user_info.ini"))
@@ -165,9 +172,9 @@ namespace cbhk_signin
         {
             FrontWindow = sender as Window;
             //自动登录
-            SignInTimer.Tick += ThreadTimerCallback;
-            SignInTimer.IsEnabled = SaveUserPassword;
-            IsOpenSignIn = !SaveUserPassword;
+            //SignInTimer.Tick += ThreadTimerCallback;
+            //SignInTimer.IsEnabled = SaveUserPassword;
+            //IsOpenSignIn = !SaveUserPassword;
 
             #region 调试
             FrontWindow.ShowInTaskbar = false;
@@ -205,6 +212,8 @@ namespace cbhk_signin
             user_information.Add("UserID", UserID);
             if(GameID != "")
             user_information.Add("mc_id", GameID);
+            user_information.Add("Account", UserAccount);
+            user_information.Add("Password",UserPassword);
             return user_information;
         }
 

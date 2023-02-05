@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace cbhk_environment.WindowDictionaries
@@ -22,8 +23,14 @@ namespace cbhk_environment.WindowDictionaries
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             base.OnMouseLeftButtonDown(e);
-            if (e.ButtonState == MouseButtonState.Pressed)
-                DragMove();
+            ApplyTemplate();
+            Grid TitleStack = Template.FindName("TitleStack",this) as Grid;
+            if (TitleStack != null)
+            {
+                Point title_range = e.GetPosition(TitleStack);
+                if (title_range.X >= 0 && title_range.X < TitleStack.ActualWidth && title_range.Y >= 0 && title_range.Y < TitleStack.ActualHeight && e.LeftButton == MouseButtonState.Pressed)
+                    DragMove();
+            }
         }
 
         protected override void OnContentRendered(EventArgs e)

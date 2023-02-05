@@ -13,10 +13,15 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
 
+    <Page.Resources>
+        <ImageBrush x:Key="ButtonNormal" ImageSource="/cbhk_environment;component/resources/common/images/ButtonNormal.png" />
+        <ImageBrush x:Key="ButtonPressed" ImageSource="/cbhk_environment;component/resources/common/images/ButtonPressed.png" />
+    </Page.Resources>
+
     <Grid Width="1080" Height="571">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*" />
-            <ColumnDefinition Width="5*" />
+            <ColumnDefinition Width="4*" />
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0">
             <TextBlock
@@ -79,7 +84,7 @@
                 </ItemsControl>
             </ScrollViewer>
         </StackPanel>
-        <StackPanel Grid.Column="1" Margin="10,0,0,0">
+        <StackPanel Grid.Column="1" Margin="10,0,35,0">
             <DockPanel Margin="0,30,0,20">
                 <TextBox
                     Width="322"
@@ -139,7 +144,7 @@
                             <Style TargetType="TextBlock">
                                 <Style.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="White" />
+                                        <Setter Property="Background" Value="Transparent" />
                                         <Setter Property="TextDecorations" Value="Baseline" />
                                     </Trigger>
                                 </Style.Triggers>
@@ -158,6 +163,7 @@
                     Background="#1F1F1F"
                     FontSize="20"
                     ItemsSource="{Binding VersionList, Mode=OneWay}"
+                    SelectedIndex="0"
                     SelectedItem="{Binding SelectedVersion, Mode=OneWayToSource}"
                     Style="{DynamicResource TextComboBoxStyle}">
                     <ity:Interaction.Triggers>
@@ -179,6 +185,7 @@
                     FontSize="20"
                     Foreground="White"
                     ItemsSource="{Binding FileTypeList, Mode=OneWay}"
+                    SelectedIndex="0"
                     SelectedItem="{Binding SelectedFileType, Mode=OneWayToSource}"
                     Style="{DynamicResource TextComboBoxStyle}">
                     <ity:Interaction.Triggers>
@@ -199,6 +206,7 @@
                     FontSize="20"
                     Foreground="White"
                     ItemsSource="{Binding FunctionTypeList, Mode=OneWay}"
+                    SelectedIndex="0"
                     Style="{DynamicResource TextComboBoxStyle}">
                     <ity:Interaction.Triggers>
                         <ity:EventTrigger EventName="SelectionChanged">
@@ -261,31 +269,29 @@
                 Margin="0,15,25,0"
                 HorizontalAlignment="Right"
                 LastChildFill="False">
-                <CustomControls:TextButtons
+                <CustomControls:IconTextButtons
                     Width="92"
                     Height="32"
-                    Background="#3D3D3D"
+                    Background="{StaticResource ButtonNormal}"
                     BorderThickness="0"
                     Command="{Binding TemplateLastStep}"
                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Page, Mode=FindAncestor}}"
                     Content="上一步"
-                    Foreground="White"
-                    MouseLeftDownBackground="#333333"
-                    MouseOverBackground="#4D4D4D"
-                    Style="{DynamicResource TextButtonsStyle}" />
-                <CustomControls:TextButtons
+                    Foreground="Black"
+                    PressedBackground="{StaticResource ButtonPressed}"
+                    Style="{DynamicResource IconTextButton}" />
+                <CustomControls:IconTextButtons
                     Width="92"
                     Height="32"
                     Margin="6,0,0,0"
-                    Background="#403582"
+                    Background="{StaticResource ButtonNormal}"
                     BorderThickness="0"
                     Command="{Binding TemplateNextStep}"
                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Page, Mode=FindAncestor}}"
                     Content="下一步"
-                    Foreground="White"
-                    MouseLeftDownBackground="#333333"
-                    MouseOverBackground="#4D4D4D"
-                    Style="{StaticResource TextButtonsStyle}" />
+                    Foreground="Black"
+                    PressedBackground="{StaticResource ButtonPressed}"
+                    Style="{StaticResource IconTextButton}" />
             </DockPanel>
         </StackPanel>
     </Grid>

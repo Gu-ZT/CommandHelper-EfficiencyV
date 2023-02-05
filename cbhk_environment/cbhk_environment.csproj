@@ -266,6 +266,10 @@
     <Compile Include="Generators\EntityGenerator\Components\PassengerItems.xaml.cs">
       <DependentUpon>PassengerItems.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Generators\OnlyOneCommandGenerator\OnlyOneCommand.xaml.cs">
+      <DependentUpon>OnlyOneCommand.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Generators\OnlyOneCommandGenerator\only_one_command_datacontext.cs" />
     <Compile Include="Generators\VillagerGenerator\Components\GossipsItems.xaml.cs">
       <DependentUpon>GossipsItems.xaml</DependentUpon>
     </Compile>
@@ -612,6 +616,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Generators\OnlyOneCommandGenerator\OnlyOneCommand.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Generators\VillagerGenerator\Components\GossipsItems.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -883,6 +891,9 @@
     <PackageReference Include="Microsoft.Windows.SDK.Contracts">
       <Version>10.0.22621.755</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf">
+      <Version>1.1.39</Version>
+    </PackageReference>
     <PackageReference Include="MicrosoftExpressionInteractions">
       <Version>3.0.40218</Version>
     </PackageReference>
@@ -934,7 +945,6 @@
     <Resource Include="resources\common\images\Minimize.png" />
     <Resource Include="resources\common\images\MinimizeHover.png" />
     <Resource Include="resources\common\images\Remove.png" />
-    <Resource Include="resources\common\images\RightArrow.png" />
     <Resource Include="resources\common\images\Window.png" />
     <Resource Include="resources\common\images\WindowHover.png" />
   </ItemGroup>
@@ -949,7 +959,6 @@
     <Resource Include="resources\common\images\TabFront.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="resources\common\images\LeftArrow.png" />
     <Resource Include="resources\common\images\TradeRightArrow.png" />
   </ItemGroup>
   <ItemGroup>
@@ -960,7 +969,9 @@
     <Resource Include="resources\common\images\spawnerIcons\IconDimensions.png" />
     <Resource Include="resources\common\images\spawnerIcons\IconEntities.png" />
     <Resource Include="resources\common\images\spawnerIcons\IconFireworks.png" />
-    <Resource Include="resources\common\images\spawnerIcons\IconItems.png" />
+    <Resource Include="resources\common\images\spawnerIcons\IconItems.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="resources\common\images\spawnerIcons\IconRecipes.png" />
     <Resource Include="resources\common\images\spawnerIcons\IconSpawner.png" />
     <Resource Include="resources\common\images\spawnerIcons\IconTags.png" />
@@ -979,6 +990,17 @@
     <Resource Include="resources\cbhk_form\images\Top.png" />
     <Resource Include="resources\cbhk_form\images\TopLeft.png" />
     <Resource Include="resources\cbhk_form\images\TopRight.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\common\images\spawnerIcons\IconDataPack.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\common\images\IconArrowLeft.png" />
+    <Resource Include="resources\common\images\IconArrowRight.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\cbhk_form\images\IconHome.png" />
+    <Resource Include="resources\cbhk_form\images\IconLink.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

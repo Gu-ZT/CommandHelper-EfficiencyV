@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
@@ -116,55 +117,6 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
         private Viewport3D AS_model;
         #endregion
 
-        /// <summary>
-        /// 检查是否加载完毕
-        /// </summary>
-        private bool WindowLoading = true;
-
-        public void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            WindowLoading = false;
-        }
-
-        #region 生成器版本
-        //版本切换锁,防止属性之间无休止更新
-        private bool version_switch_lock = false;
-        private bool version1_8;
-        public bool Version1_8
-        {
-            get { return version1_8; }
-            set
-            {
-                version1_8 = value;
-                if (!version_switch_lock)
-                {
-                    version_switch_lock = !version_switch_lock;
-                    UseMainHandPermission = Version1_8 ? Visibility.Visible : Visibility.Collapsed;
-                    Version1_9 = !Version1_8;
-                    version_switch_lock = false;
-                }
-                OnPropertyChanged();
-            }
-        }
-        private bool version1_9 = true;
-        public bool Version1_9
-        {
-            get { return version1_9; }
-            set
-            {
-                version1_9 = value;
-                if(!version_switch_lock)
-                {
-                    version_switch_lock = !version_switch_lock;
-                    HaveOffHandPermission = Version1_9 ? Visibility.Visible : Visibility.Collapsed;
-                    Version1_8 = !Version1_9;
-                    version_switch_lock = false;
-                }
-                OnPropertyChanged();
-            }
-        }
-        #endregion
-
         #region 是否拥有副手权限
         //版本切换锁,防止属性之间无休止更新
         private bool permission_switch_lock = false;
@@ -178,7 +130,7 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
                 if(!permission_switch_lock)
                 {
                     permission_switch_lock = !permission_switch_lock;
-                    UseMainHandPermission = Version1_9 ? Visibility.Collapsed : Visibility.Visible;
+                    UseMainHandPermission = SelectedVersion == "1.9+" ? Visibility.Collapsed : Visibility.Visible;
                     permission_switch_lock = false;
                 }
                 OnPropertyChanged();
@@ -197,7 +149,7 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
                 if(!permission_switch_lock)
                 {
                     permission_switch_lock = !permission_switch_lock;
-                    HaveOffHandPermission = Version1_8 ? Visibility.Collapsed : Visibility.Visible;
+                    HaveOffHandPermission = SelectedVersion == "1.8-" ? Visibility.Collapsed : Visibility.Visible;
                     permission_switch_lock = false;
                 }
                 OnPropertyChanged();
@@ -417,7 +369,7 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
             get
             {
                 string result = CannotPlaceSum + CannotTakeOrReplceSum + CannotPlaceOrReplaceSum + "";
-                return int.Parse(result)>0 ? "DisabledSlots:"+result+"," : "" ;
+                return /*int.Parse(result)>0 ? */"DisabledSlots:"+result+"," /*: ""*/ ;
             }
         }
         #endregion
@@ -1044,12 +996,14 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
         private bool cannotTakeOrReplaceHead;
         public bool CannotTakeOrReplaceHead
         {
-            get => cannotTakeOrReplaceHead;
+            get
+            {
+                return cannotTakeOrReplaceHead;
+            }
             set
             {
                 cannotTakeOrReplaceHead = value;
-                if (!WindowLoading)
-                    CannotTakeOrReplceSum += CannotTakeOrReplaceHead ? 4096 : -4096;
+                CannotTakeOrReplceSum += cannotTakeOrReplaceHead ? 4096 : -4096;
                 OnPropertyChanged();
             }
         }
@@ -1061,8 +1015,7 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
             set
             {
                 cannotTakeOrReplaceBody = value;
-                if (!WindowLoading)
-                    CannotTakeOrReplceSum += CannotTakeOrReplaceBody ? 2048 : -2048;
+                CannotTakeOrReplceSum += cannotTakeOrReplaceBody ? 2048 : -2048;
                 OnPropertyChanged();
             }
         }
@@ -1074,8 +1027,7 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
             set
             {
                 cannotTakeOrReplaceMainhand = value;
-                if (!WindowLoading)
-                    CannotTakeOrReplceSum += CannotTakeOrReplaceMainHand ? 256 : -256;
+                CannotTakeOrReplceSum += cannotTakeOrReplaceMainhand ? 256 : -256;
                 OnPropertyChanged();
             }
         }
@@ -1087,8 +1039,7 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
             set
             {
                 cannotTakeOrReplaceOffHand = value;
-                if (!WindowLoading)
-                    CannotTakeOrReplceSum += HaveOffHandPermission == Visibility.Visible && CannotTakeOrReplaceOffHand ? 8192 : -8192;
+                CannotTakeOrReplceSum += HaveOffHandPermission == Visibility.Visible && cannotTakeOrReplaceOffHand ? 8192 : -8192;
                 OnPropertyChanged();
             }
         }
@@ -1100,8 +1051,7 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
             set
             {
                 cannotTakeOrReplaceLegs = value;
-                if (!WindowLoading)
-                    CannotTakeOrReplceSum += CannotTakeOrReplaceLegs ? 1024 : -1024;
+                CannotTakeOrReplceSum += cannotTakeOrReplaceLegs ? 1024 : -1024;
                 OnPropertyChanged();
             }
         }
@@ -1113,8 +1063,7 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
             set
             {
                 cannotTakeOrReplaceBoots = value;
-                if (!WindowLoading)
-                    CannotTakeOrReplceSum += CannotTakeOrReplaceBoots ? 512 : -512;
+                CannotTakeOrReplceSum += cannotTakeOrReplaceBoots ? 512 : -512;
                 OnPropertyChanged();
             }
         }
@@ -1128,8 +1077,7 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
             set
             {
                 cannotPlaceOrReplacehead = value;
-                if (!WindowLoading)
-                    CannotPlaceOrReplaceSum += CannotPlaceOrReplaceHead ? 16 : -16;
+                CannotPlaceOrReplaceSum += cannotPlaceOrReplacehead ? 16 : -16;
                 OnPropertyChanged();
             }
         }
@@ -1141,8 +1089,7 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
             set
             {
                 cannotPlaceOrReplacebody = value;
-                if (!WindowLoading)
-                    CannotPlaceOrReplaceSum += CannotPlaceOrReplaceBody ? 8 : -8;
+                CannotPlaceOrReplaceSum += cannotPlaceOrReplacebody ? 8 : -8;
                 OnPropertyChanged();
             }
         }
@@ -1154,8 +1101,7 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
             set
             {
                 cannotPlaceOrReplaceMainHand = value;
-                if (!WindowLoading)
-                    CannotPlaceOrReplaceSum += CannotPlaceOrReplaceMainHand ? 1 : -1;
+                CannotPlaceOrReplaceSum += cannotPlaceOrReplaceMainHand ? 1 : -1;
                 OnPropertyChanged();
             }
         }
@@ -1167,8 +1113,7 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
             set
             {
                 cannotPlaceOrReplaceOffHand = value;
-                if (!WindowLoading)
-                    CannotPlaceOrReplaceSum += HaveOffHandPermission == Visibility.Visible && CannotPlaceOrReplaceOffHand ? 32 : -32;
+                CannotPlaceOrReplaceSum += HaveOffHandPermission == Visibility.Visible && cannotPlaceOrReplaceOffHand ? 32 : -32;
                 OnPropertyChanged();
             }
         }
@@ -1180,8 +1125,7 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
             set
             {
                 cannotPlaceOrReplaceLegs = value;
-                if (!WindowLoading)
-                    CannotPlaceOrReplaceSum += CannotPlaceOrReplaceLegs ? 4 : -4;
+                CannotPlaceOrReplaceSum += cannotPlaceOrReplaceLegs ? 4 : -4;
                 OnPropertyChanged();
             }
         }
@@ -1193,8 +1137,7 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
             set
             {
                 cannotPlaceOrReplaceBoots = value;
-                if (!WindowLoading)
-                    CannotPlaceOrReplaceSum += CannotPlaceOrReplaceBoots ? 2 : -2;
+                CannotPlaceOrReplaceSum += cannotPlaceOrReplaceBoots ? 2 : -2;
                 OnPropertyChanged();
             }
         }
@@ -1204,12 +1147,14 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
         private bool cannotPlaceHead;
         public bool CannotPlaceHead
         {
-            get => cannotPlaceHead;
+            get
+            {
+                return cannotPlaceHead;
+            }
             set
             {
                 cannotPlaceHead = value;
-                if (!WindowLoading)
-                    CannotPlaceSum += CannotPlaceHead ? 1048576 : -1048576;
+                CannotPlaceSum += cannotPlaceHead ? 1048576 : -1048576;
                 OnPropertyChanged();
             }
         }
@@ -1221,8 +1166,7 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
             set
             {
                 cannotPlaceBody = value;
-                if (!WindowLoading)
-                    CannotPlaceSum += CannotPlaceBody ? 524288 : -524288;
+                CannotPlaceSum += cannotPlaceBody ? 524288 : -524288;
                 OnPropertyChanged();
             }
         }
@@ -1234,8 +1178,7 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
             set
             {
                 cannotPlaceMainHand = value;
-                if (!WindowLoading)
-                    CannotPlaceSum += CannotPlaceMainHand ? 65536 : -65536;
+                CannotPlaceSum += cannotPlaceMainHand ? 65536 : -65536;
                 OnPropertyChanged();
             }
         }
@@ -1247,8 +1190,7 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
             set
             {
                 cannotPlaceOffHand = value;
-                if (!WindowLoading)
-                    CannotPlaceSum += HaveOffHandPermission == Visibility.Visible && CannotPlaceOffHand ? 2097152 : -2097152;
+                CannotPlaceSum += HaveOffHandPermission == Visibility.Visible && cannotPlaceOffHand ? 2097152 : -2097152;
                 OnPropertyChanged();
             }
         }
@@ -1260,8 +1202,7 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
             set
             {
                 cannotPlaceLegs = value;
-                if (!WindowLoading)
-                    CannotPlaceSum += cannotPlaceLegs ? 262144 : -262144;
+                CannotPlaceSum += cannotPlaceLegs ? 262144 : -262144;
                 OnPropertyChanged();
             }
         }
@@ -1273,8 +1214,7 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
             set
             {
                 cannotPlaceBoots = value;
-                if (!WindowLoading)
-                    CannotPlaceSum += CannotPlaceBoots ? 131072 : -131072;
+                CannotPlaceSum += cannotPlaceBoots ? 131072 : -131072;
                 OnPropertyChanged();
             }
         }
@@ -1282,10 +1222,28 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
 
         //布尔NBT集合
         StackPanel NBTList = null;
+        /// <summary>
+        /// 版本数据源
+        /// </summary>
+        ObservableCollection<string> versionSource = new ObservableCollection<string>() { "1.9+", "1.8-" };
+
+        #region 已选择的版本
+        private string selectedVersion = "";
+        public string SelectedVersion
+        {
+            get
+            {
+                return selectedVersion;
+            }
+            set
+            {
+                selectedVersion = value;
+            }
+        }
+        #endregion
 
         public armor_stand_datacontext()
         {
-
             #region 绑定指令
             RunCommand = new RelayCommand(run_command);
             ReturnCommand = new RelayCommand<Window>(return_command);
@@ -1324,6 +1282,12 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
             #endregion
         }
 
+        public void VersionLoaded(object sender, RoutedEventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            comboBox.ItemsSource = versionSource;
+        }
+
         /// <summary>
         /// 生成as
         /// </summary>
@@ -1349,7 +1313,7 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
 
             #region 唤出生成结果窗体
             GenerateResultDisplayer.Displayer displayer = GenerateResultDisplayer.Displayer.GetContentDisplayer();
-            displayer.GeneratorResult(OverLying,result, new string[] { custom_name },
+            displayer.GeneratorResult(OverLying,result, new string[] { "ArmorStand" },
                                     new string[] { AppDomain.CurrentDomain.BaseDirectory+ "\\resources\\configs\\ArmorStand\\images\\icon.png" },
                                     new Vector3D() { X = 25, Y = 45});
             displayer.Show();

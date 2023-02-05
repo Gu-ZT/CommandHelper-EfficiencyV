@@ -65,20 +65,25 @@ namespace cbhk_environment.ControlsDataContexts
                 return;
             }
 
-            string[] number_list = new string[2];
-            number_list = GetIntValue(current_box.Text);
-            if (number_list != null)
-                color_box.Text = double.Parse(number_list[0]) + "." + (number_list[1].Trim() != "" ? number_list[1] : "");
+            if (Regex.Replace(current_box.Text, @"\d+", "").Replace(".", "").Replace("-", "").Replace("+", "").Length > 0)
+                current_box.Text = "1";
             else
-                color_box.Text = double.Parse(current_box.Text) + 1+"";
-
-            current_box.Text = color_box.Text;
-
-            if (double.Parse(current_box.Text) > color_box.MaxValue)
             {
-                current_box.Text = color_box.MaxValue + "";
-                color_box.Text = current_box.Text;
-                return;
+                string[] number_list = new string[2];
+                number_list = GetIntValue(current_box.Text);
+                if (number_list != null)
+                    color_box.Text = double.Parse(number_list[0]) + "." + (number_list[1].Trim() != "" ? number_list[1] : "");
+                else
+                    color_box.Text = double.Parse(current_box.Text) + 1 + "";
+
+                current_box.Text = color_box.Text;
+
+                if (double.Parse(current_box.Text) > color_box.MaxValue)
+                {
+                    current_box.Text = color_box.MaxValue + "";
+                    color_box.Text = current_box.Text;
+                    return;
+                }
             }
         }
 
@@ -93,20 +98,25 @@ namespace cbhk_environment.ControlsDataContexts
                 return;
             }
 
-            string[] number_list = new string[2];
-            number_list = GetIntValue(current_box.Text);
-            if (number_list != null)
-                color_box.Text = double.Parse(number_list[0]) - 2.0 + "." + (number_list[1].Trim() != "" ? number_list[1] : "");
+            if (Regex.Replace(current_box.Text, @"\d+", "").Replace(".", "").Replace("-", "").Replace("+", "").Length > 0)
+                current_box.Text = "1";
             else
-                color_box.Text = double.Parse(current_box.Text) - 1.0 + "";
-
-            current_box.Text = color_box.Text;
-
-            if (double.Parse(current_box.Text) < color_box.MinValue)
             {
-                current_box.Text = color_box.MinValue + "";
-                color_box.Text = current_box.Text;
-                return;
+                string[] number_list = new string[2];
+                number_list = GetIntValue(current_box.Text);
+                if (number_list != null)
+                    color_box.Text = double.Parse(number_list[0]) - 2.0 + "." + (number_list[1].Trim() != "" ? number_list[1] : "");
+                else
+                    color_box.Text = double.Parse(current_box.Text) - 1.0 + "";
+
+                current_box.Text = color_box.Text;
+
+                if (double.Parse(current_box.Text) < color_box.MinValue)
+                {
+                    current_box.Text = color_box.MinValue + "";
+                    color_box.Text = current_box.Text;
+                    return;
+                }
             }
         }
 

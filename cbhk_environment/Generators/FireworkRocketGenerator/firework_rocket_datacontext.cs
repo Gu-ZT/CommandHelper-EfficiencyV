@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -26,9 +27,6 @@ namespace cbhk_environment.Generators.FireworkRocketGenerator
         public RelayCommand RunCommand { get; set; }
         #endregion
 
-        //布尔逻辑锁
-        private bool behavior_lock = true;
-
         #region 覆盖生成
         private bool overLying;
         public bool OverLying
@@ -43,41 +41,26 @@ namespace cbhk_environment.Generators.FireworkRocketGenerator
         #endregion
 
         #region 版本
-        private bool version1_12 = false;
-        public bool Version1_12
+        private string selectedVersion = "";
+        public string SelectedVersion
         {
-            get { return version1_12; }
+            get
+            {
+                return selectedVersion;
+            }
             set
             {
-                version1_12 = value;
-                if (behavior_lock)
-                {
-                    behavior_lock = false;
-                    Version1_13 = !Version1_12;
-                    behavior_lock = true;
-                }
+                selectedVersion = value;
                 OnPropertyChanged();
             }
         }
-        private bool version1_13 = true;
-        public bool Version1_13
-        {
-            get { return version1_13; }
-            set
-            {
-                version1_13 = value;
-                if (behavior_lock)
-                {
-                    behavior_lock = false;
-                    Version1_12 = !Version1_13;
-                    behavior_lock = true;
-                }
-                OnPropertyChanged();
-            }
-        }
+
+        //数据源
+        private ObservableCollection<string> VersionSource = new ObservableCollection<string> { "1.12-","1.13+" };
         #endregion
 
         #region 生成行为
+        bool behavior_lock = true;
         private bool summon = true;
         public bool Summon
         {
@@ -451,6 +434,12 @@ namespace cbhk_environment.Generators.FireworkRocketGenerator
         private void ClearFadeColorsCommand()
         {
             FadeColorStackPanel.Children.Clear();
+        }
+
+        public void VersionLoaded(object sender,RoutedEventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            comboBox.ItemsSource = VersionSource;
         }
 
         /// <summary>

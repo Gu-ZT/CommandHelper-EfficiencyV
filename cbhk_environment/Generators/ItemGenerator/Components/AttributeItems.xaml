@@ -48,21 +48,16 @@
                 VerticalAlignment="Center"
                 Foreground="White"
                 Text="值:" />
-            <CustomControls:ColorNumbericUpDowns
+            <Slider
                 Width="120"
                 HorizontalAlignment="Left"
-                ArrowBackground="Transparent"
-                ArrowForeground="White"
-                ArrowHeight="25"
-                ArrowWidth="25"
                 Background="Transparent"
                 BorderThickness="0"
-                CaretBrush="White"
                 Foreground="White"
-                MaxValue="2147483647"
-                MinValue="-2147483648"
-                Template="{DynamicResource ColorNumbericUpDown}"
-                Text="{Binding AttributeValue, Mode=TwoWay}" />
+                Maximum="2147483647"
+                Minimum="-2147483648"
+                Style="{DynamicResource NumberBoxStyle}"
+                Value="{Binding AttributeValue, Mode=TwoWay}" />
         </DockPanel>
         <DockPanel>
             <TextBlock

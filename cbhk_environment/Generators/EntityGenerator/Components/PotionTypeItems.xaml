@@ -39,46 +39,35 @@
                 VerticalAlignment="Center"
                 Foreground="White"
                 Text="持续时间:" />
-            <CustomControls:ColorNumbericUpDowns
+            <Slider
                 x:Name="EffectDuration"
                 Width="100"
                 HorizontalAlignment="Left"
-                ArrowBackground="Transparent"
-                ArrowForeground="White"
-                ArrowHeight="25"
-                ArrowWidth="25"
                 Background="Transparent"
-                BorderThickness="0"
-                CaretBrush="White"
+                BorderBrush="Black"
+                BorderThickness="1"
                 Foreground="White"
-                MaxValue="10000000"
-                MinValue="0"
-                SelectionChanged="MobEffectDurationSelectionChanged"
-                Template="{DynamicResource ColorNumbericUpDown}"
-                Text="0" />
+                Style="{DynamicResource NumberBoxStyle}"
+                ValueChanged="MobEffectDurationSelectionChanged"
+                Value="0" />
             <TextBlock
                 Margin="5,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Foreground="White"
                 Text="效果等级:" />
-            <CustomControls:ColorNumbericUpDowns
+            <Slider
                 x:Name="EffectLevel"
                 Width="50"
                 HorizontalAlignment="Left"
-                ArrowBackground="Transparent"
-                ArrowForeground="White"
-                ArrowHeight="25"
-                ArrowWidth="25"
                 Background="Transparent"
                 BorderThickness="0"
-                CaretBrush="White"
                 Foreground="White"
-                MaxValue="255"
-                MinValue="0"
-                SelectionChanged="MobEffectLevelSelectionChanged"
-                Template="{DynamicResource ColorNumbericUpDown}"
-                Text="0" />
+                Maximum="255"
+                Minimum="0"
+                Style="{DynamicResource NumberBoxStyle}"
+                ValueChanged="MobEffectLevelSelectionChanged"
+                Value="0" />
             <CustomControls:IconTextButtons
                 Width="25"
                 Height="25"

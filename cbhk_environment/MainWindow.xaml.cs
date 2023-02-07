@@ -207,6 +207,8 @@ namespace cbhk_environment
                     {
                         image = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + item_id + ".png", UriKind.Relative));
                         ItemIdSource.Add(new IconComboBoxItem() { ComboBoxItemText = item_name, ComboBoxItemIcon = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + item_id + ".png", UriKind.Absolute)) });
+                        RenderOptions.SetBitmapScalingMode(image,BitmapScalingMode.NearestNeighbor);
+                        RenderOptions.SetClearTypeHint(image,ClearTypeHint.Enabled);
                     }
                     if (!ItemDataBase.ContainsKey(item_id + ":" + item_name))
                         ItemDataBase.Add(item_id + ":" + item_name, image);
@@ -250,6 +252,8 @@ namespace cbhk_environment
                     {
                         image = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + block_id + ".png", UriKind.Relative));
                         BlockIDSource.Add(new IconComboBoxItem() { ComboBoxItemText = block_name, ComboBoxItemIcon = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\block_and_block_images\\" + block_id + ".png", UriKind.Absolute)) });
+                        RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.NearestNeighbor);
+                        RenderOptions.SetClearTypeHint(image, ClearTypeHint.Enabled);
                     }
                     if (!BlockDataBase.ContainsKey(block_id + ":" + block_name))
                         BlockDataBase.Add(block_id + ":" + block_name, image);
@@ -400,7 +404,7 @@ namespace cbhk_environment
                 string entities_json = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\entities.json");
                 string entity_id = "";
                 string entity_name = "";
-                BitmapImage image = new BitmapImage();
+                BitmapImage image = null;
 
                 JsonScript("parseJSON(" + entities_json + ");");
                 int item_count = int.Parse(JsonScript("getLength();").ToString());
@@ -410,18 +414,28 @@ namespace cbhk_environment
                     entity_name = JsonScript("getJSON('[" + i + "].name');").ToString();
                     if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + entity_id + "_spawn_egg.png"))
                     {
-                        Bitmap bitmap = new Bitmap(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + entity_id + "_spawn_egg.png");
-                        bitmap = GeneralTools.ChangeBitmapSize.Magnifier(bitmap, 2);
-                        image = GeneralTools.BitmapImageConverter.ToBitmapImage(bitmap);
-                        EntityIdSource.Add(new IconComboBoxItem() { ComboBoxItemText = entity_name, ComboBoxItemIcon = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + entity_id + "_spawn_egg.png", UriKind.Absolute)) });
+                        //Bitmap bitmap = new Bitmap(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + entity_id + "_spawn_egg.png");
+                        //bitmap = GeneralTools.ChangeBitmapSize.Magnifier(bitmap, 2);
+                        //image = GeneralTools.BitmapImageConverter.ToBitmapImage(bitmap);
+                        image = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + entity_id + "_spawn_egg.png", UriKind.Absolute));
+
+                        RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.NearestNeighbor);
+                        RenderOptions.SetClearTypeHint(image, ClearTypeHint.Enabled);
+
+                        EntityIdSource.Add(new IconComboBoxItem() { ComboBoxItemText = entity_name, ComboBoxItemIcon = image/*new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + entity_id + "_spawn_egg.png", UriKind.Absolute))*/ });
                     }
                     else
                     if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + entity_id + ".png"))
                     {
-                        Bitmap bitmap = new Bitmap(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + entity_id + ".png");
-                        bitmap = GeneralTools.ChangeBitmapSize.Magnifier(bitmap, 2);
-                        image = GeneralTools.BitmapImageConverter.ToBitmapImage(bitmap);
-                        EntityIdSource.Add(new IconComboBoxItem() { ComboBoxItemText = entity_name, ComboBoxItemIcon = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + entity_id + ".png", UriKind.Absolute)) });
+                        //Bitmap bitmap = new Bitmap(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + entity_id + ".png");
+                        //bitmap = GeneralTools.ChangeBitmapSize.Magnifier(bitmap, 2);
+                        //image = GeneralTools.BitmapImageConverter.ToBitmapImage(bitmap);
+                        image = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + entity_id + ".png",UriKind.Absolute));
+
+                        RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.NearestNeighbor);
+                        RenderOptions.SetClearTypeHint(image, ClearTypeHint.Enabled);
+
+                        EntityIdSource.Add(new IconComboBoxItem() { ComboBoxItemText = entity_name, ComboBoxItemIcon = image/*new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + entity_id + ".png", UriKind.Absolute))*/ });
                     }
                     if (!EntityDataBase.ContainsKey(entity_id + ":" + entity_name))
                         EntityDataBase.Add(entity_id + ":" + entity_name, image);
@@ -697,6 +711,7 @@ namespace cbhk_environment
                     Width = 188,
                     Height = 70,
                     BorderBrush = null,
+                    NeedMouseOverStyle = true,
                     BorderThickness = new Thickness(0),
                     Cursor = Cursors.Hand,
                 };

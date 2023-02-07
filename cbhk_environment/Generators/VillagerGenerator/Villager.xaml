@@ -207,8 +207,9 @@
                             Width="200"
                             Margin="0,0,5,0"
                             HorizontalAlignment="Left"
+                            VerticalContentAlignment="Center"
                             AllowDrop="False"
-                            FontSize="25"
+                            FontSize="30"
                             SelectedItem="{Binding VillagerType, Mode=TwoWay}"
                             Style="{DynamicResource TextComboBoxStyle}">
                             <ity:Interaction.Triggers>
@@ -227,8 +228,9 @@
                             Width="200"
                             Margin="0,0,5,0"
                             HorizontalAlignment="Left"
+                            VerticalContentAlignment="Center"
                             AllowDrop="False"
-                            FontSize="25"
+                            FontSize="30"
                             SelectedItem="{Binding VillagerProfessionType, Mode=TwoWay}"
                             Style="{DynamicResource TextComboBoxStyle}">
                             <ity:Interaction.Triggers>
@@ -247,8 +249,9 @@
                             Width="100"
                             Margin="0,0,5,0"
                             HorizontalAlignment="Left"
+                            VerticalContentAlignment="Center"
                             AllowDrop="False"
-                            FontSize="25"
+                            FontSize="30"
                             SelectedItem="{Binding VillagerLevel, Mode=TwoWay}"
                             Style="{DynamicResource TextComboBoxStyle}">
                             <ity:Interaction.Triggers>
@@ -388,23 +391,18 @@
                                                 FontSize="20"
                                                 Foreground="White"
                                                 Text="X" />
-                                            <CustomControls:ColorNumbericUpDowns
+                                            <Slider
                                                 Height="35"
                                                 HorizontalAlignment="Stretch"
                                                 AllowDrop="False"
-                                                ArrowBackground="Transparent"
-                                                ArrowForeground="Black"
-                                                ArrowHeight="25"
-                                                ArrowWidth="25"
                                                 Background="Transparent"
                                                 BorderThickness="0"
-                                                CaretBrush="White"
                                                 FontSize="25"
-                                                Foreground="Black"
-                                                MaxValue="2147483647"
-                                                MinValue="-2147483648"
-                                                Template="{DynamicResource ColorNumbericUpDown}"
-                                                Text="{Binding MeetingPointX, Mode=TwoWay}" />
+                                                Foreground="White"
+                                                Maximum="2147483647"
+                                                Minimum="-2147483648"
+                                                Style="{DynamicResource NumberBoxStyle}"
+                                                Value="{Binding MeetingPointX, Mode=TwoWay}" />
                                         </DockPanel>
                                         <DockPanel
                                             Grid.Row="0"
@@ -416,23 +414,18 @@
                                                 FontSize="20"
                                                 Foreground="White"
                                                 Text="Y" />
-                                            <CustomControls:ColorNumbericUpDowns
+                                            <Slider
                                                 Height="35"
                                                 HorizontalAlignment="Stretch"
                                                 AllowDrop="False"
-                                                ArrowBackground="Transparent"
-                                                ArrowForeground="Black"
-                                                ArrowHeight="25"
-                                                ArrowWidth="25"
                                                 Background="Transparent"
                                                 BorderThickness="0"
-                                                CaretBrush="White"
                                                 FontSize="25"
-                                                Foreground="Black"
-                                                MaxValue="2147483647"
-                                                MinValue="-2147483648"
-                                                Template="{DynamicResource ColorNumbericUpDown}"
-                                                Text="{Binding MeetingPointY, Mode=TwoWay}" />
+                                                Foreground="White"
+                                                Maximum="2147483647"
+                                                Minimum="-2147483648"
+                                                Style="{DynamicResource NumberBoxStyle}"
+                                                Value="{Binding MeetingPointY, Mode=TwoWay}" />
                                         </DockPanel>
                                         <DockPanel Grid.Row="0" Grid.Column="2">
                                             <TextBlock
@@ -441,23 +434,18 @@
                                                 FontSize="20"
                                                 Foreground="White"
                                                 Text="Z" />
-                                            <CustomControls:ColorNumbericUpDowns
+                                            <Slider
                                                 Height="35"
                                                 HorizontalAlignment="Stretch"
                                                 AllowDrop="False"
-                                                ArrowBackground="Transparent"
-                                                ArrowForeground="Black"
-                                                ArrowHeight="25"
-                                                ArrowWidth="25"
                                                 Background="Transparent"
                                                 BorderThickness="0"
-                                                CaretBrush="White"
                                                 FontSize="25"
-                                                Foreground="Black"
-                                                MaxValue="2147483647"
-                                                MinValue="-2147483648"
-                                                Template="{DynamicResource ColorNumbericUpDown}"
-                                                Text="{Binding MeetingPointZ, Mode=TwoWay}" />
+                                                Foreground="White"
+                                                Maximum="2147483647"
+                                                Minimum="-2147483648"
+                                                Style="{DynamicResource NumberBoxStyle}"
+                                                Value="{Binding MeetingPointZ, Mode=TwoWay}" />
                                         </DockPanel>
                                         <DockPanel
                                             Grid.Row="1"
@@ -476,7 +464,7 @@
                                                 AllowDrop="False"
                                                 Background="Transparent"
                                                 BorderThickness="0"
-                                                FontSize="15"
+                                                FontSize="25"
                                                 Foreground="White"
                                                 SelectedIndex="0"
                                                 SelectedItem="{Binding MeetingPointDimension, Mode=TwoWay}"
@@ -515,23 +503,18 @@
                                                 FontSize="20"
                                                 Foreground="White"
                                                 Text="X" />
-                                            <CustomControls:ColorNumbericUpDowns
+                                            <Slider
                                                 Height="35"
                                                 HorizontalAlignment="Stretch"
                                                 AllowDrop="False"
-                                                ArrowBackground="Transparent"
-                                                ArrowForeground="Black"
-                                                ArrowHeight="25"
-                                                ArrowWidth="25"
                                                 Background="Transparent"
                                                 BorderThickness="0"
-                                                CaretBrush="White"
                                                 FontSize="25"
-                                                Foreground="Black"
-                                                MaxValue="2147483647"
-                                                MinValue="-2147483648"
-                                                Template="{DynamicResource ColorNumbericUpDown}"
-                                                Text="{Binding HomeX, Mode=TwoWay}" />
+                                                Foreground="White"
+                                                Maximum="2147483647"
+                                                Minimum="-2147483648"
+                                                Style="{DynamicResource NumberBoxStyle}"
+                                                Value="{Binding HomeX, Mode=TwoWay}" />
                                         </DockPanel>
                                         <DockPanel
                                             Grid.Row="0"
@@ -543,23 +526,18 @@
                                                 FontSize="20"
                                                 Foreground="White"
                                                 Text="Y" />
-                                            <CustomControls:ColorNumbericUpDowns
+                                            <Slider
                                                 Height="35"
                                                 HorizontalAlignment="Stretch"
                                                 AllowDrop="False"
-                                                ArrowBackground="Transparent"
-                                                ArrowForeground="Black"
-                                                ArrowHeight="25"
-                                                ArrowWidth="25"
                                                 Background="Transparent"
                                                 BorderThickness="0"
-                                                CaretBrush="White"
                                                 FontSize="25"
-                                                Foreground="Black"
-                                                MaxValue="2147483647"
-                                                MinValue="-2147483648"
-                                                Template="{DynamicResource ColorNumbericUpDown}"
-                                                Text="{Binding HomeY, Mode=TwoWay}" />
+                                                Foreground="White"
+                                                Maximum="2147483647"
+                                                Minimum="-2147483648"
+                                                Style="{DynamicResource NumberBoxStyle}"
+                                                Value="{Binding HomeY, Mode=TwoWay}" />
                                         </DockPanel>
                                         <DockPanel Grid.Row="0" Grid.Column="2">
                                             <TextBlock
@@ -568,23 +546,18 @@
                                                 FontSize="20"
                                                 Foreground="White"
                                                 Text="Z" />
-                                            <CustomControls:ColorNumbericUpDowns
+                                            <Slider
                                                 Height="35"
                                                 HorizontalAlignment="Stretch"
                                                 AllowDrop="False"
-                                                ArrowBackground="Transparent"
-                                                ArrowForeground="Black"
-                                                ArrowHeight="25"
-                                                ArrowWidth="25"
                                                 Background="Transparent"
                                                 BorderThickness="0"
-                                                CaretBrush="White"
                                                 FontSize="25"
-                                                Foreground="Black"
-                                                MaxValue="2147483647"
-                                                MinValue="-2147483648"
-                                                Template="{DynamicResource ColorNumbericUpDown}"
-                                                Text="{Binding HomeZ, Mode=TwoWay}" />
+                                                Foreground="White"
+                                                Maximum="2147483647"
+                                                Minimum="-2147483648"
+                                                Style="{DynamicResource NumberBoxStyle}"
+                                                Value="{Binding HomeZ, Mode=TwoWay}" />
                                         </DockPanel>
                                         <DockPanel
                                             Grid.Row="1"
@@ -603,7 +576,7 @@
                                                 AllowDrop="False"
                                                 Background="Transparent"
                                                 BorderThickness="0"
-                                                FontSize="15"
+                                                FontSize="25"
                                                 Foreground="White"
                                                 SelectedIndex="0"
                                                 SelectedItem="{Binding HomeDimension, Mode=TwoWay}"
@@ -639,24 +612,19 @@
                                                 FontSize="20"
                                                 Foreground="White"
                                                 Text="X" />
-                                            <CustomControls:ColorNumbericUpDowns
+                                            <Slider
                                                 Height="35"
                                                 Margin="0,0,5,0"
                                                 HorizontalAlignment="Stretch"
                                                 AllowDrop="False"
-                                                ArrowBackground="Transparent"
-                                                ArrowForeground="Black"
-                                                ArrowHeight="25"
-                                                ArrowWidth="25"
                                                 Background="Transparent"
                                                 BorderThickness="0"
-                                                CaretBrush="White"
                                                 FontSize="25"
-                                                Foreground="Black"
-                                                MaxValue="2147483647"
-                                                MinValue="-2147483648"
-                                                Template="{DynamicResource ColorNumbericUpDown}"
-                                                Text="{Binding JobSiteX, Mode=TwoWay}" />
+                                                Foreground="White"
+                                                Maximum="2147483647"
+                                                Minimum="-2147483648"
+                                                Style="{DynamicResource NumberBoxStyle}"
+                                                Value="{Binding JobSiteX, Mode=TwoWay}" />
                                         </DockPanel>
                                         <DockPanel Grid.Row="0" Grid.Column="1">
                                             <TextBlock
@@ -665,24 +633,19 @@
                                                 FontSize="20"
                                                 Foreground="White"
                                                 Text="Y" />
-                                            <CustomControls:ColorNumbericUpDowns
+                                            <Slider
                                                 Height="35"
                                                 Margin="0,0,5,0"
                                                 HorizontalAlignment="Stretch"
                                                 AllowDrop="False"
-                                                ArrowBackground="Transparent"
-                                                ArrowForeground="Black"
-                                                ArrowHeight="25"
-                                                ArrowWidth="25"
                                                 Background="Transparent"
                                                 BorderThickness="0"
-                                                CaretBrush="White"
                                                 FontSize="25"
-                                                Foreground="Black"
-                                                MaxValue="2147483647"
-                                                MinValue="-2147483648"
-                                                Template="{DynamicResource ColorNumbericUpDown}"
-                                                Text="{Binding JobSiteY, Mode=TwoWay}" />
+                                                Foreground="White"
+                                                Maximum="2147483647"
+                                                Minimum="-2147483648"
+                                                Style="{DynamicResource NumberBoxStyle}"
+                                                Value="{Binding JobSiteY, Mode=TwoWay}" />
                                         </DockPanel>
                                         <DockPanel Grid.Row="0" Grid.Column="2">
                                             <TextBlock
@@ -691,23 +654,18 @@
                                                 FontSize="20"
                                                 Foreground="White"
                                                 Text="Z" />
-                                            <CustomControls:ColorNumbericUpDowns
+                                            <Slider
                                                 Height="35"
                                                 HorizontalAlignment="Stretch"
                                                 AllowDrop="False"
-                                                ArrowBackground="Transparent"
-                                                ArrowForeground="Black"
-                                                ArrowHeight="25"
-                                                ArrowWidth="25"
                                                 Background="Transparent"
                                                 BorderThickness="0"
-                                                CaretBrush="White"
                                                 FontSize="25"
-                                                Foreground="Black"
-                                                MaxValue="2147483647"
-                                                MinValue="-2147483648"
-                                                Template="{DynamicResource ColorNumbericUpDown}"
-                                                Text="{Binding JobSiteZ, Mode=TwoWay}" />
+                                                Foreground="White"
+                                                Maximum="2147483647"
+                                                Minimum="-2147483648"
+                                                Style="{DynamicResource NumberBoxStyle}"
+                                                Value="{Binding JobSiteZ, Mode=TwoWay}" />
                                         </DockPanel>
                                         <DockPanel
                                             Grid.Row="1"
@@ -725,7 +683,7 @@
                                                 AllowDrop="False"
                                                 Background="Transparent"
                                                 BorderThickness="0"
-                                                FontSize="15"
+                                                FontSize="25"
                                                 Foreground="White"
                                                 SelectedIndex="0"
                                                 SelectedItem="{Binding JobSiteDimension, Mode=TwoWay}"
@@ -857,25 +815,20 @@
                         ToolTip="此村民最后一次前往工作站点重新供应交易的刻。"
                         ToolTipService.InitialShowDelay="0"
                         ToolTipService.ShowDuration="1000" />
-                    <CustomControls:ColorNumbericUpDowns
+                    <Slider
                         Width="450"
                         Height="50"
                         Margin="10,0"
                         HorizontalAlignment="Left"
                         AllowDrop="False"
-                        ArrowBackground="Transparent"
-                        ArrowForeground="Black"
-                        ArrowHeight="25"
-                        ArrowWidth="25"
                         Background="Transparent"
                         BorderThickness="0"
-                        CaretBrush="White"
                         FontSize="25"
                         Foreground="White"
-                        MaxValue="2147483647"
-                        MinValue="-2147483648"
-                        Template="{DynamicResource ColorNumbericUpDown}"
-                        Text="{Binding LastRestock, Mode=TwoWay}" />
+                        Maximum="2147483647"
+                        Minimum="-2147483648"
+                        Style="{DynamicResource NumberBoxStyle}"
+                        Value="{Binding LastRestock, Mode=TwoWay}" />
                     <TextBlock
                         Margin="0,0,5,0"
                         VerticalAlignment="Center"
@@ -885,25 +838,20 @@
                         ToolTip="此村民当前的经验值。"
                         ToolTipService.InitialShowDelay="0"
                         ToolTipService.ShowDuration="1000" />
-                    <CustomControls:ColorNumbericUpDowns
+                    <Slider
                         Width="450"
                         Height="50"
                         Margin="10,0,0,0"
                         HorizontalAlignment="Left"
                         AllowDrop="False"
-                        ArrowBackground="Transparent"
-                        ArrowForeground="Black"
-                        ArrowHeight="25"
-                        ArrowWidth="25"
                         Background="Transparent"
                         BorderThickness="0"
-                        CaretBrush="White"
                         FontSize="25"
                         Foreground="White"
-                        MaxValue="2147483647"
-                        MinValue="-2147483648"
-                        Template="{DynamicResource ColorNumbericUpDown}"
-                        Text="{Binding Xp, Mode=TwoWay}" />
+                        Maximum="2147483647"
+                        Minimum="-2147483648"
+                        Style="{DynamicResource NumberBoxStyle}"
+                        Value="{Binding Xp, Mode=TwoWay}" />
                 </DockPanel>
             </Grid>
         </Viewbox>

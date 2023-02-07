@@ -1,5 +1,4 @@
-﻿using cbhk_environment.ControlsDataContexts;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -21,8 +20,8 @@ namespace cbhk_environment.Generators.VillagerGenerator.Components
                 string result;
                 string item_data = Type.SelectedItem.ToString();
                 string TypeData = item_data.Trim() != ""?"Type:"+ item_data+",":"";
-                string ValueData = Value.Text.Trim() != "" ? "Value:" + (Value.Text.Contains(".") ? Value.Text.Split('.')[0] :Value.Text) +",":"";
-                string TargetData = Target.Text.Trim() != "" ?"Target:"+Target.Text+",":"";
+                string ValueData = Value.ToString().Trim() != "" ? "Value:" + (Value.ToString().Contains(".") ? Value.ToString().Split('.')[0] :Value.ToString()) +",":"";
+                string TargetData = Target.Text.Trim() != "" ?"Target:\""+Target.Text+"\",":"";
                 result = TypeData != "" || ValueData != "" || TargetData != "" ?TypeData + ValueData + TargetData:"";
                 result = "{" + result.TrimEnd(',') + "},";
                 return result;

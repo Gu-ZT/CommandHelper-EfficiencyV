@@ -120,20 +120,25 @@ namespace cbhk_environment.Generators.VillagerGenerator.Components
         {
             get
             {
-                string result;
-                string rewardExp = "rewardExp:" + (RewardExp?1:0) + "b,";
-                string maxUses = MaxUses.Trim() != "" ? "maxUses:" + MaxUses + ",":"";
-                string uses = Uses.Trim() != "" ? "uses:" + Uses + ",":"";
-                string buy = Buy.Tag != null ? "buy:" + (Buy.Tag.ToString().Contains("{")?Buy.Tag.ToString():"{id:\"minecraft:"+Buy.Tag.ToString().Split(' ')[0] + "\",Count:"+ BuyItemCount.Text +"b}") +",":"";
-                string buyB = BuyB.Tag != null ?"buyB:" + (BuyB.Tag.ToString().Contains("{") ? BuyB.Tag.ToString() : "{id:\"minecraft:" + BuyB.Tag.ToString().Split(' ')[0] + "\",Count:"+BuybItemCount.Text+"b}") + ",":"";
-                string sell = Sell.Tag != null ?"sell:"+ (Sell.Tag.ToString().Contains("{") ? Sell.Tag.ToString() : "{id:\"minecraft:" + Sell.Tag.ToString().Split(' ')[0] + "\",Count:"+SellItemCount.Text+"b}") + ",":"";
-                string xp = Xp.Trim() != "" ?"xp:"+Xp+",":"";
-                string demand = Demand.Trim() != "" ? "demand:"+Demand+"," :"";
-                string specialPrice = SpecialPrice.Trim() != "" ? "specialPrice:"+ SpecialPrice+"," :"";
-                string priceMultiplier = PriceMultiplier.Trim() != "" ? "priceMultiplier:"+PriceMultiplier+"," :"";
-                result = rewardExp + maxUses + uses + buy + buyB + sell + xp + demand + specialPrice + priceMultiplier;
-                result = "{"+result.TrimEnd(',')+"}";
-                return result;
+                if (Buy.Tag != null)
+                {
+                    string result;
+                    string rewardExp = "rewardExp:" + (RewardExp ? 1 : 0) + "b,";
+                    string maxUses = MaxUses.Trim() != "" ? "maxUses:" + MaxUses + "," : "";
+                    string uses = Uses.Trim() != "" ? "uses:" + Uses + "," : "";
+                    string buy = "buy:" + (Buy.Tag.ToString().Contains("{") ? Buy.Tag.ToString() : "{id:\"minecraft:" + Buy.Tag.ToString().Split(' ')[0] + "\",Count:" + BuyItemCount.Text + "b}") + ",";
+                    string buyB = BuyB.Tag != null ? "buyB:" + (BuyB.Tag.ToString().Contains("{") ? BuyB.Tag.ToString() : "{id:\"minecraft:" + BuyB.Tag.ToString().Split(' ')[0] + "\",Count:" + BuybItemCount.Text + "b}") + "," : "";
+                    string sell = Sell.Tag != null ? "sell:" + (Sell.Tag.ToString().Contains("{") ? Sell.Tag.ToString() : "{id:\"minecraft:" + Sell.Tag.ToString().Split(' ')[0] + "\",Count:" + SellItemCount.Text + "b}") + "," : "";
+                    string xp = Xp.Trim() != "" ? "xp:" + Xp + "," : "";
+                    string demand = Demand.Trim() != "" ? "demand:" + Demand + "," : "";
+                    string specialPrice = SpecialPrice.Trim() != "" ? "specialPrice:" + SpecialPrice + "," : "";
+                    string priceMultiplier = PriceMultiplier.Trim() != "" ? "priceMultiplier:" + PriceMultiplier + "," : "";
+                    result = rewardExp + maxUses + uses + buy + buyB + sell + xp + demand + specialPrice + priceMultiplier;
+                    result = "{" + result.TrimEnd(',') + "}";
+                    return result;
+                }
+                else
+                    return "";
             }
         }
         #endregion
@@ -275,7 +280,7 @@ namespace cbhk_environment.Generators.VillagerGenerator.Components
         {
             BuyItemCount.Visibility = Visibility.Collapsed;
             ModifyBuyItemCount.Visibility = Visibility.Visible;
-            ModifyBuyItemCount.Text = BuyItemCount.Text;
+            ModifyBuyItemCount.Value = int.Parse(BuyItemCount.Text);
         }
 
         /// <summary>
@@ -287,7 +292,7 @@ namespace cbhk_environment.Generators.VillagerGenerator.Components
         {
             BuybItemCount.Visibility = Visibility.Collapsed;
             ModifyBuyBItemCount.Visibility = Visibility.Visible;
-            ModifyBuyBItemCount.Text = BuybItemCount.Text;
+            ModifyBuyBItemCount.Value = int.Parse(BuybItemCount.Text);
         }
 
         /// <summary>
@@ -299,7 +304,7 @@ namespace cbhk_environment.Generators.VillagerGenerator.Components
         {
             SellItemCount.Visibility = Visibility.Collapsed;
             ModifySellItemCount.Visibility = Visibility.Visible;
-            ModifySellItemCount.Text = SellItemCount.Text;
+            ModifySellItemCount.Value = int.Parse(SellItemCount.Text);
         }
 
         /// <summary>
@@ -310,10 +315,25 @@ namespace cbhk_environment.Generators.VillagerGenerator.Components
         private void CloseNumberModifyMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             ModifyBuyItemCount.Visibility = ModifyBuyBItemCount.Visibility = ModifySellItemCount.Visibility = Visibility.Collapsed;
-            BuyItemCount.Text = ModifyBuyItemCount.Text;
-            BuybItemCount.Text = ModifyBuyBItemCount.Text;
-            SellItemCount.Text = ModifySellItemCount.Text;
+            BuyItemCount.Text = ModifyBuyItemCount.Value.ToString();
+            BuybItemCount.Text = ModifyBuyBItemCount.Value.ToString();
+            SellItemCount.Text = ModifySellItemCount.Value.ToString();
             BuyItemCount.Visibility = BuybItemCount.Visibility = SellItemCount.Visibility = Visibility.Visible;
         }
+
+        //private void ModifyBuyItemCount_MouseEnter(object sender, MouseEventArgs e)
+        //{
+        //    Buy.IsHitTestVisible = false;
+        //}
+
+        //private void ModifyBuyItemCount_MouseLeave(object sender, MouseEventArgs e)
+        //{
+        //    Buy.IsHitTestVisible = true;
+        //}
+
+        //private void ModifyBuyItemCount_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        //{
+        //    Buy.IsHitTestVisible = ModifyBuyItemCount.Visibility == Visibility.Visible ? false : true;
+        //}
     }
 }

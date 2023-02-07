@@ -19,7 +19,7 @@ namespace cbhk_environment.Generators.EntityGenerator.Components
             {
                 if (EffectIdString.Length > 0)
                 {
-                    string result = "{Id:" + EffectIdString + "b,Duration:" + int.Parse(EffectDuration.Text) + ",Amplifier:" + int.Parse(EffectLevel.Text) + "b,Ambient:0b,ShowParticles:0b},";
+                    string result = "{Id:" + EffectIdString + "b,Duration:" + int.Parse(EffectDuration.Value.ToString()) + ",Amplifier:" + int.Parse(EffectLevel.Value.ToString()) + "b,Ambient:0b,ShowParticles:0b},";
                     return result;
                 }
                 else
@@ -70,7 +70,7 @@ namespace cbhk_environment.Generators.EntityGenerator.Components
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MobEffectDurationSelectionChanged(object sender, RoutedEventArgs e)
+        private void MobEffectDurationSelectionChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             UpdateMobEffectData();
         }
@@ -80,7 +80,7 @@ namespace cbhk_environment.Generators.EntityGenerator.Components
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MobEffectLevelSelectionChanged(object sender, RoutedEventArgs e)
+        private void MobEffectLevelSelectionChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             UpdateMobEffectData();
         }
@@ -90,7 +90,7 @@ namespace cbhk_environment.Generators.EntityGenerator.Components
         /// </summary>
         private void UpdateMobEffectData()
         {
-            if (EffectID.SelectedItem != null && int.TryParse(EffectDuration.Text, out int effectDuration) && int.TryParse(EffectDuration.Text, out int effectLevel))
+            if (EffectID.SelectedItem != null && int.TryParse(EffectDuration.Value.ToString(), out int effectDuration) && int.TryParse(EffectDuration.Value.ToString(), out int effectLevel))
             {
                 IconComboBoxItem comboBoxItem = EffectID.SelectedItem as IconComboBoxItem;
                 EffectIdString = MainWindow.MobEffectDataBase.Where(item => Regex.Match(item.Value, @"[\u4E00-\u9FFF]+").ToString() == comboBoxItem.ComboBoxItemText).First().Value;

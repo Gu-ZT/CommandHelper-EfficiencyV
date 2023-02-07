@@ -583,7 +583,7 @@ namespace cbhk_environment.Generators.VillagerGenerator
 
             //把交易数据页放入容器中，用于定位出现位置
             popup.Child = transactionItemDataForm;
-            popup.Placement = PlacementMode.Bottom;
+            popup.Placement = PlacementMode.Mouse;
             popup.PlacementTarget = CurrentItem;
         }
 
@@ -770,8 +770,12 @@ namespace cbhk_environment.Generators.VillagerGenerator
                         ToolTip = image_name[0] + " " + image_name[1],
                         HorizontalAlignment = HorizontalAlignment.Left,
                         VerticalAlignment = VerticalAlignment.Top,
-                        Source = bitmapImage
+                        Source = bitmapImage,
+                        SnapsToDevicePixels = true,
+                        UseLayoutRounding = true
                     };
+                    RenderOptions.SetBitmapScalingMode(a_item, BitmapScalingMode.NearestNeighbor);
+                    RenderOptions.SetClearTypeHint(a_item, ClearTypeHint.Enabled);
                     a_item.MouseLeftButtonDown += SelectItemClickDown;
                     ToolTipService.SetShowDuration(a_item, 1500);
                     ToolTipService.SetInitialShowDelay(a_item, 0);
@@ -841,12 +845,12 @@ namespace cbhk_environment.Generators.VillagerGenerator
             #endregion
 
             BindingOperations.SetBinding(transactionItemDataForm.rewardExp, ToggleButton.IsCheckedProperty, rewardExpBinder);
-            BindingOperations.SetBinding(transactionItemDataForm.maxUses, TextBox.TextProperty, maxUsesBinder);
-            BindingOperations.SetBinding(transactionItemDataForm.uses, TextBox.TextProperty, usesBinder);
-            BindingOperations.SetBinding(transactionItemDataForm.xp, TextBox.TextProperty, xpBinder);
-            BindingOperations.SetBinding(transactionItemDataForm.demand, TextBox.TextProperty, demandBinder);
-            BindingOperations.SetBinding(transactionItemDataForm.specialPrice, TextBox.TextProperty, specialPriceBinder);
-            BindingOperations.SetBinding(transactionItemDataForm.priceMultiplier, TextBox.TextProperty, priceMultiplierBinder);
+            BindingOperations.SetBinding(transactionItemDataForm.maxUses, RangeBase.ValueProperty, maxUsesBinder);
+            BindingOperations.SetBinding(transactionItemDataForm.uses, RangeBase.ValueProperty, usesBinder);
+            BindingOperations.SetBinding(transactionItemDataForm.xp, RangeBase.ValueProperty, xpBinder);
+            BindingOperations.SetBinding(transactionItemDataForm.demand, RangeBase.ValueProperty, demandBinder);
+            BindingOperations.SetBinding(transactionItemDataForm.specialPrice, RangeBase.ValueProperty, specialPriceBinder);
+            BindingOperations.SetBinding(transactionItemDataForm.priceMultiplier, RangeBase.ValueProperty, priceMultiplierBinder);
         }
 
         /// <summary>
@@ -960,7 +964,7 @@ namespace cbhk_environment.Generators.VillagerGenerator
             foreach (Image item in BagItems[0].Children)
             {
 
-                if (item.ToolTip.ToString() == ItemSearcher.Text.Trim() || item.ToolTip.ToString().Contains(ItemSearcher.Text.Trim()))
+                if (item.ToolTip.ToString() == ItemSearcher.Text.Trim() || item.ToolTip.ToString().StartsWith(ItemSearcher.Text.Trim()))
                 {
                     item.Visibility = Visibility.Visible;
                 }
@@ -1041,10 +1045,10 @@ namespace cbhk_environment.Generators.VillagerGenerator
             }).ToList();
 
             if(another_item.Count > 0)
-            if(another_item.First().Value.Text.Trim() != "" && current_item.Value.Text.Trim() != "")
+            if(another_item.First().Value.ToString().Trim() != "" && current_item.Value.ToString().Trim() != "")
             {
-                int minor_negative = current_type == "minor_negative" ? int.Parse(another_item.First().Value.Text) : int.Parse(current_item.Value.Text);
-                int trading = current_type != "trading" ? int.Parse(another_item.First().Value.Text) : int.Parse(current_item.Value.Text);
+                int minor_negative = current_type == "minor_negative" ? int.Parse(another_item.First().Value.ToString()) : int.Parse(current_item.Value.ToString());
+                int trading = current_type != "trading" ? int.Parse(another_item.First().Value.ToString()) : int.Parse(current_item.Value.ToString());
                 transactionItems.All(item => { item.UpdateDiscountData(minor_negative, trading); return true; });
             }
         }

@@ -33,6 +33,11 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
         BitmapImage KnowLedgeBookImage = null;
         #endregion
 
+        #region 默认键值
+        List<char> DefaultKeyList = new List<char> { 'm','j','s','b' };
+        static int defaultKeyListIndex = 0;
+        #endregion
+
         //存储九宫格容器引用
         public static Grid CraftingTableGrid = null;
 
@@ -60,7 +65,7 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
         public ItemsDisplayer ItemInfomationWindow = new ItemsDisplayer();
 
         //获取生成数量的引用
-        ColorNumbericUpDowns RecipeCount = null;
+        Slider RecipeCount = null;
         
         //获取文件名引用
         public TextBox RecipeFileName = null;
@@ -90,9 +95,8 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
             get
             {
                 string result = "";
-                RecipeCount.Text = RecipeCount.Text.Contains(".") ? RecipeCount.Text.Split('.')[0].Replace("-","").Trim() : RecipeCount.Text.Replace("-", "").Trim();
-                RecipeCount.Text = RecipeCount.Text.Trim() != "" && int.Parse(RecipeCount.Text) > 1 ?",\"count\":"+ RecipeCount.Text: "";
-                result = "\"result\":{\"item\":\"minecraft:" + recipe_result + "\""+ RecipeCount.Text +"}";
+                RecipeCount.Value = int.Parse(RecipeCount.Value.ToString().Contains(".") ? RecipeCount.Value.ToString().Split('.')[0].Replace("-", "").Trim() : RecipeCount.Value.ToString().Replace("-", "").Trim());
+                result = "\"result\":{\"item\":\"minecraft:" + recipe_result + "\",\"count\":"+ RecipeCount.Value +"}";
                 return result;
             }
             set { recipe_result = value; }
@@ -581,6 +585,18 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
         }
 
         /// <summary>
+        /// 分配默认键值 
+        /// </summary>
+        private char SetDefaultKey()
+        {
+            if (defaultKeyListIndex >= DefaultKeyList.Count)
+                defaultKeyListIndex = 0;
+            char result = DefaultKeyList[defaultKeyListIndex];
+            defaultKeyListIndex++;
+            return result;
+        }
+
+        /// <summary>
         /// 选中物品,更新数据
         /// </summary>
         /// <param name="sender"></param>
@@ -615,6 +631,9 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
             {
                 case "0":
                     if (FirstItem.Count > 0)
+                    {
+                        if(FirstItem.Count == 1 && ItemInfomationWindow.KeyBox.Text.Trim() == "")
+                            ItemInfomationWindow.KeyBox.Text = SetDefaultKey().ToString();
                         foreach (Image item in ItemInfomationWindow.CurrentItemInfomation.Children)
                         {
                             int count = FirstItem.Where(a_image => a_image.Tag == item.Tag).Count();
@@ -623,12 +642,16 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
                             else
                                 item.Visibility = Visibility.Collapsed;
                         }
+                    }
                     else
                         foreach (Image item in ItemInfomationWindow.CurrentItemInfomation.Children)
                             item.Visibility = Visibility.Collapsed;
                     break;
                 case "1":
                     if (SecondItem.Count > 0)
+                    {
+                        if (SecondItem.Count == 1 && ItemInfomationWindow.KeyBox.Text.Trim() == "")
+                            ItemInfomationWindow.KeyBox.Text = SetDefaultKey().ToString();
                         foreach (Image item in ItemInfomationWindow.CurrentItemInfomation.Children)
                         {
                             int count = SecondItem.Where(a_image => a_image.Tag == item.Tag).Count();
@@ -637,12 +660,16 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
                             else
                                 item.Visibility = Visibility.Collapsed;
                         }
+                    }
                     else
                         foreach (Image item in ItemInfomationWindow.CurrentItemInfomation.Children)
                             item.Visibility = Visibility.Collapsed;
                     break;
                 case "2":
                     if (ThirdItem.Count > 0)
+                    {
+                        if (ThirdItem.Count == 1 && ItemInfomationWindow.KeyBox.Text.Trim() == "")
+                            ItemInfomationWindow.KeyBox.Text = SetDefaultKey().ToString();
                         foreach (Image item in ItemInfomationWindow.CurrentItemInfomation.Children)
                         {
                             int count = ThirdItem.Where(a_image => a_image.Tag == item.Tag).Count();
@@ -651,12 +678,16 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
                             else
                                 item.Visibility = Visibility.Collapsed;
                         }
+                    }
                     else
                         foreach (Image item in ItemInfomationWindow.CurrentItemInfomation.Children)
                             item.Visibility = Visibility.Collapsed;
                     break;
                 case "3":
                     if (FourthItem.Count > 0)
+                    {
+                        if (FourthItem.Count == 1 && ItemInfomationWindow.KeyBox.Text.Trim() == "")
+                            ItemInfomationWindow.KeyBox.Text = SetDefaultKey().ToString();
                         foreach (Image item in ItemInfomationWindow.CurrentItemInfomation.Children)
                         {
                             int count = FourthItem.Where(a_image => a_image.Tag == item.Tag).Count();
@@ -665,12 +696,16 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
                             else
                                 item.Visibility = Visibility.Collapsed;
                         }
+                    }
                     else
                         foreach (Image item in ItemInfomationWindow.CurrentItemInfomation.Children)
                             item.Visibility = Visibility.Collapsed;
                     break;
                 case "4":
                     if (FifthItem.Count > 0)
+                    {
+                        if (FifthItem.Count == 1 && ItemInfomationWindow.KeyBox.Text.Trim() == "")
+                            ItemInfomationWindow.KeyBox.Text = SetDefaultKey().ToString();
                         foreach (Image item in ItemInfomationWindow.CurrentItemInfomation.Children)
                         {
                             int count = FifthItem.Where(a_image => a_image.Tag == item.Tag).Count();
@@ -679,12 +714,16 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
                             else
                                 item.Visibility = Visibility.Collapsed;
                         }
+                    }
                     else
                         foreach (Image item in ItemInfomationWindow.CurrentItemInfomation.Children)
                             item.Visibility = Visibility.Collapsed;
                     break;
                 case "5":
                     if (SixthItem.Count > 0)
+                    {
+                        if (SixthItem.Count == 1 && ItemInfomationWindow.KeyBox.Text.Trim() == "")
+                            ItemInfomationWindow.KeyBox.Text = SetDefaultKey().ToString();
                         foreach (Image item in ItemInfomationWindow.CurrentItemInfomation.Children)
                         {
                             int count = SixthItem.Where(a_image => a_image.Tag == item.Tag).Count();
@@ -693,12 +732,16 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
                             else
                                 item.Visibility = Visibility.Collapsed;
                         }
+                    }
                     else
                         foreach (Image item in ItemInfomationWindow.CurrentItemInfomation.Children)
                             item.Visibility = Visibility.Collapsed;
                     break;
                 case "6":
                     if (SeventhItem.Count > 0)
+                    {
+                        if (SeventhItem.Count == 1 && ItemInfomationWindow.KeyBox.Text.Trim() == "")
+                            ItemInfomationWindow.KeyBox.Text = SetDefaultKey().ToString();
                         foreach (Image item in ItemInfomationWindow.CurrentItemInfomation.Children)
                         {
                             int count = SeventhItem.Where(a_image => a_image.Tag == item.Tag).Count();
@@ -707,12 +750,16 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
                             else
                                 item.Visibility = Visibility.Collapsed;
                         }
+                    }
                     else
                         foreach (Image item in ItemInfomationWindow.CurrentItemInfomation.Children)
                             item.Visibility = Visibility.Collapsed;
                     break;
                 case "7":
                     if (EighthItem.Count > 0)
+                    {
+                        if (EighthItem.Count == 1 && ItemInfomationWindow.KeyBox.Text.Trim() == "")
+                            ItemInfomationWindow.KeyBox.Text = SetDefaultKey().ToString();
                         foreach (Image item in ItemInfomationWindow.CurrentItemInfomation.Children)
                         {
                             int count = EighthItem.Where(a_image => a_image.Tag == item.Tag).Count();
@@ -721,12 +768,16 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
                             else
                                 item.Visibility = Visibility.Collapsed;
                         }
+                    }
                     else
                         foreach (Image item in ItemInfomationWindow.CurrentItemInfomation.Children)
                             item.Visibility = Visibility.Collapsed;
                     break;
                 case "8":
                     if (NinthItem.Count > 0)
+                    {
+                        if (NinthItem.Count == 1 && ItemInfomationWindow.KeyBox.Text.Trim() == "")
+                            ItemInfomationWindow.KeyBox.Text = SetDefaultKey().ToString();
                         foreach (Image item in ItemInfomationWindow.CurrentItemInfomation.Children)
                         {
                             int count = NinthItem.Where(a_image => a_image.Tag == item.Tag).Count();
@@ -735,6 +786,7 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
                             else
                                 item.Visibility = Visibility.Collapsed;
                         }
+                    }
                     else
                         foreach (Image item in ItemInfomationWindow.CurrentItemInfomation.Children)
                             item.Visibility = Visibility.Collapsed;
@@ -762,7 +814,7 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
         /// <param name="e"></param>
         public void ResultCountLoaded(object sender, RoutedEventArgs e)
         {
-            RecipeCount = sender as ColorNumbericUpDowns;
+            RecipeCount = sender as Slider;
         }
 
         /// <summary>

@@ -135,18 +135,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ControlsDataContexts\ColorNumbericUpDownHander.cs" />
     <Compile Include="ControlsDataContexts\ComboBoxSearchDataContext.cs" />
     <Compile Include="ControlsDataContexts\ConvertIconComboBoxItemImage.cs" />
     <Compile Include="ControlsDataContexts\ConvertIconComboBoxItemText.cs" />
+    <Compile Include="ControlsDataContexts\NumberBoxInputLimit.cs" />
+    <Compile Include="ControlsDataContexts\NumberBoxValueConverter.cs" />
     <Compile Include="ControlsDataContexts\ResizableTextBoxHander.cs" />
     <Compile Include="ControlsDataContexts\RichCheckBoxListItemSource.cs" />
-    <Compile Include="ControlsDataContexts\StringToFloat.cs" />
+    <Compile Include="ControlsDataContexts\DoubleToFloat.cs" />
     <Compile Include="ControlsDataContexts\TextComboBoxSearchDataContext.cs" />
     <Compile Include="ControlsDataContexts\TreeViewLineConverter.cs" />
     <Compile Include="CustomControls\Accordion.cs" />
     <Compile Include="CustomControls\ColorCheckBoxs.cs" />
-    <Compile Include="CustomControls\ColorNumbericUpDowns.cs" />
     <Compile Include="CustomControls\ColorPickers\ColorPickers.xaml.cs">
       <DependentUpon>ColorPickers.xaml</DependentUpon>
     </Compile>
@@ -404,10 +404,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ControlsDictionaries\ColorNumbericUpDowns.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="ControlsDictionaries\ColorSliders.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -441,6 +437,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="ControlsDictionaries\ListBoxWithScrollViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ControlsDictionaries\NumberBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -847,7 +847,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="resources\cbhk_form\images\more\developer_qq.png" />
-    <Resource Include="resources\cbhk_form\images\more\thanks_list.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="resources\cbhk_form\images\more\conversation_group.png" />
@@ -1001,6 +1000,27 @@
   <ItemGroup>
     <Resource Include="resources\cbhk_form\images\IconHome.png" />
     <Resource Include="resources\cbhk_form\images\IconLink.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\cbhk_form\images\more\thanks\1.png" />
+    <Resource Include="resources\cbhk_form\images\more\thanks\1Hover.png" />
+    <Resource Include="resources\cbhk_form\images\more\thanks\2.png" />
+    <Resource Include="resources\cbhk_form\images\more\thanks\2Hover.png" />
+    <Resource Include="resources\cbhk_form\images\more\thanks\3.png" />
+    <Resource Include="resources\cbhk_form\images\more\thanks\3Hover.png" />
+    <Resource Include="resources\cbhk_form\images\more\thanks\4.png" />
+    <Resource Include="resources\cbhk_form\images\more\thanks\4Hover.png" />
+    <Resource Include="resources\cbhk_form\images\more\thanks\5.png" />
+    <Resource Include="resources\cbhk_form\images\more\thanks\5Hover.png" />
+    <Resource Include="resources\cbhk_form\images\more\thanks\6.png" />
+    <Resource Include="resources\cbhk_form\images\more\thanks\6Hover.png" />
+    <Resource Include="resources\cbhk_form\images\more\thanks\7.png" />
+    <Resource Include="resources\cbhk_form\images\more\thanks\7Hover.png" />
+    <Resource Include="resources\cbhk_form\images\more\thanks\8.png" />
+    <Resource Include="resources\cbhk_form\images\more\thanks\8Hover.png" />
+    <Resource Include="resources\cbhk_form\images\more\thanks\9.png" />
+    <Resource Include="resources\cbhk_form\images\more\thanks\9Hover.png" />
+    <Resource Include="resources\cbhk_form\images\more\thanks\Title.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -37,7 +37,7 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
         string arrow_path = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\Recipe\\images\\arrow.png";
 
         //获取经验的引用
-        ColorNumbericUpDowns RecipeCount = null;
+        Slider RecipeCount = null;
         //获取文件名引用
         public TextBox RecipeFileName = null;
 
@@ -71,16 +71,10 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
             get
             {
                 string result;
-                string CountData;
-
-                RecipeCount.Text = RecipeCount.Text.Contains(".") ? RecipeCount.Text.Split('.')[0].Replace("-", "") : RecipeCount.Text;
-
-                CountData = RecipeCount.Text.Trim() != "" && int.Parse(RecipeCount.Text.Trim()) > 0 ? RecipeCount.Text + "," : "";
-
-                if (CountData.Trim() != "")
-                    CountData = "\"count\":" + CountData;
-
-                result = CountData + "\"result\":\"minecraft:" + recipe_result + "\"";
+                string CountData = ",\"count\":";
+                RecipeCount.Value = int.Parse(RecipeCount.Value.ToString().Contains(".") ? RecipeCount.Value.ToString().Split('.')[0].Replace("-", "") : RecipeCount.Value.ToString());
+                CountData += CountData;
+                result = "\"result\":\"minecraft:" + recipe_result + "\"" + CountData;
                 return result;
             }
             set { recipe_result = value; }
@@ -383,7 +377,7 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
         /// <param name="e"></param>
         private void RecipeCountLoaded(object sender, RoutedEventArgs e)
         {
-            RecipeCount = sender as ColorNumbericUpDowns;
+            RecipeCount = sender as Slider;
         }
     }
 }

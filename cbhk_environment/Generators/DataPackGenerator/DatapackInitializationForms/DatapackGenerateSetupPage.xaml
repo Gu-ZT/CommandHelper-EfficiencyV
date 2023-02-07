@@ -276,23 +276,19 @@
                     </ity:EventTrigger>
                 </ity:Interaction.Triggers>
             </ComboBox>
-            <CustomControls:ColorNumbericUpDowns
+            <Slider
                 Uid="Number"
                 Width="150"
                 Height="30"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                ArrowBackground="Transparent"
-                ArrowForeground="White"
-                ArrowHeight="25"
-                ArrowWidth="25"
                 Background="Transparent"
                 Foreground="White"
-                MaxValue="2147483647"
-                MinValue="-2147483648"
+                Maximum="2147483647"
+                Minimum="-2147483648"
                 Template="{DynamicResource ColorNumbericUpDown}"
-                Text="{Binding SelectedDatapackDescription, Mode=TwoWay}"
-                Visibility="Collapsed" />
+                Visibility="Collapsed"
+                Value="{Binding SelectedDatapackDescription, Mode=TwoWay}" />
             <TextBox
                 Uid="String"
                 Width="200"

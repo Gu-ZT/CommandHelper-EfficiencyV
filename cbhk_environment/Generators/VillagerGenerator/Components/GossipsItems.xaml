@@ -37,25 +37,20 @@
             ToolTip="此言论的强度。"
             ToolTipService.InitialShowDelay="0"
             ToolTipService.ShowDuration="1000" />
-        <CustomControls:ColorNumbericUpDowns
+        <Slider
             x:Name="Value"
             Grid.Row="0"
             Grid.Column="1"
             Height="35"
             HorizontalAlignment="Stretch"
             AllowDrop="False"
-            ArrowBackground="Transparent"
-            ArrowForeground="Black"
-            ArrowHeight="25"
-            ArrowWidth="25"
             Background="Transparent"
             BorderThickness="0"
-            CaretBrush="White"
             FontSize="25"
-            Foreground="Black"
-            MaxValue="2147483647"
-            MinValue="1"
-            Template="{DynamicResource ColorNumbericUpDown}" />
+            Foreground="White"
+            Maximum="2147483647"
+            Minimum="1"
+            Style="{DynamicResource NumberBoxStyle}" />
         <TextBlock
             Grid.Row="1"
             Grid.Column="0"

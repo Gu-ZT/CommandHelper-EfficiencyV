@@ -50,12 +50,12 @@
                 FontSize="20"
                 Foreground="White"
                 Text="该数据包对应的游戏版本" />
-            <CustomControls:TextComboBoxs
+            <ComboBox
                 Width="345"
                 Height="30"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
-                Style="{DynamicResource TextComboBox}" />
+                Style="{DynamicResource TextComboBoxStyle}" />
         </DockPanel>
         <DockPanel Margin="0,5">
             <TextBlock
@@ -64,38 +64,32 @@
                 FontSize="20"
                 Foreground="White"
                 Text="该数据包的简介" />
-            <CustomControls:TextComboBoxs
+            <ComboBox
                 x:Name="TypeSelector"
                 Width="150"
                 Height="30"
                 Margin="5,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
-                Style="{DynamicResource TextComboBox}" />
-            <CustomControls:TextComboBoxs
+                Style="{DynamicResource TextComboBoxStyle}" />
+            <ComboBox
                 x:Name="BoolBox"
                 Width="100"
                 Height="30"
                 Margin="5,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
-                Style="{DynamicResource TextComboBox}">
+                Style="{DynamicResource TextComboBoxStyle}">
                 <ComboBoxItem>True</ComboBoxItem>
                 <ComboBoxItem>False</ComboBoxItem>
-            </CustomControls:TextComboBoxs>
-            <CustomControls:ColorNumbericUpDowns
+            </ComboBox>
+            <Slider
                 x:Name="NumberBox"
                 Width="50"
                 Height="30"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                ArrowBackground="Transparent"
-                ArrowForeground="White"
-                ArrowHeight="25"
-                ArrowWidth="25"
-                MaxValue="2147483647"
-                MinValue="-2147483648"
-                Template="{DynamicResource ColorNumbericUpDown}" />
+                Style="{DynamicResource NumberBoxStyle}" />
             <TextBox
                 x:Name="TextBox"
                 Margin="5,0"

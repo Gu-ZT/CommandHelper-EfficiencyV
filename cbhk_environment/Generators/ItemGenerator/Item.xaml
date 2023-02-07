@@ -340,37 +340,29 @@
                                 VerticalAlignment="Center"
                                 Foreground="White"
                                 Text="数量:" />
-                            <CustomControls:ColorNumbericUpDowns
+                            <Slider
                                 Width="120"
                                 HorizontalAlignment="Left"
-                                ArrowHeight="25"
-                                ArrowWidth="25"
                                 Background="Transparent"
                                 BorderThickness="0"
-                                CaretBrush="White"
-                                MaxValue="2147483647"
-                                MinValue="1"
-                                Template="{DynamicResource ColorNumbericUpDown}"
-                                Text="{Binding ItemCount, Mode=TwoWay}" />
+                                Maximum="2147483647"
+                                Minimum="1"
+                                Style="{DynamicResource NumberBoxStyle}"
+                                Value="{Binding ItemCount, Mode=TwoWay}" />
                             <TextBlock
                                 Margin="5,0"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
                                 Foreground="White"
                                 Text="附加值:" />
-                            <CustomControls:ColorNumbericUpDowns
+                            <Slider
                                 Width="50"
                                 HorizontalAlignment="Left"
-                                ArrowBackground="Transparent"
-                                ArrowForeground="White"
-                                ArrowHeight="25"
-                                ArrowWidth="25"
                                 BorderThickness="0"
-                                CaretBrush="White"
-                                MaxValue="2147483647"
-                                MinValue="0"
-                                Template="{DynamicResource ColorNumbericUpDown}"
-                                Text="{Binding ItemDamage, Mode=TwoWay}" />
+                                Maximum="2147483647"
+                                Minimum="0"
+                                Style="{DynamicResource NumberBoxStyle}"
+                                Value="{Binding ItemDamage, Mode=TwoWay}" />
                         </DockPanel>
                         <CustomControls:Accordion
                             Title="属性"

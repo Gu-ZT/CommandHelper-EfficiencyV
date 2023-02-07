@@ -396,9 +396,9 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
 
         #region 重置动作的按钮前景颜色对象
         //灰色
-        static SolidColorBrush gray_brush = new SolidColorBrush(Color.FromRgb(100, 100, 100));
+        static SolidColorBrush gray_brush = new SolidColorBrush((Color)System.Windows.Media.ColorConverter.ConvertFromString("#8F8F8F"));
         //白色
-        static SolidColorBrush white_brush = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+        static SolidColorBrush black_brush = new SolidColorBrush((Color)System.Windows.Media.ColorConverter.ConvertFromString("#000000"));
         #endregion
 
         #region 是否可以重置所有动作
@@ -409,7 +409,7 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
             set
             {
                 can_reset_all_pose = value;
-                ResetAllPoseButtonForeground = CanResetAllPose ? white_brush:gray_brush;
+                ResetAllPoseButtonForeground = CanResetAllPose ? black_brush:gray_brush;
                 OnPropertyChanged();
             }
         }
@@ -435,7 +435,7 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
             set
             {
                 can_reset_head_pose = value;
-                ResetHeadPoseButtonForeground = CanResetHeadPose ? white_brush : gray_brush;
+                ResetHeadPoseButtonForeground = CanResetHeadPose ? black_brush : gray_brush;
                 OnPropertyChanged();
             }
         }
@@ -461,7 +461,7 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
             set
             {
                 can_reset_body_pose = value;
-                ResetBodyPoseButtonForeground = CanResetBodyPose ? white_brush : gray_brush;
+                ResetBodyPoseButtonForeground = CanResetBodyPose ? black_brush : gray_brush;
                 OnPropertyChanged();
             }
         }
@@ -487,7 +487,7 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
             set
             {
                 can_reset_larm_pose = value;
-                ResetLArmPoseButtonForeground = CanResetLArmPose ? white_brush : gray_brush;
+                ResetLArmPoseButtonForeground = CanResetLArmPose ? black_brush : gray_brush;
                 OnPropertyChanged();
             }
         }
@@ -513,7 +513,7 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
             set
             {
                 can_reset_rarm_pose = value;
-                ResetRArmPoseButtonForeground = CanResetRArmPose ? white_brush : gray_brush;
+                ResetRArmPoseButtonForeground = CanResetRArmPose ? black_brush : gray_brush;
                 OnPropertyChanged();
             }
         }
@@ -539,7 +539,7 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
             set
             {
                 can_reset_lleg_pose = value;
-                ResetLLegPoseButtonForeground = CanResetLLegPose ? white_brush : gray_brush;
+                ResetLLegPoseButtonForeground = CanResetLLegPose ? black_brush : gray_brush;
                 OnPropertyChanged();
             }
         }
@@ -565,7 +565,7 @@ namespace cbhk_environment.Generators.ArmorStandGenerator
             set
             {
                 can_reset_rleg_pose = value;
-                ResetRLegPoseButtonForeground = CanResetRLegPose ? white_brush : gray_brush;
+                ResetRLegPoseButtonForeground = CanResetRLegPose ? black_brush : gray_brush;
                 OnPropertyChanged();
             }
         }

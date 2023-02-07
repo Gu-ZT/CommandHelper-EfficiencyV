@@ -1,7 +1,5 @@
-﻿using cbhk_environment.GeneralTools;
-using System;
+﻿using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -94,7 +92,7 @@ namespace cbhk_environment.Generators.ItemGenerator.Components
                 string uid1 = random.Next(1000, 10000).ToString();
                 string uid2 = random.Next(1000, 10000).ToString();
                 string uid3 = random.Next(1000, 10000).ToString();
-                string result = "{AttributeName:\""+attributeIDString+"\",Name:\""+AttributeName+"\",Amount:"+AttributeValue+"d,Operation:"+attributeValueTypeString+",UUID:[I;"+uid0+","+uid1+","+uid2+","+uid3+"],Slot:"+attributeSlotString+"},";
+                string result = "{AttributeName:\""+attributeIDString+"\",Name:\""+AttributeName+"\",Amount:"+AttributeValue+"d,Operation:"+attributeValueTypeString+",UUID:[I;"+uid0+","+uid1+","+uid2+","+uid3+"],Slot:\""+attributeSlotString+"\"},";
                 return result;
             }
         }

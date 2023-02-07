@@ -39,13 +39,12 @@
                 Foreground="White"
                 Text="键" />
             <TextBox
-                Name="KeyBox"
+                x:Name="KeyBox"
                 Width="265"
                 Height="25"
                 Margin="5,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Background="Transparent"
                 BorderBrush="Black"
                 CaretBrush="White"
                 FontSize="20"
@@ -66,7 +65,6 @@
                 Margin="5,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Background="Transparent"
                 BorderBrush="Black"
                 CaretBrush="White"
                 FontSize="20"

@@ -113,5 +113,14 @@ namespace cbhk_environment.CustomControls
 
         public static readonly DependencyProperty PressedBackgroundProperty =
             DependencyProperty.Register("PressedBackground", typeof(ImageBrush), typeof(IconTextButtons), new PropertyMetadata(default(ImageBrush)));
+
+        public bool NeedMouseOverStyle
+        {
+            get { return (bool)GetValue(NeedMouseOverStyleProperty); }
+            set { SetValue(NeedMouseOverStyleProperty, value); }
+        }
+
+        public static readonly DependencyProperty NeedMouseOverStyleProperty =
+            DependencyProperty.Register("NeedMouseOverStyle", typeof(bool), typeof(IconTextButtons), new PropertyMetadata(default(bool)));
     }
 }

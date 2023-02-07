@@ -35,9 +35,9 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
         string background_path = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\Recipe\\images\\blast_furnace.png";
 
         //获取经验的引用
-        ColorNumbericUpDowns RecipeExp = null;
+        Slider RecipeExp = null;
         //获取烧制时间的引用
-        ColorNumbericUpDowns RecipeCookingTime = null;
+        Slider RecipeCookingTime = null;
         //获取文件名引用
         public TextBox RecipeFileName = null;
 
@@ -71,19 +71,14 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
             get
             {
                 string result;
-                string ExperienceData;
-                string CookingtimeData;
+                string ExperienceData = "\"experience\":";
+                string CookingtimeData = "\"cookingtime\":";
 
-                RecipeExp.Text = RecipeExp.Text.Contains(".") ? RecipeExp.Text.Split('.')[0].Replace("-", "") : RecipeExp.Text;
-                RecipeCookingTime.Text = RecipeCookingTime.Text.Contains(".") ? RecipeCookingTime.Text.Split('.')[0].Replace("-", "") : RecipeCookingTime.Text;
+                RecipeExp.Value = int.Parse(RecipeExp.Value.ToString().Contains(".") ? RecipeExp.Value.ToString().Split('.')[0].Replace("-", "") : RecipeExp.Value.ToString());
+                RecipeCookingTime.Value = int.Parse(RecipeCookingTime.Value.ToString().Contains(".") ? RecipeCookingTime.Value.ToString().Split('.')[0].Replace("-", "") : RecipeCookingTime.Value.ToString());
 
-                ExperienceData = RecipeExp.Text.Trim() != "" && int.Parse(RecipeExp.Text.Trim()) > 0 ? RecipeExp.Text + "," : "";
-                CookingtimeData = RecipeCookingTime.Text.Trim() != "" && int.Parse(RecipeCookingTime.Text.Trim()) > 0 ? RecipeCookingTime.Text + "," : "";
-
-                if (ExperienceData.Trim() != "")
-                    ExperienceData = "\"experience\":" + ExperienceData;
-                if (CookingtimeData.Trim() != "")
-                    CookingtimeData = "\"cookingtime\":" + CookingtimeData;
+                ExperienceData += RecipeExp.Value + ",";
+                CookingtimeData += RecipeCookingTime.Value + ",";
 
                 result = ExperienceData + CookingtimeData + "\"result\":\"minecraft:" + recipe_result + "\"";
                 return result;
@@ -378,7 +373,7 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
         /// <param name="e"></param>
         private void RecipeExpLoaded(object sender, RoutedEventArgs e)
         {
-            RecipeExp = sender as ColorNumbericUpDowns;
+            RecipeExp = sender as Slider;
         }
 
         /// <summary>
@@ -388,7 +383,7 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
         /// <param name="e"></param>
         private void RecipeCookingTimeLoaded(object sender, RoutedEventArgs e)
         {
-            RecipeCookingTime = sender as ColorNumbericUpDowns;
+            RecipeCookingTime = sender as Slider;
         }
     }
 }

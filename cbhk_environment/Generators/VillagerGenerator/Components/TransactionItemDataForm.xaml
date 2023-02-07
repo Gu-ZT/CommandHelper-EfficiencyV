@@ -38,25 +38,20 @@
                     ToolTip="代表在交易选项失效前能进行的最大交易次数。当交易被刷新时，以2到12的随机数增加。"
                     ToolTipService.InitialShowDelay="0"
                     ToolTipService.ShowDuration="1500" />
-                <CustomControls:ColorNumbericUpDowns
+                <Slider
                     x:Name="maxUses"
                     Width="135"
                     Height="30"
                     HorizontalAlignment="Left"
                     AllowDrop="False"
-                    ArrowBackground="Transparent"
-                    ArrowForeground="Black"
-                    ArrowHeight="25"
-                    ArrowWidth="25"
                     Background="Transparent"
                     BorderThickness="0"
-                    CaretBrush="White"
                     FontSize="25"
                     Foreground="White"
-                    MaxValue="2147483647"
-                    MinValue="0"
-                    Template="{DynamicResource ColorNumbericUpDown}"
-                    Text="1" />
+                    Maximum="2147483647"
+                    Minimum="0"
+                    Style="{DynamicResource NumberBoxStyle}"
+                    Value="0" />
             </DockPanel>
             <DockPanel Margin="0,3,0,0">
                 <TextBlock
@@ -68,25 +63,20 @@
                     ToolTip="已经交易的次数，如果大于或等于maxUses，该交易将失效。"
                     ToolTipService.InitialShowDelay="0"
                     ToolTipService.ShowDuration="1500" />
-                <CustomControls:ColorNumbericUpDowns
+                <Slider
                     x:Name="uses"
                     Width="160"
                     Height="30"
                     HorizontalAlignment="Left"
                     AllowDrop="False"
-                    ArrowBackground="Transparent"
-                    ArrowForeground="Black"
-                    ArrowHeight="25"
-                    ArrowWidth="25"
                     Background="Transparent"
                     BorderThickness="0"
-                    CaretBrush="White"
                     FontSize="25"
                     Foreground="White"
-                    MaxValue="2147483647"
-                    MinValue="0"
-                    Template="{DynamicResource ColorNumbericUpDown}"
-                    Text="0" />
+                    Maximum="2147483647"
+                    Minimum="0"
+                    Style="{DynamicResource NumberBoxStyle}"
+                    Value="0" />
             </DockPanel>
             <DockPanel Margin="0,3,0,0">
                 <TextBlock
@@ -98,25 +88,20 @@
                     ToolTip="村民从此交易选项中能获得的经验值。"
                     ToolTipService.InitialShowDelay="0"
                     ToolTipService.ShowDuration="1500" />
-                <CustomControls:ColorNumbericUpDowns
+                <Slider
                     x:Name="xp"
                     Width="170"
                     Height="30"
                     HorizontalAlignment="Left"
                     AllowDrop="False"
-                    ArrowBackground="Transparent"
-                    ArrowForeground="Black"
-                    ArrowHeight="25"
-                    ArrowWidth="25"
                     Background="Transparent"
                     BorderThickness="0"
-                    CaretBrush="White"
                     FontSize="25"
                     Foreground="White"
-                    MaxValue="2147483647"
-                    MinValue="1"
-                    Template="{DynamicResource ColorNumbericUpDown}"
-                    Text="0" />
+                    Maximum="2147483647"
+                    Minimum="0"
+                    Style="{DynamicResource NumberBoxStyle}"
+                    Value="0" />
             </DockPanel>
             <DockPanel Margin="0,3,0,0">
                 <TextBlock
@@ -128,25 +113,20 @@
                     ToolTip="根据需求确定的第一个收购物品的价格调节。当村民重新供应后更新此字段。"
                     ToolTipService.InitialShowDelay="0"
                     ToolTipService.ShowDuration="1500" />
-                <CustomControls:ColorNumbericUpDowns
+                <Slider
                     x:Name="demand"
                     Width="135"
                     Height="30"
                     HorizontalAlignment="Left"
                     AllowDrop="False"
-                    ArrowBackground="Transparent"
-                    ArrowForeground="Black"
-                    ArrowHeight="25"
-                    ArrowWidth="25"
                     Background="Transparent"
                     BorderThickness="0"
-                    CaretBrush="White"
                     FontSize="25"
                     Foreground="White"
-                    MaxValue="2147483647"
-                    MinValue="-2147483648"
-                    Template="{DynamicResource ColorNumbericUpDown}"
-                    Text="0" />
+                    Maximum="2147483647"
+                    Minimum="-2147483648"
+                    Style="{DynamicResource NumberBoxStyle}"
+                    Value="0" />
             </DockPanel>
             <DockPanel Margin="0,3,0,0">
                 <TextBlock
@@ -158,25 +138,20 @@
                     ToolTip="添加到第一个收购物品的价格调节。"
                     ToolTipService.InitialShowDelay="0"
                     ToolTipService.ShowDuration="1500" />
-                <CustomControls:ColorNumbericUpDowns
+                <Slider
                     x:Name="specialPrice"
                     Width="115"
                     Height="30"
                     HorizontalAlignment="Left"
                     AllowDrop="False"
-                    ArrowBackground="Transparent"
-                    ArrowForeground="Black"
-                    ArrowHeight="25"
-                    ArrowWidth="25"
                     Background="Transparent"
                     BorderThickness="0"
-                    CaretBrush="White"
                     FontSize="25"
                     Foreground="White"
-                    MaxValue="2147483647"
-                    MinValue="-2147483648"
-                    Template="{DynamicResource ColorNumbericUpDown}"
-                    Text="0" />
+                    Maximum="2147483647"
+                    Minimum="-2147483648"
+                    Style="{DynamicResource NumberBoxStyle}"
+                    Value="0" />
             </DockPanel>
             <DockPanel Margin="0,3,0,0">
                 <TextBlock
@@ -188,25 +163,20 @@
                     ToolTip="当前应用到此交易选项价格的乘数。"
                     ToolTipService.InitialShowDelay="0"
                     ToolTipService.ShowDuration="1500" />
-                <CustomControls:ColorNumbericUpDowns
+                <Slider
                     x:Name="priceMultiplier"
                     Width="100"
                     Height="30"
                     HorizontalAlignment="Left"
                     AllowDrop="False"
-                    ArrowBackground="Transparent"
-                    ArrowForeground="Black"
-                    ArrowHeight="25"
-                    ArrowWidth="25"
                     Background="Transparent"
                     BorderThickness="0"
-                    CaretBrush="White"
                     FontSize="25"
                     Foreground="White"
-                    MaxValue="2147483647"
-                    MinValue="-2147483648"
-                    Template="{DynamicResource ColorNumbericUpDown}"
-                    Text="1" />
+                    Maximum="2147483647"
+                    Minimum="-2147483648"
+                    Style="{DynamicResource NumberBoxStyle}"
+                    Value="0" />
             </DockPanel>
         </StackPanel>
     </ScrollViewer>

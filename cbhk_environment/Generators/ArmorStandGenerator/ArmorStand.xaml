@@ -57,7 +57,7 @@
             <Setter Property="Foreground" Value="White" />
         </Style>
 
-        <control_datacontexts:StringToFloat x:Key="StringToFloatConverter" />
+        <control_datacontexts:DoubleToFloat x:Key="DoubleToFloatConverter" />
     </Window.Resources>
 
     <StackPanel VerticalAlignment="Stretch" Background="#7F323232">
@@ -412,20 +412,13 @@
                                     Minimum="-180"
                                     Style="{DynamicResource ColorSlider}"
                                     Value="{Binding Path=HeadX, Mode=TwoWay}" />
-                                <CustomControls:ColorNumbericUpDowns
+                                <Slider
                                     Width="120"
-                                    ArrowBackground="{StaticResource ButtonNormal}"
-                                    ArrowForeground="Black"
-                                    ArrowHeight="20"
-                                    ArrowWidth="20"
-                                    Background="{StaticResource TextBoxBackground}"
-                                    CaretBrush="White"
                                     Foreground="White"
-                                    MaxValue="180"
-                                    MinValue="-180"
-                                    PressedBackground="{StaticResource ButtonPressed}"
-                                    Template="{DynamicResource ColorNumbericUpDown}"
-                                    Text="{Binding Path=HeadX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StringToFloatConverter}}" />
+                                    Maximum="180"
+                                    Minimum="-180"
+                                    Style="{DynamicResource NumberBoxStyle}"
+                                    Value="{Binding Path=HeadX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CustomControls:RadiusToggleButtons
                                     Height="25"
                                     Margin="0,2"
@@ -465,17 +458,13 @@
                                     Minimum="-180"
                                     Style="{DynamicResource ColorSlider}"
                                     Value="{Binding Path=HeadY, Mode=TwoWay}" />
-                                <CustomControls:ColorNumbericUpDowns
+                                <Slider
                                     Width="120"
-                                    ArrowBackground="{StaticResource ButtonNormal}"
-                                    ArrowForeground="Black"
-                                    Background="{StaticResource TextBoxBackground}"
-                                    CaretBrush="White"
                                     Foreground="White"
-                                    MaxValue="180"
-                                    MinValue="-180"
-                                    Template="{DynamicResource ColorNumbericUpDown}"
-                                    Text="{Binding Path=HeadY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StringToFloatConverter}}" />
+                                    Maximum="180"
+                                    Minimum="-180"
+                                    Style="{DynamicResource NumberBoxStyle}"
+                                    Value="{Binding Path=HeadY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CustomControls:RadiusToggleButtons
                                     Height="25"
                                     Margin="0,0"
@@ -515,17 +504,13 @@
                                     Minimum="-180"
                                     Style="{DynamicResource ColorSlider}"
                                     Value="{Binding Path=HeadZ, Mode=TwoWay}" />
-                                <CustomControls:ColorNumbericUpDowns
+                                <Slider
                                     Width="120"
-                                    ArrowBackground="{StaticResource ButtonNormal}"
-                                    ArrowForeground="Black"
-                                    Background="{StaticResource TextBoxBackground}"
-                                    CaretBrush="White"
                                     Foreground="White"
-                                    MaxValue="180"
-                                    MinValue="-180"
-                                    Template="{DynamicResource ColorNumbericUpDown}"
-                                    Text="{Binding Path=HeadZ, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StringToFloatConverter}}" />
+                                    Maximum="180"
+                                    Minimum="-180"
+                                    Style="{DynamicResource NumberBoxStyle}"
+                                    Value="{Binding Path=HeadZ, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CustomControls:RadiusToggleButtons
                                     Height="25"
                                     Margin="0,2"
@@ -654,20 +639,13 @@
                                     Minimum="-180"
                                     Style="{DynamicResource ColorSlider}"
                                     Value="{Binding Path=BodyX, Mode=TwoWay}" />
-                                <CustomControls:ColorNumbericUpDowns
+                                <Slider
                                     Width="120"
-                                    ArrowBackground="{StaticResource ButtonNormal}"
-                                    ArrowForeground="Black"
-                                    ArrowHeight="20"
-                                    ArrowWidth="20"
-                                    Background="{StaticResource TextBoxBackground}"
-                                    CaretBrush="White"
                                     Foreground="White"
-                                    MaxValue="180"
-                                    MinValue="-180"
-                                    PressedBackground="{StaticResource ButtonPressed}"
-                                    Template="{DynamicResource ColorNumbericUpDown}"
-                                    Text="{Binding Path=BodyX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StringToFloatConverter}}" />
+                                    Maximum="180"
+                                    Minimum="-180"
+                                    Style="{DynamicResource NumberBoxStyle}"
+                                    Value="{Binding Path=BodyX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CustomControls:RadiusToggleButtons
                                     Height="25"
                                     Margin="0,2"
@@ -707,17 +685,13 @@
                                     Minimum="-180"
                                     Style="{DynamicResource ColorSlider}"
                                     Value="{Binding Path=BodyY, Mode=TwoWay}" />
-                                <CustomControls:ColorNumbericUpDowns
+                                <Slider
                                     Width="120"
-                                    ArrowBackground="{StaticResource ButtonNormal}"
-                                    ArrowForeground="Black"
-                                    Background="{StaticResource TextBoxBackground}"
-                                    CaretBrush="White"
                                     Foreground="White"
-                                    MaxValue="180"
-                                    MinValue="-180"
-                                    Template="{DynamicResource ColorNumbericUpDown}"
-                                    Text="{Binding Path=BodyY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StringToFloatConverter}}" />
+                                    Maximum="180"
+                                    Minimum="-180"
+                                    Style="{DynamicResource NumberBoxStyle}"
+                                    Value="{Binding Path=BodyY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CustomControls:RadiusToggleButtons
                                     Height="25"
                                     Margin="0,0"
@@ -757,17 +731,13 @@
                                     Minimum="-180"
                                     Style="{DynamicResource ColorSlider}"
                                     Value="{Binding Path=BodyZ, Mode=TwoWay}" />
-                                <CustomControls:ColorNumbericUpDowns
+                                <Slider
                                     Width="120"
-                                    ArrowBackground="{StaticResource ButtonNormal}"
-                                    ArrowForeground="Black"
-                                    Background="{StaticResource TextBoxBackground}"
-                                    CaretBrush="White"
                                     Foreground="White"
-                                    MaxValue="180"
-                                    MinValue="-180"
-                                    Template="{DynamicResource ColorNumbericUpDown}"
-                                    Text="{Binding Path=BodyZ, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StringToFloatConverter}}" />
+                                    Maximum="180"
+                                    Minimum="-180"
+                                    Style="{DynamicResource NumberBoxStyle}"
+                                    Value="{Binding Path=BodyZ, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CustomControls:RadiusToggleButtons
                                     Height="25"
                                     Margin="0,2"
@@ -896,20 +866,13 @@
                                     Minimum="-180"
                                     Style="{DynamicResource ColorSlider}"
                                     Value="{Binding Path=LArmX, Mode=TwoWay}" />
-                                <CustomControls:ColorNumbericUpDowns
+                                <Slider
                                     Width="120"
-                                    ArrowBackground="{StaticResource ButtonNormal}"
-                                    ArrowForeground="Black"
-                                    ArrowHeight="20"
-                                    ArrowWidth="20"
-                                    Background="{StaticResource TextBoxBackground}"
-                                    CaretBrush="White"
                                     Foreground="White"
-                                    MaxValue="180"
-                                    MinValue="-180"
-                                    PressedBackground="{StaticResource ButtonPressed}"
-                                    Template="{DynamicResource ColorNumbericUpDown}"
-                                    Text="{Binding Path=LArmX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StringToFloatConverter}}" />
+                                    Maximum="180"
+                                    Minimum="-180"
+                                    Style="{DynamicResource NumberBoxStyle}"
+                                    Value="{Binding Path=LArmX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CustomControls:RadiusToggleButtons
                                     Height="25"
                                     Margin="0,2"
@@ -949,17 +912,13 @@
                                     Minimum="-180"
                                     Style="{DynamicResource ColorSlider}"
                                     Value="{Binding Path=LArmY, Mode=TwoWay}" />
-                                <CustomControls:ColorNumbericUpDowns
+                                <Slider
                                     Width="120"
-                                    ArrowBackground="{StaticResource ButtonNormal}"
-                                    ArrowForeground="Black"
-                                    Background="{StaticResource TextBoxBackground}"
-                                    CaretBrush="White"
                                     Foreground="White"
-                                    MaxValue="180"
-                                    MinValue="-180"
-                                    Template="{DynamicResource ColorNumbericUpDown}"
-                                    Text="{Binding Path=LArmY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StringToFloatConverter}}" />
+                                    Maximum="180"
+                                    Minimum="-180"
+                                    Style="{DynamicResource NumberBoxStyle}"
+                                    Value="{Binding Path=LArmY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CustomControls:RadiusToggleButtons
                                     Height="25"
                                     Margin="0,0"
@@ -999,17 +958,13 @@
                                     Minimum="-180"
                                     Style="{DynamicResource ColorSlider}"
                                     Value="{Binding Path=LArmZ, Mode=TwoWay}" />
-                                <CustomControls:ColorNumbericUpDowns
+                                <Slider
                                     Width="120"
-                                    ArrowBackground="{StaticResource ButtonNormal}"
-                                    ArrowForeground="Black"
-                                    Background="{StaticResource TextBoxBackground}"
-                                    CaretBrush="White"
                                     Foreground="White"
-                                    MaxValue="180"
-                                    MinValue="-180"
-                                    Template="{DynamicResource ColorNumbericUpDown}"
-                                    Text="{Binding Path=LArmZ, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StringToFloatConverter}}" />
+                                    Maximum="180"
+                                    Minimum="-180"
+                                    Style="{DynamicResource NumberBoxStyle}"
+                                    Value="{Binding Path=LArmZ, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CustomControls:RadiusToggleButtons
                                     Height="25"
                                     Margin="0,2"
@@ -1139,20 +1094,13 @@
                                     Minimum="-180"
                                     Style="{DynamicResource ColorSlider}"
                                     Value="{Binding Path=RArmX, Mode=TwoWay}" />
-                                <CustomControls:ColorNumbericUpDowns
+                                <Slider
                                     Width="120"
-                                    ArrowBackground="{StaticResource ButtonNormal}"
-                                    ArrowForeground="Black"
-                                    ArrowHeight="20"
-                                    ArrowWidth="20"
-                                    Background="{StaticResource TextBoxBackground}"
-                                    CaretBrush="White"
                                     Foreground="White"
-                                    MaxValue="180"
-                                    MinValue="-180"
-                                    PressedBackground="{StaticResource ButtonPressed}"
-                                    Template="{DynamicResource ColorNumbericUpDown}"
-                                    Text="{Binding Path=RArmX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StringToFloatConverter}}" />
+                                    Maximum="180"
+                                    Minimum="-180"
+                                    Style="{DynamicResource NumberBoxStyle}"
+                                    Value="{Binding Path=RArmX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CustomControls:RadiusToggleButtons
                                     Height="25"
                                     Margin="0,2"
@@ -1192,17 +1140,13 @@
                                     Minimum="-180"
                                     Style="{DynamicResource ColorSlider}"
                                     Value="{Binding Path=RArmY, Mode=TwoWay}" />
-                                <CustomControls:ColorNumbericUpDowns
+                                <Slider
                                     Width="120"
-                                    ArrowBackground="{StaticResource ButtonNormal}"
-                                    ArrowForeground="Black"
-                                    Background="{StaticResource TextBoxBackground}"
-                                    CaretBrush="White"
                                     Foreground="White"
-                                    MaxValue="180"
-                                    MinValue="-180"
-                                    Template="{DynamicResource ColorNumbericUpDown}"
-                                    Text="{Binding Path=RArmY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StringToFloatConverter}}" />
+                                    Maximum="180"
+                                    Minimum="-180"
+                                    Style="{DynamicResource NumberBoxStyle}"
+                                    Value="{Binding Path=RArmY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CustomControls:RadiusToggleButtons
                                     Height="25"
                                     Margin="0,0"
@@ -1242,17 +1186,13 @@
                                     Minimum="-180"
                                     Style="{DynamicResource ColorSlider}"
                                     Value="{Binding Path=RArmZ, Mode=TwoWay}" />
-                                <CustomControls:ColorNumbericUpDowns
+                                <Slider
                                     Width="120"
-                                    ArrowBackground="{StaticResource ButtonNormal}"
-                                    ArrowForeground="Black"
-                                    Background="{StaticResource TextBoxBackground}"
-                                    CaretBrush="White"
                                     Foreground="White"
-                                    MaxValue="180"
-                                    MinValue="-180"
-                                    Template="{DynamicResource ColorNumbericUpDown}"
-                                    Text="{Binding Path=RArmZ, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StringToFloatConverter}}" />
+                                    Maximum="180"
+                                    Minimum="-180"
+                                    Style="{DynamicResource NumberBoxStyle}"
+                                    Value="{Binding Path=RArmZ, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CustomControls:RadiusToggleButtons
                                     Height="25"
                                     Margin="0,2"
@@ -1381,20 +1321,13 @@
                                     Minimum="-180"
                                     Style="{DynamicResource ColorSlider}"
                                     Value="{Binding Path=LLegX, Mode=TwoWay}" />
-                                <CustomControls:ColorNumbericUpDowns
+                                <Slider
                                     Width="120"
-                                    ArrowBackground="{StaticResource ButtonNormal}"
-                                    ArrowForeground="Black"
-                                    ArrowHeight="20"
-                                    ArrowWidth="20"
-                                    Background="{StaticResource TextBoxBackground}"
-                                    CaretBrush="White"
                                     Foreground="White"
-                                    MaxValue="180"
-                                    MinValue="-180"
-                                    PressedBackground="{StaticResource ButtonPressed}"
-                                    Template="{DynamicResource ColorNumbericUpDown}"
-                                    Text="{Binding Path=LLegX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StringToFloatConverter}}" />
+                                    Maximum="180"
+                                    Minimum="-180"
+                                    Style="{DynamicResource NumberBoxStyle}"
+                                    Value="{Binding Path=LLegX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CustomControls:RadiusToggleButtons
                                     Height="25"
                                     Margin="0,2"
@@ -1434,17 +1367,13 @@
                                     Minimum="-180"
                                     Style="{DynamicResource ColorSlider}"
                                     Value="{Binding Path=LLegY, Mode=TwoWay}" />
-                                <CustomControls:ColorNumbericUpDowns
+                                <Slider
                                     Width="120"
-                                    ArrowBackground="{StaticResource ButtonNormal}"
-                                    ArrowForeground="Black"
-                                    Background="{StaticResource TextBoxBackground}"
-                                    CaretBrush="White"
                                     Foreground="White"
-                                    MaxValue="180"
-                                    MinValue="-180"
-                                    Template="{DynamicResource ColorNumbericUpDown}"
-                                    Text="{Binding Path=LLegY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StringToFloatConverter}}" />
+                                    Maximum="180"
+                                    Minimum="-180"
+                                    Style="{DynamicResource NumberBoxStyle}"
+                                    Value="{Binding Path=LLegY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CustomControls:RadiusToggleButtons
                                     Height="25"
                                     Margin="0,0"
@@ -1484,17 +1413,13 @@
                                     Minimum="-180"
                                     Style="{DynamicResource ColorSlider}"
                                     Value="{Binding Path=LLegZ, Mode=TwoWay}" />
-                                <CustomControls:ColorNumbericUpDowns
+                                <Slider
                                     Width="120"
-                                    ArrowBackground="{StaticResource ButtonNormal}"
-                                    ArrowForeground="Black"
-                                    Background="{StaticResource TextBoxBackground}"
-                                    CaretBrush="White"
                                     Foreground="White"
-                                    MaxValue="180"
-                                    MinValue="-180"
-                                    Template="{DynamicResource ColorNumbericUpDown}"
-                                    Text="{Binding Path=LLegZ, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StringToFloatConverter}}" />
+                                    Maximum="180"
+                                    Minimum="-180"
+                                    Style="{DynamicResource NumberBoxStyle}"
+                                    Value="{Binding Path=LLegZ, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CustomControls:RadiusToggleButtons
                                     Height="25"
                                     Margin="0,2"
@@ -1623,20 +1548,13 @@
                                     Minimum="-180"
                                     Style="{DynamicResource ColorSlider}"
                                     Value="{Binding Path=RLegX, Mode=TwoWay}" />
-                                <CustomControls:ColorNumbericUpDowns
+                                <Slider
                                     Width="120"
-                                    ArrowBackground="{StaticResource ButtonNormal}"
-                                    ArrowForeground="Black"
-                                    ArrowHeight="20"
-                                    ArrowWidth="20"
-                                    Background="{StaticResource TextBoxBackground}"
-                                    CaretBrush="White"
                                     Foreground="White"
-                                    MaxValue="180"
-                                    MinValue="-180"
-                                    PressedBackground="{StaticResource ButtonPressed}"
-                                    Template="{DynamicResource ColorNumbericUpDown}"
-                                    Text="{Binding Path=RLegX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StringToFloatConverter}}" />
+                                    Maximum="180"
+                                    Minimum="-180"
+                                    Style="{DynamicResource NumberBoxStyle}"
+                                    Value="{Binding Path=RLegX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CustomControls:RadiusToggleButtons
                                     Height="25"
                                     Margin="0,2"
@@ -1676,17 +1594,13 @@
                                     Minimum="-180"
                                     Style="{DynamicResource ColorSlider}"
                                     Value="{Binding Path=RLegY, Mode=TwoWay}" />
-                                <CustomControls:ColorNumbericUpDowns
+                                <Slider
                                     Width="120"
-                                    ArrowBackground="{StaticResource ButtonNormal}"
-                                    ArrowForeground="Black"
-                                    Background="{StaticResource TextBoxBackground}"
-                                    CaretBrush="White"
                                     Foreground="White"
-                                    MaxValue="180"
-                                    MinValue="-180"
-                                    Template="{DynamicResource ColorNumbericUpDown}"
-                                    Text="{Binding Path=RLegY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StringToFloatConverter}}" />
+                                    Maximum="180"
+                                    Minimum="-180"
+                                    Style="{DynamicResource NumberBoxStyle}"
+                                    Value="{Binding Path=RLegY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CustomControls:RadiusToggleButtons
                                     Height="25"
                                     Margin="0,0"
@@ -1726,17 +1640,13 @@
                                     Minimum="-180"
                                     Style="{DynamicResource ColorSlider}"
                                     Value="{Binding Path=RLegZ, Mode=TwoWay}" />
-                                <CustomControls:ColorNumbericUpDowns
+                                <Slider
                                     Width="120"
-                                    ArrowBackground="{StaticResource ButtonNormal}"
-                                    ArrowForeground="Black"
-                                    Background="{StaticResource TextBoxBackground}"
-                                    CaretBrush="White"
                                     Foreground="White"
-                                    MaxValue="180"
-                                    MinValue="-180"
-                                    Template="{DynamicResource ColorNumbericUpDown}"
-                                    Text="{Binding Path=RLegZ, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StringToFloatConverter}}" />
+                                    Maximum="180"
+                                    Minimum="-180"
+                                    Style="{DynamicResource NumberBoxStyle}"
+                                    Value="{Binding Path=RLegZ, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CustomControls:RadiusToggleButtons
                                     Height="25"
                                     Margin="0,2"

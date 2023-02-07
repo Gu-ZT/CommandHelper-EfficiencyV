@@ -55,10 +55,15 @@
                 Height="150"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
+                Panel.ZIndex="-1"
                 AllowDrop="True"
                 Cursor="Hand"
                 Drop="UpdateBuyItem"
-                Source="/cbhk_environment;component/resources/cbhk_form/images/empty.png" />
+                RenderOptions.BitmapScalingMode="HighQuality"
+                RenderOptions.ClearTypeHint="Enabled"
+                SnapsToDevicePixels="True"
+                Source="/cbhk_environment;component/resources/cbhk_form/images/empty.png"
+                UseLayoutRounding="True" />
             <TextBlock
                 x:Name="BuyItemCount"
                 Grid.Row="0"
@@ -76,30 +81,25 @@
                 MouseLeftButtonUp="BuyItemCountMouseLeftButtonUp"
                 Text="1"
                 TextAlignment="Center" />
-            <CustomControls:ColorNumbericUpDowns
+            <Slider
                 x:Name="ModifyBuyItemCount"
                 Grid.Row="0"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
-                Width="60"
+                Width="80"
                 Height="50"
-                Margin="50,0,0,0"
-                Padding="0,5,0,0"
+                Margin="50,0,0,50"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Bottom"
                 Panel.ZIndex="1"
-                ArrowBackground="Transparent"
-                ArrowForeground="White"
                 BorderThickness="0"
-                CaretBrush="White"
                 FontSize="25"
-                Foreground="Black"
-                MaxValue="64"
-                MinValue="1"
-                Template="{DynamicResource ColorNumbericUpDown}"
-                Text="1"
-                TextAlignment="Center"
-                Visibility="Collapsed" />
+                Foreground="White"
+                Maximum="64"
+                Minimum="1"
+                Style="{DynamicResource NumberBoxStyle}"
+                Visibility="Collapsed"
+                Value="1" />
             <TextBlock
                 x:Name="DisCount"
                 Grid.Row="0"
@@ -124,10 +124,15 @@
                 Margin="0,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
+                Panel.ZIndex="-1"
                 AllowDrop="True"
                 Cursor="Hand"
                 Drop="UpdateBuybItem"
-                Source="/cbhk_environment;component/resources/cbhk_form/images/empty.png" />
+                RenderOptions.BitmapScalingMode="HighQuality"
+                RenderOptions.ClearTypeHint="Enabled"
+                SnapsToDevicePixels="True"
+                Source="/cbhk_environment;component/resources/cbhk_form/images/empty.png"
+                UseLayoutRounding="True" />
             <TextBlock
                 x:Name="BuybItemCount"
                 Grid.Row="0"
@@ -145,31 +150,27 @@
                 MouseLeftButtonUp="BuyBItemCountMouseLeftButtonUp"
                 Text="1"
                 TextAlignment="Center" />
-            <CustomControls:ColorNumbericUpDowns
+            <Slider
                 x:Name="ModifyBuyBItemCount"
                 Grid.Row="0"
                 Grid.Column="1"
                 Grid.ColumnSpan="2"
-                Width="60"
+                Width="80"
                 Height="50"
-                Margin="80,0,0,0"
+                Margin="80,0,0,50"
                 Padding="0,5,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Bottom"
                 Panel.ZIndex="1"
-                ArrowBackground="Transparent"
-                ArrowForeground="White"
                 Background="Transparent"
                 BorderThickness="0"
-                CaretBrush="White"
                 FontSize="25"
                 Foreground="White"
-                MaxValue="64"
-                MinValue="1"
-                Template="{DynamicResource ColorNumbericUpDown}"
-                Text="1"
-                TextAlignment="Center"
-                Visibility="Collapsed" />
+                Maximum="64"
+                Minimum="1"
+                Style="{DynamicResource NumberBoxStyle}"
+                Visibility="Collapsed"
+                Value="1" />
             <Image
                 x:Name="TradeArrow"
                 Grid.Row="0"
@@ -178,6 +179,9 @@
                 Height="95"
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
+                Panel.ZIndex="-1"
+                RenderOptions.BitmapScalingMode="NearestNeighbor"
+                RenderOptions.ClearTypeHint="Enabled"
                 Source="/cbhk_environment;component/resources/common/images/TradeRightArrow.png" />
             <Image
                 x:Name="Sell"
@@ -187,10 +191,15 @@
                 Height="150"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
+                Panel.ZIndex="-1"
                 AllowDrop="True"
                 Cursor="Hand"
                 Drop="UpdateSellItem"
-                Source="/cbhk_environment;component/resources/cbhk_form/images/empty.png" />
+                RenderOptions.BitmapScalingMode="HighQuality"
+                RenderOptions.ClearTypeHint="Enabled"
+                SnapsToDevicePixels="True"
+                Source="/cbhk_environment;component/resources/cbhk_form/images/empty.png"
+                UseLayoutRounding="True" />
             <TextBlock
                 x:Name="SellItemCount"
                 Grid.Row="0"
@@ -208,31 +217,27 @@
                 MouseLeftButtonUp="SellItemCountMouseLeftButtonUp"
                 Text="1"
                 TextAlignment="Center" />
-            <CustomControls:ColorNumbericUpDowns
+            <Slider
                 x:Name="ModifySellItemCount"
                 Grid.Row="0"
                 Grid.Column="3"
                 Grid.ColumnSpan="2"
-                Width="60"
+                Width="80"
                 Height="50"
-                Margin="90,25,0,0"
+                Margin="90,0,0,50"
                 Padding="0,5,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Bottom"
                 Panel.ZIndex="1"
-                ArrowBackground="Transparent"
-                ArrowForeground="White"
                 Background="Transparent"
                 BorderThickness="0"
-                CaretBrush="White"
                 FontSize="25"
                 Foreground="White"
-                MaxValue="64"
-                MinValue="1"
-                Template="{DynamicResource ColorNumbericUpDown}"
-                Text="1"
-                TextAlignment="Center"
-                Visibility="Collapsed" />
+                Maximum="64"
+                Minimum="1"
+                Style="{DynamicResource NumberBoxStyle}"
+                Visibility="Collapsed"
+                Value="1" />
             <CustomControls:IconTextButtons
                 Grid.Row="0"
                 Grid.Column="4"

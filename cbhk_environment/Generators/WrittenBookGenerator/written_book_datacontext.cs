@@ -494,58 +494,62 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
         {
             RichRun start_run = written_box.Selection.Start.Parent as RichRun;
             RichRun end_run = written_box.Selection.End.Parent as RichRun;
-            RichParagraph StartParagraph = start_run.Parent as RichParagraph;
-            RichParagraph EndParagraph = end_run.Parent as RichParagraph;
-            List<RichRun> StartRuns = new List<RichRun> { };
-            StartRuns = StartParagraph.Inlines.ToList().ConvertAll(item => item as RichRun);
-            int StartRunIndex =StartRuns.IndexOf(start_run);
-            //移除不包括在内的对象
-            if(StartRunIndex > 0)
-            StartRuns.RemoveRange(0, StartRunIndex);
-            if(!Equals(StartParagraph, EndParagraph))
-            {
-                FlowDocument page = StartParagraph.Parent as FlowDocument;
-                List<RichParagraph> paragraphs = page.Blocks.ToList().ConvertAll(item=>item as RichParagraph);
-                int StartParagraphIndex = paragraphs.IndexOf(StartParagraph);
-                int EndParagrapghIndex = paragraphs.IndexOf(EndParagraph);
-                //表示两行相邻
-                if(EndParagrapghIndex - StartParagraphIndex == 1)
-                {
-                    StartRuns.AddRange(EndParagraph.Inlines.ToList().ConvertAll(item=>item as RichRun));
 
-                }//表示选中了不止两行
-                else
+            if (end_run != null && start_run != null)
+            {
+                RichParagraph StartParagraph = start_run.Parent as RichParagraph;
+                RichParagraph EndParagraph = end_run.Parent as RichParagraph;
+                List<RichRun> StartRuns = new List<RichRun> { };
+                StartRuns = StartParagraph.Inlines.ToList().ConvertAll(item => item as RichRun);
+                int StartRunIndex = StartRuns.IndexOf(start_run);
+                //移除不包括在内的对象
+                if (StartRunIndex > 0)
+                    StartRuns.RemoveRange(0, StartRunIndex);
+                if (!Equals(StartParagraph, EndParagraph))
                 {
-                    List<RichRun> EndRuns = new List<RichRun> { };
-                    for (int i = StartParagraphIndex + 1; i <= EndParagrapghIndex; i++)
+                    FlowDocument page = StartParagraph.Parent as FlowDocument;
+                    List<RichParagraph> paragraphs = page.Blocks.ToList().ConvertAll(item => item as RichParagraph);
+                    int StartParagraphIndex = paragraphs.IndexOf(StartParagraph);
+                    int EndParagrapghIndex = paragraphs.IndexOf(EndParagraph);
+                    //表示两行相邻
+                    if (EndParagrapghIndex - StartParagraphIndex == 1)
                     {
-                        EndRuns = paragraphs[i].Inlines.ToList().ConvertAll(item => item as RichRun);
-                        //最后一个段落只加行首到选区末尾处
-                        if (i == EndParagrapghIndex)
+                        StartRuns.AddRange(EndParagraph.Inlines.ToList().ConvertAll(item => item as RichRun));
+
+                    }//表示选中了不止两行
+                    else
+                    {
+                        List<RichRun> EndRuns = new List<RichRun> { };
+                        for (int i = StartParagraphIndex + 1; i <= EndParagrapghIndex; i++)
                         {
-                            int EndRunIndex = EndRuns.IndexOf(end_run);
-                            EndRuns.RemoveRange(EndRunIndex + 1,EndRuns.Count - (EndRunIndex + 1));
+                            EndRuns = paragraphs[i].Inlines.ToList().ConvertAll(item => item as RichRun);
+                            //最后一个段落只加行首到选区末尾处
+                            if (i == EndParagrapghIndex)
+                            {
+                                int EndRunIndex = EndRuns.IndexOf(end_run);
+                                EndRuns.RemoveRange(EndRunIndex + 1, EndRuns.Count - (EndRunIndex + 1));
+                            }
+                            StartRuns.AddRange(EndRuns);
                         }
-                        StartRuns.AddRange(EndRuns);
                     }
                 }
-            }
-            else
-            {
-                int EndRunIndex = StartRuns.IndexOf(end_run);
-                StartRuns.RemoveRange(EndRunIndex + 1, StartRuns.Count - (EndRunIndex + 1));
-            }
+                else
+                {
+                    int EndRunIndex = StartRuns.IndexOf(end_run);
+                    StartRuns.RemoveRange(EndRunIndex + 1, StartRuns.Count - (EndRunIndex + 1));
+                }
 
-            foreach (RichRun item in StartRuns)
-            {
-                item.FontWeight = FontWeights.Normal;
-                item.FontStyle = FontStyles.Normal;
-                item.TextDecorations = new TextDecorationCollection();
-                item.Foreground = new SolidColorBrush(Color.FromRgb(0, 0, 0));
-                item.IsObfuscated = false;
-                item.ObfuscateTimer.Enabled = false;
-                if (item.UID.Trim() != "")
-                    item.Text = item.UID;
+                foreach (RichRun item in StartRuns)
+                {
+                    item.FontWeight = FontWeights.Normal;
+                    item.FontStyle = FontStyles.Normal;
+                    item.TextDecorations = new TextDecorationCollection();
+                    item.Foreground = new SolidColorBrush(Color.FromRgb(0, 0, 0));
+                    item.IsObfuscated = false;
+                    item.ObfuscateTimer.Enabled = false;
+                    if (item.UID.Trim() != "")
+                        item.Text = item.UID;
+                }
             }
         }
 

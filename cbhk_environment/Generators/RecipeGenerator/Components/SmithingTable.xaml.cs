@@ -1,11 +1,8 @@
-﻿using cbhk_environment.CustomControls;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -33,7 +30,7 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
         public static bool DisplayCurrentItem = false;
 
         //获取经验的引用
-        ColorNumbericUpDowns RecipeCount = null;
+        Slider RecipeCount = null;
         //获取文件名引用
         public TextBox RecipeFileName = null;
 
@@ -62,16 +59,11 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
             get
             {
                 string result;
-                string CountData;
+                string CountData = ",\"count\":";
 
-                RecipeCount.Text = RecipeCount.Text.Contains(".") ? RecipeCount.Text.Split('.')[0].Replace("-", "") : RecipeCount.Text;
-
-                CountData = RecipeCount.Text.Trim() != "" && int.Parse(RecipeCount.Text.Trim()) > 0 ? RecipeCount.Text + "," : "";
-
-                if (CountData.Trim() != "")
-                    CountData = "\"count\":" + CountData;
-
-                result = CountData + "\"result\":\"minecraft:" + recipe_result + "\"";
+                RecipeCount.Value = int.Parse(RecipeCount.Value.ToString().Contains(".") ? RecipeCount.Value.ToString().Split('.')[0].Replace("-", "") : RecipeCount.Value.ToString());
+                CountData += RecipeCount.Value + ",";
+                result = "\"result\":\"minecraft:" + recipe_result + "\"" + CountData;
                 return result;
             }
             set { recipe_result = value; }
@@ -265,7 +257,7 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
         /// <param name="e"></param>
         private void RecipeCountLoaded(object sender, RoutedEventArgs e)
         {
-            RecipeCount = sender as ColorNumbericUpDowns;
+            RecipeCount = sender as Slider;
         }
 
         /// <summary>

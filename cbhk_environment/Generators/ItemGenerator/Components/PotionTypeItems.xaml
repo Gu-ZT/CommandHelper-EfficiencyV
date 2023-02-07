@@ -36,42 +36,32 @@
                 VerticalAlignment="Center"
                 Foreground="White"
                 Text="持续时间:" />
-            <CustomControls:ColorNumbericUpDowns
+            <Slider
                 Width="100"
                 HorizontalAlignment="Left"
-                ArrowBackground="Transparent"
-                ArrowForeground="White"
-                ArrowHeight="25"
-                ArrowWidth="25"
                 Background="Transparent"
                 BorderThickness="0"
-                CaretBrush="White"
                 Foreground="White"
-                MaxValue="10000000"
-                MinValue="-10000000"
-                Template="{DynamicResource ColorNumbericUpDown}"
-                Text="{Binding PotionDuration, Mode=TwoWay}" />
+                Maximum="10000000"
+                Minimum="-10000000"
+                Style="{DynamicResource NumberBoxStyle}"
+                Value="{Binding PotionDuration, Mode=TwoWay}" />
             <TextBlock
                 Margin="5,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Foreground="White"
                 Text="效果等级:" />
-            <CustomControls:ColorNumbericUpDowns
+            <Slider
                 Width="50"
                 HorizontalAlignment="Left"
-                ArrowBackground="Transparent"
-                ArrowForeground="White"
-                ArrowHeight="25"
-                ArrowWidth="25"
                 Background="Transparent"
                 BorderThickness="0"
-                CaretBrush="White"
                 Foreground="White"
-                MaxValue="255"
-                MinValue="-255"
-                Template="{DynamicResource ColorNumbericUpDown}"
-                Text="{Binding PotionLevel, Mode=TwoWay}" />
+                Maximum="255"
+                Minimum="-255"
+                Style="{DynamicResource NumberBoxStyle}"
+                Value="{Binding PotionLevel, Mode=TwoWay}" />
             <CustomControls:IconTextButtons
                 Width="25"
                 Margin="5,0"

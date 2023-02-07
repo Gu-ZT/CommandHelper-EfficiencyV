@@ -1,6 +1,5 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
-using System.Windows;
 using Point = System.Drawing.Point;
 
 namespace cbhk_environment.GeneralTools

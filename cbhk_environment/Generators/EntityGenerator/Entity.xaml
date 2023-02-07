@@ -197,16 +197,14 @@
                                 Background="Transparent"
                                 Foreground="White"
                                 Text="血量" />
-                            <CustomControls:ColorNumbericUpDowns
+                            <Slider
                                 Width="125"
                                 Height="30"
                                 HorizontalAlignment="Left"
-                                ArrowHeight="25"
-                                ArrowWidth="25"
-                                MaxValue="2147483647"
-                                MinValue="-2147483648"
-                                Template="{DynamicResource ColorNumbericUpDown}"
-                                Text="{Binding Health, Mode=TwoWay}" />
+                                Maximum="2147483647"
+                                Minimum="-2147483648"
+                                Style="{DynamicResource NumberBoxStyle}"
+                                Value="{Binding Health, Mode=TwoWay}" />
                             <TextBlock
                                 Margin="0,0,5,0"
                                 HorizontalAlignment="Left"
@@ -231,34 +229,27 @@
                                 Background="Transparent"
                                 Foreground="White"
                                 Text="Motion" />
-                            <CustomControls:ColorNumbericUpDowns
+                            <Slider
                                 Width="100"
                                 HorizontalAlignment="Left"
-                                ArrowHeight="25"
-                                ArrowWidth="25"
-                                MaxValue="2147483647"
-                                MinValue="-2147483648"
-                                Template="{DynamicResource ColorNumbericUpDown}"
-                                Text="{Binding MotionX, Mode=TwoWay}" />
-                            <CustomControls:ColorNumbericUpDowns
+                                Maximum="2147483647"
+                                Minimum="-2147483648"
+                                Style="{DynamicResource NumberBoxStyle}"
+                                Value="{Binding MotionX, Mode=TwoWay}" />
+                            <Slider
                                 Width="100"
                                 HorizontalAlignment="Left"
-                                ArrowHeight="25"
-                                ArrowWidth="25"
-                                MaxValue="2147483647"
-                                MinValue="-2147483648"
-                                Template="{DynamicResource ColorNumbericUpDown}"
-                                Text="{Binding MotionY, Mode=TwoWay}" />
-                            <CustomControls:ColorNumbericUpDowns
+                                Maximum="2147483647"
+                                Minimum="-2147483648"
+                                Style="{DynamicResource NumberBoxStyle}"
+                                Value="{Binding MotionY, Mode=TwoWay}" />
+                            <Slider
                                 Width="100"
                                 HorizontalAlignment="Left"
-                                ArrowForeground="White"
-                                ArrowHeight="25"
-                                ArrowWidth="25"
-                                MaxValue="2147483647"
-                                MinValue="-2147483648"
-                                Template="{DynamicResource ColorNumbericUpDown}"
-                                Text="{Binding MotionZ, Mode=TwoWay}" />
+                                Maximum="2147483647"
+                                Minimum="-2147483648"
+                                Style="{DynamicResource NumberBoxStyle}"
+                                Value="{Binding MotionZ, Mode=TwoWay}" />
                             <TextBlock
                                 Margin="5,0"
                                 HorizontalAlignment="Left"
@@ -283,15 +274,13 @@
                                 Background="Transparent"
                                 Foreground="White"
                                 Text="燃烧状态" />
-                            <CustomControls:ColorNumbericUpDowns
+                            <Slider
                                 Width="100"
                                 HorizontalAlignment="Left"
-                                ArrowHeight="25"
-                                ArrowWidth="25"
-                                MaxValue="2147483647"
-                                MinValue="-2147483648"
-                                Template="{DynamicResource ColorNumbericUpDown}"
-                                Text="{Binding Fire, Mode=TwoWay}" />
+                                Maximum="2147483647"
+                                Minimum="-2147483648"
+                                Style="{DynamicResource NumberBoxStyle}"
+                                Value="{Binding Fire, Mode=TwoWay}" />
                         </DockPanel>
                         <DockPanel Height="30" Background="#2F2F2F">
                             <CustomControls:TextCheckBoxs
@@ -439,31 +428,27 @@
                                                 VerticalAlignment="Center"
                                                 Foreground="White"
                                                 Text="最大生命值" />
-                                            <CustomControls:ColorNumbericUpDowns
+                                            <Slider
                                                 Width="185"
                                                 Height="25"
                                                 HorizontalAlignment="Left"
-                                                ArrowHeight="25"
-                                                ArrowWidth="25"
-                                                MaxValue="2147483647"
-                                                MinValue="-2147483648"
-                                                Template="{DynamicResource ColorNumbericUpDown}"
-                                                Text="{Binding MaxHealth, Mode=TwoWay}" />
+                                                Maximum="2147483647"
+                                                Minimum="-2147483648"
+                                                Style="{DynamicResource NumberBoxStyle}"
+                                                Value="{Binding MaxHealth, Mode=TwoWay}" />
                                             <TextBlock
                                                 Margin="5,0,20,0"
                                                 HorizontalAlignment="Left"
                                                 VerticalAlignment="Center"
                                                 Foreground="White"
                                                 Text="抗击退" />
-                                            <CustomControls:ColorNumbericUpDowns
+                                            <Slider
                                                 Height="25"
                                                 HorizontalAlignment="Stretch"
-                                                ArrowHeight="25"
-                                                ArrowWidth="25"
-                                                MaxValue="2147483647"
-                                                MinValue="-2147483648"
-                                                Template="{DynamicResource ColorNumbericUpDown}"
-                                                Text="{Binding KnockbackResistance, Mode=TwoWay}" />
+                                                Maximum="2147483647"
+                                                Minimum="-2147483648"
+                                                Style="{DynamicResource NumberBoxStyle}"
+                                                Value="{Binding KnockbackResistance, Mode=TwoWay}" />
                                         </DockPanel>
                                         <DockPanel>
                                             <TextBlock
@@ -472,33 +457,29 @@
                                                 VerticalAlignment="Center"
                                                 Foreground="White"
                                                 Text="移动速度" />
-                                            <CustomControls:ColorNumbericUpDowns
+                                            <Slider
                                                 Width="200"
                                                 Height="25"
                                                 HorizontalAlignment="Left"
-                                                ArrowHeight="25"
-                                                ArrowWidth="25"
-                                                MaxValue="2147483647"
-                                                MinValue="-2147483648"
-                                                Template="{DynamicResource ColorNumbericUpDown}"
-                                                Text="{Binding MovementSpeed, Mode=TwoWay}" />
+                                                Maximum="2147483647"
+                                                Minimum="-2147483648"
+                                                Style="{DynamicResource NumberBoxStyle}"
+                                                Value="{Binding MovementSpeed, Mode=TwoWay}" />
                                             <TextBlock
                                                 Margin="5,0,0,0"
                                                 HorizontalAlignment="Left"
                                                 VerticalAlignment="Center"
                                                 Foreground="White"
                                                 Text="跟踪距离" />
-                                            <CustomControls:ColorNumbericUpDowns
+                                            <Slider
                                                 Width="177"
                                                 Height="25"
                                                 Margin="5,0,0,0"
                                                 HorizontalAlignment="Left"
-                                                ArrowHeight="25"
-                                                ArrowWidth="25"
-                                                MaxValue="2147483647"
-                                                MinValue="-2147483648"
-                                                Template="{DynamicResource ColorNumbericUpDown}"
-                                                Text="{Binding FollowRange, Mode=TwoWay}" />
+                                                Maximum="2147483647"
+                                                Minimum="-2147483648"
+                                                Style="{DynamicResource NumberBoxStyle}"
+                                                Value="{Binding FollowRange, Mode=TwoWay}" />
                                         </DockPanel>
                                         <DockPanel>
                                             <TextBlock
@@ -507,32 +488,28 @@
                                                 VerticalAlignment="Center"
                                                 Foreground="White"
                                                 Text="攻击伤害" />
-                                            <CustomControls:ColorNumbericUpDowns
+                                            <Slider
                                                 Width="200"
                                                 Height="25"
                                                 HorizontalAlignment="Left"
-                                                ArrowHeight="25"
-                                                ArrowWidth="25"
-                                                MaxValue="2147483647"
-                                                MinValue="-2147483648"
-                                                Template="{DynamicResource ColorNumbericUpDown}"
-                                                Text="{Binding AttackDamage, Mode=TwoWay}" />
+                                                Maximum="2147483647"
+                                                Minimum="-2147483648"
+                                                Style="{DynamicResource NumberBoxStyle}"
+                                                Value="{Binding AttackDamage, Mode=TwoWay}" />
                                             <TextBlock
                                                 Margin="5,0"
                                                 HorizontalAlignment="Left"
                                                 VerticalAlignment="Center"
                                                 Foreground="White"
                                                 Text="攻击速度" />
-                                            <CustomControls:ColorNumbericUpDowns
+                                            <Slider
                                                 Width="177"
                                                 Height="25"
                                                 HorizontalAlignment="Left"
-                                                ArrowHeight="25"
-                                                ArrowWidth="25"
-                                                MaxValue="2147483647"
-                                                MinValue="-2147483648"
-                                                Template="{DynamicResource ColorNumbericUpDown}"
-                                                Text="{Binding AttackSpeed, Mode=TwoWay}" />
+                                                Maximum="2147483647"
+                                                Minimum="-2147483648"
+                                                Style="{DynamicResource NumberBoxStyle}"
+                                                Value="{Binding AttackSpeed, Mode=TwoWay}" />
                                         </DockPanel>
                                         <DockPanel>
                                             <TextBlock
@@ -541,32 +518,28 @@
                                                 VerticalAlignment="Center"
                                                 Foreground="White"
                                                 Text="护甲" />
-                                            <CustomControls:ColorNumbericUpDowns
+                                            <Slider
                                                 Width="200"
                                                 Height="25"
                                                 HorizontalAlignment="Left"
-                                                ArrowHeight="25"
-                                                ArrowWidth="25"
-                                                MaxValue="2147483647"
-                                                MinValue="-2147483648"
-                                                Template="{DynamicResource ColorNumbericUpDown}"
-                                                Text="{Binding Armor, Mode=TwoWay}" />
+                                                Maximum="2147483647"
+                                                Minimum="-2147483648"
+                                                Style="{DynamicResource NumberBoxStyle}"
+                                                Value="{Binding Armor, Mode=TwoWay}" />
                                             <TextBlock
                                                 Margin="5,0"
                                                 HorizontalAlignment="Left"
                                                 VerticalAlignment="Center"
                                                 Foreground="White"
                                                 Text="护甲韧性" />
-                                            <CustomControls:ColorNumbericUpDowns
+                                            <Slider
                                                 Width="177"
                                                 Height="25"
                                                 HorizontalAlignment="Left"
-                                                ArrowHeight="25"
-                                                ArrowWidth="25"
-                                                MaxValue="2147483647"
-                                                MinValue="-2147483648"
-                                                Template="{DynamicResource ColorNumbericUpDown}"
-                                                Text="{Binding ArmorToughness, Mode=TwoWay}" />
+                                                Maximum="2147483647"
+                                                Minimum="-2147483648"
+                                                Style="{DynamicResource NumberBoxStyle}"
+                                                Value="{Binding ArmorToughness, Mode=TwoWay}" />
                                         </DockPanel>
                                     </StackPanel>
                                 </Border>
@@ -644,19 +617,16 @@
                                             ToolTipService.InitialShowDelay="0"
                                             ToolTipService.ShowDuration="1000"
                                             Value="{Binding MainHandDropChance, Mode=TwoWay}" />
-                                        <CustomControls:ColorNumbericUpDowns
+                                        <Slider
                                             Width="145"
                                             Height="25"
                                             HorizontalAlignment="Left"
-                                            ArrowForeground="White"
-                                            ArrowHeight="25"
-                                            ArrowWidth="25"
                                             Background="Transparent"
                                             Foreground="White"
-                                            MaxValue="100"
-                                            MinValue="0"
-                                            Template="{DynamicResource ColorNumbericUpDown}"
-                                            Text="{Binding MainHandDropChance, Mode=TwoWay}" />
+                                            Maximum="100"
+                                            Minimum="0"
+                                            Style="{DynamicResource NumberBoxStyle}"
+                                            Value="{Binding MainHandDropChance, Mode=TwoWay}" />
                                     </DockPanel>
                                     <TextBlock
                                         Margin="30,0,0,0"
@@ -705,19 +675,16 @@
                                             ToolTipService.InitialShowDelay="0"
                                             ToolTipService.ShowDuration="1000"
                                             Value="{Binding OffHandDropChance, Mode=TwoWay}" />
-                                        <CustomControls:ColorNumbericUpDowns
+                                        <Slider
                                             Width="145"
                                             Height="25"
                                             HorizontalAlignment="Left"
-                                            ArrowForeground="White"
-                                            ArrowHeight="25"
-                                            ArrowWidth="25"
                                             Background="Transparent"
                                             Foreground="White"
-                                            MaxValue="100"
-                                            MinValue="0"
-                                            Template="{DynamicResource ColorNumbericUpDown}"
-                                            Text="{Binding OffHandDropChance, Mode=TwoWay}" />
+                                            Maximum="100"
+                                            Minimum="0"
+                                            Style="{DynamicResource NumberBoxStyle}"
+                                            Value="{Binding OffHandDropChance, Mode=TwoWay}" />
                                     </DockPanel>
                                 </StackPanel>
                             </Border>
@@ -781,19 +748,16 @@
                                             ToolTipService.InitialShowDelay="0"
                                             ToolTipService.ShowDuration="1000"
                                             Value="{Binding HeadItemDropChance, Mode=TwoWay}" />
-                                        <CustomControls:ColorNumbericUpDowns
+                                        <Slider
                                             Width="145"
                                             Height="25"
                                             HorizontalAlignment="Left"
-                                            ArrowForeground="White"
-                                            ArrowHeight="25"
-                                            ArrowWidth="25"
                                             Background="Transparent"
                                             Foreground="White"
-                                            MaxValue="100"
-                                            MinValue="0"
-                                            Template="{DynamicResource ColorNumbericUpDown}"
-                                            Text="{Binding HeadItemDropChance, Mode=TwoWay}" />
+                                            Maximum="100"
+                                            Minimum="0"
+                                            Style="{DynamicResource NumberBoxStyle}"
+                                            Value="{Binding HeadItemDropChance, Mode=TwoWay}" />
                                     </DockPanel>
                                     <TextBlock
                                         Margin="30,0,0,0"
@@ -842,19 +806,16 @@
                                             ToolTipService.InitialShowDelay="0"
                                             ToolTipService.ShowDuration="1000"
                                             Value="{Binding ChestItemDropChance, Mode=TwoWay}" />
-                                        <CustomControls:ColorNumbericUpDowns
+                                        <Slider
                                             Width="145"
                                             Height="25"
                                             HorizontalAlignment="Left"
-                                            ArrowForeground="White"
-                                            ArrowHeight="25"
-                                            ArrowWidth="25"
                                             Background="Transparent"
                                             Foreground="White"
-                                            MaxValue="100"
-                                            MinValue="0"
-                                            Template="{DynamicResource ColorNumbericUpDown}"
-                                            Text="{Binding ChestItemDropChance, Mode=TwoWay}" />
+                                            Maximum="100"
+                                            Minimum="0"
+                                            Style="{DynamicResource NumberBoxStyle}"
+                                            Value="{Binding ChestItemDropChance, Mode=TwoWay}" />
                                     </DockPanel>
                                     <TextBlock
                                         Margin="30,0,0,0"
@@ -903,19 +864,16 @@
                                             ToolTipService.InitialShowDelay="0"
                                             ToolTipService.ShowDuration="1000"
                                             Value="{Binding LegItemDropChance, Mode=TwoWay}" />
-                                        <CustomControls:ColorNumbericUpDowns
+                                        <Slider
                                             Width="145"
                                             Height="25"
                                             HorizontalAlignment="Left"
-                                            ArrowForeground="White"
-                                            ArrowHeight="25"
-                                            ArrowWidth="25"
                                             Background="Transparent"
                                             Foreground="White"
-                                            MaxValue="100"
-                                            MinValue="0"
-                                            Template="{DynamicResource ColorNumbericUpDown}"
-                                            Text="{Binding LegItemDropChance, Mode=TwoWay}" />
+                                            Maximum="100"
+                                            Minimum="0"
+                                            Style="{DynamicResource NumberBoxStyle}"
+                                            Value="{Binding LegItemDropChance, Mode=TwoWay}" />
                                     </DockPanel>
                                     <TextBlock
                                         Margin="30,0,0,0"
@@ -964,19 +922,16 @@
                                             ToolTipService.InitialShowDelay="0"
                                             ToolTipService.ShowDuration="1000"
                                             Value="{Binding BootItemDropChance, Mode=TwoWay}" />
-                                        <CustomControls:ColorNumbericUpDowns
+                                        <Slider
                                             Width="145"
                                             Height="25"
                                             HorizontalAlignment="Left"
-                                            ArrowForeground="White"
-                                            ArrowHeight="25"
-                                            ArrowWidth="25"
                                             Background="Transparent"
                                             Foreground="White"
-                                            MaxValue="100"
-                                            MinValue="0"
-                                            Template="{DynamicResource ColorNumbericUpDown}"
-                                            Text="{Binding BootItemDropChance, Mode=TwoWay}" />
+                                            Maximum="100"
+                                            Minimum="0"
+                                            Style="{DynamicResource NumberBoxStyle}"
+                                            Value="{Binding BootItemDropChance, Mode=TwoWay}" />
                                     </DockPanel>
                                 </StackPanel>
                             </Border>

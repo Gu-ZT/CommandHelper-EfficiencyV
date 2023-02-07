@@ -132,24 +132,19 @@
                     Foreground="Black"
                     Text="经验"
                     TextAlignment="Center" />
-                <CustomControls:ColorNumbericUpDowns
+                <Slider
                     Width="150"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     AllowDrop="False"
-                    ArrowBackground="Transparent"
-                    ArrowForeground="White"
-                    ArrowHeight="25"
-                    ArrowWidth="25"
                     Background="Transparent"
                     BorderThickness="0"
-                    CaretBrush="White"
                     FontSize="20"
-                    Foreground="Black"
+                    Foreground="White"
                     Loaded="RecipeExpLoaded"
-                    MaxValue="2147483647"
-                    MinValue="0"
-                    Template="{DynamicResource ColorNumbericUpDown}" />
+                    Maximum="2147483647"
+                    Minimum="1"
+                    Style="{DynamicResource NumberBoxStyle}" />
             </DockPanel>
             <DockPanel
                 Grid.Row="0"
@@ -167,24 +162,19 @@
                     Foreground="Black"
                     Text="烧制时间"
                     TextAlignment="Center" />
-                <CustomControls:ColorNumbericUpDowns
+                <Slider
                     Width="125"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     AllowDrop="False"
-                    ArrowBackground="Transparent"
-                    ArrowForeground="White"
-                    ArrowHeight="25"
-                    ArrowWidth="25"
                     Background="Transparent"
                     BorderThickness="0"
-                    CaretBrush="White"
                     FontSize="20"
                     Foreground="White"
                     Loaded="RecipeCookingTimeLoaded"
-                    MaxValue="2147483647"
-                    MinValue="0"
-                    Template="{DynamicResource ColorNumbericUpDown}" />
+                    Maximum="2147483647"
+                    Minimum="1"
+                    Style="{DynamicResource NumberBoxStyle}" />
             </DockPanel>
             <DockPanel
                 Grid.Row="1"

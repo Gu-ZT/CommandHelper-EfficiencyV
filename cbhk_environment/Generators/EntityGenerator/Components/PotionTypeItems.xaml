@@ -23,10 +23,10 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Foreground="White"
-                Text="药水类型:" />
+                Text="药水类型" />
             <ComboBox
                 x:Name="EffectID"
-                Width="100"
+                Width="140"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Loaded="MobEffectIdLoaded"
@@ -38,15 +38,17 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Foreground="White"
-                Text="持续时间:" />
+                Text="持续时间" />
             <Slider
                 x:Name="EffectDuration"
-                Width="100"
+                Width="120"
                 HorizontalAlignment="Left"
                 Background="Transparent"
                 BorderBrush="Black"
                 BorderThickness="1"
                 Foreground="White"
+                Maximum="2147483647"
+                Minimum="-2147483648"
                 Style="{DynamicResource NumberBoxStyle}"
                 ValueChanged="MobEffectDurationSelectionChanged"
                 Value="0" />
@@ -55,10 +57,10 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Foreground="White"
-                Text="效果等级:" />
+                Text="效果等级" />
             <Slider
                 x:Name="EffectLevel"
-                Width="50"
+                Width="80"
                 HorizontalAlignment="Left"
                 Background="Transparent"
                 BorderThickness="0"

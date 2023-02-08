@@ -44,7 +44,11 @@
                                 x:Name="PART_ContentHost"
                                 Focusable="false"
                                 HorizontalScrollBarVisibility="Hidden"
+                                RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                RenderOptions.ClearTypeHint="Enabled"
+                                SnapsToDevicePixels="True"
                                 Style="{StaticResource DefaultScrollViewer}"
+                                UseLayoutRounding="True"
                                 VerticalScrollBarVisibility="Hidden" />
                             <Grid
                                 x:Name="resizeGripGrid"

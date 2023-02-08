@@ -14,6 +14,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using System.Windows.Data;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
+using System.Threading.Tasks;
 
 namespace cbhk_environment.Generators.VillagerGenerator
 {
@@ -22,7 +23,7 @@ namespace cbhk_environment.Generators.VillagerGenerator
         #region 处理拖拽
         public static bool IsGrabingItem = false;
         Image drag_source = null;
-        Image GrabedImage = new Image();
+        Image GrabedImage = null;
         #endregion
 
         #region 生成与返回
@@ -62,11 +63,6 @@ namespace cbhk_environment.Generators.VillagerGenerator
         //图标路径
         string icon_path = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\Villager\\images\\icon.png";
 
-        //导入的背包的列数
-        int MaxColumnCount = 9;
-
-        //拖拽响应范围
-        Grid VillagerGridZone = null;
         //左侧交易项数据源
         public static ObservableCollection<TransactionItems> transactionItems { get; set; } = new ObservableCollection<TransactionItems> { };
         //言论数据源
@@ -85,9 +81,6 @@ namespace cbhk_environment.Generators.VillagerGenerator
 
         //当前选中的物品
         public static TransactionItems CurrentItem = null;
-
-        //物品搜索框引用
-        TextBox ItemSearcher = null;
 
         #region 言论面板收放
         private Visibility isEditGossips = Visibility.Collapsed;
@@ -170,12 +163,64 @@ namespace cbhk_environment.Generators.VillagerGenerator
         //言论数据源所在视图引用
         ScrollViewer GossipViewer = null;
 
-        //背包物品数据源
-        public List<UniformGrid> BagItems { get; set; } = new List<UniformGrid> { new UniformGrid() { Width = 1080 } };
-        //背包物品引用
-        ItemsControl ItemList = null;
-        //交易列表
-        public static List<string> Recipes = new List<string> { };
+        //物品引用
+        public ObservableCollection<Uri> BagItems { get; set; } = new ObservableCollection<Uri>();
+        //物品描述引用
+        public ObservableCollection<string> BagItemToolTips { get; set; } = new ObservableCollection<string> { };
+
+        #region 已选中的成员
+        private Uri selectedItem = null;
+        public Uri SelectedItem
+        {
+            get
+            {
+                return selectedItem;
+            }
+            set
+            {
+                selectedItem = value;
+            }
+        }
+        #endregion
+
+        #region 搜索内容
+        private string searchText = "";
+        public string SearchText
+        {
+            get
+            {
+                return searchText;
+            }
+            set
+            {
+                searchText = value;
+                if(Bag != null)
+                {
+                    if (SearchText.Trim().Length > 0)
+                    {
+                        foreach (var item in Bag.Items)
+                        {
+                            ListBoxItem listBoxItem = Bag.ItemContainerGenerator.ContainerFromItem(item) as ListBoxItem;
+                            ContentPresenter contentPresenter = GeneralTools.ChildrenHelper.FindVisualChild<ContentPresenter>(listBoxItem);
+                            Image image = contentPresenter.ContentTemplate.FindName("contentImage", contentPresenter) as Image;
+                            string itemInfo = image.ToolTip.ToString();
+                            if (!(itemInfo.Contains(SearchText) || SearchText.StartsWith(itemInfo)))
+                                listBoxItem.Visibility = Visibility.Collapsed;
+                            else
+                                listBoxItem.Visibility = Visibility.Visible;
+                        }
+                    }
+                    else
+                        foreach (var item in Bag.Items)
+                        {
+                            ListBoxItem listBoxItem = Bag.ItemContainerGenerator.ContainerFromItem(item) as ListBoxItem;
+                            listBoxItem.Visibility = Visibility.Visible;
+                        }
+                }
+            }
+        }
+        #endregion
+
         //言论搜索类型数据源
         ObservableCollection<string> gossipSearchType = new ObservableCollection<string> { };
         //言论搜索类型配置文件路径
@@ -568,6 +613,13 @@ namespace cbhk_environment.Generators.VillagerGenerator
         public RelayCommand ClearTransactionItem { get; set; }
         #endregion
 
+        //物品加载进程锁
+        object itemLoadLock = new object();
+
+        //背包引用
+        ListBox Bag = null;
+        //滚动视图引用
+        ScrollViewer scrollViewer = null;
         public villager_datacontext()
         {
             #region 链接指令
@@ -577,31 +629,36 @@ namespace cbhk_environment.Generators.VillagerGenerator
             ClearTransactionItem = new RelayCommand(ClearTransactionItemCommand);
             #endregion
 
-            #region 初始化网格的列
-            BagItems[0].Columns = MaxColumnCount;
-            #endregion
-
-            //把交易数据页放入容器中，用于定位出现位置
+            #region 把交易数据页放入容器中，用于定位出现位置
             popup.Child = transactionItemDataForm;
             popup.Placement = PlacementMode.Mouse;
             popup.PlacementTarget = CurrentItem;
+            #endregion
+
+            #region 异步载入物品序列
+            BindingOperations.EnableCollectionSynchronization(BagItems, itemLoadLock);
+            //加载物品集合
+            Task.Run(() =>
+            {
+                lock (itemLoadLock)
+                {
+                    string uriDirectoryPath = AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\";
+                    string urlPath = "";
+                    foreach (var item in MainWindow.ItemDataBase)
+                    {
+                        urlPath = uriDirectoryPath + item.Key.Substring(0, item.Key.IndexOf(":")) + ".png";
+                        if (File.Exists(urlPath))
+                            BagItems.Add(new Uri(urlPath, UriKind.Absolute));
+                    }
+                }
+            });
+            #endregion
         }
 
         public void VersionLoaded(object sender, RoutedEventArgs e)
         {
             ComboBox comboBox = sender as ComboBox;
             comboBox.ItemsSource = VersionSource;
-        }
-
-        /// <summary>
-        /// 载入高清背景并订阅鼠标移动事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void TransactionBackgroundLoaded(object sender, RoutedEventArgs e)
-        {
-            VillagerGridZone = sender as Grid;
-            VillagerGridZone.MouseMove += SelectItemMove;
         }
 
         /// <summary>
@@ -740,51 +797,11 @@ namespace cbhk_environment.Generators.VillagerGenerator
         private void run_command()
         {
             string result = "";
-
             result += WillingString + VillagerData + Offers + Gossips + Brain + LastRestockString + XpString;
-
             result = "/summon villager ~ ~1 ~ {" + result.TrimEnd(',') + "}";
-
             GenerateResultDisplayer.Displayer displayer = GenerateResultDisplayer.Displayer.GetContentDisplayer();
             displayer.GeneratorResult(OverLying, new string[] { result }, new string[] { "" }, new string[] { icon_path }, new System.Windows.Media.Media3D.Vector3D() { X = 30, Y = 30 });
             displayer.Show();
-        }
-
-        /// <summary>
-        /// 获取背包引用
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void ItemZoneLoaded(object sender, RoutedEventArgs e)
-        {
-            ItemList = sender as ItemsControl;
-            foreach (KeyValuePair<string, BitmapImage> item in MainWindow.ItemDataBase)
-            {
-                string[] image_name = item.Key.Split(':');
-                if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + image_name[0] + ".png"))
-                {
-                    BitmapImage bitmapImage = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + image_name[0] + ".png", UriKind.Absolute));
-                    Image a_item = new Image()
-                    {
-                        Tag = image_name[0],
-                        ToolTip = image_name[0] + " " + image_name[1],
-                        HorizontalAlignment = HorizontalAlignment.Left,
-                        VerticalAlignment = VerticalAlignment.Top,
-                        Source = bitmapImage,
-                        SnapsToDevicePixels = true,
-                        UseLayoutRounding = true
-                    };
-                    RenderOptions.SetBitmapScalingMode(a_item, BitmapScalingMode.NearestNeighbor);
-                    RenderOptions.SetClearTypeHint(a_item, ClearTypeHint.Enabled);
-                    a_item.MouseLeftButtonDown += SelectItemClickDown;
-                    ToolTipService.SetShowDuration(a_item, 1500);
-                    ToolTipService.SetInitialShowDelay(a_item, 0);
-                    BagItems[0].Children.Add(a_item);
-                    ToolTipService.GetToolTip(a_item);
-                }
-            }
-            ItemList.ItemsSource = BagItems;
-            BagItems[0].Children[0].Visibility = Visibility.Collapsed;
         }
 
         /// <summary>
@@ -926,6 +943,16 @@ namespace cbhk_environment.Generators.VillagerGenerator
         }
 
         /// <summary>
+        /// 载入背包引用
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void BagItemLoaded(object sender, RoutedEventArgs e)
+        {
+            Bag = sender as ListBox;
+        }
+
+        /// <summary>
         /// 获取言论搜索目标的引用
         /// </summary>
         /// <param name="sender"></param>
@@ -933,44 +960,6 @@ namespace cbhk_environment.Generators.VillagerGenerator
         public void GossipSearchTargetLoaded(object sender, RoutedEventArgs e)
         {
             GossipSearchTarget = sender as TextBox;
-        }
-
-        /// <summary>
-        /// 获取物品搜索框的引用
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void ItemSearcherLoaded(object sender, RoutedEventArgs e)
-        {
-            ItemSearcher = sender as TextBox;
-        }
-
-        /// <summary>
-        /// 查找物品
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void SearchItemTextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (ItemSearcher.Text.Trim() == "")
-            {
-                foreach (Image item in BagItems[0].Children)
-                {
-                    item.Visibility = Visibility.Visible;
-                }
-                return;
-            }
-
-            foreach (Image item in BagItems[0].Children)
-            {
-
-                if (item.ToolTip.ToString() == ItemSearcher.Text.Trim() || item.ToolTip.ToString().StartsWith(ItemSearcher.Text.Trim()))
-                {
-                    item.Visibility = Visibility.Visible;
-                }
-                else
-                    item.Visibility = Visibility.Collapsed;
-            }
         }
 
         /// <summary>
@@ -1017,6 +1006,28 @@ namespace cbhk_environment.Generators.VillagerGenerator
             }
         }
 
+        public void ScrollViewer_Loaded(object sender, RoutedEventArgs e)
+        {
+            scrollViewer = sender as ScrollViewer;
+        }
+
+        public void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            var eventArg = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta)
+            {
+                RoutedEvent = UIElement.MouseWheelEvent,
+                Source = e.Source
+            };
+            ScrollViewer scv = (ScrollViewer)sender;
+            scv.RaiseEvent(eventArg);
+            e.Handled = true;
+        }
+
+        public  void ListBox_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            ScrollViewer_PreviewMouseWheel(scrollViewer, e);
+        }
+
         /// <summary>
         /// 左击言论成员后计算左侧所有物品的价格
         /// </summary>
@@ -1058,27 +1069,40 @@ namespace cbhk_environment.Generators.VillagerGenerator
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void SelectItemClickDown(object sender, MouseButtonEventArgs e)
+        public void SelectItemClickDown(object sender, MouseButtonEventArgs e)
         {
-            IsGrabingItem = true;
-            Image image = sender as Image;
-            drag_source = image;
-            GrabedImage = new Image() { Tag = image.ToolTip.ToString() };
-        }
-
-        /// <summary>
-        /// 处理拖拽物品
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void SelectItemMove(object sender, MouseEventArgs e)
-        {
-            if (IsGrabingItem && drag_source != null && GrabedImage != null)
+            if (SelectedItem != null)
             {
-                DataObject dataObject = new DataObject(typeof(Image), GrabedImage);
-                if (dataObject != null)
-                    DragDrop.DoDragDrop(drag_source, dataObject, DragDropEffects.Move);
-                IsGrabingItem = false;
+                IsGrabingItem = true;
+
+                int startIndex = SelectedItem.ToString().LastIndexOf('/') + 1;
+                int endIndex = SelectedItem.ToString().LastIndexOf('.');
+                string itemID = SelectedItem.ToString().Substring(startIndex, endIndex - startIndex);
+                string toolTip = "";
+                MainWindow.ItemDataBase.All(item =>
+                {
+                    if (item.Key.Substring(0, item.Key.IndexOf(':')) == itemID)
+                    {
+                        toolTip = item.Key.Substring(0,item.Key.IndexOf(':'));
+                        return true;
+                    }
+                    return false;
+                });
+
+                drag_source = new Image
+                {
+                    Source = new BitmapImage(SelectedItem),
+                    Tag = toolTip
+                };
+                GrabedImage = drag_source;
+
+                if (IsGrabingItem && drag_source != null)
+                {
+                    DataObject dataObject = new DataObject(typeof(Image), GrabedImage);
+                    if (dataObject != null)
+                        DragDrop.DoDragDrop(drag_source, dataObject, DragDropEffects.Move);
+                    IsGrabingItem = false;
+                }
             }
         }
     }

@@ -32,7 +32,11 @@
                             VirtualizingPanel.IsVirtualizing="True"
                             VirtualizingPanel.ScrollUnit="Pixel"
                             VirtualizingPanel.VirtualizationMode="Recycling">
-                            <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                            <ItemsPresenter
+                                RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                RenderOptions.ClearTypeHint="Enabled"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                UseLayoutRounding="True" />
                         </ScrollViewer>
                     </Border>
                     <ControlTemplate.Triggers>

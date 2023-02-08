@@ -33,7 +33,10 @@
                             Width="{TemplateBinding ToggleWidth}"
                             Height="{TemplateBinding ToggleHeight}"
                             BorderThickness="0"
-                            SnapsToDevicePixels="true">
+                            RenderOptions.BitmapScalingMode="NearestNeighbor"
+                            RenderOptions.ClearTypeHint="Enabled"
+                            SnapsToDevicePixels="True"
+                            UseLayoutRounding="True">
                             <!--<Path
                                 x:Name="CheckShape"
                                 Width="15"

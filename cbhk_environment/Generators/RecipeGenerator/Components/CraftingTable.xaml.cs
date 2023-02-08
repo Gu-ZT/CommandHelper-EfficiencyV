@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace cbhk_environment.Generators.RecipeGenerator.Components
@@ -34,8 +35,8 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
         #endregion
 
         #region 默认键值
-        List<char> DefaultKeyList = new List<char> { 'm','j','s','b' };
-        static int defaultKeyListIndex = 0;
+        List<char> DefaultKeyList = new List<char> { 'm','j','s','b','c','d','e','f','g' };
+        int defaultKeyListIndex = 0;
         #endregion
 
         //存储九宫格容器引用
@@ -394,9 +395,7 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
             Image current_item = sender as Image;
             string item_id = recipe_datacontext.GrabedImage.Tag.ToString();
             string image_path = AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + item_id + ".png";
-            System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(image_path);
-            bitmap = GeneralTools.ChangeBitmapSize.Magnifier(bitmap, 10);
-            BitmapImage bitmapImage = GeneralTools.BitmapImageConverter.ToBitmapImage(bitmap);
+            BitmapImage bitmapImage = new BitmapImage(new Uri(image_path,UriKind.Absolute));
             #endregion
 
             #region 获取空图像引用
@@ -412,8 +411,12 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
                 Width = current_item.Width,
                 Tag = item_id,
                 ToolTip = item_id + " 右击删除",
-                Uid = current_item.Uid
+                Uid = current_item.Uid,
+                SnapsToDevicePixels = true,
+                UseLayoutRounding = true
             };
+            RenderOptions.SetBitmapScalingMode(cache_image,BitmapScalingMode.HighQuality);
+            RenderOptions.SetClearTypeHint(cache_image,ClearTypeHint.Enabled);
             ToolTipService.SetInitialShowDelay(cache_image, 0);
             ToolTipService.SetShowDuration(cache_image, 1000);
             cache_image.MouseRightButtonDown += DeleteCacheImage;
@@ -825,6 +828,18 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
         private void RecipeFileNameLoaded(object sender, RoutedEventArgs e)
         {
             RecipeFileName = sender as TextBox;
+        }
+
+        /// <summary>
+        /// 抬起右键后删除合成结果
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DeleteRecipeResultClick(object sender, MouseButtonEventArgs e)
+        {
+            Image image = sender as Image;
+            image.Source = empty_image;
+            RecipeResult = "";
         }
     }
 }

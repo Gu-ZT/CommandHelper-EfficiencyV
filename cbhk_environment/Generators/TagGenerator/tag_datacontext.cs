@@ -3,15 +3,17 @@ using cbhk_environment.GeneralTools;
 using cbhk_environment.WindowDictionaries;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using WK.Libraries.BetterFolderBrowserNS;
@@ -68,8 +70,7 @@ namespace cbhk_environment.Generators.TagGenerator
         //存储最终生成的列表
         List<string> BlocksAndItems = new List<string> { };
         List<string> Entities = new List<string>();
-        //保存复选框所在父级栈表
-        ItemsControl checkbox_parent = null;
+
         //保存搜索框的值引用
         private string searchText = "";
         public string SearchText
@@ -87,10 +88,11 @@ namespace cbhk_environment.Generators.TagGenerator
         //保存所有RichCheckBox的键
         List<string> BlockAndItemKeys = new List<string> { };
         //保存所有可视化成员
-        List<RichCheckBoxs> VisibleCheckBoxs = new List<RichCheckBoxs> { };
+        List<TagItemTemplate> VisibleCheckBoxs = new List<TagItemTemplate> { };
 
-        private ObservableCollection<RichCheckBoxs> tagItems = new ObservableCollection<RichCheckBoxs> { };
-        public ObservableCollection<RichCheckBoxs> TagItems
+        #region 所有标签成员
+        private ObservableCollection<TagItemTemplate> tagItems = new ObservableCollection<TagItemTemplate> { };
+        public ObservableCollection<TagItemTemplate> TagItems
         {
             get
             {
@@ -102,6 +104,31 @@ namespace cbhk_environment.Generators.TagGenerator
                 OnPropertyChanged();
             }
         }
+        #endregion
+
+        //载入进程锁
+        object tagItemsLock = new object();
+
+        //滚动视图引用
+        ScrollViewer scrollViewer = null;
+
+        //标签容器
+        ListBox TagZone = null;
+
+        #region 当前选中成员
+        private TagItemTemplate selectedItem = null;
+        public TagItemTemplate SelectedItem
+        {
+            get
+            {
+                return selectedItem;
+            }
+            set
+            {
+                selectedItem = value;
+            }
+        }
+        #endregion
 
         public tag_datacontext()
         {
@@ -109,33 +136,36 @@ namespace cbhk_environment.Generators.TagGenerator
             RunCommand = new RelayCommand(run_command);
             ReturnCommand = new RelayCommand<CommonWindow>(return_command);
             #endregion
-        }
 
-        /// <summary>
-        /// 载入id列表
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void TagStackPanelLoaded(object sender, RoutedEventArgs e)
-        {
-            checkbox_parent = sender as ItemsControl;
-            foreach (var item in MainWindow.TagSpawnerItemCheckBoxList)
+            #region 异步载入标签成员
+            BindingOperations.EnableCollectionSynchronization(TagItems, tagItemsLock);
+            Task.Run(() =>
             {
-                item.Checked += ItemChecked;
-                item.Unchecked += ItemUnChecked;
-                item.MouseEnter += ItemMouseEnter;
-                TagItems.Add(item);
-                BlockAndItemKeys.Add(item.HeaderText);
-            }
-            foreach (var item in MainWindow.EntityCheckBoxList)
-            {
-                item.Checked += ItemChecked;
-                item.Unchecked += ItemUnChecked;
-                item.MouseEnter += ItemMouseEnter;
-                TagItems.Add(item);
-                BlockAndItemKeys.Add(item.HeaderText);
-            }
-            checkbox_parent.ItemsSource = TagItems;
+                lock(tagItemsLock)
+                {
+                    string uriDirectoryPath = AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\";
+                    string urlPath = "";
+                    string id = "";
+                    foreach (var item in MainWindow.ItemDataBase)
+                    {
+                        id = item.Key.Substring(0, item.Key.IndexOf(":"));
+                        urlPath = uriDirectoryPath + id + ".png";
+                        if (File.Exists(urlPath))
+                        {
+                            int matchCount = MainWindow.EntityDataBase.Where(block=> block.Key.Substring(0, block.Key.IndexOf(':')) == id).Count();
+                            string uid = matchCount > 0 ?"Item":"Entity";
+                            TagItems.Add(new TagItemTemplate()
+                            {
+                                ContentImage = new Uri(urlPath,UriKind.Absolute),
+                                ContentString = item.Key.Replace(":", " "),
+                                TagString = uid,
+                                BeChecked = false
+                            });
+                        }
+                    }
+                }
+            });
+            #endregion
         }
 
         /// <summary>
@@ -176,7 +206,7 @@ namespace cbhk_environment.Generators.TagGenerator
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ItemUnChecked(object sender, RoutedEventArgs e)
+        public void ItemUnChecked(object sender, RoutedEventArgs e)
         {
             RichCheckBoxs richCheckBoxs = sender as RichCheckBoxs;
             if(richCheckBoxs.Uid == "Item")
@@ -191,7 +221,7 @@ namespace cbhk_environment.Generators.TagGenerator
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ItemChecked(object sender, RoutedEventArgs e)
+        public void ItemChecked(object sender, RoutedEventArgs e)
         {
             RichCheckBoxs richCheckBoxs = sender as RichCheckBoxs;
 
@@ -221,7 +251,6 @@ namespace cbhk_environment.Generators.TagGenerator
         /// </summary>
         private void run_command()
         {
-            MessageBox.Show(SearchText);
             string result = string.Join("\r\n",BlocksAndItems) + string.Join("\r\n",Entities).TrimEnd(',');
             result = "{\r\n  \"replace\": " + Replace.ToString().ToLower() + ",\r\n\"values\": [\r\n" + result + "  \r\n]\r\n}";
             BetterFolderBrowser folderBrowser = new BetterFolderBrowser()
@@ -262,15 +291,15 @@ namespace cbhk_environment.Generators.TagGenerator
 
             if (VisibleCheckBoxs.Count == 0)
             {
-                foreach (RichCheckBoxs item in checkbox_parent.Items)
+                foreach (var item in TagItems)
                 {
-                    item.IsChecked = true;
+                    SetItemValue(item,value);
                 }
             }
             else
                 for (int i = 0; i < VisibleCheckBoxs.Count; i++)
                 {
-                    VisibleCheckBoxs[i].IsChecked = value;
+                    SetItemValue(VisibleCheckBoxs[i],value);
                 }
         }
 
@@ -283,15 +312,15 @@ namespace cbhk_environment.Generators.TagGenerator
         {
             if (VisibleCheckBoxs.Count == 0)
             {
-                foreach (RichCheckBoxs item in checkbox_parent.Items)
+                foreach (var item in TagItems)
                 {
-                    item.IsChecked = !item.IsChecked.Value;
+                    ReverseValue(item);
                 }
             }
             else
-                foreach (RichCheckBoxs item in VisibleCheckBoxs)
+                foreach (var item in VisibleCheckBoxs)
                 {
-                    item.IsChecked = !item.IsChecked;
+                    ReverseValue(item);
                 }
         }
 
@@ -303,11 +332,13 @@ namespace cbhk_environment.Generators.TagGenerator
         public void SearchBoxKeyUp(object sender, TextChangedEventArgs e)
         {
             #region 为空则恢复所有RichCheckBox的可见性
-            if (SearchText.Trim() == "")
+            string content = SearchText;
+            if (content.Trim() == "")
             {
-                foreach (RichCheckBoxs item in checkbox_parent.Items)
+                foreach (var item in TagZone.Items)
                 {
-                    item.Visibility = Visibility.Visible;
+                    ListBoxItem listBoxItem = TagZone.ItemContainerGenerator.ContainerFromItem(item) as ListBoxItem;
+                    listBoxItem.Visibility = Visibility.Visible;
                 }
                 VisibleCheckBoxs.Clear();
                 return;
@@ -315,23 +346,167 @@ namespace cbhk_environment.Generators.TagGenerator
             #endregion
 
             //暂时全部隐藏
-            foreach (RichCheckBoxs item in checkbox_parent.Items)
+            foreach (var item in TagZone.Items)
             {
-                item.Visibility = Visibility.Collapsed;
+                ListBoxItem listBoxItem = TagZone.ItemContainerGenerator.ContainerFromItem(item) as ListBoxItem;
+                listBoxItem.Visibility = Visibility.Collapsed;
             }
-            List<string> result = BlockAndItemKeys.Where(item => item.StartsWith(SearchText)).Distinct().ToList();
+            List<string> result = BlockAndItemKeys.Where(item => item.StartsWith(SearchText)).ToList();
             //更新当前新可视化成员列表
             VisibleCheckBoxs.Clear();
 
+            if(result.Count > 0)
             foreach (string item in result)
             {
-                RichCheckBoxs box = checkbox_parent.Items[BlockAndItemKeys.IndexOf(item)] as RichCheckBoxs;
-                if (box.HeaderText.Contains(item) || item.Contains(box.HeaderText))
+                TagItemTemplate tagItemTemplate = TagZone.Items[BlockAndItemKeys.IndexOf(item)] as TagItemTemplate;
+                ListBoxItem listBoxItem = TagZone.ItemContainerGenerator.ContainerFromItem(tagItemTemplate) as ListBoxItem;
+                ContentPresenter contentPresenter = ChildrenHelper.FindVisualChild<ContentPresenter>(listBoxItem);
+                TextBlock textblock = contentPresenter.ContentTemplate.FindName("contentbox", contentPresenter) as TextBlock;
+
+                if (textblock.Text.StartsWith(SearchText) || textblock.Text.Substring(textblock.Text.IndexOf(' ') + 1).StartsWith(SearchText))
                 {
-                    box.Visibility = Visibility.Visible;
-                    VisibleCheckBoxs.Add(box);
+                    listBoxItem.Visibility = Visibility.Visible;
+                    VisibleCheckBoxs.Add(tagItemTemplate);
+                }
+            }
+            else
+                foreach (var item in TagItems)
+                {
+                    ListBoxItem listBoxItem = TagZone.ItemContainerGenerator.ContainerFromItem(item) as ListBoxItem;
+                    ContentPresenter contentPresenter = ChildrenHelper.FindVisualChild<ContentPresenter>(listBoxItem);
+                    TextBlock textblock = contentPresenter.ContentTemplate.FindName("contentbox", contentPresenter) as TextBlock;
+
+                    if (textblock.Text.StartsWith(SearchText) || textblock.Text.Substring(textblock.Text.IndexOf(' ') + 1).StartsWith(SearchText))
+                    {
+                        listBoxItem.Visibility = Visibility.Visible;
+                        VisibleCheckBoxs.Add(item);
+                    }
+                }
+        }
+
+        public void ScrollViewer_Loaded(object sender, RoutedEventArgs e)
+        {
+            scrollViewer = sender as ScrollViewer;
+        }
+
+        public void ListBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            TagZone = sender as ListBox;
+        }
+
+        public void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            var eventArg = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta)
+            {
+                RoutedEvent = UIElement.MouseWheelEvent,
+                Source = e.Source
+            };
+            ScrollViewer scv = (ScrollViewer)sender;
+            scv.RaiseEvent(eventArg);
+            e.Handled = true;
+        }
+
+        public void ListBox_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            ScrollViewer_PreviewMouseWheel(scrollViewer, e);
+        }
+
+        /// <summary>
+        /// 设置目标成员的值
+        /// </summary>
+        /// <param name="CurrentItem"></param>
+        /// <param name="ItemValue"></param>
+        private void SetItemValue(object CurrentItem,bool ItemValue)
+        {
+            TagItemTemplate tagItemTemplate = CurrentItem as TagItemTemplate;
+            ListBoxItem listBoxItem = TagZone.ItemContainerGenerator.ContainerFromItem(CurrentItem) as ListBoxItem;
+            ContentPresenter contentPresenter = ChildrenHelper.FindVisualChild<ContentPresenter>(listBoxItem);
+            IconCheckBoxs iconCheckBoxs = contentPresenter.ContentTemplate.FindName("checkbox", contentPresenter) as IconCheckBoxs;
+            TextBlock textblock = contentPresenter.ContentTemplate.FindName("contentbox", contentPresenter) as TextBlock;
+            string itemString = "";
+
+            if(textblock.Text.Trim().Length > 0)
+            {
+                itemString = textblock.Text.Trim().Substring(0, textblock.Text.Trim().IndexOf(' '));
+                if (Regex.IsMatch(textblock.Text.Trim(), "[a-zA-z_]+"))
+                {
+                    iconCheckBoxs.IsChecked = ItemValue;
+                    if (iconCheckBoxs.IsChecked.Value)
+                    {
+                        if (tagItemTemplate.TagString == "Item")
+                            BlocksAndItems.Add("\"minecraft:" + itemString + "\",");
+                        else
+                        if (tagItemTemplate.TagString == "Entity")
+                            Entities.Add("\"minecraft:" + itemString + "\",");
+                    }
+                    else
+                    {
+                        if (tagItemTemplate.TagString == "Item")
+                            BlocksAndItems.Remove("\"minecraft:" + itemString + "\",");
+                        else
+                        if (tagItemTemplate.TagString == "Entity")
+                            Entities.Remove("\"minecraft:" + itemString + "\",");
+                    }
                 }
             }
         }
+
+        /// <summary>
+        /// 反转目标成员的值
+        /// </summary>
+        /// <param name="CurrentItem"></param>
+        private void ReverseValue(object CurrentItem)
+        {
+            TagItemTemplate tagItemTemplate = CurrentItem as TagItemTemplate;
+            ListBoxItem listBoxItem = TagZone.ItemContainerGenerator.ContainerFromItem(CurrentItem) as ListBoxItem;
+            ContentPresenter contentPresenter = ChildrenHelper.FindVisualChild<ContentPresenter>(listBoxItem);
+            IconCheckBoxs iconCheckBoxs = contentPresenter.ContentTemplate.FindName("checkbox", contentPresenter) as IconCheckBoxs;
+            TextBlock textblock = contentPresenter.ContentTemplate.FindName("contentbox", contentPresenter) as TextBlock;
+
+            string itemString = "";
+            if(textblock.Text.Trim().Length > 0)
+            {
+                itemString = textblock.Text.Trim().Substring(0, textblock.Text.Trim().IndexOf(' '));
+                if (Regex.IsMatch(textblock.Text.Trim(), "[a-zA-z_]+"))
+                {
+                    iconCheckBoxs.IsChecked = !iconCheckBoxs.IsChecked.Value;
+                    if (iconCheckBoxs.IsChecked.Value)
+                    {
+                        if (tagItemTemplate.TagString == "Item")
+                            BlocksAndItems.Add("\"minecraft:" + itemString + "\",");
+                        else
+                        if (tagItemTemplate.TagString == "Entity")
+                            Entities.Add("\"minecraft:" + itemString + "\",");
+                    }
+                    else
+                    {
+                        if (tagItemTemplate.TagString == "Item")
+                            BlocksAndItems.Remove("\"minecraft:" + itemString + "\",");
+                        else
+                        if (tagItemTemplate.TagString == "Entity")
+                            Entities.Remove("\"minecraft:" + itemString + "\",");
+                    }
+                }
+            }
+        }
+
+        public void ListBoxClick(object sender, MouseButtonEventArgs e)
+        {
+            if (SelectedItem != null)
+            {
+                ReverseValue(TagZone.SelectedItem);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 载入成员的属性模板
+    /// </summary
+    public class TagItemTemplate
+    {
+        public Uri ContentImage { get; set; }
+        public string TagString { get; set; }
+        public string ContentString { get; set; }
+        public bool? BeChecked { get; set; }
     }
 }

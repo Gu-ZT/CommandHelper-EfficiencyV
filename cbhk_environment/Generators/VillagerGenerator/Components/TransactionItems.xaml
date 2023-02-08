@@ -21,7 +21,12 @@
         x:Name="border"
         BorderBrush="Black"
         BorderThickness="2">
-        <Grid Background="{StaticResource ButtonNormal}" MouseLeftButtonDown="CloseNumberModifyMouseLeftButtonDown">
+        <Grid
+            Background="{StaticResource ButtonNormal}"
+            MouseLeftButtonDown="CloseNumberModifyMouseLeftButtonDown"
+            RenderOptions.BitmapScalingMode="NearestNeighbor"
+            RenderOptions.ClearTypeHint="Enabled"
+            UseLayoutRounding="True">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
@@ -46,7 +51,6 @@
                     </TextDecoration>
                 </TextBlock.TextDecorations>
             </TextBlock>
-
             <Image
                 x:Name="Buy"
                 Grid.Row="0"

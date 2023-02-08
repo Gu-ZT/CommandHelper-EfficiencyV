@@ -199,6 +199,7 @@
     <Compile Include="GeneralTools\ChangeBitmapSize.cs" />
     <Compile Include="GeneralTools\ColorManagement.cs" />
     <Compile Include="GeneralTools\ConvertJsonToTreeView.cs" />
+    <Compile Include="GeneralTools\ChildrenHelper.cs" />
     <Compile Include="GeneralTools\GetDataFromJson.cs" />
     <Compile Include="GeneralTools\GetTextWidth.cs" />
     <Compile Include="GeneralTools\MosaicHelper.cs" />
@@ -208,6 +209,10 @@
     <Compile Include="GeneralTools\ScrollToSomeWhere.cs" />
     <Compile Include="GeneralTools\ScrollViewerHelper\FramewrokElementExtensions.cs" />
     <Compile Include="GeneralTools\ScrollViewerHelper\ScrollToControlAction.cs" />
+    <Compile Include="GeneralTools\ToolTipToString.cs" />
+    <Compile Include="GeneralTools\UriHelper.cs" />
+    <Compile Include="GeneralTools\UriToBitmapConverter.cs" />
+    <Compile Include="GeneralTools\UriToToolTip.cs" />
     <Compile Include="Generators\ArmorStandGenerator\ArmorStand.xaml.cs">
       <DependentUpon>ArmorStand.xaml</DependentUpon>
     </Compile>

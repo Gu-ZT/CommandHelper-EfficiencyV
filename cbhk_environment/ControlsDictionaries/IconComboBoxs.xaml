@@ -46,7 +46,11 @@
             <Image
                 Width="60"
                 Height="60"
-                Source="{Binding ComboBoxItemIcon}" />
+                RenderOptions.BitmapScalingMode="NearestNeighbor"
+                RenderOptions.ClearTypeHint="Enabled"
+                SnapsToDevicePixels="True"
+                Source="{Binding ComboBoxItemIcon}"
+                UseLayoutRounding="True" />
             <TextBlock
                 VerticalAlignment="Center"
                 Foreground="White"
@@ -190,7 +194,11 @@
                         x:Name="dropDownBorder"
                         Background="{StaticResource Frame}"
                         BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}"
-                        BorderThickness="1">
+                        BorderThickness="1"
+                        RenderOptions.BitmapScalingMode="NearestNeighbor"
+                        RenderOptions.ClearTypeHint="Enabled"
+                        SnapsToDevicePixels="True"
+                        UseLayoutRounding="True">
                         <ScrollViewer
                             x:Name="DropDownScrollViewer"
                             Width="{TemplateBinding Width}"
@@ -233,7 +241,11 @@
                 <Image
                     Width="30"
                     Height="{TemplateBinding Height}"
-                    Source="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Path=SelectedItem, Converter={StaticResource IconComboBoxImageConverter}}" />
+                    RenderOptions.BitmapScalingMode="NearestNeighbor"
+                    RenderOptions.ClearTypeHint="Enabled"
+                    SnapsToDevicePixels="True"
+                    Source="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Path=SelectedItem, Converter={StaticResource IconComboBoxImageConverter}}"
+                    UseLayoutRounding="True" />
                 <TextBox
                     x:Name="EditableTextBox"
                     Margin="{TemplateBinding Padding}"
@@ -245,7 +257,11 @@
                     DataContext="{StaticResource SearcherDataContext}"
                     Foreground="White"
                     IsReadOnly="{Binding IsReadOnly, RelativeSource={RelativeSource TemplatedParent}}"
-                    Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Path=SelectedItem, Converter={StaticResource IconComboBoxTextConverter}}">
+                    RenderOptions.BitmapScalingMode="NearestNeighbor"
+                    RenderOptions.ClearTypeHint="Enabled"
+                    SnapsToDevicePixels="True"
+                    Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Path=SelectedItem, Converter={StaticResource IconComboBoxTextConverter}}"
+                    UseLayoutRounding="True">
                     <ity:Interaction.Triggers>
                         <ity:EventTrigger EventName="KeyUp">
                             <itn:CallMethodAction MethodName="ItemSearcher" TargetObject="{Binding}" />

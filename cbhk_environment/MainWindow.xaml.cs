@@ -10,13 +10,10 @@ using System.Windows.Media.Imaging;
 using static cbhk_environment.FilePathComparator;
 using cbhk_environment.SettingForm;
 using Point = System.Windows.Point;
-using System.Linq;
-using System.Windows.Threading;
 using Hardcodet.Wpf.TaskbarNotification;
 using cbhk_environment.ControlsDataContexts;
 using System.Collections.ObjectModel;
 using MSScriptControl;
-using System.Drawing;
 using Image = System.Windows.Controls.Image;
 using System.Text.RegularExpressions;
 using cbhk_environment.CustomControls;
@@ -91,6 +88,8 @@ namespace cbhk_environment
         #endregion
 
         #region 所有数据源对象
+        //配方生成器图片源
+        public static ObservableCollection<Image> RecipeImageList = new ObservableCollection<Image> { };
         //属性数据源
         public static ObservableCollection<string> AttributeSource = new ObservableCollection<string> { };
         //属性生效槽位数据源
@@ -209,6 +208,23 @@ namespace cbhk_environment
                         ItemIdSource.Add(new IconComboBoxItem() { ComboBoxItemText = item_name, ComboBoxItemIcon = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + item_id + ".png", UriKind.Absolute)) });
                         RenderOptions.SetBitmapScalingMode(image,BitmapScalingMode.NearestNeighbor);
                         RenderOptions.SetClearTypeHint(image,ClearTypeHint.Enabled);
+
+                        #region 给配方生成器提供数据
+                        Image recipeImage = new Image()
+                        {
+                            Source = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + item_id + ".png", UriKind.Absolute)),
+                            ToolTip = item_id + " " + item_name,
+                            Width = 100,
+                            Height = 100,
+                            Tag = Regex.Match(item_id, @"[a-zA-Z_]+").ToString()
+                        };
+                        RenderOptions.SetBitmapScalingMode(recipeImage, BitmapScalingMode.HighQuality);
+                        RenderOptions.SetClearTypeHint(recipeImage, ClearTypeHint.Enabled);
+                        ToolTipService.SetInitialShowDelay(recipeImage, 0);
+                        ToolTipService.SetShowDuration(recipeImage, 1000);
+                        RecipeImageList.Add(recipeImage);
+                        #endregion
+
                     }
                     if (!ItemDataBase.ContainsKey(item_id + ":" + item_name))
                         ItemDataBase.Add(item_id + ":" + item_name, image);
@@ -251,6 +267,8 @@ namespace cbhk_environment
                     if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\block_and_block_images\\" + block_id + ".png"))
                     {
                         image = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + block_id + ".png", UriKind.Relative));
+                        RenderOptions.SetBitmapScalingMode(image,BitmapScalingMode.HighQuality);
+                        RenderOptions.SetClearTypeHint(image,ClearTypeHint.Enabled);
                         BlockIDSource.Add(new IconComboBoxItem() { ComboBoxItemText = block_name, ComboBoxItemIcon = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\block_and_block_images\\" + block_id + ".png", UriKind.Absolute)) });
                         RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.NearestNeighbor);
                         RenderOptions.SetClearTypeHint(image, ClearTypeHint.Enabled);
@@ -326,7 +344,10 @@ namespace cbhk_environment
                     MobEffectDataBase.Add(potion_id, potion_name + potion_num);
                     if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\mob_effects_images\\" + potion_id + ".png"))
                     {
-                        MobEffectIdSource.Add(new IconComboBoxItem() { ComboBoxItemText = potion_name, ComboBoxItemIcon = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\mob_effects_images\\" + potion_id + ".png", UriKind.Absolute)) });
+                        BitmapImage bitmapImage = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\mob_effects_images\\" + potion_id + ".png", UriKind.Absolute));
+                        RenderOptions.SetBitmapScalingMode(bitmapImage,BitmapScalingMode.NearestNeighbor);
+                        RenderOptions.SetClearTypeHint(bitmapImage,ClearTypeHint.Enabled);
+                        MobEffectIdSource.Add(new IconComboBoxItem() { ComboBoxItemText = potion_name, ComboBoxItemIcon = bitmapImage });
                     }
                 }
             }
@@ -414,28 +435,22 @@ namespace cbhk_environment
                     entity_name = JsonScript("getJSON('[" + i + "].name');").ToString();
                     if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + entity_id + "_spawn_egg.png"))
                     {
-                        //Bitmap bitmap = new Bitmap(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + entity_id + "_spawn_egg.png");
-                        //bitmap = GeneralTools.ChangeBitmapSize.Magnifier(bitmap, 2);
-                        //image = GeneralTools.BitmapImageConverter.ToBitmapImage(bitmap);
                         image = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + entity_id + "_spawn_egg.png", UriKind.Absolute));
 
                         RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.NearestNeighbor);
                         RenderOptions.SetClearTypeHint(image, ClearTypeHint.Enabled);
 
-                        EntityIdSource.Add(new IconComboBoxItem() { ComboBoxItemText = entity_name, ComboBoxItemIcon = image/*new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + entity_id + "_spawn_egg.png", UriKind.Absolute))*/ });
+                        EntityIdSource.Add(new IconComboBoxItem() { ComboBoxItemText = entity_name, ComboBoxItemIcon = image });
                     }
                     else
                     if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + entity_id + ".png"))
                     {
-                        //Bitmap bitmap = new Bitmap(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + entity_id + ".png");
-                        //bitmap = GeneralTools.ChangeBitmapSize.Magnifier(bitmap, 2);
-                        //image = GeneralTools.BitmapImageConverter.ToBitmapImage(bitmap);
                         image = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + entity_id + ".png",UriKind.Absolute));
 
                         RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.NearestNeighbor);
                         RenderOptions.SetClearTypeHint(image, ClearTypeHint.Enabled);
 
-                        EntityIdSource.Add(new IconComboBoxItem() { ComboBoxItemText = entity_name, ComboBoxItemIcon = image/*new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + entity_id + ".png", UriKind.Absolute))*/ });
+                        EntityIdSource.Add(new IconComboBoxItem() { ComboBoxItemText = entity_name, ComboBoxItemIcon = image });
                     }
                     if (!EntityDataBase.ContainsKey(entity_id + ":" + entity_name))
                         EntityDataBase.Add(entity_id + ":" + entity_name, image);

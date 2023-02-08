@@ -25,7 +25,11 @@
                             Width="{TemplateBinding ImageWidth}"
                             Height="{TemplateBinding ImageHeight}"
                             Margin="{TemplateBinding ImageMargin}"
+                            RenderOptions.BitmapScalingMode="NearestNeighbor"
+                            RenderOptions.ClearTypeHint="Enabled"
+                            SnapsToDevicePixels="True"
                             Source="{TemplateBinding HeaderImage}"
+                            UseLayoutRounding="True"
                             Visibility="Visible" />
                         <TextBlock
                             Margin="{TemplateBinding TextMargin}"

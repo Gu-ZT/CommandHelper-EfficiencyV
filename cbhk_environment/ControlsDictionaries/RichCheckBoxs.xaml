@@ -48,7 +48,11 @@
                             VerticalAlignment="Stretch"
                             Background="{StaticResource UnChecked}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            RenderOptions.BitmapScalingMode="NearestNeighbor"
+                            RenderOptions.ClearTypeHint="Enabled"
+                            SnapsToDevicePixels="True"
+                            UseLayoutRounding="True">
                             <!--<Viewbox HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <Viewbox.RenderTransform>
                                     <RotateTransform Angle="-45" />

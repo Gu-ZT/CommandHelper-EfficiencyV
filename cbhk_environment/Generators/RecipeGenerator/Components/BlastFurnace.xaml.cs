@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -62,6 +63,11 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
         #region 知识之书图标
         System.Drawing.Bitmap KnowLedgeBook = null;
         BitmapImage KnowLedgeBookImage = null;
+        #endregion
+
+        #region 默认键值
+        List<char> DefaultKeyList = new List<char> { 'm', 's' };
+        int defaultKeyListIndex = 0;
         #endregion
 
         #region 生成结果
@@ -247,6 +253,18 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
         }
 
         /// <summary>
+        /// 分配默认键值 
+        /// </summary>
+        private char SetDefaultKey()
+        {
+            if (defaultKeyListIndex >= DefaultKeyList.Count)
+                defaultKeyListIndex = 0;
+            char result = DefaultKeyList[defaultKeyListIndex];
+            defaultKeyListIndex++;
+            return result;
+        }
+
+        /// <summary>
         /// 更新物品
         /// </summary>
         /// <param name="sender"></param>
@@ -290,6 +308,9 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
             switch (current_item.Uid)
             {
                 case "0":
+                    if (MeltedItemList.Count == 1 && ItemInfomationWindow.KeyBox.Text.Trim() == "")
+                        ItemInfomationWindow.KeyBox.Text = SetDefaultKey().ToString();
+
                     if (MultipleMode.IsChecked.Value || MeltedItemList.Count == 0)
                     {
                         if (MeltedItemList.Where(item => item.Tag == cache_image.Tag).Count() == 0)
@@ -307,6 +328,8 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
                     }
                     break;
                 case "1":
+                    if (RecipeResult.Trim().Length == 1 && ItemInfomationWindow.KeyBox.Text.Trim() == "")
+                        ItemInfomationWindow.KeyBox.Text = SetDefaultKey().ToString();
                     current_item.Source = bitmapImage;
                     RecipeResult = current_item.Tag.ToString();
                     break;
@@ -384,6 +407,18 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
         private void RecipeCookingTimeLoaded(object sender, RoutedEventArgs e)
         {
             RecipeCookingTime = sender as Slider;
+        }
+
+        /// <summary>
+        /// 抬起右键后删除合成结果
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DeleteRecipeResultClick(object sender, MouseButtonEventArgs e)
+        {
+            Image image = sender as Image;
+            image.Source = empty_image;
+            RecipeResult = "";
         }
     }
 }

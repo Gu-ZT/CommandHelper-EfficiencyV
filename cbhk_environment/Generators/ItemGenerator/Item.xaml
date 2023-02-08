@@ -9,9 +9,9 @@
     xmlns:local_window="clr-namespace:cbhk_environment.WindowDictionaries"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="物品生成器"
-    Width="590"
+    Width="647"
     Height="432"
-    MinWidth="590"
+    MinWidth="647"
     MinHeight="432"
     Background="#2F2F2F"
     Icon="/cbhk_environment;component/resources/common/images/spawnerIcons/IconItems.png"
@@ -320,7 +320,7 @@
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
                                 Foreground="White"
-                                Text="物品ID:" />
+                                Text="物品ID" />
                             <ComboBox
                                 Width="200"
                                 HorizontalAlignment="Left"
@@ -339,7 +339,7 @@
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
                                 Foreground="White"
-                                Text="数量:" />
+                                Text="数量" />
                             <Slider
                                 Width="120"
                                 HorizontalAlignment="Left"
@@ -354,9 +354,9 @@
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
                                 Foreground="White"
-                                Text="附加值:" />
+                                Text="附加值" />
                             <Slider
-                                Width="50"
+                                Width="80"
                                 HorizontalAlignment="Left"
                                 BorderThickness="0"
                                 Maximum="2147483647"

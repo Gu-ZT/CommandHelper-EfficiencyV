@@ -162,7 +162,11 @@
                     Margin="5,0"
                     VerticalAlignment="center"
                     Background="{StaticResource SliderBackground}"
-                    BorderThickness="0">
+                    BorderThickness="0"
+                    RenderOptions.BitmapScalingMode="NearestNeighbor"
+                    RenderOptions.ClearTypeHint="Enabled"
+                    SnapsToDevicePixels="True"
+                    UseLayoutRounding="True">
                     <Canvas Margin="-6,-1">
                         <Rectangle
                             x:Name="PART_SelectionRange"

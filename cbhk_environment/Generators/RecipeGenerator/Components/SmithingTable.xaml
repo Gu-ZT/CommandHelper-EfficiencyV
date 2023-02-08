@@ -4,8 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:CustomControls="clr-namespace:cbhk_environment.CustomControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:itn="http://schemas.microsoft.com/expression/2010/interactions"
-    xmlns:ity="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:local="clr-namespace:cbhk_environment.Generators.RecipeGenerator.Components"
     xmlns:local_datacontext="clr-namespace:cbhk_environment.Generators.RecipeGenerator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -76,7 +74,11 @@
                 AllowDrop="True"
                 Cursor="Hand"
                 Drop="ItemUpdate"
-                Source="/cbhk_environment;component/resources/cbhk_form/images/empty.png" />
+                MouseRightButtonUp="DeleteRecipeResultClick"
+                Source="/cbhk_environment;component/resources/cbhk_form/images/empty.png"
+                ToolTip="右击删除"
+                ToolTipService.InitialShowDelay="0"
+                ToolTipService.ShowDuration="1000" />
             <DockPanel
                 Margin="325,80,0,0"
                 HorizontalAlignment="Left"

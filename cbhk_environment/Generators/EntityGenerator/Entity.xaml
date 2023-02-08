@@ -12,10 +12,10 @@
     xmlns:local_window="clr-namespace:cbhk_environment.WindowDictionaries"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="实体生成器"
-    Width="560"
-    Height="300"
-    MinWidth="560"
-    MinHeight="300"
+    Width="664"
+    Height="370"
+    MinWidth="664"
+    MinHeight="370"
     Background="#2F2F2F"
     Icon="/cbhk_environment;component/resources/common/images/spawnerIcons/IconEntities.png"
     ResizeMode="CanResizeWithGrip"
@@ -415,13 +415,12 @@
                                 Background="#FFE5B663"
                                 FontSize="15"
                                 FreshVisibility="Collapsed"
-                                IsExpanded="True"
                                 ModifyVisibility="Collapsed"
                                 Style="{DynamicResource AccordionStyle}"
                                 TitleForeground="Black">
                                 <Border Margin="5,0" Background="#2F2F2F">
                                     <StackPanel>
-                                        <DockPanel>
+                                        <DockPanel Margin="0,5,5,5">
                                             <TextBlock
                                                 Margin="5,0"
                                                 HorizontalAlignment="Left"
@@ -430,8 +429,9 @@
                                                 Text="最大生命值" />
                                             <Slider
                                                 Width="185"
-                                                Height="25"
+                                                Height="40"
                                                 HorizontalAlignment="Left"
+                                                FontSize="30"
                                                 Maximum="2147483647"
                                                 Minimum="-2147483648"
                                                 Style="{DynamicResource NumberBoxStyle}"
@@ -443,14 +443,16 @@
                                                 Foreground="White"
                                                 Text="抗击退" />
                                             <Slider
-                                                Height="25"
-                                                HorizontalAlignment="Stretch"
+                                                Width="176"
+                                                Height="40"
+                                                HorizontalAlignment="Left"
+                                                FontSize="30"
                                                 Maximum="2147483647"
                                                 Minimum="-2147483648"
                                                 Style="{DynamicResource NumberBoxStyle}"
                                                 Value="{Binding KnockbackResistance, Mode=TwoWay}" />
                                         </DockPanel>
-                                        <DockPanel>
+                                        <DockPanel Margin="0,5,5,5">
                                             <TextBlock
                                                 Margin="5,0"
                                                 HorizontalAlignment="Left"
@@ -459,8 +461,9 @@
                                                 Text="移动速度" />
                                             <Slider
                                                 Width="200"
-                                                Height="25"
+                                                Height="40"
                                                 HorizontalAlignment="Left"
+                                                FontSize="30"
                                                 Maximum="2147483647"
                                                 Minimum="-2147483648"
                                                 Style="{DynamicResource NumberBoxStyle}"
@@ -473,15 +476,16 @@
                                                 Text="跟踪距离" />
                                             <Slider
                                                 Width="177"
-                                                Height="25"
+                                                Height="40"
                                                 Margin="5,0,0,0"
                                                 HorizontalAlignment="Left"
+                                                FontSize="30"
                                                 Maximum="2147483647"
                                                 Minimum="-2147483648"
                                                 Style="{DynamicResource NumberBoxStyle}"
                                                 Value="{Binding FollowRange, Mode=TwoWay}" />
                                         </DockPanel>
-                                        <DockPanel>
+                                        <DockPanel Margin="0,5,5,5">
                                             <TextBlock
                                                 Margin="5,0"
                                                 HorizontalAlignment="Left"
@@ -490,8 +494,9 @@
                                                 Text="攻击伤害" />
                                             <Slider
                                                 Width="200"
-                                                Height="25"
+                                                Height="40"
                                                 HorizontalAlignment="Left"
+                                                FontSize="30"
                                                 Maximum="2147483647"
                                                 Minimum="-2147483648"
                                                 Style="{DynamicResource NumberBoxStyle}"
@@ -504,14 +509,15 @@
                                                 Text="攻击速度" />
                                             <Slider
                                                 Width="177"
-                                                Height="25"
+                                                Height="40"
                                                 HorizontalAlignment="Left"
+                                                FontSize="30"
                                                 Maximum="2147483647"
                                                 Minimum="-2147483648"
                                                 Style="{DynamicResource NumberBoxStyle}"
                                                 Value="{Binding AttackSpeed, Mode=TwoWay}" />
                                         </DockPanel>
-                                        <DockPanel>
+                                        <DockPanel Margin="0,5,5,5">
                                             <TextBlock
                                                 Margin="20,0,20,0"
                                                 HorizontalAlignment="Left"
@@ -520,8 +526,9 @@
                                                 Text="护甲" />
                                             <Slider
                                                 Width="200"
-                                                Height="25"
+                                                Height="40"
                                                 HorizontalAlignment="Left"
+                                                FontSize="30"
                                                 Maximum="2147483647"
                                                 Minimum="-2147483648"
                                                 Style="{DynamicResource NumberBoxStyle}"
@@ -534,8 +541,9 @@
                                                 Text="护甲韧性" />
                                             <Slider
                                                 Width="177"
-                                                Height="25"
+                                                Height="40"
                                                 HorizontalAlignment="Left"
+                                                FontSize="30"
                                                 Maximum="2147483647"
                                                 Minimum="-2147483648"
                                                 Style="{DynamicResource NumberBoxStyle}"
@@ -619,9 +627,10 @@
                                             Value="{Binding MainHandDropChance, Mode=TwoWay}" />
                                         <Slider
                                             Width="145"
-                                            Height="25"
+                                            Height="40"
                                             HorizontalAlignment="Left"
                                             Background="Transparent"
+                                            FontSize="30"
                                             Foreground="White"
                                             Maximum="100"
                                             Minimum="0"
@@ -677,9 +686,10 @@
                                             Value="{Binding OffHandDropChance, Mode=TwoWay}" />
                                         <Slider
                                             Width="145"
-                                            Height="25"
+                                            Height="40"
                                             HorizontalAlignment="Left"
                                             Background="Transparent"
+                                            FontSize="30"
                                             Foreground="White"
                                             Maximum="100"
                                             Minimum="0"
@@ -750,9 +760,10 @@
                                             Value="{Binding HeadItemDropChance, Mode=TwoWay}" />
                                         <Slider
                                             Width="145"
-                                            Height="25"
+                                            Height="40"
                                             HorizontalAlignment="Left"
                                             Background="Transparent"
+                                            FontSize="30"
                                             Foreground="White"
                                             Maximum="100"
                                             Minimum="0"
@@ -808,9 +819,10 @@
                                             Value="{Binding ChestItemDropChance, Mode=TwoWay}" />
                                         <Slider
                                             Width="145"
-                                            Height="25"
+                                            Height="40"
                                             HorizontalAlignment="Left"
                                             Background="Transparent"
+                                            FontSize="30"
                                             Foreground="White"
                                             Maximum="100"
                                             Minimum="0"
@@ -866,9 +878,10 @@
                                             Value="{Binding LegItemDropChance, Mode=TwoWay}" />
                                         <Slider
                                             Width="145"
-                                            Height="25"
+                                            Height="40"
                                             HorizontalAlignment="Left"
                                             Background="Transparent"
+                                            FontSize="30"
                                             Foreground="White"
                                             Maximum="100"
                                             Minimum="0"
@@ -924,9 +937,10 @@
                                             Value="{Binding BootItemDropChance, Mode=TwoWay}" />
                                         <Slider
                                             Width="145"
-                                            Height="25"
+                                            Height="40"
                                             HorizontalAlignment="Left"
                                             Background="Transparent"
+                                            FontSize="30"
                                             Foreground="White"
                                             Maximum="100"
                                             Minimum="0"

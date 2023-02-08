@@ -52,7 +52,11 @@
                             VerticalAlignment="Stretch"
                             Background="{TemplateBinding Background}"
                             BorderBrush="Black"
-                            BorderThickness="1">
+                            BorderThickness="1"
+                            RenderOptions.BitmapScalingMode="NearestNeighbor"
+                            RenderOptions.ClearTypeHint="Enabled"
+                            SnapsToDevicePixels="True"
+                            UseLayoutRounding="True">
                             <Border.RenderTransform>
                                 <RotateTransform Angle="45" />
                             </Border.RenderTransform>

@@ -29,8 +29,8 @@
                 <ControlTemplate TargetType="{x:Type Slider}">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="*" MinHeight="20" />
-                            <RowDefinition Height="*" MinHeight="20" />
+                            <RowDefinition Height="*" MinHeight="15" />
+                            <RowDefinition Height="*" MinHeight="15" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="10*" MinWidth="40" />
@@ -57,7 +57,11 @@
                             Grid.Row="0"
                             Grid.Column="1"
                             Background="{StaticResource ButtonNormal}"
-                            Command="{x:Static Slider.IncreaseSmall}">
+                            Command="{x:Static Slider.IncreaseSmall}"
+                            RenderOptions.BitmapScalingMode="HighQuality"
+                            RenderOptions.ClearTypeHint="Enabled"
+                            SnapsToDevicePixels="True"
+                            UseLayoutRounding="True">
                             <!--<Path Data="M4,0 L0,4 8,4 Z" Fill="Black" />-->
                             <Image RenderTransformOrigin="0.5,0.5" Source="/cbhk_environment;component/resources/common/images/AccordionArrow.png">
                                 <Image.RenderTransform>
@@ -70,7 +74,11 @@
                             Grid.Row="1"
                             Grid.Column="1"
                             Background="{StaticResource ButtonNormal}"
-                            Command="{x:Static Slider.DecreaseSmall}">
+                            Command="{x:Static Slider.DecreaseSmall}"
+                            RenderOptions.BitmapScalingMode="HighQuality"
+                            RenderOptions.ClearTypeHint="Enabled"
+                            SnapsToDevicePixels="True"
+                            UseLayoutRounding="True">
                             <!--<Path Data="M0,0 L4,4 8,0 Z" Fill="Black" />-->
                             <Image Source="/cbhk_environment;component/resources/common/images/AccordionArrow.png" />
                         </RepeatButton>

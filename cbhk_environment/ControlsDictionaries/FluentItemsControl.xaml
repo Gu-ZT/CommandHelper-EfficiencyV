@@ -23,7 +23,11 @@
             <Border
                 Width="20"
                 Height="20"
-                Background="{StaticResource UnChecked}" />
+                Background="{StaticResource UnChecked}"
+                RenderOptions.BitmapScalingMode="NearestNeighbor"
+                RenderOptions.ClearTypeHint="Enabled"
+                SnapsToDevicePixels="True"
+                UseLayoutRounding="True" />
             <Image
                 Width="40"
                 Height="40"

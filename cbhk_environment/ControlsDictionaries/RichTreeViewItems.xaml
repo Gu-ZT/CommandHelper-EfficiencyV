@@ -81,16 +81,22 @@
                             Height="4"
                             Margin="9,1,0,0"
                             Fill="{TemplateBinding ConnectingLineFill}"
+                            RenderOptions.BitmapScalingMode="NearestNeighbor"
+                            RenderOptions.ClearTypeHint="Enabled"
                             SnapsToDevicePixels="True"
-                            Stroke="{TemplateBinding ConnectingLineFill}" />
+                            Stroke="{TemplateBinding ConnectingLineFill}"
+                            UseLayoutRounding="True" />
                         <Rectangle
                             x:Name="VerLn"
                             Grid.RowSpan="2"
                             Width="4"
                             Margin="0,0,1,0"
                             Fill="{TemplateBinding ConnectingLineFill}"
-                            SnapsToDevicePixels="true"
-                            Stroke="{TemplateBinding ConnectingLineFill}">
+                            RenderOptions.BitmapScalingMode="NearestNeighbor"
+                            RenderOptions.ClearTypeHint="Enabled"
+                            SnapsToDevicePixels="True"
+                            Stroke="{TemplateBinding ConnectingLineFill}"
+                            UseLayoutRounding="True">
 
                             <Rectangle.Height>
                                 <MultiBinding Converter="{StaticResource LineConverter}">

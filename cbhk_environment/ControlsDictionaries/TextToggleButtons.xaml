@@ -47,7 +47,10 @@
                             Background="{StaticResource SelectedBackground}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            SnapsToDevicePixels="true"
+                            RenderOptions.BitmapScalingMode="NearestNeighbor"
+                            RenderOptions.ClearTypeHint="Enabled"
+                            SnapsToDevicePixels="True"
+                            UseLayoutRounding="True"
                             Visibility="Collapsed">
                             <ContentPresenter
                                 x:Name="contentPresenter_"

@@ -1,10 +1,7 @@
 ﻿using cbhk_environment.GeneralTools.ScrollViewerHelper;
-using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace cbhk_environment.Generators.VillagerGenerator.Components
 {
@@ -13,15 +10,6 @@ namespace cbhk_environment.Generators.VillagerGenerator.Components
     /// </summary>
     public partial class TransactionItems : UserControl
     {
-        //箭头图像背景文件路径
-        //string arrow_path = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\Villager\\images\\arrow.png";
-        //按钮图像背景文件路径
-        string background_button_path = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\Villager\\images\\background_button.png";
-        //黑边框
-        SolidColorBrush BlackBrush = new SolidColorBrush(Color.FromRgb(0,0,0));
-        //白边框
-        SolidColorBrush WhiteBrush = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-
         #region 物品数据
         /// <summary>
         /// 1 或 0 (true/false) - true代表交易会提供经验球。Java版中所有自然生成的村民的交易都会给予经验球。
@@ -149,30 +137,28 @@ namespace cbhk_environment.Generators.VillagerGenerator.Components
         }
 
         /// <summary>
-        /// 载入箭头背景图
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        //private void ArrowLoaded(object sender, RoutedEventArgs e)
-        //{
-        //    Image current_image = sender as Image;
-        //    current_image.Source = new BitmapImage(new Uri(arrow_path,UriKind.Absolute));
-        //}
-
-        /// <summary>
         /// 更新物品显示图像以及文本提示
         /// </summary>
         /// <param name="old_image"></param>
         /// <param name="new_image"></param>
         private void UpdateItem(Image old_image,Image new_image)
         {
-            string file_name = AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + new_image.Tag.ToString().Split(' ')[0] + ".png";
-            System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(file_name);
-            bitmap = GeneralTools.ChangeBitmapSize.Magnifier(bitmap,20);
-            BitmapImage bitmapImage = GeneralTools.BitmapImageConverter.ToBitmapImage(bitmap);
-            old_image.Source = bitmapImage;
-            old_image.Tag = new_image.Tag;
-            old_image.ToolTip = old_image.Tag.ToString();
+            int startIndex = new_image.Source.ToString().LastIndexOf('/') + 1;
+            int endIndex = new_image.Source.ToString().LastIndexOf('.');
+            string itemID = new_image.Source.ToString().Substring(startIndex, endIndex - startIndex);
+            string toolTip = "";
+            foreach (var item in MainWindow.ItemDataBase)
+            {
+                if (item.Key.Substring(0, item.Key.IndexOf(':')) == itemID)
+                {
+                    toolTip = item.Key.Replace(":", " ");
+                    break;
+                }
+            }
+
+            old_image.Source = new_image.Source;
+            old_image.Tag = toolTip.Substring(0,toolTip.IndexOf(' '));
+            old_image.ToolTip = toolTip;
             ToolTipService.SetShowDuration(old_image, 1000);
             ToolTipService.SetInitialShowDelay(old_image, 0);
         }

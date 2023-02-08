@@ -23,7 +23,7 @@
                 Foreground="White"
                 Text="药水类型" />
             <ComboBox
-                Width="100"
+                Width="140"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Loaded="MobEffectIdLoaded"
@@ -53,7 +53,7 @@
                 Foreground="White"
                 Text="效果等级:" />
             <Slider
-                Width="50"
+                Width="100"
                 HorizontalAlignment="Left"
                 Background="Transparent"
                 BorderThickness="0"

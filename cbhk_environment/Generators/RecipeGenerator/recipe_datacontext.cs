@@ -2,17 +2,16 @@
 using cbhk_environment.CustomControls;
 using cbhk_environment.GeneralTools;
 using cbhk_environment.Generators.RecipeGenerator.Components;
-using cbhk_environment.GenerateResultDisplayer;
 using cbhk_environment.WindowDictionaries;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MSScriptControl;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -21,7 +20,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using WK.Libraries.BetterFolderBrowserNS;
-using Windows.ApplicationModel.VoiceCommands;
 
 namespace cbhk_environment.Generators.RecipeGenerator
 {
@@ -89,11 +87,69 @@ namespace cbhk_environment.Generators.RecipeGenerator
         //本生成器的图标路径
         string icon_path = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\Recipe\\images\\icon.png";
         //右侧缓存区引用
-        private UniformGrid CacheZone = null;
+        public ListBox ItemZone = null;
+        //滚动视图
+        public ScrollViewer scrollViewer = null;
         //拖拽源
         public static Image drag_source = null;
-        
-        //private ObservableCollection<string> VersionSource = new ObservableCollection<string> { "1.12-","1.13+" };
+
+        public ObservableCollection<Uri> ItemsSource { get; set; } = new ObservableCollection<Uri> { };
+
+        #region 已选中的成员
+        private Uri selectedItem = null;
+        public Uri SelectedItem
+        {
+            get
+            {
+                return selectedItem;
+            }
+            set
+            {
+                selectedItem = value;
+            }
+        }
+        #endregion
+
+        #region 搜索值
+        private string searchText = "";
+        public string SearchText
+        {
+            get
+            {
+                return searchText;
+            }
+            set
+            {
+                searchText = value;
+                if(ItemZone != null)
+                {
+                    if (searchText.Trim().Length > 0)
+                    {
+                        foreach (var item in ItemZone.Items)
+                        {
+                            ListBoxItem listBoxItem = ItemZone.ItemContainerGenerator.ContainerFromItem(item) as ListBoxItem;
+                            ContentPresenter contentPresenter = ChildrenHelper.FindVisualChild<ContentPresenter>(listBoxItem);
+                            Image image = contentPresenter.ContentTemplate.FindName("contentImage", contentPresenter) as Image;
+                            string itemInfo = image.ToolTip.ToString();
+                            if (!(itemInfo.Contains(SearchText) || SearchText.StartsWith(itemInfo)))
+                                listBoxItem.Visibility = Visibility.Collapsed;
+                            else
+                                listBoxItem.Visibility = Visibility.Visible;
+                        }
+                    }
+                    else
+                        foreach (var item in ItemZone.Items)
+                        {
+                            ListBoxItem listBoxItem = ItemZone.ItemContainerGenerator.ContainerFromItem(item) as ListBoxItem;
+                            listBoxItem.Visibility = Visibility.Visible;
+                        }
+                }
+            }
+        }
+        #endregion
+
+        //异步锁
+        object itemLoadLock = new object();
 
         /// <summary>
         /// 配方操作类型
@@ -109,6 +165,25 @@ namespace cbhk_environment.Generators.RecipeGenerator
             #region 链接命令
             ReturnCommand = new RelayCommand<CommonWindow>(return_command);
             RunCommand = new RelayCommand(run_command);
+            #endregion
+
+            #region 异步载入物品序列
+            BindingOperations.EnableCollectionSynchronization(ItemsSource, itemLoadLock);
+            //加载物品集合
+            Task.Run(() =>
+            {
+                lock (itemLoadLock)
+                {
+                    string uriDirectoryPath = AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\";
+                    string urlPath = "";
+                    foreach (var item in MainWindow.ItemDataBase)
+                    {
+                        urlPath = uriDirectoryPath + item.Key.Substring(0, item.Key.IndexOf(":")) + ".png";
+                        if (File.Exists(urlPath))
+                            ItemsSource.Add(new Uri(urlPath, UriKind.Absolute));
+                    }
+                }
+            });
             #endregion
         }
 
@@ -188,12 +263,6 @@ namespace cbhk_environment.Generators.RecipeGenerator
             //displayer.Show();
         }
 
-        //public void VersionLoaded(object sender, RoutedEventArgs e)
-        //{
-        //    ComboBox comboBox = sender as ComboBox;
-        //    comboBox.ItemsSource = VersionSource;
-        //}
-
         /// <summary>
         /// 载入左侧切换栏图标
         /// </summary>
@@ -254,17 +323,6 @@ namespace cbhk_environment.Generators.RecipeGenerator
         }
 
         /// <summary>
-        /// 载入物品id列表
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void ItemIdsLoaded(object sender, RoutedEventArgs e)
-        {
-            ComboBox comboBoxs = sender as ComboBox;
-            comboBoxs.ItemsSource = MainWindow.ItemIdSource;
-        }
-
-        /// <summary>
         /// 载入编辑区控件
         /// </summary>
         /// <param name="sender"></param>
@@ -308,13 +366,45 @@ namespace cbhk_environment.Generators.RecipeGenerator
         }
 
         /// <summary>
-        /// 获取右侧ID缓存区引用
+        /// 处理开始拖拽物品
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void CacheZoneLoaded(object sender, RoutedEventArgs e)
+        public void SelectItemClickDown(object sender, MouseButtonEventArgs e)
         {
-            CacheZone = sender as UniformGrid;
+            if (SelectedItem != null)
+            {
+                IsGrabingItem = true;
+
+                int startIndex = SelectedItem.ToString().LastIndexOf('/') + 1;
+                int endIndex = SelectedItem.ToString().LastIndexOf('.');
+                string itemID = SelectedItem.ToString().Substring(startIndex, endIndex - startIndex);
+                string toolTip = "";
+
+                foreach (var item in MainWindow.ItemDataBase)
+                {
+                    if (item.Key.Substring(0, item.Key.IndexOf(':')) == itemID)
+                    {
+                        toolTip = item.Key.Substring(0, item.Key.IndexOf(':'));
+                        break;
+                    }
+                }
+
+                drag_source = new Image
+                {
+                    Source = new BitmapImage(SelectedItem),
+                    Tag = toolTip
+                };
+                GrabedImage = drag_source;
+
+                if (IsGrabingItem && drag_source != null)
+                {
+                    DataObject dataObject = new DataObject(typeof(Image), GrabedImage);
+                    if (dataObject != null)
+                        DragDrop.DoDragDrop(drag_source, dataObject, DragDropEffects.Move);
+                    IsGrabingItem = false;
+                }
+            }
         }
 
         /// <summary>
@@ -330,39 +420,6 @@ namespace cbhk_environment.Generators.RecipeGenerator
         }
 
         /// <summary>
-        /// 添加ID缓存
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void AddItemIdKeyUp(object sender, KeyEventArgs e)
-        {
-            if(e.Key == Key.Enter)
-            {
-                ComboBox box = sender as ComboBox;
-                IconComboBoxItem dataGroup = box.SelectedItem as IconComboBoxItem;
-                KeyValuePair<string, BitmapImage> a_item = MainWindow.ItemDataBase.Where(item => item.Key.Contains(dataGroup.ComboBoxItemText)).First();
-                string image_name = Regex.Match(a_item.Key, @"[a-zA-Z_]+").ToString();
-                System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\item_and_block_images\\" + image_name + ".png");
-                bitmap = ChangeBitmapSize.Magnifier(bitmap, 10);
-                BitmapImage bitmapImage = BitmapImageConverter.ToBitmapImage(bitmap);
-                Image image = new Image
-                {
-                    Height = 50,
-                    Width = 50,
-                    Cursor = Cursors.Hand,
-                    Source = bitmapImage,
-                    Tag = image_name,
-                    ToolTip = Regex.Match(a_item.Key, @"[\u4e00-\u9fa5]+").ToString()
-                };
-                image.MouseLeftButtonDown += SelectItemClickDown;
-                image.MouseRightButtonUp += DeleteItemClick;
-                ToolTipService.SetInitialShowDelay(image, 0);
-                ToolTipService.SetShowDuration(image, 1000);
-                CacheZone.Children.Add(image);
-            }
-        }
-
-        /// <summary>
         /// 右击删除该物品
         /// </summary>
         /// <param name="sender"></param>
@@ -371,22 +428,6 @@ namespace cbhk_environment.Generators.RecipeGenerator
         {
             UniformGrid parent = (sender as Image).Parent as UniformGrid;
             parent.Children.Remove(sender as Image);
-        }
-
-        /// <summary>
-        /// 处理开始拖拽物品
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void SelectItemClickDown(object sender, MouseButtonEventArgs e)
-        {
-            IsGrabingItem = !IsGrabingItem;
-            Image image = sender as Image;
-            drag_source = image;
-            GrabedImage.Source = image.Source;
-            GrabedImage.Tag = image.Tag;
-            GrabedImage.Height = GrabedImage.Width = 50;
-            GrabedImage.Cursor = Cursors.Hand;
         }
 
         /// <summary>
@@ -472,6 +513,33 @@ namespace cbhk_environment.Generators.RecipeGenerator
                         craftingTable.ItemInfomationWindow.CurrentItemInfomation.Children[0].Visibility = Visibility.Visible;
                     break;
             }
+        }
+
+        public void ScrollViewer_Loaded(object sender, RoutedEventArgs e)
+        {
+            scrollViewer = sender as ScrollViewer;
+        }
+
+        public void ListBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            ItemZone = sender as ListBox;
+        }
+
+        public void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            var eventArg = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta)
+            {
+                RoutedEvent = UIElement.MouseWheelEvent,
+                Source = e.Source
+            };
+            ScrollViewer scv = (ScrollViewer)sender;
+            scv.RaiseEvent(eventArg);
+            e.Handled = true;
+        }
+
+        public void ListBox_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            ScrollViewer_PreviewMouseWheel(scrollViewer, e);
         }
     }
 }

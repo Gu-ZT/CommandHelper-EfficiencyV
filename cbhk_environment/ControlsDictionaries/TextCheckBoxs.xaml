@@ -45,9 +45,13 @@
                             Margin="{TemplateBinding TextCheckMargin}"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
-                            Background="{TemplateBinding Background}"
+                            Background="{StaticResource CheckBoxEmpty}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="0">
+                            BorderThickness="0"
+                            RenderOptions.BitmapScalingMode="NearestNeighbor"
+                            RenderOptions.ClearTypeHint="Enabled"
+                            SnapsToDevicePixels="True"
+                            UseLayoutRounding="True">
                             <!--<Border.RenderTransform>
                                 <RotateTransform Angle="45" />
                             </Border.RenderTransform>

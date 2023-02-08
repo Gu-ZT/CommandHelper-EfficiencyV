@@ -20,7 +20,10 @@
                     <Grid
                         x:Name="border"
                         Background="{TemplateBinding Background}"
-                        SnapsToDevicePixels="true">
+                        RenderOptions.BitmapScalingMode="NearestNeighbor"
+                        RenderOptions.ClearTypeHint="Enabled"
+                        SnapsToDevicePixels="True"
+                        UseLayoutRounding="True">
                         <ContentPresenter
                             x:Name="contentPresenter"
                             Margin="{TemplateBinding Padding}"

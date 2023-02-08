@@ -47,7 +47,11 @@
                             VerticalAlignment="Stretch"
                             Background="{StaticResource CheckBoxEmpty}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="0">
+                            BorderThickness="0"
+                            RenderOptions.BitmapScalingMode="NearestNeighbor"
+                            RenderOptions.ClearTypeHint="Enabled"
+                            SnapsToDevicePixels="True"
+                            UseLayoutRounding="True">
                             <!--<Viewbox HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <Grid x:Name="markGrid">
                                     <Path

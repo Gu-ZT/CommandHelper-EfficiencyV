@@ -28,7 +28,10 @@
                         x:Name="templateRoot"
                         MinHeight="20"
                         Background="{StaticResource TabBack}"
-                        SnapsToDevicePixels="true">
+                        RenderOptions.BitmapScalingMode="NearestNeighbor"
+                        RenderOptions.ClearTypeHint="Enabled"
+                        SnapsToDevicePixels="true"
+                        UseLayoutRounding="True">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="8*" />
                             <ColumnDefinition Width="*" />

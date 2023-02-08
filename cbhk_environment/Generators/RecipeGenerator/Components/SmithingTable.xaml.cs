@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -94,6 +95,11 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
         }
         #endregion
 
+        #region 默认键值
+        List<char> DefaultKeyList = new List<char> { 'm', 'j', 's' };
+        int defaultKeyListIndex = 0;
+        #endregion
+
         public SmithingTable()
         {
             InitializeComponent();
@@ -155,6 +161,18 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
         }
 
         /// <summary>
+        /// 分配默认键值 
+        /// </summary>
+        private char SetDefaultKey()
+        {
+            if (defaultKeyListIndex >= DefaultKeyList.Count)
+                defaultKeyListIndex = 0;
+            char result = DefaultKeyList[defaultKeyListIndex];
+            defaultKeyListIndex++;
+            return result;
+        }
+
+        /// <summary>
         /// 更新物品
         /// </summary>
         /// <param name="sender"></param>
@@ -199,18 +217,24 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
             switch (current_item.Uid)
             {
                 case "0":
+                    if(current_item.Source == null && ItemInfomationWindow.KeyBox.Text.Trim() == "")
+                        ItemInfomationWindow.KeyBox.Text = SetDefaultKey().ToString();
                     current_item.Source = bitmapImage;
                     cache_image.Source = current_item.Source;
                     BasedItem = current_item;
                     UpdateMultipleItemView(cache_image);
                     break;
                 case "1":
+                    if (current_item.Source == null && ItemInfomationWindow.KeyBox.Text.Trim() == "")
+                        ItemInfomationWindow.KeyBox.Text = SetDefaultKey().ToString();
                     current_item.Source = bitmapImage;
                     cache_image.Source = current_item.Source;
                     AdditionItem = current_item;
                     UpdateMultipleItemView(cache_image);
                     break;
                 case "2":
+                    if (RecipeResult.Trim().Length == 1 && ItemInfomationWindow.KeyBox.Text.Trim() == "")
+                        ItemInfomationWindow.KeyBox.Text = SetDefaultKey().ToString();
                     current_item.Source = bitmapImage;
                     RecipeResult = current_item.Tag.ToString();
                     break;
@@ -342,6 +366,18 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
             }
             else
                 ItemInfomationWindow.Hide();
+        }
+
+        /// <summary>
+        /// 抬起右键后删除合成结果
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DeleteRecipeResultClick(object sender, MouseButtonEventArgs e)
+        {
+            Image image = sender as Image;
+            image.Source = empty_image;
+            RecipeResult = "";
         }
     }
 }

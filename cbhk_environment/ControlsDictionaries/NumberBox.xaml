@@ -43,6 +43,8 @@
                             Padding="0"
                             VerticalAlignment="Stretch"
                             VerticalContentAlignment="Center"
+                            BorderBrush="Black"
+                            BorderThickness="1"
                             Foreground="{TemplateBinding Foreground}"
                             Text="{Binding Value, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={ValueConverter:NumberBoxValueConverter}}">
                             <TextBox.InputBindings>

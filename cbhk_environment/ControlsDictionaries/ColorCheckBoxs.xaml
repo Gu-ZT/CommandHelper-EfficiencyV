@@ -51,26 +51,7 @@
                             RenderOptions.BitmapScalingMode="NearestNeighbor"
                             RenderOptions.ClearTypeHint="Enabled"
                             SnapsToDevicePixels="True"
-                            UseLayoutRounding="True">
-                            <!--<Viewbox HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                <Grid x:Name="markGrid">
-                                    <Path
-                                        x:Name="optionMark"
-                                        Margin="1"
-                                        Data="M350.098633 707.71959l-210.483852-210.483852-71.423703 71.423703 281.907555 281.907555 605.710288-605.710288-71.423703-71.423703L350.098633 707.71959z"
-                                        Fill="{StaticResource OptionMark.Static.Glyph}"
-                                        Opacity="0"
-                                        Stretch="None" />
-                                    <Ellipse
-                                        x:Name="indeterminateMark"
-                                        Width="5"
-                                        Height="5"
-                                        Margin="2"
-                                        Fill="{StaticResource OptionMark.Static.Glyph}"
-                                        Opacity="0" />
-                                </Grid>
-                            </Viewbox>-->
-                        </Border>
+                            UseLayoutRounding="True" />
                         <Border
                             Grid.Column="1"
                             Width="15"
@@ -96,33 +77,31 @@
                             <Setter Property="FocusVisualStyle" Value="{x:Null}" />
                             <Setter Property="Padding" Value="4,-1,0,0" />
                         </Trigger>
-                        <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="checkBoxBorder" Property="Background" Value="{StaticResource OptionMark.MouseOver.Background}" />
-                            <Setter TargetName="checkBoxBorder" Property="BorderBrush" Value="{StaticResource OptionMark.MouseOver.Border}" />
-                            <!--<Setter TargetName="optionMark" Property="Fill" Value="{StaticResource OptionMark.MouseOver.Glyph}" />
-                            <Setter TargetName="indeterminateMark" Property="Fill" Value="{StaticResource OptionMark.MouseOver.Glyph}" />-->
-                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition SourceName="checkBoxBorder" Property="IsMouseOver" Value="True" />
+                                <Condition Property="IsChecked" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" Value="{StaticResource CheckboxChecked}" />
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition SourceName="checkBoxBorder" Property="IsMouseOver" Value="True" />
+                                <Condition Property="IsChecked" Value="False" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" Value="{StaticResource CheckBoxEmpty}" />
+                        </MultiTrigger>
                         <Trigger Property="IsEnabled" Value="false">
                             <Setter TargetName="checkBoxBorder" Property="Background" Value="{StaticResource OptionMark.Disabled.Background}" />
                             <Setter TargetName="checkBoxBorder" Property="BorderBrush" Value="{StaticResource OptionMark.Disabled.Border}" />
                             <!--<Setter TargetName="optionMark" Property="Fill" Value="{StaticResource OptionMark.Disabled.Glyph}" />
                             <Setter TargetName="indeterminateMark" Property="Fill" Value="{StaticResource OptionMark.Disabled.Glyph}" />-->
                         </Trigger>
-                        <Trigger Property="IsPressed" Value="true">
-                            <Setter TargetName="checkBoxBorder" Property="Background" Value="{StaticResource OptionMark.Pressed.Background}" />
-                            <Setter TargetName="checkBoxBorder" Property="BorderBrush" Value="{StaticResource OptionMark.Pressed.Border}" />
-                            <!--<Setter TargetName="optionMark" Property="Fill" Value="{StaticResource OptionMark.Pressed.Glyph}" />
-                            <Setter TargetName="indeterminateMark" Property="Fill" Value="{StaticResource OptionMark.Pressed.Glyph}" />-->
-                        </Trigger>
                         <Trigger Property="IsChecked" Value="true">
                             <Setter TargetName="checkBoxBorder" Property="Background" Value="{StaticResource CheckboxChecked}" />
-                            <!--<Setter TargetName="optionMark" Property="Opacity" Value="1" />-->
-                            <!--<Setter TargetName="indeterminateMark" Property="Opacity" Value="0" />-->
                         </Trigger>
                         <Trigger Property="IsChecked" Value="{x:Null}">
                             <Setter TargetName="checkBoxBorder" Property="Background" Value="{StaticResource CheckBoxEmpty}" />
-                            <!--<Setter TargetName="optionMark" Property="Opacity" Value="0" />-->
-                            <!--<Setter TargetName="indeterminateMark" Property="Opacity" Value="1" />-->
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

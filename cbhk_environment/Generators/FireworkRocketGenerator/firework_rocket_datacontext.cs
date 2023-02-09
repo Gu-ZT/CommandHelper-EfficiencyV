@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -277,6 +278,22 @@ namespace cbhk_environment.Generators.FireworkRocketGenerator
         public RelayCommand AddToFadeColors { get; set; }
         #endregion
 
+        #region 已选择的形状
+        private string selectedShape = "";
+        public string SelectedShape
+        {
+            get
+            {
+                return selectedShape;
+            }
+            set
+            {
+                selectedShape = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion
+
         //主颜色库
         private List<string> MainColors = new List<string> { };
         //备选颜色库
@@ -287,10 +304,6 @@ namespace cbhk_environment.Generators.FireworkRocketGenerator
         public StackPanel ColorStackPanel = null;
         //备用颜色面板引用
         public StackPanel FadeColorStackPanel = null;
-        //自定义颜色选择器引用
-        public ColorPickers colorPickers = null;
-        //获取画布引用
-        public Canvas EffectCanvas = null;
         //按角度飞出
         public bool FlyAngle { get; set; }
         //保存成员样式
@@ -303,339 +316,86 @@ namespace cbhk_environment.Generators.FireworkRocketGenerator
 
         //本生成器的图标路径
         string icon_path = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\FireworkRocket\\images\\icon.png";
+        //原版颜色库路径
+        string colorStoragePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\FireworkRocket\\images";
 
         public firework_rocket_datacontext()
         {
             #region 连接指令
             ReturnCommand = new RelayCommand<CommonWindow>(return_command);
             RunCommand = new RelayCommand(run_command);
-            SelectAll = new RelayCommand<TextToggleButtons>(SelectAllCommand);
-            ReverseAll = new RelayCommand<TextToggleButtons>(ReverseAllCommand);
-            AddToColors = new RelayCommand(AddToColorsCommand);
-            AddToFadeColors = new RelayCommand(AddToFadeColorsCommand);
-            ClearColors = new RelayCommand(ClearColorsCommand);
-            ClearFadeColors = new RelayCommand(ClearFadeColorsCommand);
+            //SelectAll = new RelayCommand<TextToggleButtons>(SelectAllCommand);
+            //ReverseAll = new RelayCommand<TextToggleButtons>(ReverseAllCommand);
+            //AddToColors = new RelayCommand(AddToColorsCommand);
+            //AddToFadeColors = new RelayCommand(AddToFadeColorsCommand);
+            //ClearColors = new RelayCommand(ClearColorsCommand);
+            //ClearFadeColors = new RelayCommand(ClearFadeColorsCommand);
             #endregion
         }
 
         /// <summary>
-        /// 选择所有颜色
+        /// 载入原版颜色库
         /// </summary>
-        private void SelectAllCommand(TextToggleButtons buttons)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void StructureColorList_Loaded(object sender, RoutedEventArgs e)
         {
-            bool current_value = buttons.IsChecked.Value;
-            foreach (ColorCheckBoxs box in StructColorsPanel.Children)
-                box.IsChecked = current_value;
-        }
+            ScrollViewer scrollViewer = sender as ScrollViewer;
+            UniformGrid uniformGrid = scrollViewer.Content as UniformGrid;
 
-        /// <summary>
-        /// 反选所有颜色
-        /// </summary>
-        private void ReverseAllCommand(TextToggleButtons buttons)
-        {
-            bool current_value = buttons.IsChecked.Value;
-            foreach (ColorCheckBoxs box in StructColorsPanel.Children)
-                box.IsChecked = !current_value;
-        }
-
-        /// <summary>
-        /// 添加到主颜色
-        /// </summary>
-        private void AddToColorsCommand()
-        {
-            int select_count = 0;
-            foreach (ColorCheckBoxs box in StructColorsPanel.Children)
+            string[] colorArray = Directory.GetFiles(colorStoragePath);
+            foreach (var item in colorArray)
             {
-                if (box.IsChecked.Value)
+                if(item.Contains("dye"))
                 {
-                    ColorCheckBoxs colorCheckBoxs = new ColorCheckBoxs()
+                    string colorName = item.Substring(0, item.LastIndexOf('_'));
+                    System.Windows.Media.Imaging.BitmapImage bitmapImage = new System.Windows.Media.Imaging.BitmapImage(new Uri(item,UriKind.Absolute));
+                    IconCheckBoxs iconCheckBoxs = new IconCheckBoxs
                     {
-                        HeaderHeight = 20,
-                        HeaderWidth = 20,
-                        ContentColor = box.ContentColor,
-                        Style = box.Style,
-                        IsChecked = true
+                        ContentImage = bitmapImage,
+                        HeaderHeight = 25,
+                        HeaderWidth = 25,
+                        SnapsToDevicePixels = true,
+                        UseLayoutRounding = true,
+                        ToolTip = Path.GetFileNameWithoutExtension(colorName).Replace("_dye", ""),
+                        Tag = colorName,
+                        Style = Application.Current.Resources["IconCheckBox"] as Style
                     };
-                    MainColors.Add((int)Convert.ToInt64(box.ContentColor.ToString().Remove(0, 1), 16)+"");
-                    colorCheckBoxs.Click += AddedColorClick;
-                    ColorStackPanel.Children.Add(colorCheckBoxs);
-                    select_count++;
+                    iconCheckBoxs.Checked += StructureColorChecked;
+                    iconCheckBoxs.Unchecked += StructureColorUnChecked;
+                    RenderOptions.SetBitmapScalingMode(iconCheckBoxs,BitmapScalingMode.NearestNeighbor);
+                    RenderOptions.SetClearTypeHint(iconCheckBoxs,ClearTypeHint.Enabled);
+                    ToolTipService.SetShowDuration(iconCheckBoxs,1000);
+                    ToolTipService.SetInitialShowDelay(iconCheckBoxs,0);
+                    uniformGrid.Children.Add(iconCheckBoxs);
                 }
             }
-            if(select_count == 0)
-            {
-                ColorCheckBoxs colorCheckBoxs = new ColorCheckBoxs()
-                {
-                    HeaderHeight = 20,
-                    HeaderWidth = 20,
-                    ContentColor = colorPickers.SelectColor,
-                    Style = color_box.Style,
-                    IsChecked = true
-                };
-                MainColors.Add((int)Convert.ToInt64(colorPickers.SelectColor.ToString().Remove(0, 1), 16) + "");
-                colorCheckBoxs.Click += AddedColorClick;
-                ColorStackPanel.Children.Add(colorCheckBoxs);
-            }
         }
 
         /// <summary>
-        /// 添加到备选颜色
+        /// 已取消选择结构色
         /// </summary>
-        private void AddToFadeColorsCommand()
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void StructureColorUnChecked(object sender, RoutedEventArgs e)
         {
-            int select_count = 0;
-            foreach (ColorCheckBoxs box in StructColorsPanel.Children)
-            {
-                if (box.IsChecked.Value)
-                {
-                    ColorCheckBoxs colorCheckBoxs = new ColorCheckBoxs()
-                    {
-                        HeaderHeight = 20,
-                        HeaderWidth = 20,
-                        ContentColor = box.ContentColor,
-                        Style = box.Style,
-                        IsChecked = true
-                    };
-                    FadeColors.Add((int)Convert.ToInt64(box.ContentColor.ToString().Remove(0, 1), 16) + "");
-                    colorCheckBoxs.Click += AddedColorClick;
-                    FadeColorStackPanel.Children.Add(colorCheckBoxs);
-                    select_count++;
-                }
-            }
-            if (select_count == 0)
-            {
-                ColorCheckBoxs colorCheckBoxs = new ColorCheckBoxs()
-                {
-                    HeaderHeight = 20,
-                    HeaderWidth = 20,
-                    ContentColor = colorPickers.SelectColor,
-                    Style = color_box.Style,
-                    IsChecked = true
-                };
-                FadeColors.Add((int)Convert.ToInt64(colorPickers.SelectColor.ToString().Remove(0, 1), 16) + "");
-                colorCheckBoxs.Click += AddedColorClick;
-                FadeColorStackPanel.Children.Add(colorCheckBoxs);
-            }
+
         }
 
         /// <summary>
-        /// 清空主颜色
+        /// 已选择结构色
         /// </summary>
-        private void ClearColorsCommand()
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void StructureColorChecked(object sender, RoutedEventArgs e)
         {
-            ColorStackPanel.Children.Clear();
-        }
 
-        /// <summary>
-        /// 清空备选颜色
-        /// </summary>
-        private void ClearFadeColorsCommand()
-        {
-            FadeColorStackPanel.Children.Clear();
         }
 
         public void VersionLoaded(object sender,RoutedEventArgs e)
         {
             ComboBox comboBox = sender as ComboBox;
             comboBox.ItemsSource = VersionSource;
-        }
-
-        /// <summary>
-        /// 载入结构颜色数据
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void StructColorsLoaded(object sender, RoutedEventArgs e)
-        {
-            StructColorsPanel = sender as StackPanel;
-            color_box = StructColorsPanel.Children[0] as ColorCheckBoxs;
-            StructColorsPanel.Children.Clear();
-            if(File.Exists(AppDomain.CurrentDomain.BaseDirectory+ "resources\\configs\\struct_colors.ini"))
-            {
-                string[] colors = File.ReadAllLines(AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\struct_colors.ini");
-                for (int i = 0; i < colors.Length; i++)
-                {
-                    string[] key_value = colors[i].Split('=');
-                    if (!StructColors.ContainsKey(key_value[0]))
-                        StructColors.Add(key_value[0], key_value[1]);
-                    ColorCheckBoxs colorCheckBoxs = new ColorCheckBoxs()
-                    {
-                        HeaderHeight = 20,
-                        HeaderWidth = 20,
-                        Style = color_box.Style,
-                        ContentColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString(key_value[1]))
-                    };
-                    StructColorsPanel.Children.Add(colorCheckBoxs);
-                }
-            }
-        }
-
-        /// <summary>
-        /// 获取主颜色面板引用
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void ColorsPanelLoaded(object sender, RoutedEventArgs e)
-        {
-            ColorStackPanel = sender as StackPanel;
-        }
-
-        /// <summary>
-        /// 获取备用颜色面板引用
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void FadeColorsPanelLoaded(object sender, RoutedEventArgs e)
-        {
-            FadeColorStackPanel = sender as StackPanel;
-        }
-
-        /// <summary>
-        /// 获取自定义颜色选择器引用
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void CustomColorSelectorLoaded(object sender, RoutedEventArgs e)
-        {
-            colorPickers = sender as ColorPickers;
-        }
-
-        /// <summary>
-        /// 获取效果显示画布引用
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void EffectCanvasLoaded(object sender, RoutedEventArgs e)
-        {
-            EffectCanvas = sender as Canvas;
-        }
-
-        /// <summary>
-        /// 获取所有形状所在栈的引用
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void ShapeStackPanelLoaded(object sender, RoutedEventArgs e)
-        {
-            StackPanel shapes = sender as StackPanel;
-            TextToggleButtons shape_item = shapes.Children[0] as TextToggleButtons;
-            shapes.Children.Clear();
-            if(File.Exists(AppDomain.CurrentDomain.BaseDirectory+ "resources\\configs\\FireworkRocket\\data\\shapes.ini"))
-            {
-                List<bool> shape_value = new List<bool> { };
-                string[] shape_configs = File.ReadAllLines(AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\FireworkRocket\\data\\shapes.ini");
-                for (int i = 0; i < shape_configs.Length; i++)
-                {
-                    if (i == 0)
-                        shape_value.Add(true);
-                    else
-                        shape_value.Add(false);
-                    Binding binding = new Binding()
-                    {
-                        Path = new PropertyPath("FireworkShape[" + i + "]"),
-                        Mode = BindingMode.TwoWay
-                    };
-                    TextToggleButtons textToggleButtons = new TextToggleButtons()
-                    {
-                        Content = shape_configs[i],
-                        Cursor = Cursors.Hand,
-                        Style = shape_item.Style,
-                        Foreground = shape_item.Foreground,
-                        Background = shape_item.Background,
-                        VerticalContentAlignment = shape_item.VerticalContentAlignment,
-                        SelectedBackground = shape_item.SelectedBackground
-                    };
-                    textToggleButtons.Click += ShapeItemClick;
-                    shapes.Children.Add(textToggleButtons);
-                    BindingOperations.SetBinding(textToggleButtons, TextToggleButtons.IsCheckedProperty, binding);
-                }
-                FireworkShape = shape_value;
-            }
-        }
-
-        /// <summary>
-        /// 选取形状点击事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ShapeItemClick(object sender, RoutedEventArgs e)
-        {
-            TextToggleButtons textToggleButtons = sender as TextToggleButtons;
-            StackPanel parent = textToggleButtons.Parent as StackPanel;
-            int current_index = 0;
-            if(textToggleButtons.IsChecked.Value)
-            {
-                current_index = parent.Children.IndexOf(textToggleButtons);
-                for (int i = 0; i < parent.Children.Count; i++)
-                {
-                    if(i != current_index)
-                    {
-                        (parent.Children[i] as TextToggleButtons).IsChecked = false;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// 获取轨迹所在栈的引用
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void TrajectoriesStackPanelLoaded(object sender, RoutedEventArgs e)
-        {
-            StackPanel trajectories = sender as StackPanel;
-            TextToggleButtons shape_trajectory = trajectories.Children[0] as TextToggleButtons;
-            trajectories.Children.Clear();
-            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\FireworkRocket\\data\\trajectories.ini"))
-            {
-                List<bool> trajectory = new List<bool> { };
-                string[] shape_configs = File.ReadAllLines(AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\FireworkRocket\\data\\trajectories.ini");
-                for (int i = 0; i < shape_configs.Length; i++)
-                {
-                    trajectory.Add(false);
-                    string[] trajectory_info = shape_configs[i].Split('=');
-                    Trajectories.Add(trajectory_info[0], trajectory_info[1]);
-                    Binding binding = new Binding()
-                    {
-                        Path = new PropertyPath("FireworkTrajectory[" + i + "]"),
-                        Mode = BindingMode.TwoWay
-                    };
-                    TextToggleButtons textToggleButtons = new TextToggleButtons()
-                    {
-                        Content = trajectory_info[0],
-                        Cursor = Cursors.Hand,
-                        Style = shape_trajectory.Style,
-                        Foreground = shape_trajectory.Foreground,
-                        Background = shape_trajectory.Background,
-                        VerticalContentAlignment = shape_trajectory.VerticalContentAlignment,
-                        SelectedBackground = shape_trajectory.SelectedBackground
-                    };
-                    trajectories.Children.Add(textToggleButtons);
-                    BindingOperations.SetBinding(textToggleButtons, TextToggleButtons.IsCheckedProperty, binding);
-                }
-                FireworkTrajectory = trajectory;
-            }
-        }
-
-        /// <summary>
-        /// 被添加的颜色点击事件
-        /// </summary>
-        private void AddedColorClick(object sender, RoutedEventArgs e)
-        {
-            ColorCheckBoxs box = sender as ColorCheckBoxs;
-            if(box.Parent == ColorStackPanel)
-            {
-                int current_index = MainColors.IndexOf((int)Convert.ToInt64(box.ContentColor.ToString().Remove(0, 1), 16) + "");
-                MainColors.RemoveAt(current_index);
-            }
-            else
-            if (box.Parent == FadeColorStackPanel)
-            {
-                int current_index = FadeColors.IndexOf((int)Convert.ToInt64(box.ContentColor.ToString().Remove(0, 1), 16) + "");
-                FadeColors.RemoveAt(current_index);
-            }
-            StackPanel parent = box.Parent as StackPanel;
-            parent.Children.Remove(box);
         }
 
         /// <summary>

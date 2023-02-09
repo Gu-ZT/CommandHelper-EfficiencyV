@@ -64,7 +64,7 @@
                 <RepeatButton
                     x:Name="HorizontalSmallDecrease"
                     Width="10"
-                    Height="12"
+                    Height="20"
                     Margin="1"
                     Background="Transparent"
                     BorderThickness="0"
@@ -96,7 +96,7 @@
                 <Track.Thumb>
                     <Thumb
                         Height="12"
-                        Margin="0,2,0,0"
+                        Margin="0,8,0,0"
                         Template="{StaticResource ThumbTemplate}" />
                 </Track.Thumb>
                 <!--  右滑块  -->
@@ -118,8 +118,8 @@
                 VerticalAlignment="Center"
                 Background="Transparent">
                 <RepeatButton
-                    Width="10"
-                    Height="12"
+                    Width="13"
+                    Height="20"
                     Margin="1"
                     Background="Transparent"
                     BorderThickness="0"
@@ -245,11 +245,11 @@
         <Style.Triggers>
             <Trigger Property="Orientation" Value="Horizontal">
                 <Setter Property="Template" Value="{StaticResource HorizontalScrollBar}" />
-                <Setter Property="Height" Value="5" />
+                <Setter Property="Height" Value="10" />
             </Trigger>
             <Trigger Property="Orientation" Value="Vertical">
                 <Setter Property="Template" Value="{StaticResource VerticalScrollBar}" />
-                <Setter Property="Width" Value="5" />
+                <Setter Property="Width" Value="10" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -285,7 +285,7 @@
                             x:Name="PART_VerticalScrollBar"
                             Grid.Row="0"
                             Grid.Column="1"
-                            Width="12"
+                            Width="15"
                             AutomationProperties.AutomationId="VerticalScrollBar"
                             Maximum="{TemplateBinding ScrollableHeight}"
                             Minimum="0"
@@ -298,6 +298,7 @@
                             x:Name="PART_HorizontalScrollBar"
                             Grid.Row="1"
                             Grid.Column="0"
+                            Height="15"
                             AutomationProperties.AutomationId="HorizontalScrollBar"
                             Maximum="{TemplateBinding ScrollableWidth}"
                             Minimum="0"

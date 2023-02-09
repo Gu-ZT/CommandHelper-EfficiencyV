@@ -166,67 +166,48 @@
                     Foreground="White"
                     Text="{Binding SearchText, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}" />
             </DockPanel>
-            <ScrollViewer
+            <ListBox
                 Grid.Row="2"
                 HorizontalAlignment="Stretch"
-                Background="#555956"
+                BorderThickness="0"
+                ItemsSource="{Binding ItemsSource, IsAsync=True}"
                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                 ScrollViewer.VerticalScrollBarVisibility="Auto"
-                Style="{DynamicResource DefaultScrollViewer}"
-                VirtualizingPanel.IsVirtualizing="True"
-                VirtualizingPanel.ScrollUnit="Pixel"
-                VirtualizingPanel.VirtualizationMode="Recycling">
+                SelectedItem="{Binding SelectedItem, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
+                Style="{DynamicResource ListBoxScrollViewerStyle}">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Background="#555956" Columns="2" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <DockPanel>
+                            <Image
+                                x:Name="contentImage"
+                                RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                RenderOptions.ClearTypeHint="Enabled"
+                                SnapsToDevicePixels="True"
+                                Source="{Binding IsAsync=True, Converter={StaticResource UriToBitmapImage}, Mode=OneTime}"
+                                ToolTip="{Binding Path=Source, Mode=OneTime, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource UriToToolTip}}"
+                                ToolTipService.InitialShowDelay="0"
+                                ToolTipService.ShowDuration="1000"
+                                UseLayoutRounding="True" />
+                        </DockPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
                 <behavior:Interaction.Triggers>
                     <behavior:EventTrigger EventName="Loaded">
-                        <behavior:CallMethodAction MethodName="ScrollViewer_Loaded" TargetObject="{Binding}" />
+                        <behavior:CallMethodAction MethodName="ListBox_Loaded" TargetObject="{Binding}" />
                     </behavior:EventTrigger>
-                    <behavior:EventTrigger EventName="PreviewMouseWheel">
-                        <behavior:CallMethodAction MethodName="ScrollViewer_PreviewMouseWheel" TargetObject="{Binding}" />
+                    <behavior:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                        <behavior:CallMethodAction MethodName="SelectItemClickDown" TargetObject="{Binding}" />
+                    </behavior:EventTrigger>
+                    <behavior:EventTrigger EventName="MouseLeave">
+                        <behavior:CallMethodAction MethodName="ListBox_MouseLeave" TargetObject="{Binding}" />
                     </behavior:EventTrigger>
                 </behavior:Interaction.Triggers>
-                <ListBox
-                    HorizontalAlignment="Stretch"
-                    Background="Transparent"
-                    ItemsSource="{Binding ItemsSource, IsAsync=True}"
-                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                    ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                    SelectedItem="{Binding SelectedItem, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
-                    <ListBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <UniformGrid Columns="2" />
-                        </ItemsPanelTemplate>
-                    </ListBox.ItemsPanel>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <DockPanel>
-                                <Image
-                                    x:Name="contentImage"
-                                    Source="{Binding IsAsync=True, Converter={StaticResource UriToBitmapImage}, Mode=OneTime}"
-                                    ToolTip="{Binding Path=Source, Mode=OneTime, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource UriToToolTip}}"
-                                    ToolTipService.InitialShowDelay="0"
-                                    ToolTipService.ShowDuration="1000" />
-                            </DockPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                    <!--  去除白色边框线  -->
-                    <ListBox.Template>
-                        <ControlTemplate>
-                            <ItemsPresenter />
-                        </ControlTemplate>
-                    </ListBox.Template>
-                    <behavior:Interaction.Triggers>
-                        <behavior:EventTrigger EventName="PreviewMouseWheel">
-                            <behavior:CallMethodAction MethodName="ListBox_PreviewMouseWheel" TargetObject="{Binding}" />
-                        </behavior:EventTrigger>
-                        <behavior:EventTrigger EventName="Loaded">
-                            <behavior:CallMethodAction MethodName="ListBox_Loaded" TargetObject="{Binding}" />
-                        </behavior:EventTrigger>
-                        <behavior:EventTrigger EventName="PreviewMouseLeftButtonDown">
-                            <behavior:CallMethodAction MethodName="SelectItemClickDown" TargetObject="{Binding}" />
-                        </behavior:EventTrigger>
-                    </behavior:Interaction.Triggers>
-                </ListBox>
-            </ScrollViewer>
+            </ListBox>
         </Grid>
     </Grid>
 </local_window:CommonWindow>

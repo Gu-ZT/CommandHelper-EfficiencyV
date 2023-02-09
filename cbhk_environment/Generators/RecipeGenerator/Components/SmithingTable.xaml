@@ -43,8 +43,11 @@
                     Cursor="Hand"
                     Drop="ItemUpdate"
                     Loaded="BasedItemLoaded"
-                    MouseLeftButtonDown="SelectItemClick"
-                    Source="/cbhk_environment;component/resources/cbhk_form/images/empty.png" />
+                    RenderOptions.BitmapScalingMode="HighQuality"
+                    RenderOptions.ClearTypeHint="Enabled"
+                    SnapsToDevicePixels="True"
+                    Source="/cbhk_environment;component/resources/cbhk_form/images/empty.png"
+                    UseLayoutRounding="True" />
             </Border>
             <Border
                 Grid.Row="0"
@@ -60,8 +63,11 @@
                     Cursor="Hand"
                     Drop="ItemUpdate"
                     Loaded="AdditionItemLoaded"
-                    MouseLeftButtonDown="SelectItemClick"
-                    Source="/cbhk_environment;component/resources/cbhk_form/images/empty.png" />
+                    RenderOptions.BitmapScalingMode="HighQuality"
+                    RenderOptions.ClearTypeHint="Enabled"
+                    SnapsToDevicePixels="True"
+                    Source="/cbhk_environment;component/resources/cbhk_form/images/empty.png"
+                    UseLayoutRounding="True" />
             </Border>
             <Image
                 Uid="2"
@@ -75,10 +81,50 @@
                 Cursor="Hand"
                 Drop="ItemUpdate"
                 MouseRightButtonUp="DeleteRecipeResultClick"
+                RenderOptions.BitmapScalingMode="HighQuality"
+                RenderOptions.ClearTypeHint="Enabled"
+                SnapsToDevicePixels="True"
                 Source="/cbhk_environment;component/resources/cbhk_form/images/empty.png"
                 ToolTip="右击删除"
                 ToolTipService.InitialShowDelay="0"
-                ToolTipService.ShowDuration="1000" />
+                ToolTipService.ShowDuration="1000"
+                UseLayoutRounding="True" />
+            <DockPanel
+                Margin="335,20,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Panel.ZIndex="1">
+                <TextBlock
+                    Margin="0,0,17,0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Foreground="Black"
+                    Text="Tag0" />
+                <TextBox
+                    Width="140"
+                    Height="30"
+                    FontSize="20"
+                    Foreground="White"
+                    Text="{Binding BasedItemTag, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}" />
+            </DockPanel>
+            <DockPanel
+                Margin="335,50,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Panel.ZIndex="1">
+                <TextBlock
+                    Margin="0,0,17,0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Foreground="Black"
+                    Text="Tag1" />
+                <TextBox
+                    Width="140"
+                    Height="30"
+                    FontSize="20"
+                    Foreground="White"
+                    Text="{Binding AdditionTag, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}" />
+            </DockPanel>
             <DockPanel
                 Margin="325,80,0,0"
                 HorizontalAlignment="Left"
@@ -111,7 +157,7 @@
                 Height="30"
                 Margin="329,0,0,45">
                 <TextBlock
-                    Margin="5,0"
+                    Margin="20,0,20,0"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     Background="Transparent"
@@ -119,10 +165,8 @@
                     Text="组" />
                 <TextBox
                     x:Name="GroupId"
-                    MinWidth="170"
-                    MinHeight="30"
-                    MaxWidth="235"
-                    MaxHeight="30"
+                    Width="140"
+                    Height="30"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     BorderBrush="Black"
@@ -138,7 +182,7 @@
                 Margin="325,20,0,0"
                 LastChildFill="False">
                 <TextBlock
-                    Margin="10,0"
+                    Margin="14,0"
                     VerticalAlignment="Center"
                     Panel.ZIndex="1"
                     Background="Transparent"
@@ -147,7 +191,7 @@
                     Text=" 数量"
                     TextAlignment="Center" />
                 <Slider
-                    Width="150"
+                    Width="140"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     AllowDrop="False"

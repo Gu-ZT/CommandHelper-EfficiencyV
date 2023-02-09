@@ -473,6 +473,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="ControlsDictionaries\RichTextBoxDefaultStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ControlsDictionaries\RichTreeViewItems.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

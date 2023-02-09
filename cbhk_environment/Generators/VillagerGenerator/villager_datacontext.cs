@@ -204,7 +204,7 @@ namespace cbhk_environment.Generators.VillagerGenerator
                             ContentPresenter contentPresenter = GeneralTools.ChildrenHelper.FindVisualChild<ContentPresenter>(listBoxItem);
                             Image image = contentPresenter.ContentTemplate.FindName("contentImage", contentPresenter) as Image;
                             string itemInfo = image.ToolTip.ToString();
-                            if (!(itemInfo.Contains(SearchText) || SearchText.StartsWith(itemInfo)))
+                            if (!(itemInfo.Substring(itemInfo.IndexOf(' ') + 1).StartsWith(SearchText) || itemInfo.StartsWith(SearchText)))
                                 listBoxItem.Visibility = Visibility.Collapsed;
                             else
                                 listBoxItem.Visibility = Visibility.Visible;
@@ -613,13 +613,16 @@ namespace cbhk_environment.Generators.VillagerGenerator
         public RelayCommand ClearTransactionItem { get; set; }
         #endregion
 
+        #region 添加与清空言论
+        public RelayCommand AddGossipItem { get; set; }
+        public RelayCommand ClearGossipItem { get; set; }
+        #endregion
+
         //物品加载进程锁
         object itemLoadLock = new object();
 
         //背包引用
         ListBox Bag = null;
-        //滚动视图引用
-        ScrollViewer scrollViewer = null;
         public villager_datacontext()
         {
             #region 链接指令
@@ -627,6 +630,8 @@ namespace cbhk_environment.Generators.VillagerGenerator
             ReturnCommand = new RelayCommand<CommonWindow>(return_command);
             AddTransactionItem = new RelayCommand(AddTransactionItemCommand);
             ClearTransactionItem = new RelayCommand(ClearTransactionItemCommand);
+            AddGossipItem = new RelayCommand(AddGossipItemCommand);
+            ClearGossipItem = new RelayCommand(ClearGossipItemCommand);
             #endregion
 
             #region 把交易数据页放入容器中，用于定位出现位置
@@ -879,8 +884,8 @@ namespace cbhk_environment.Generators.VillagerGenerator
         {
             TransactionItems transaction = new TransactionItems()
             {
-                Height = 125,
-                Width = 575
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                Height = 75
             };
             transaction.MouseLeftButtonDown += BuyItemDataUpdater;
             transactionItems.Add(transaction);
@@ -929,17 +934,24 @@ namespace cbhk_environment.Generators.VillagerGenerator
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void AddGossipItemClick(object sender, RoutedEventArgs e)
+        private void AddGossipItemCommand()
         {
             GossipsItems gossipsItem = new GossipsItems()
             {
-                Height = 125,
-                Width = 400,
-                Margin = new Thickness(0, 0, 5, 10),
+                Width = 315,
+                Margin = new Thickness(0, 0, 5, 5),
                 HorizontalAlignment = HorizontalAlignment.Left
             };
             gossipsItem.MouseLeftButtonDown += GossipsItemMouseLeftButtonDown;
             gossipItems.Add(gossipsItem);
+        }
+
+        /// <summary>
+        /// 清空言论控件
+        /// </summary>
+        private void ClearGossipItemCommand()
+        {
+            gossipItems.Clear();
         }
 
         /// <summary>
@@ -1006,28 +1018,6 @@ namespace cbhk_environment.Generators.VillagerGenerator
             }
         }
 
-        public void ScrollViewer_Loaded(object sender, RoutedEventArgs e)
-        {
-            scrollViewer = sender as ScrollViewer;
-        }
-
-        public void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            var eventArg = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta)
-            {
-                RoutedEvent = UIElement.MouseWheelEvent,
-                Source = e.Source
-            };
-            ScrollViewer scv = (ScrollViewer)sender;
-            scv.RaiseEvent(eventArg);
-            e.Handled = true;
-        }
-
-        public  void ListBox_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            ScrollViewer_PreviewMouseWheel(scrollViewer, e);
-        }
-
         /// <summary>
         /// 左击言论成员后计算左侧所有物品的价格
         /// </summary>
@@ -1044,9 +1034,9 @@ namespace cbhk_environment.Generators.VillagerGenerator
 
             string search_type = current_type == "minor_negative" ? "trading" : current_type;
 
-            string compare_type = null;
+            string compare_type = "";
 
-            List<GossipsItems> another_item = gossipItems.Where(item =>
+            List<GossipsItems> another_items = gossipItems.Where(item =>
             {
                 compare_type = item.Type.SelectedItem as string;
                 if (item.Target.Text.Trim() == current_item.Target.Text.Trim() && search_type == compare_type)
@@ -1055,13 +1045,18 @@ namespace cbhk_environment.Generators.VillagerGenerator
                     return false;
             }).ToList();
 
-            if(another_item.Count > 0)
-            if(another_item.First().Value.ToString().Trim() != "" && current_item.Value.ToString().Trim() != "")
+            if(another_items.Count > 0)
+            if(another_items.First().Value.Value.ToString().Trim() != "" && current_item.Value.Value.ToString().Trim() != "")
             {
-                int minor_negative = current_type == "minor_negative" ? int.Parse(another_item.First().Value.ToString()) : int.Parse(current_item.Value.ToString());
-                int trading = current_type != "trading" ? int.Parse(another_item.First().Value.ToString()) : int.Parse(current_item.Value.ToString());
+                int minor_negative = current_type == "minor_negative" ? int.Parse(another_items.First().Value.Value.ToString()) : int.Parse(current_item.Value.Value.ToString());
+                int trading = current_type != "trading" ? int.Parse(another_items.First().Value.Value.ToString()) : int.Parse(current_item.Value.Value.ToString());
                 transactionItems.All(item => { item.UpdateDiscountData(minor_negative, trading); return true; });
             }
+        }
+
+        public void ListBox_MouseLeave(object sender, MouseEventArgs e)
+        {
+            SelectedItem = null;
         }
 
         /// <summary>
@@ -1074,7 +1069,6 @@ namespace cbhk_environment.Generators.VillagerGenerator
             if (SelectedItem != null)
             {
                 IsGrabingItem = true;
-
                 int startIndex = SelectedItem.ToString().LastIndexOf('/') + 1;
                 int endIndex = SelectedItem.ToString().LastIndexOf('.');
                 string itemID = SelectedItem.ToString().Substring(startIndex, endIndex - startIndex);

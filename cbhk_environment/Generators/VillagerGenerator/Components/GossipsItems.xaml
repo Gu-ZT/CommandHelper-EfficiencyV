@@ -6,95 +6,121 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:cbhk_environment.Generators.VillagerGenerator.Components"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Margin="10,0,0,0"
     d:DesignHeight="450"
     d:DesignWidth="800"
     Background="Transparent"
-    Cursor="Hand"
+    ToolTip="左击更新左侧价格"
+    ToolTipService.InitialShowDelay="0"
+    ToolTipService.ShowDuration="1000"
     mc:Ignorable="d">
 
-    <Grid
-        Width="390"
-        Height="120"
-        MouseRightButtonUp="Grid_MouseRightButtonUp">
+    <UserControl.Resources>
+        <ImageBrush x:Key="ButtonNormal" ImageSource="/cbhk_environment;component/resources/common/images/ButtonNormal.png" />
+        <ImageBrush x:Key="ButtonPressed" ImageSource="/cbhk_environment;component/resources/common/images/ButtonPressed.png" />
+    </UserControl.Resources>
+
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2.5*" />
             <ColumnDefinition Width="9*" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <TextBlock
+        <CustomControls:IconTextButtons
+            Grid.Row="0"
+            Grid.RowSpan="3"
+            Grid.Column="1"
+            Background="{StaticResource ButtonNormal}"
+            Click="IconTextButtons_Click"
+            Content="X"
+            Foreground="Black"
+            PressedBackground="{StaticResource ButtonPressed}"
+            Style="{DynamicResource IconTextButton}" />
+        <DockPanel
             Grid.Row="0"
             Grid.Column="0"
-            Margin="0,0,5,0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Center"
-            FontSize="25"
-            Foreground="White"
-            Text="Value"
-            ToolTip="此言论的强度。"
-            ToolTipService.InitialShowDelay="0"
-            ToolTipService.ShowDuration="1000" />
-        <Slider
-            x:Name="Value"
-            Grid.Row="0"
-            Grid.Column="1"
-            Height="35"
-            HorizontalAlignment="Stretch"
-            AllowDrop="False"
-            Background="Transparent"
-            BorderThickness="0"
-            FontSize="25"
-            Foreground="White"
-            Maximum="2147483647"
-            Minimum="1"
-            Style="{DynamicResource NumberBoxStyle}" />
-        <TextBlock
+            LastChildFill="True">
+            <TextBlock
+                Margin="0,0,10.6,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                FontSize="15"
+                Foreground="White"
+                Text="Value"
+                ToolTip="此言论的强度。"
+                ToolTipService.InitialShowDelay="0"
+                ToolTipService.ShowDuration="1000" />
+            <Slider
+                x:Name="Value"
+                Height="30"
+                HorizontalAlignment="Stretch"
+                AllowDrop="False"
+                Background="Transparent"
+                BorderThickness="0"
+                FontSize="20"
+                Foreground="White"
+                Maximum="2147483647"
+                Minimum="0"
+                Style="{DynamicResource NumberBoxStyle}" />
+        </DockPanel>
+        <DockPanel
             Grid.Row="1"
             Grid.Column="0"
-            Margin="0,0,5,0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Center"
-            FontSize="25"
-            Foreground="White"
-            Text="Target"
-            ToolTip="引发言论的玩家的UUID。"
-            ToolTipService.InitialShowDelay="0"
-            ToolTipService.ShowDuration="1000" />
-        <TextBox
-            x:Name="Target"
-            Grid.Row="1"
-            Grid.Column="1"
-            Height="35"
-            HorizontalAlignment="Stretch"
-            BorderBrush="Black"
-            BorderThickness="1"
-            CaretBrush="White"
-            FontSize="25"
-            Foreground="White" />
-        <TextBlock
+            LastChildFill="True">
+            <TextBlock
+                Grid.Row="1"
+                Grid.Column="0"
+                Margin="0,0,5,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                FontSize="15"
+                Foreground="White"
+                Text="Target"
+                ToolTip="引发言论的玩家的UUID。"
+                ToolTipService.InitialShowDelay="0"
+                ToolTipService.ShowDuration="1000" />
+            <TextBox
+                x:Name="Target"
+                Height="30"
+                HorizontalAlignment="Stretch"
+                BorderBrush="Black"
+                BorderThickness="1"
+                CaretBrush="White"
+                FontSize="20"
+                Foreground="White" />
+        </DockPanel>
+        <DockPanel
             Grid.Row="2"
             Grid.Column="0"
-            Margin="0,0,5,0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Center"
-            FontSize="25"
-            Foreground="White"
-            Text="Type"
-            ToolTip="一个ID值，指示此言论的类型。"
-            ToolTipService.InitialShowDelay="0"
-            ToolTipService.ShowDuration="1000" />
-        <CustomControls:TextComboBoxs
-            x:Name="Type"
-            Grid.Row="2"
-            Grid.Column="1"
-            Height="35"
-            HorizontalAlignment="Stretch"
-            FontSize="25"
-            Loaded="TypeLoaded"
-            Style="{DynamicResource TextComboBoxStyle}" />
+            LastChildFill="True">
+            <TextBlock
+                Grid.Row="2"
+                Grid.Column="0"
+                Margin="0,0,16,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                FontSize="15"
+                Foreground="White"
+                Text="Type"
+                ToolTip="一个ID值，指示此言论的类型。"
+                ToolTipService.InitialShowDelay="0"
+                ToolTipService.ShowDuration="1000" />
+            <CustomControls:TextComboBoxs
+                x:Name="Type"
+                Grid.Row="2"
+                Grid.Column="1"
+                Height="30"
+                Padding="0,5,0,0"
+                HorizontalAlignment="Stretch"
+                FontSize="15"
+                Loaded="TypeLoaded"
+                SelectedIndex="0"
+                Style="{DynamicResource TextComboBoxStyle}" />
+        </DockPanel>
     </Grid>
 
 </UserControl>

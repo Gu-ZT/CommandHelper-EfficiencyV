@@ -86,12 +86,12 @@ namespace cbhk_environment.Generators.OnlyOneCommandGenerator
         /// </summary>
         private void AddOneCommandPageCommand()
         {
-            ScrollViewer scrollViewer = new ScrollViewer
-            {
-                HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
-                VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
-                Style = Application.Current.Resources["DefaultScrollViewer"] as Style
-            };
+            //ScrollViewer scrollViewer = new ScrollViewer
+            //{
+            //    HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+            //    VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            //    Style = Application.Current.Resources["DefaultScrollViewer"] as Style
+            //};
             RichTextBox richTextBox = new RichTextBox()
             {
                 MinHeight = 318,
@@ -100,7 +100,7 @@ namespace cbhk_environment.Generators.OnlyOneCommandGenerator
                 Foreground = new SolidColorBrush(Colors.White),
                 BorderThickness = new Thickness(0),
                 FontSize = 15,
-                VerticalScrollBarVisibility = ScrollBarVisibility.Disabled,
+                VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
                 HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled
             };
             EnabledFlowDocument enabledFlowDocument = new EnabledFlowDocument()
@@ -108,7 +108,7 @@ namespace cbhk_environment.Generators.OnlyOneCommandGenerator
                 LineHeight = 10
             };
             richTextBox.Document = enabledFlowDocument;
-            scrollViewer.Content = richTextBox;
+            //scrollViewer.Content = richTextBox;
             RichTabItems tabItem = new RichTabItems
             {
                 Padding = new Thickness(10, 2, 0, 0),
@@ -117,7 +117,7 @@ namespace cbhk_environment.Generators.OnlyOneCommandGenerator
                 Header = "OOC",
                 IsContentSaved = true,
                 Style = Application.Current.Resources["RichTabItemStyle"] as Style,
-                Content = scrollViewer
+                Content = richTextBox
             };
             CurrentItem = tabItem;
             OneCommandTabControl.Items.Add(tabItem);

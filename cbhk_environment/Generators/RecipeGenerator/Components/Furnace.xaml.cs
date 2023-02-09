@@ -64,11 +64,6 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
         }
         #endregion
 
-        #region 默认键值
-        List<char> DefaultKeyList = new List<char> { 'm', 's' };
-        int defaultKeyListIndex = 0;
-        #endregion
-
         #region 知识之书图标
         System.Drawing.Bitmap KnowLedgeBook = null;
         BitmapImage KnowLedgeBookImage = null;
@@ -257,18 +252,6 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
         }
 
         /// <summary>
-        /// 分配默认键值 
-        /// </summary>
-        private char SetDefaultKey()
-        {
-            if (defaultKeyListIndex >= DefaultKeyList.Count)
-                defaultKeyListIndex = 0;
-            char result = DefaultKeyList[defaultKeyListIndex];
-            defaultKeyListIndex++;
-            return result;
-        }
-
-        /// <summary>
         /// 更新物品
         /// </summary>
         /// <param name="sender"></param>
@@ -312,8 +295,6 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
             switch (current_item.Uid)
             {
                 case "0":
-                    if (MeltedItemList.Count == 1 && ItemInfomationWindow.KeyBox.Text.Trim() == "")
-                        ItemInfomationWindow.KeyBox.Text = SetDefaultKey().ToString();
                     if (MultipleMode.IsChecked.Value || MeltedItemList.Count == 0)
                     {
                         if (MeltedItemList.Where(item => item.Tag == cache_image.Tag).Count() == 0)
@@ -331,8 +312,6 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
                     }
                     break;
                 case "1":
-                    if (RecipeResult.Trim().Length == 1 && ItemInfomationWindow.KeyBox.Text.Trim() == "")
-                        ItemInfomationWindow.KeyBox.Text = SetDefaultKey().ToString();
                     current_item.Source = bitmapImage;
                     RecipeResult = current_item.Tag.ToString();
                     break;
@@ -360,6 +339,8 @@ namespace cbhk_environment.Generators.RecipeGenerator.Components
 
             if (DisplayCurrentItem)
             {
+                if (MeltedItemList.Count == 1 && ItemInfomationWindow.KeyBox.Text.Trim() == "")
+                    ItemInfomationWindow.KeyBox.Text = "m";
                 Window window = Window.GetWindow(image);
                 Point point = image.TransformToAncestor(window).Transform(new Point(0, 0));
                 point = PointToScreen(point);

@@ -61,7 +61,7 @@
                     AllowDrop="True"
                     Cursor="Hand"
                     Drop="ItemUpdate"
-                    MouseLeftButtonUp="DeleteRecipeResultClick"
+                    MouseRightButtonUp="DeleteRecipeResultClick"
                     Source="/cbhk_environment;component/resources/cbhk_form/images/empty.png"
                     ToolTip="右击删除"
                     ToolTipService.InitialShowDelay="0"

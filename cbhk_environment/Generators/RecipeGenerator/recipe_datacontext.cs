@@ -520,6 +520,11 @@ namespace cbhk_environment.Generators.RecipeGenerator
             scrollViewer = sender as ScrollViewer;
         }
 
+        public void ListBox_MouseLeave(object sender, MouseEventArgs e)
+        {
+            SelectedItem = null;
+        }
+
         public void ListBox_Loaded(object sender, RoutedEventArgs e)
         {
             ItemZone = sender as ListBox;

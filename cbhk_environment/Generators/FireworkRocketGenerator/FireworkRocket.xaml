@@ -13,10 +13,10 @@
     xmlns:local_window="clr-namespace:cbhk_environment.WindowDictionaries"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="烟花火箭生成器"
-    Width="615"
-    Height="335"
-    MinWidth="615"
-    MinHeight="335"
+    Width="702"
+    Height="503"
+    MinWidth="702"
+    MinHeight="503"
     Background="#2F2F2F"
     Icon="/cbhk_environment;component/resources/common/images/spawnerIcons/IconFireworks.png"
     ResizeMode="CanResizeWithGrip"
@@ -45,7 +45,7 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
+            <RowDefinition Height="30" />
             <RowDefinition Height="5*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -148,320 +148,156 @@
                 IsChecked="{Binding FlyAngle, Mode=TwoWay}"
                 Style="{DynamicResource TextToggleButtonsStyle}" />
         </DockPanel>
-        <DockPanel Grid.Row="1" LastChildFill="True">
-            <ScrollViewer Style="{DynamicResource DefaultScrollViewer}" VerticalScrollBarVisibility="Auto">
-                <StackPanel>
-                    <CustomControls:Accordion
-                        Title="颜色"
-                        Margin="2,0"
-                        Background="#FFE5B663"
-                        BorderThickness="0"
-                        Cursor="Hand"
-                        ExpandDirection="Down"
-                        FontSize="15"
-                        FreshVisibility="Collapsed"
-                        IsExpanded="True"
-                        ModifyVisibility="Collapsed"
-                        Style="{DynamicResource AccordionStyle}"
-                        TitleForeground="Black">
-                        <StackPanel>
-                            <Border Background="#2F2F2F">
-                                <DockPanel>
-                                    <StackPanel Width="200" Height="100">
-                                        <Grid Width="200" Height="100">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="*" />
-                                                <RowDefinition Height="2*" />
-                                            </Grid.RowDefinitions>
-                                            <TextBlock
-                                                Grid.Row="0"
-                                                Grid.Column="0"
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Center"
-                                                Foreground="White"
-                                                Text="颜色库" />
-                                            <Button
-                                                Grid.Row="0"
-                                                Grid.Column="1"
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Center"
-                                                Background="Transparent"
-                                                BorderThickness="0"
-                                                Command="{Binding ClearColors}"
-                                                Content="主要颜色"
-                                                Cursor="Hand"
-                                                Foreground="White"
-                                                ToolTip="点击清空"
-                                                ToolTipService.InitialShowDelay="0"
-                                                ToolTipService.ShowDuration="1000" />
-                                            <Button
-                                                Grid.Row="0"
-                                                Grid.Column="2"
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Center"
-                                                Background="Transparent"
-                                                BorderThickness="0"
-                                                Command="{Binding ClearFadeColors}"
-                                                Content="备选颜色"
-                                                Cursor="Hand"
-                                                Foreground="White"
-                                                ToolTip="点击清空"
-                                                ToolTipService.InitialShowDelay="0"
-                                                ToolTipService.ShowDuration="1000" />
-                                            <ScrollViewer
-                                                Grid.Row="1"
-                                                Grid.Column="0"
-                                                ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                                Style="{DynamicResource DefaultScrollViewer}">
-                                                <StackPanel>
-                                                    <CustomControls:ColorCheckBoxs
-                                                        ContentColor="Red"
-                                                        HeaderHeight="20"
-                                                        HeaderWidth="20"
-                                                        Style="{DynamicResource ColorCheckBox}" />
-                                                    <ity:Interaction.Triggers>
-                                                        <ity:EventTrigger EventName="Loaded">
-                                                            <itn:CallMethodAction MethodName="StructColorsLoaded" TargetObject="{Binding}" />
-                                                        </ity:EventTrigger>
-                                                    </ity:Interaction.Triggers>
-                                                </StackPanel>
-                                            </ScrollViewer>
-                                            <ScrollViewer
-                                                Grid.Row="1"
-                                                Grid.Column="1"
-                                                Style="{DynamicResource DefaultScrollViewer}"
-                                                VerticalScrollBarVisibility="Auto">
-                                                <StackPanel>
-                                                    <ity:Interaction.Triggers>
-                                                        <ity:EventTrigger EventName="Loaded">
-                                                            <itn:CallMethodAction MethodName="ColorsPanelLoaded" TargetObject="{Binding}" />
-                                                        </ity:EventTrigger>
-                                                    </ity:Interaction.Triggers>
-                                                </StackPanel>
-                                            </ScrollViewer>
-                                            <ScrollViewer
-                                                Grid.Row="1"
-                                                Grid.Column="2"
-                                                Style="{DynamicResource DefaultScrollViewer}"
-                                                VerticalScrollBarVisibility="Auto">
-                                                <StackPanel>
-                                                    <ity:Interaction.Triggers>
-                                                        <ity:EventTrigger EventName="Loaded">
-                                                            <itn:CallMethodAction MethodName="FadeColorsPanelLoaded" TargetObject="{Binding}" />
-                                                        </ity:EventTrigger>
-                                                    </ity:Interaction.Triggers>
-                                                </StackPanel>
-                                            </ScrollViewer>
-                                        </Grid>
-                                    </StackPanel>
-                                    <StackPanel>
-                                        <CustomControls:TextToggleButtons
-                                            Margin="0,4,0,0"
-                                            HorizontalAlignment="Stretch"
-                                            VerticalAlignment="Top"
-                                            Background="Transparent"
-                                            BorderBrush="Black"
-                                            Command="{Binding SelectAll}"
-                                            CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"
-                                            Content="全选"
-                                            Cursor="Hand"
-                                            Foreground="White"
-                                            Style="{DynamicResource TextToggleButtonsStyle}" />
-                                        <CustomControls:TextToggleButtons
-                                            HorizontalAlignment="Stretch"
-                                            VerticalAlignment="Top"
-                                            Background="Transparent"
-                                            BorderBrush="Black"
-                                            Command="{Binding ReverseAll}"
-                                            CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"
-                                            Content="反选"
-                                            Cursor="Hand"
-                                            Foreground="White"
-                                            Style="{DynamicResource TextToggleButtonsStyle}" />
-                                        <CustomControls:IconTextButtons
-                                            HorizontalAlignment="Stretch"
-                                            VerticalAlignment="Top"
-                                            Background="{StaticResource ButtonNormal}"
-                                            BorderBrush="Black"
-                                            Command="{Binding AddToColors}"
-                                            CommandTarget="{Binding RelativeSource={RelativeSource Mode=Self}}"
-                                            Content="添加到颜色"
-                                            FontSize="10"
-                                            Foreground="Black"
-                                            PressedBackground="{StaticResource ButtonPressed}"
-                                            Style="{DynamicResource IconTextButton}" />
-                                        <CustomControls:IconTextButtons
-                                            HorizontalAlignment="Stretch"
-                                            VerticalAlignment="Top"
-                                            Background="{StaticResource ButtonNormal}"
-                                            BorderBrush="Black"
-                                            Command="{Binding AddToFadeColors}"
-                                            CommandTarget="{Binding RelativeSource={RelativeSource Mode=Self}}"
-                                            Content="添加到备用颜色"
-                                            Cursor="Hand"
-                                            FontSize="10"
-                                            Foreground="Black"
-                                            PressedBackground="{StaticResource ButtonPressed}"
-                                            Style="{DynamicResource IconTextButton}" />
-                                        <DockPanel>
-                                            <TextBlock
-                                                Grid.Row="0"
-                                                Grid.Column="2"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Center"
-                                                FontSize="10"
-                                                Foreground="White"
-                                                Text="自定义颜色" />
-                                            <ColorPicker:ColorPickers Background="Red" SelectColor="Red">
-                                                <ity:Interaction.Triggers>
-                                                    <ity:EventTrigger EventName="Loaded">
-                                                        <itn:CallMethodAction MethodName="CustomColorSelectorLoaded" TargetObject="{Binding}" />
-                                                    </ity:EventTrigger>
-                                                </ity:Interaction.Triggers>
-                                            </ColorPicker:ColorPickers>
-                                        </DockPanel>
-                                    </StackPanel>
-                                </DockPanel>
-                            </Border>
-                        </StackPanel>
-                    </CustomControls:Accordion>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <CustomControls:Accordion
-                            Title="爆炸形状"
-                            Grid.Column="0"
-                            Margin="2,0,0,0"
-                            Background="#FFE5B663"
-                            BorderThickness="0"
-                            Cursor="Hand"
-                            ExpandDirection="Down"
-                            FontSize="15"
-                            FreshVisibility="Collapsed"
-                            IsExpanded="True"
-                            ModifyVisibility="Collapsed"
-                            Style="{DynamicResource AccordionStyle}"
-                            TitleForeground="Black">
-                            <ScrollViewer
-                                Height="45"
-                                Background="#2F2F2F"
-                                ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                Style="{DynamicResource DefaultScrollViewer}">
-                                <StackPanel>
-                                    <ity:Interaction.Triggers>
-                                        <ity:EventTrigger EventName="Loaded">
-                                            <itn:CallMethodAction MethodName="ShapeStackPanelLoaded" TargetObject="{Binding}" />
-                                        </ity:EventTrigger>
-                                    </ity:Interaction.Triggers>
-                                    <CustomControls:TextToggleButtons
-                                        VerticalContentAlignment="Center"
-                                        Background="Transparent"
-                                        Content="球形"
-                                        Foreground="White"
-                                        Style="{DynamicResource TextToggleButtonsStyle}" />
-                                </StackPanel>
-                            </ScrollViewer>
-                        </CustomControls:Accordion>
-                        <CustomControls:Accordion
-                            Title="爆炸轨迹"
-                            Grid.Column="1"
-                            Margin="0,0,2,0"
-                            Background="#FFE5B663"
-                            BorderThickness="0"
-                            Cursor="Hand"
-                            ExpandDirection="Down"
-                            FontSize="15"
-                            FreshVisibility="Collapsed"
-                            IsExpanded="True"
-                            ModifyVisibility="Collapsed"
-                            Style="{DynamicResource AccordionStyle}"
-                            TitleForeground="Black">
-                            <ScrollViewer
-                                Height="45"
-                                Background="#2F2F2F"
-                                ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                Style="{DynamicResource DefaultScrollViewer}">
-                                <StackPanel>
-                                    <ity:Interaction.Triggers>
-                                        <ity:EventTrigger EventName="Loaded">
-                                            <itn:CallMethodAction MethodName="TrajectoriesStackPanelLoaded" TargetObject="{Binding}" />
-                                        </ity:EventTrigger>
-                                    </ity:Interaction.Triggers>
-                                    <CustomControls:TextToggleButtons
-                                        VerticalAlignment="Stretch"
-                                        Background="Transparent"
-                                        Content="闪烁"
-                                        Cursor="Hand"
-                                        Foreground="White"
-                                        Style="{DynamicResource TextToggleButtonsStyle}" />
-                                </StackPanel>
-                            </ScrollViewer>
-                        </CustomControls:Accordion>
-                    </Grid>
-                    <CustomControls:Accordion
-                        Title="飞行时长"
-                        Grid.Column="0"
-                        Margin="2,0,0,0"
-                        Background="#FFE5B663"
-                        BorderThickness="0"
-                        ExpandDirection="Down"
-                        FontSize="15"
-                        FreshVisibility="Collapsed"
-                        IsExpanded="True"
-                        ModifyVisibility="Collapsed"
-                        Style="{DynamicResource AccordionStyle}"
-                        TitleForeground="Black">
-                        <Grid Height="25" Background="#2F2F2F">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <CustomControls:TextToggleButtons
-                                Grid.Column="0"
-                                Background="Transparent"
-                                Content="短"
-                                Cursor="Hand"
-                                Foreground="White"
-                                IsChecked="{Binding ShortDuration, Mode=TwoWay}"
-                                Style="{DynamicResource TextToggleButtonsStyle}" />
-                            <CustomControls:TextToggleButtons
-                                Grid.Column="1"
-                                Background="Transparent"
-                                Content="中"
-                                Cursor="Hand"
-                                Foreground="White"
-                                IsChecked="{Binding MediumDuration, Mode=TwoWay}"
-                                Style="{DynamicResource TextToggleButtonsStyle}" />
-                            <CustomControls:TextToggleButtons
-                                Grid.Column="2"
-                                Background="Transparent"
-                                Content="长"
-                                Cursor="Hand"
-                                Foreground="White"
-                                IsChecked="{Binding LongDuration, Mode=TwoWay}"
-                                Style="{DynamicResource TextToggleButtonsStyle}" />
-                        </Grid>
-                    </CustomControls:Accordion>
-                </StackPanel>
-            </ScrollViewer>
-            <Canvas
-                MinWidth="280"
-                VerticalAlignment="Stretch"
-                Background="Transparent">
-                <ity:Interaction.Triggers>
-                    <ity:EventTrigger EventName="Loaded">
-                        <itn:CallMethodAction MethodName="EffectCanvasLoaded" TargetObject="{Binding}" />
-                    </ity:EventTrigger>
-                </ity:Interaction.Triggers>
-            </Canvas>
-        </DockPanel>
+        <ScrollViewer
+            Grid.Row="1"
+            HorizontalScrollBarVisibility="Disabled"
+            Style="{DynamicResource DefaultScrollViewer}"
+            VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <CustomControls:Accordion
+                    Title="原版颜色库"
+                    Background="#FFE5B663"
+                    FreshVisibility="Collapsed"
+                    IsExpanded="True"
+                    ModifyVisibility="Collapsed"
+                    Style="{DynamicResource AccordionStyle}"
+                    TitleForeground="Black">
+                    <ScrollViewer
+                        MinHeight="100"
+                        Background="Transparent"
+                        HorizontalScrollBarVisibility="Disabled"
+                        VerticalScrollBarVisibility="Auto">
+                        <behavior:Interaction.Triggers>
+                            <behavior:EventTrigger EventName="Loaded">
+                                <behavior:CallMethodAction MethodName="StructureColorList_Loaded" TargetObject="{Binding}" />
+                            </behavior:EventTrigger>
+                        </behavior:Interaction.Triggers>
+                        <UniformGrid Columns="6" />
+                    </ScrollViewer>
+                </CustomControls:Accordion>
+                <DockPanel>
+                    <TextBlock
+                        Margin="5,5,5,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        FontSize="20"
+                        Foreground="White"
+                        Text="形状" />
+                    <CustomControls:TextComboBoxs
+                        Margin="0,0,5,0"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center"
+                        SelectedIndex="0"
+                        SelectedItem="{Binding SelectedShape, Mode=TwoWay}"
+                        Style="{DynamicResource TextComboBoxStyle}">
+                        <!--<behavior:Interaction.Triggers>
+                            <behavior:EventTrigger EventName="Loaded">
+                                <behavior:CallMethodAction MethodName="" TargetObject="{Binding}" />
+                            </behavior:EventTrigger>
+                        </behavior:Interaction.Triggers>-->
+                    </CustomControls:TextComboBoxs>
+                </DockPanel>
+                <DockPanel>
+                    <TextBlock
+                        Margin="5,2,5,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        FontSize="20"
+                        Foreground="White"
+                        Text="轨迹" />
+                    <CustomControls:TextCheckBoxs
+                        Margin="5,2,0,0"
+                        HorizontalAlignment="Left"
+                        FontSize="20"
+                        Foreground="White"
+                        HeaderHeight="25"
+                        HeaderText="闪烁"
+                        HeaderWidth="25"
+                        Style="{DynamicResource TextCheckBox}" />
+                    <CustomControls:TextCheckBoxs
+                        Margin="5,2,0,0"
+                        HorizontalAlignment="Left"
+                        FontSize="20"
+                        Foreground="White"
+                        HeaderHeight="25"
+                        HeaderText="拖尾"
+                        HeaderWidth="25"
+                        Style="{DynamicResource TextCheckBox}" />
+                </DockPanel>
+                <DockPanel>
+                    <TextBlock
+                        Margin="5,2,5,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        FontSize="20"
+                        Foreground="White"
+                        Text="模式" />
+                    <CustomControls:TextCheckBoxs
+                        Margin="5,2,0,0"
+                        HorizontalAlignment="Left"
+                        FontSize="20"
+                        Foreground="White"
+                        HeaderHeight="25"
+                        HeaderText="点"
+                        HeaderWidth="25"
+                        IsChecked="True"
+                        Style="{DynamicResource TextCheckBox}" />
+                    <CustomControls:TextCheckBoxs
+                        Margin="5,2,0,0"
+                        HorizontalAlignment="Left"
+                        FontSize="20"
+                        Foreground="White"
+                        HeaderHeight="25"
+                        HeaderText="连续"
+                        HeaderWidth="25"
+                        Style="{DynamicResource TextCheckBox}" />
+                </DockPanel>
+                <DockPanel Margin="0,5,0,0">
+                    <TextBlock
+                        Margin="5,0,5,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        FontSize="20"
+                        Foreground="White"
+                        Text="颜色板" />
+                    <ColorPicker:ColorPickers
+                        Margin="0,0,5,0"
+                        Background="Red"
+                        SelectColor="Red" />
+                </DockPanel>
+                <CustomControls:Accordion
+                    Title="淡入颜色"
+                    Background="#FFE5B663"
+                    FreshVisibility="Collapsed"
+                    IsExpanded="True"
+                    ModifyVisibility="Collapsed"
+                    Style="{DynamicResource AccordionStyle}"
+                    TitleForeground="Black">
+                    <ScrollViewer
+                        MinHeight="35"
+                        HorizontalScrollBarVisibility="Disabled"
+                        Style="{DynamicResource DefaultScrollViewer}"
+                        VerticalScrollBarVisibility="Auto">
+                        <DockPanel LastChildFill="False" />
+                    </ScrollViewer>
+                </CustomControls:Accordion>
+                <CustomControls:Accordion
+                    Title="淡出颜色"
+                    Background="#FFE5B663"
+                    FreshVisibility="Collapsed"
+                    IsExpanded="True"
+                    ModifyVisibility="Collapsed"
+                    Style="{DynamicResource AccordionStyle}"
+                    TitleForeground="Black">
+                    <ScrollViewer
+                        MinHeight="35"
+                        HorizontalScrollBarVisibility="Disabled"
+                        Style="{DynamicResource DefaultScrollViewer}"
+                        VerticalScrollBarVisibility="Auto">
+                        <DockPanel LastChildFill="False" />
+                    </ScrollViewer>
+                </CustomControls:Accordion>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </local_window:CommonWindow>

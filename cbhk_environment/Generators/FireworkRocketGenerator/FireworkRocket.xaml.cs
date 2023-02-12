@@ -1,8 +1,4 @@
-﻿using cbhk_environment.GeneralTools;
-using System.Windows;
-using System.Windows.Media;
-
-namespace cbhk_environment.Generators.FireworkRocketGenerator
+﻿namespace cbhk_environment.Generators.FireworkRocketGenerator
 {
     /// <summary>
     /// FireworkRocket.xaml 的交互逻辑

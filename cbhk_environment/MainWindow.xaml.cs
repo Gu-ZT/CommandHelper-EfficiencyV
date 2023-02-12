@@ -17,6 +17,7 @@ using MSScriptControl;
 using Image = System.Windows.Controls.Image;
 using System.Text.RegularExpressions;
 using cbhk_environment.CustomControls;
+using System.Text;
 
 namespace cbhk_environment
 {

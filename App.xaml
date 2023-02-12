@@ -12,6 +12,7 @@
                 <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/ListBoxWithScrollViewer.xaml" />
                 <!--<ResourceDictionary Source="/cbhk_signin;component/resources/Dictionaries/PasswordTextBox.xaml" />-->
                 <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/TextBoxDefaultStyle.xaml" />
+                <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/DefaultContextMenuStyle.xaml" />
                 <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/IconTextButtons.xaml" />
                 <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/IconComboBoxs.xaml" />
                 <ResourceDictionary Source="/cbhk_environment;component/ControlsDictionaries/RadiusToggleButtons.xaml" />

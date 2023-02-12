@@ -292,69 +292,70 @@
             <Menu
                 Grid.Column="3"
                 Height="25"
-                Margin="0,0,0,10"
-                VerticalAlignment="Bottom"
-                Background="Transparent">
-                <MenuItem>
-                    <MenuItem.Header>
-                        <TextBlock Foreground="White" Text="指令教程" />
-                    </MenuItem.Header>
+                Margin="0,10,0,0"
+                VerticalAlignment="Center"
+                Background="Transparent"
+                BorderThickness="0">
+                <MenuItem
+                    Height="25"
+                    Foreground="White"
+                    Header="指令教程">
                     <MenuItem.DataContext>
                         <main_form_data_context:CommandClasses />
                     </MenuItem.DataContext>
-                    <MenuItem Command="{Binding BasicKnowledgeCommand}">
-                        <MenuItem.Header>
-                            <TextBlock Foreground="White" Text="基础" />
-                        </MenuItem.Header>
-                    </MenuItem>
-                    <MenuItem Command="{Binding AdvancedKnowledgeCommand}">
-                        <MenuItem.Header>
-                            <TextBlock Foreground="White" Text="进阶" />
-                        </MenuItem.Header>
-                    </MenuItem>
-                    <MenuItem Command="{Binding OriginalEditionModKnowledgeCommand}">
-                        <MenuItem.Header>
-                            <TextBlock Foreground="White" Text="原版模组" />
-                        </MenuItem.Header>
-                    </MenuItem>
+                    <MenuItem
+                        Background="#2F2F2F"
+                        Command="{Binding BasicKnowledgeCommand}"
+                        Foreground="White"
+                        Header="基础" />
+                    <MenuItem
+                        Background="#2F2F2F"
+                        Command="{Binding AdvancedKnowledgeCommand}"
+                        Foreground="White"
+                        Header="进阶" />
+                    <MenuItem
+                        Background="#2F2F2F"
+                        Command="{Binding OriginalEditionModKnowledgeCommand}"
+                        Foreground="White"
+                        Header="原版模组" />
                 </MenuItem>
-                <MenuItem>
-                    <MenuItem.Header>
-                        <TextBlock Foreground="White" Text="更多" />
-                    </MenuItem.Header>
+                <MenuItem
+                    Height="25"
+                    Foreground="White"
+                    Header="更多">
                     <MenuItem.DataContext>
                         <main_form_data_context:More />
                     </MenuItem.DataContext>
-                    <MenuItem Command="{Binding ConversationGroupCommand}">
-                        <MenuItem.Header>
-                            <TextBlock Foreground="White" Text="进群交流" />
-                        </MenuItem.Header>
-                    </MenuItem>
-                    <MenuItem Command="{Binding FeedBackBugsCommand}">
-                        <MenuItem.Header>
-                            <TextBlock Foreground="White" Text="反馈bug" />
-                        </MenuItem.Header>
-                    </MenuItem>
-                    <MenuItem Command="{Binding AboutUsCommand}">
-                        <MenuItem.Header>
-                            <TextBlock Foreground="White" Text="关于编辑器" />
-                        </MenuItem.Header>
-                    </MenuItem>
+                    <MenuItem
+                        Background="#2F2F2F"
+                        Command="{Binding ConversationGroupCommand}"
+                        Foreground="White"
+                        Header="进群交流" />
+                    <MenuItem
+                        Background="#2F2F2F"
+                        Command="{Binding FeedBackBugsCommand}"
+                        Foreground="White"
+                        Header="反馈bug" />
+                    <MenuItem
+                        Background="#2F2F2F"
+                        Command="{Binding AboutUsCommand}"
+                        Foreground="White"
+                        Header="关于编辑器" />
                 </MenuItem>
-                <MenuItem>
-                    <MenuItem.Header>
-                        <TextBlock Foreground="White" Text="设置" />
-                    </MenuItem.Header>
-                    <MenuItem Click="StatupItemClick">
-                        <MenuItem.Header>
-                            <TextBlock Foreground="White" Text="启动项" />
-                        </MenuItem.Header>
-                    </MenuItem>
-                    <MenuItem Click="IndividualizationForm">
-                        <MenuItem.Header>
-                            <TextBlock Foreground="White" Text="个性化" />
-                        </MenuItem.Header>
-                    </MenuItem>
+                <MenuItem
+                    Height="25"
+                    Foreground="White"
+                    Header="设置">
+                    <MenuItem
+                        Background="#2F2F2F"
+                        Click="StatupItemClick"
+                        Foreground="White"
+                        Header="启动项" />
+                    <MenuItem
+                        Background="#2F2F2F"
+                        Click="IndividualizationForm"
+                        Foreground="White"
+                        Header="个性化" />
                 </MenuItem>
             </Menu>
         </Grid>

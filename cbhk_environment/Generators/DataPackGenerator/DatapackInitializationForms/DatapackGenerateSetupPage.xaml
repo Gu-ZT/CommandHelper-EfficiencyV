@@ -3,9 +3,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:CustomControls="clr-namespace:cbhk_environment.CustomControls"
+    xmlns:behavior="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:itn="http://schemas.microsoft.com/expression/2010/interactions"
-    xmlns:ity="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:local="clr-namespace:cbhk_environment.Generators.DataPackGenerator.DatapackInitializationForms"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="DatapackGenerateSetupPage"
@@ -28,11 +27,11 @@
             Foreground="White"
             Text="配置新数据包" />
         <DockPanel Margin="0,0,0,15" LastChildFill="False">
-            <ity:Interaction.Triggers>
-                <ity:EventTrigger EventName="Loaded">
-                    <itn:CallMethodAction MethodName="TypeTagListLoaded" TargetObject="{Binding}" />
-                </ity:EventTrigger>
-            </ity:Interaction.Triggers>
+            <behavior:Interaction.Triggers>
+                <behavior:EventTrigger EventName="Loaded">
+                    <behavior:CallMethodAction MethodName="TypeTagListLoaded" TargetObject="{Binding}" />
+                </behavior:EventTrigger>
+            </behavior:Interaction.Triggers>
         </DockPanel>
         <DockPanel Margin="0,0,0,5">
             <DockPanel Margin="0,0,0,0">
@@ -174,13 +173,21 @@
                 HorizontalAlignment="Left"
                 Background="Transparent"
                 Foreground="White"
-                ItemsSource="{Binding HistoryDatapackGeneratorPathList}"
+                ItemsSource="{Binding GeneratorPathList, Mode=TwoWay}"
+                SelectedIndex="0"
                 SelectedItem="{Binding SelectedDatapackPath, Mode=TwoWay}"
-                Style="{DynamicResource TextComboBoxStyle}" />
+                Style="{DynamicResource TextComboBoxStyle}">
+                <behavior:Interaction.Triggers>
+                    <behavior:EventTrigger EventName="Loaded">
+                        <behavior:CallMethodAction MethodName="DatapackGeneratorPathLoaded" TargetObject="{Binding}" />
+                    </behavior:EventTrigger>
+                </behavior:Interaction.Triggers>
+            </ComboBox>
             <CustomControls:IconTextButtons
                 Width="35"
                 Height="25"
                 Margin="10,0,0,0"
+                Padding="0,-10,0,0"
                 HorizontalAlignment="Left"
                 Background="{StaticResource ButtonNormal}"
                 Command="{Binding SetDatapackPath}"
@@ -197,11 +204,11 @@
                 IsEditable="True"
                 SelectedItem="{Binding SelectedDatapackVersion, Mode=TwoWay}"
                 Style="{DynamicResource TextComboBoxStyle}">
-                <ity:Interaction.Triggers>
-                    <ity:EventTrigger EventName="Loaded">
-                        <itn:CallMethodAction MethodName="DatapackVersionLoaded" TargetObject="{Binding}" />
-                    </ity:EventTrigger>
-                </ity:Interaction.Triggers>
+                <behavior:Interaction.Triggers>
+                    <behavior:EventTrigger EventName="Loaded">
+                        <behavior:CallMethodAction MethodName="DatapackVersionLoaded" TargetObject="{Binding}" />
+                    </behavior:EventTrigger>
+                </behavior:Interaction.Triggers>
             </ComboBox>
         </DockPanel>
         <DockPanel Margin="0,0,0,10">
@@ -227,11 +234,11 @@
                 ToolTipService.ShowDuration="1000" />
         </DockPanel>
         <DockPanel Margin="0,0,0,10">
-            <ity:Interaction.Triggers>
-                <ity:EventTrigger EventName="Loaded">
-                    <itn:CallMethodAction MethodName="DatapackDescriptionContainerLoaded" TargetObject="{Binding}" />
-                </ity:EventTrigger>
-            </ity:Interaction.Triggers>
+            <behavior:Interaction.Triggers>
+                <behavior:EventTrigger EventName="Loaded">
+                    <behavior:CallMethodAction MethodName="DatapackDescriptionContainerLoaded" TargetObject="{Binding}" />
+                </behavior:EventTrigger>
+            </behavior:Interaction.Triggers>
             <TextBlock
                 Margin="5,0,10,0"
                 VerticalAlignment="Center"
@@ -247,14 +254,14 @@
                 IsEditable="True"
                 SelectedItem="{Binding SelectedDatapackDescriptionType, Mode=TwoWay}"
                 Style="{DynamicResource TextComboBoxStyle}">
-                <ity:Interaction.Triggers>
-                    <ity:EventTrigger EventName="Loaded">
-                        <itn:CallMethodAction MethodName="DatapackDescriptionTypeLoaded" TargetObject="{Binding}" />
-                    </ity:EventTrigger>
-                    <ity:EventTrigger EventName="SelectionChanged">
-                        <itn:CallMethodAction MethodName="DescriptionTypeSelectionChanged" TargetObject="{Binding}" />
-                    </ity:EventTrigger>
-                </ity:Interaction.Triggers>
+                <behavior:Interaction.Triggers>
+                    <behavior:EventTrigger EventName="Loaded">
+                        <behavior:CallMethodAction MethodName="DatapackDescriptionTypeLoaded" TargetObject="{Binding}" />
+                    </behavior:EventTrigger>
+                    <behavior:EventTrigger EventName="SelectionChanged">
+                        <behavior:CallMethodAction MethodName="DescriptionTypeSelectionChanged" TargetObject="{Binding}" />
+                    </behavior:EventTrigger>
+                </behavior:Interaction.Triggers>
             </ComboBox>
             <ComboBox
                 Uid="Bool"
@@ -270,11 +277,11 @@
                 IsReadOnly="True"
                 Style="{DynamicResource TextComboBoxStyle}"
                 Visibility="Collapsed">
-                <ity:Interaction.Triggers>
-                    <ity:EventTrigger EventName="Loaded">
-                        <itn:CallMethodAction MethodName="DatapackDescriptionBoolTypeLoaded" TargetObject="{Binding}" />
-                    </ity:EventTrigger>
-                </ity:Interaction.Triggers>
+                <behavior:Interaction.Triggers>
+                    <behavior:EventTrigger EventName="Loaded">
+                        <behavior:CallMethodAction MethodName="DatapackDescriptionBoolTypeLoaded" TargetObject="{Binding}" />
+                    </behavior:EventTrigger>
+                </behavior:Interaction.Triggers>
             </ComboBox>
             <Slider
                 Uid="Number"
@@ -329,7 +336,7 @@
             <CustomControls:IconTextButtons
                 Height="30"
                 Margin="0,0,10,0"
-                Padding="5"
+                Padding="5,-2,5,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Background="{StaticResource ButtonNormal}"
@@ -340,7 +347,7 @@
                 Style="{DynamicResource IconTextButton}" />
             <CustomControls:IconTextButtons
                 Height="30"
-                Padding="5"
+                Padding="5,-2,5,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Background="{StaticResource ButtonNormal}"

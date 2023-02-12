@@ -421,6 +421,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="ControlsDictionaries\DefaultContextMenuStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ControlsDictionaries\FluentItemsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1030,6 +1034,15 @@
     <Resource Include="resources\cbhk_form\images\more\thanks\9.png" />
     <Resource Include="resources\cbhk_form\images\more\thanks\9Hover.png" />
     <Resource Include="resources\cbhk_form\images\more\thanks\Title.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Generators\DataPackGenerator\Images\dataPackIcon.png" />
+    <Resource Include="Generators\DataPackGenerator\Images\folderIcon.png" />
+    <Resource Include="Generators\DataPackGenerator\Images\mcfIcon.png" />
+    <Resource Include="Generators\DataPackGenerator\Images\lockIcon.png" />
+    <Resource Include="Generators\DataPackGenerator\Images\plusIcon.png" />
+    <Resource Include="Generators\DataPackGenerator\Images\IconSmallUnlocked.png" />
+    <Resource Include="Generators\DataPackGenerator\Images\editedIcon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

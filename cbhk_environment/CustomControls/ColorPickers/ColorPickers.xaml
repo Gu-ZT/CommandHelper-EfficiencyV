@@ -151,7 +151,7 @@
                                     <ColumnDefinition Width="30" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <Grid>
+                                <Grid x:Name="rectColorGrid">
                                     <Rectangle
                                         x:Name="viewSelectColor"
                                         Fill="Red"

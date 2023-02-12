@@ -8,6 +8,18 @@
     <ImageBrush x:Key="OrangeButtonNormal" ImageSource="/cbhk_environment;component/resources/common/images/TextToggleButtonNormal.png" />
     <ImageBrush x:Key="OrangeButtonPressed" ImageSource="/cbhk_environment;component/resources/common/images/TextToggleButtonPressed.png" />
 
+    <Style x:Key="ModifyButtonStyle" TargetType="CustomControls:IconTextButtons">
+        <Style.Setters>
+            <Setter Property="ContentTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <Image Source="/cbhk_environment;component/resources/common/images/Edit.png" />
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
     <Style x:Key="ExpanderDownHeaderStyle" TargetType="{x:Type ToggleButton}">
         <Setter Property="Template">
             <Setter.Value>
@@ -41,9 +53,10 @@
                                     Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=CustomControls:Accordion}, Path=Title}"
                                     TextAlignment="Center" />
                                 <CustomControls:IconTextButtons
-                                    Width="20"
+                                    Width="Auto"
+                                    Height="20"
                                     Margin="2.5,0"
-                                    Padding="1,0,0,2"
+                                    Padding="5,2"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     Background="{StaticResource OrangeButtonNormal}"
@@ -51,14 +64,20 @@
                                     Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=CustomControls:Accordion}, Path=Modify}"
                                     CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=CustomControls:Accordion}}"
                                     Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=CustomControls:Accordion}, Path=ModifyName}"
-                                    Foreground="Black"
+                                    Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=CustomControls:Accordion}, Path=ModifyForeground}"
+                                    IconColor="Black"
+                                    IconData="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=CustomControls:Accordion}, Path=ModifyIconData}"
+                                    IconHeight="12"
+                                    IconMargin="4 0 0 2"
+                                    IconWidth="12"
                                     PressedBackground="{StaticResource OrangeButtonPressed}"
                                     Style="{DynamicResource IconTextButton}"
                                     Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=CustomControls:Accordion}, Path=ModifyVisibility}" />
                                 <CustomControls:IconTextButtons
-                                    Width="20"
+                                    Width="Auto"
+                                    Height="20"
                                     Margin="2.5,0"
-                                    Padding="1,0,0,2"
+                                    Padding="5,2"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     Background="{StaticResource OrangeButtonNormal}"
@@ -66,7 +85,12 @@
                                     Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=CustomControls:Accordion}, Path=Fresh}"
                                     CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=CustomControls:Accordion}}"
                                     Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=CustomControls:Accordion}, Path=FreshName}"
-                                    Foreground="Black"
+                                    Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=CustomControls:Accordion}, Path=FreshForeground}"
+                                    IconColor="Black"
+                                    IconData="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=CustomControls:Accordion}, Path=FreshIconData}"
+                                    IconHeight="10"
+                                    IconMargin="5 0 0 2"
+                                    IconWidth="10"
                                     PressedBackground="{StaticResource OrangeButtonPressed}"
                                     Style="{DynamicResource IconTextButton}"
                                     Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=CustomControls:Accordion}, Path=FreshVisibility}" />

@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.Input;
-using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 
 namespace cbhk_environment.CustomControls
 {
@@ -16,6 +16,24 @@ namespace cbhk_environment.CustomControls
 
         public static readonly DependencyProperty ModifyProperty =
             DependencyProperty.Register("Modify", typeof(RelayCommand<FrameworkElement>), typeof(Accordion), new PropertyMetadata(null));
+
+        public Brush ModifyForeground
+        {
+            get { return (Brush)GetValue(ModifyForegroundProperty); }
+            set { SetValue(ModifyForegroundProperty, value); }
+        }
+
+        public static readonly DependencyProperty ModifyForegroundProperty =
+            DependencyProperty.Register("ModifyForeground", typeof(Brush), typeof(Accordion), new PropertyMetadata(default(Brush)));
+
+        public Geometry ModifyIconData
+        {
+            get { return (Geometry)GetValue(ModifyIconDataProperty); }
+            set { SetValue(ModifyIconDataProperty, value); }
+        }
+
+        public static readonly DependencyProperty ModifyIconDataProperty =
+            DependencyProperty.Register("ModifyIconData", typeof(Geometry), typeof(Accordion), new PropertyMetadata(default(Geometry)));
 
         public Visibility ModifyVisibility
         {
@@ -34,6 +52,26 @@ namespace cbhk_environment.CustomControls
 
         public static readonly DependencyProperty FreshProperty =
             DependencyProperty.Register("Fresh", typeof(RelayCommand<FrameworkElement>), typeof(Accordion), new PropertyMetadata(null));
+
+        public Geometry FreshIconData
+        {
+            get { return (Geometry)GetValue(FreshIconDataProperty); }
+            set { SetValue(FreshIconDataProperty, value); }
+        }
+
+        public static readonly DependencyProperty FreshIconDataProperty =
+            DependencyProperty.Register("FreshIconData", typeof(Geometry), typeof(Accordion), new PropertyMetadata(default(Geometry)));
+
+        public Brush FreshForeground
+        {
+            get { return (Brush)GetValue(FreshForegroundProperty); }
+            set { SetValue(FreshForegroundProperty, value); }
+        }
+
+        public static readonly DependencyProperty FreshForegroundProperty =
+            DependencyProperty.Register("FreshForeground", typeof(Brush), typeof(Accordion), new PropertyMetadata(default(Brush)));
+
+
 
         public Visibility FreshVisibility
         {

@@ -11,6 +11,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
+using Windows.Gaming.Input.ForceFeedback;
 using WK.Libraries.BetterFolderBrowserNS;
 
 namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationForms
@@ -208,7 +209,21 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         #endregion
 
         #region 版本、生成路径、描述等数据
-        public ObservableCollection<string> HistoryDatapackGeneratorPathList { get; set; } = new ObservableCollection<string> { };
+        private ObservableCollection<string> generatorPathList = new ObservableCollection<string> { };
+        public ObservableCollection<string> GeneratorPathList
+        {
+            get
+            {
+                return generatorPathList;
+            }
+            set
+            {
+                generatorPathList = value;
+                OnPropertyChanged();
+            }
+        }
+
+        string DatapackGeneratorFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\DataPack\\data\\generatorPathes.ini";
 
         //数据包所对应游戏版本配置文件路径
         string DatapackVersionFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\datapackVersion.json";
@@ -239,6 +254,22 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
             SynchronizePackAndNameSpaceName = new RelayCommand<TextCheckBoxs>(SynchronizePackAndNameSpaceNameCommand);
         }
         #endregion
+
+        /// <summary>
+        /// 数据包生成路径载入
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void DatapackGeneratorPathLoaded(object sender, RoutedEventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            string[] files = Directory.GetFiles(DatapackGeneratorFilePath);
+            foreach (string item in files)
+            {
+                GeneratorPathList.Add(item);
+            }
+            comboBox.ItemsSource = GeneratorPathList;
+        }
 
         /// <summary>
         /// 初始化数据包简介数据源
@@ -421,11 +452,15 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
                 if (Directory.Exists(folderBrowser.SelectedFolder))
                 {
                     string selectedPath = folderBrowser.SelectedFolder;
-                    if (HistoryDatapackGeneratorPathList.Where(item => item == selectedPath).Count() == 0)
-                        HistoryDatapackGeneratorPathList.Add(selectedPath);
+                    if (GeneratorPathList.Where(item => item == selectedPath).Count() == 0)
+                    {
+                        GeneratorPathList.Prepend(selectedPath);
+                        if (GeneratorPathList.Count > 100)
+                            GeneratorPathList.Remove(GeneratorPathList.Last());
+                    }
 
                     if (SelectedDatapackPath == "")
-                        SelectedDatapackPath = HistoryDatapackGeneratorPathList[HistoryDatapackGeneratorPathList.Count - 1];
+                        SelectedDatapackPath = GeneratorPathList[0];
                 }
             }
         }
@@ -435,6 +470,11 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         /// </summary>
         private void AttributeNextStepCommand(Page page)
         {
+            #region 生成路径链表保存至文件
+            string generatorPathContent = string.Join("\r\n", GeneratorPathList);
+            File.WriteAllText(DatapackGeneratorFilePath, generatorPathContent);
+            #endregion
+
             #region 数据包名、主命名空间、生成路径任意一项为空则不提供生成服务
             string SelectedDatapackPathString = SelectedDatapackPath.Trim();
             if (DatapackName.Trim() == "" ||

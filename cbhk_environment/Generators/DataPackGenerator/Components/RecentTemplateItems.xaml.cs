@@ -56,7 +56,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                 //表示开始更新
                 TemplateSelectDataContext.TemplateCheckLock = true;
 
-                foreach (TemplateItems templateItems in initializationDatacontext.TemplateList)
+                foreach (TemplateItems templateItems in TemplateSelectDataContext.TemplateList)
                 {
                     if (templateItems.TemplateName.Text == TemplateName.Text)
                     {
@@ -85,7 +85,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                 //表示开始更新
                 TemplateSelectDataContext.TemplateCheckLock = true;
 
-                foreach (TemplateItems templateItems in initializationDatacontext.TemplateList)
+                foreach (TemplateItems templateItems in TemplateSelectDataContext.TemplateList)
                 {
                     if (templateItems.TemplateName.Text == TemplateName.Text)
                         templateItems.TemplateSelector.IsChecked = false;

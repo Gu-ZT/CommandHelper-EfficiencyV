@@ -17,10 +17,13 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
         /// </summary>
         private string originalName = "";
 
+        public ContentReader.ContentType FileType { get; set; } = ContentReader.ContentType.UnKnown;
+
         public ContentItems(string FilePath, ContentReader.ContentType type)
         {
             InitializeComponent();
 
+            FileType = type;
             Uid = FilePath;
             DisplayFileName.Text = Path.GetFileName(FilePath);
 

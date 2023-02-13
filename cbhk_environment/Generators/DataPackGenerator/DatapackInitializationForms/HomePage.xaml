@@ -36,11 +36,8 @@
                     Foreground="White"
                     Text="打开近期使用的内容" />
                 <TextBox
-                    Width="280"
-                    Height="35"
-                    Margin="10,30,0,30"
-                    Padding="0,2,0,0"
-                    HorizontalAlignment="Left"
+                    Margin="10,30,96,30"
+                    HorizontalAlignment="Stretch"
                     BorderBrush="#424242"
                     CaretBrush="White"
                     FontSize="25"
@@ -54,6 +51,7 @@
                         <VisualBrush
                             x:Key="BackgroundBrush"
                             AlignmentX="Left"
+                            AlignmentY="Center"
                             Stretch="Uniform">
                             <VisualBrush.Visual>
                                 <Grid
@@ -61,12 +59,14 @@
                                     Height="35"
                                     Background="#383838">
                                     <TextBlock
-                                        Margin="10,0,0,0"
+                                        Margin="15,0,0,0"
+                                        HorizontalAlignment="Left"
                                         VerticalAlignment="Center"
                                         Background="Transparent"
-                                        FontSize="12"
+                                        FontSize="15"
                                         Foreground="#D6D6D6"
-                                        Text=" 搜索最近使用的内容" />
+                                        Text="搜索近期使用内容"
+                                        TextAlignment="Center" />
                                 </Grid>
                             </VisualBrush.Visual>
                         </VisualBrush>
@@ -75,11 +75,9 @@
                         <Style TargetType="TextBox">
                             <Setter Property="Background" Value="Transparent" />
                             <Style.Triggers>
-
-                                <Trigger Property="Text" Value="{x:Null}">
+                                <!--<Trigger Property="Text" Value="{x:Null}">
                                     <Setter Property="Background" Value="{StaticResource BackgroundBrush}" />
-                                </Trigger>
-
+                                </Trigger>-->
                                 <Trigger Property="Text" Value="">
                                     <Setter Property="Background" Value="{StaticResource BackgroundBrush}" />
                                 </Trigger>

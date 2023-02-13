@@ -107,7 +107,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         /// <summary>
         /// 模板成员集合
         /// </summary>
-        public ObservableCollection<TemplateItems> TemplateList { get; set; } = new ObservableCollection<TemplateItems>();
+        public static ObservableCollection<TemplateItems> TemplateList { get; set; } = new ObservableCollection<TemplateItems>();
 
         /// <summary>
         /// 模板状态锁，防止更新死循环

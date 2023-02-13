@@ -69,8 +69,9 @@ namespace cbhk_environment.Generators.WrittenBookGenerator.Components
         /// <param name="e"></param>
         private void ClickEventsLoaded(object sender, RoutedEventArgs e)
         {
-            TextComboBoxs textComboBoxs = sender as TextComboBoxs;
+            ComboBox textComboBoxs = sender as ComboBox;
             textComboBoxs.ItemsSource = written_book_datacontext.clickEventSource;
+            textComboBoxs.SelectedIndex = 0;
         }
 
         /// <summary>
@@ -80,8 +81,9 @@ namespace cbhk_environment.Generators.WrittenBookGenerator.Components
         /// <param name="e"></param>
         private void HoverEventsLoaded(object sender, RoutedEventArgs e)
         {
-            TextComboBoxs textComboBoxs = sender as TextComboBoxs;
+            ComboBox textComboBoxs = sender as ComboBox;
             textComboBoxs.ItemsSource = written_book_datacontext.hoverEventSource;
+            textComboBoxs.SelectedIndex = 0;
         }
 
         /// <summary>

@@ -175,7 +175,8 @@
                         <ScrollViewer
                             x:Name="DropDownScrollViewer"
                             Width="{TemplateBinding Width}"
-                            Style="{DynamicResource DefaultScrollViewer}">
+                            Style="{DynamicResource DefaultScrollViewer}"
+                            VirtualizingPanel.ScrollUnit="Pixel">
                             <Grid x:Name="grid" RenderOptions.ClearTypeHint="Enabled">
                                 <Canvas
                                     x:Name="canvas"
@@ -217,6 +218,7 @@
                     HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                     VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                     BorderThickness="0"
+                    CaretBrush="White"
                     DataContext="{StaticResource TextSearcherDataContext}"
                     Foreground="White"
                     IsReadOnly="{Binding IsReadOnly, RelativeSource={RelativeSource TemplatedParent}}"
@@ -281,7 +283,7 @@
                         Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                         BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}"
                         BorderThickness="1">
-                        <ScrollViewer x:Name="DropDownScrollViewer">
+                        <ScrollViewer x:Name="DropDownScrollViewer" Style="{DynamicResource DefaultScrollViewer}">
                             <Grid x:Name="grid" RenderOptions.ClearTypeHint="Enabled">
                                 <Canvas
                                     x:Name="canvas"

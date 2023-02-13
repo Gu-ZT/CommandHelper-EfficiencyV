@@ -76,9 +76,9 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
         //取消署名背景文件路径
         string signatureCancelFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\WrittenBook\\images\\cancel_signature.png";
         //点击事件数据源
-        public static ObservableCollection<string> clickEventSource = new ObservableCollection<string> { };
+        public static ObservableCollection<string> clickEventSource { get; set; } = new ObservableCollection<string> { };
         //悬浮事件数据源
-        public static ObservableCollection<string> hoverEventSource = new ObservableCollection<string> { };
+        public static ObservableCollection<string> hoverEventSource { get; set; } = new ObservableCollection<string> { };
         //点击事件数据源文件路径
         string clickEventSourceFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\WrittenBook\\data\\clickEventActions.ini";
         //悬浮事件数据源文件路径
@@ -432,7 +432,7 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
             #endregion
 
             #region 读取点击事件
-            if (File.Exists(clickEventSourceFilePath))
+            if (File.Exists(clickEventSourceFilePath) && clickEventSource.Count == 0)
             {
                 string[] source = File.ReadAllLines(clickEventSourceFilePath);
                 for (int i = 0; i < source.Length; i++)
@@ -446,7 +446,7 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
             #endregion
 
             #region 读取悬浮事件
-            if (File.Exists(hoverEventSourceFilePath))
+            if (File.Exists(hoverEventSourceFilePath) && hoverEventSource.Count == 0)
             {
                 string[] source = File.ReadAllLines(hoverEventSourceFilePath);
                 for (int i = 0; i < source.Length; i++)
@@ -470,7 +470,6 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
             EventForm.Content = EventComponent;
             EventForm.Closing += (o, e) => { e.Cancel = true; EventForm.Hide(); };
             EventForm.DataContext = this;
-            EventComponent.DataContext = this;
             #endregion
         }
 
@@ -904,14 +903,18 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
                     }));
 
                     if (i == 0)
-                        object_result = page_content[i].Inlines.ToList().ConvertAll(line => line as RichRun)[0].Result.TrimEnd(',');
+                    {
+                        object_result = string.Join("", page_content[0].Inlines.ToList().ConvertAll(line => line as RichRun).Select(run =>
+                        {
+                            return run.Result;
+                        })).TrimEnd(',');
+                    }
                 }
                 page_string = page_string.TrimEnd(',') + "]',";
 
                 page_string = page_string.TrimEnd(',').Trim('\'');
                 result = page_string;
-                written_box.Document = new EnabledFlowDocument();
-
+                //written_box.Document = new EnabledFlowDocument();
                 CommonWindow window = Window.GetWindow(written_box) as CommonWindow;
                 window.DialogResult = true;
             }
@@ -996,25 +999,25 @@ namespace cbhk_environment.Generators.WrittenBookGenerator
                 };
                 #endregion
 
-                BindingOperations.SetBinding(EventComponent.EnableClickEvent, RadiusToggleButtons.IsCheckedProperty, HaveClickEventBinder);
-                BindingOperations.SetBinding(EventComponent.EnableHoverEvent, RadiusToggleButtons.IsCheckedProperty, HaveHoverEventBinder);
-                BindingOperations.SetBinding(EventComponent.EnableInsertion, RadiusToggleButtons.IsCheckedProperty, HaveInsertionBinder);
+                BindingOperations.SetBinding(EventComponent.EnableClickEvent, System.Windows.Controls.Primitives.ToggleButton.IsCheckedProperty, HaveClickEventBinder);
+                BindingOperations.SetBinding(EventComponent.EnableHoverEvent, System.Windows.Controls.Primitives.ToggleButton.IsCheckedProperty, HaveHoverEventBinder);
+                BindingOperations.SetBinding(EventComponent.EnableInsertion, System.Windows.Controls.Primitives.ToggleButton.IsCheckedProperty, HaveInsertionBinder);
 
                 EventComponent.ClickEventPanel.Visibility = CurrentRichRun.HasClickEvent ? Visibility.Visible : Visibility.Collapsed;
                 EventComponent.HoverEventPanel.Visibility = CurrentRichRun.HasHoverEvent ? Visibility.Visible : Visibility.Collapsed;
                 EventComponent.InsertionPanel.Visibility = CurrentRichRun.HasInsertion ? Visibility.Visible : Visibility.Collapsed;
 
-                BindingOperations.SetBinding(EventComponent.ClickEventActionBox,TextComboBoxs.SelectedItemProperty, ClickEventActionBinder);
-                BindingOperations.SetBinding(EventComponent.HoverEventActionBox, TextComboBoxs.SelectedItemProperty, HoverEventActionBinder);
+                BindingOperations.SetBinding(EventComponent.ClickEventActionBox, System.Windows.Controls.Primitives.Selector.SelectedItemProperty, ClickEventActionBinder);
+                BindingOperations.SetBinding(EventComponent.HoverEventActionBox, System.Windows.Controls.Primitives.Selector.SelectedItemProperty, HoverEventActionBinder);
 
                 #region 在视觉上更新事件类型
-                EventComponent.ClickEventActionBox.ApplyTemplate();
-                EventComponent.HoverEventActionBox.ApplyTemplate();
-                TextBox clickEventActionBox = EventComponent.ClickEventActionBox.Template.FindName("EditableTextBox", EventComponent.ClickEventActionBox) as TextBox;
-                clickEventActionBox.Text = CurrentRichRun.ClickEventActionItem;
+                //EventComponent.ClickEventActionBox.ApplyTemplate();
+                //EventComponent.HoverEventActionBox.ApplyTemplate();
+                //TextBox clickEventActionBox = EventComponent.ClickEventActionBox.Template.FindName("EditableTextBox", EventComponent.ClickEventActionBox) as TextBox;
+                //clickEventActionBox.Text = CurrentRichRun.ClickEventActionItem;
 
-                TextBox hoverEventActionBox = EventComponent.HoverEventActionBox.Template.FindName("EditableTextBox", EventComponent.HoverEventActionBox) as TextBox;
-                hoverEventActionBox.Text = CurrentRichRun.HoverEventActionItem;
+                //TextBox hoverEventActionBox = EventComponent.HoverEventActionBox.Template.FindName("EditableTextBox", EventComponent.HoverEventActionBox) as TextBox;
+                //hoverEventActionBox.Text = CurrentRichRun.HoverEventActionItem;
                 #endregion
 
                 BindingOperations.SetBinding(EventComponent.ClickEventValueBox, TextBox.TextProperty, ClickEventValueBinder);

@@ -10,6 +10,7 @@
     Title="EditPage"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    Background="#1E1E1E"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -31,6 +32,7 @@
                 </MenuItem.Icon>
                 <MenuItem
                     Background="#2F2F2F"
+                    Command="{Binding AddFile}"
                     Foreground="White"
                     Header="添加文件">
                     <MenuItem.Icon>
@@ -42,6 +44,7 @@
                 </MenuItem>
                 <MenuItem
                     Background="#2F2F2F"
+                    Command="{Binding AddFolder}"
                     Foreground="White"
                     Header="添加文件夹">
                     <MenuItem.Icon>
@@ -54,6 +57,7 @@
             </MenuItem>
             <MenuItem
                 Background="#2F2F2F"
+                Command="{Binding Cut}"
                 Foreground="White"
                 Header="剪切">
                 <MenuItem.Icon>
@@ -65,6 +69,7 @@
             </MenuItem>
             <MenuItem
                 Background="#2F2F2F"
+                Command="{Binding Copy}"
                 Foreground="White"
                 Header="复制">
                 <MenuItem.Icon>
@@ -76,6 +81,7 @@
             </MenuItem>
             <MenuItem
                 Background="#2F2F2F"
+                Command="{Binding Paste}"
                 Foreground="White"
                 Header="粘贴">
                 <MenuItem.Icon>
@@ -87,6 +93,7 @@
             </MenuItem>
             <MenuItem
                 Background="#2F2F2F"
+                Command="{Binding CopyFullPath}"
                 Foreground="White"
                 Header="复制完整路径">
                 <MenuItem.Icon>
@@ -98,6 +105,7 @@
             </MenuItem>
             <MenuItem
                 Background="#2F2F2F"
+                Command="{Binding OpenWithResourceManagement}"
                 Foreground="White"
                 Header="在文件资源管理器中打开此文件夹">
                 <MenuItem.Icon>
@@ -109,6 +117,7 @@
             </MenuItem>
             <MenuItem
                 Background="#2F2F2F"
+                Command="{Binding ExcludeFromProject}"
                 Foreground="White"
                 Header="从项目中排除">
                 <MenuItem.Icon>
@@ -120,6 +129,7 @@
             </MenuItem>
             <MenuItem
                 Background="#2F2F2F"
+                Command="{Binding OpenWithTerminal}"
                 Foreground="White"
                 Header="在终端中打开">
                 <MenuItem.Icon>
@@ -131,6 +141,7 @@
             </MenuItem>
             <MenuItem
                 Background="#2F2F2F"
+                Command="{Binding Delete}"
                 Foreground="White"
                 Header="删除">
                 <MenuItem.Icon>
@@ -142,6 +153,7 @@
             </MenuItem>
             <MenuItem
                 Background="#2F2F2F"
+                Command="{Binding Attribute}"
                 Foreground="White"
                 Header="属性">
                 <MenuItem.Icon>
@@ -229,8 +241,8 @@
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     Background="#1A1A1A"
-                    BorderBrush="#3D3D3D"
-                    BorderThickness="1"
+                    BorderBrush="Transparent"
+                    BorderThickness="0"
                     CaretBrush="White"
                     FontSize="15"
                     Foreground="White"
@@ -878,17 +890,64 @@
             Grid.Column="2"
             Margin="0,14,0,0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="20" />
+                <RowDefinition Height="20" ContextMenu="{StaticResource DatapackManagerMenu}" />
+                <RowDefinition Height="30" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <TextBlock
                 Grid.Row="0"
                 Margin="5,0,0,0"
-                ContextMenu="{StaticResource DatapackManagerMenu}"
                 Foreground="White"
                 Text="数据包管理器" />
-            <TreeView
+            <TextBox
                 Grid.Row="1"
+                Padding="2,0,0,0"
+                VerticalAlignment="Stretch"
+                HorizontalContentAlignment="Left"
+                BorderBrush="#3D3D3D"
+                CaretBrush="White"
+                FontSize="20"
+                Foreground="White"
+                Text="{Binding DatapackSeacherValue, Mode=OneWayToSource}">
+                <TextBox.Resources>
+                    <VisualBrush
+                        x:Key="BackgroundBrush"
+                        AlignmentX="Left"
+                        AlignmentY="Center"
+                        Stretch="UniformToFill">
+                        <VisualBrush.Visual>
+                            <Grid
+                                Width="400"
+                                Height="53"
+                                Background="#383838">
+                                <TextBlock
+                                    Margin="15,0,0,0"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Background="Transparent"
+                                    Foreground="#D6D6D6"
+                                    Text="搜索数据包"
+                                    TextAlignment="Left" />
+                            </Grid>
+                        </VisualBrush.Visual>
+                    </VisualBrush>
+                </TextBox.Resources>
+                <TextBox.Style>
+                    <Style TargetType="TextBox">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Style.Triggers>
+                            <!--<Trigger Property="Text" Value="{x:Null}">
+                                <Setter Property="Background" Value="{StaticResource BackgroundBrush}" />
+                            </Trigger>-->
+                            <Trigger Property="Text" Value="">
+                                <Setter Property="Background" Value="{StaticResource BackgroundBrush}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBox.Style>
+            </TextBox>
+            <TreeView
+                Grid.Row="2"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 Background="#1F1F1F"

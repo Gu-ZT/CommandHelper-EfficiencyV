@@ -220,6 +220,9 @@
     <Compile Include="CommandClasses\ClassicAndNew.xaml.cs">
       <DependentUpon>ClassicAndNew.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Generators\DataPackGenerator\Components\AddFileForm.xaml.cs">
+      <DependentUpon>AddFileForm.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Generators\DataPackGenerator\Components\ContentReader.cs" />
     <Compile Include="Generators\DataPackGenerator\Components\ContentSaver.cs" />
     <Compile Include="Generators\DataPackGenerator\Components\ContentItems.xaml.cs">
@@ -562,6 +565,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="CommandClasses\ClassicAndNew.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Generators\DataPackGenerator\Components\AddFileForm.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

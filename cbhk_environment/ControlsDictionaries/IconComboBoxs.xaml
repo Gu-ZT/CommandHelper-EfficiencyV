@@ -322,7 +322,7 @@
                         Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                         BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}"
                         BorderThickness="1">
-                        <ScrollViewer x:Name="DropDownScrollViewer">
+                        <ScrollViewer x:Name="DropDownScrollViewer" Style="{DynamicResource DefaultScrollViewer}">
                             <Grid x:Name="grid" RenderOptions.ClearTypeHint="Enabled">
                                 <Canvas
                                     x:Name="canvas"
@@ -396,6 +396,8 @@
         <Setter Property="ItemsPanel" Value="{StaticResource ItemVirtualizingTemplate}" />
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="VirtualizingPanel.ScrollUnit" Value="Pixel" />
+        <Setter Property="VirtualizingPanel.VirtualizationMode" Value="Recycling" />
         <Setter Property="Padding" Value="6,3,5,3" />
         <Setter Property="ItemTemplate" Value="{StaticResource DisplayTemplate}" />
         <Setter Property="ScrollViewer.CanContentScroll" Value="true" />

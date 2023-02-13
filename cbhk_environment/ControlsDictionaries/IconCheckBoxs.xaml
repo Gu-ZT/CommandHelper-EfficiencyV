@@ -49,9 +49,7 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="0"
                             RenderOptions.BitmapScalingMode="NearestNeighbor"
-                            RenderOptions.ClearTypeHint="Enabled"
-                            SnapsToDevicePixels="True"
-                            UseLayoutRounding="True">
+                            RenderOptions.ClearTypeHint="Enabled">
                             <!--<Border.RenderTransform>
                                 <RotateTransform Angle="45" />
                             </Border.RenderTransform>-->

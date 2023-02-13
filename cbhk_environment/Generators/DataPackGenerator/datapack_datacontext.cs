@@ -488,7 +488,11 @@ namespace cbhk_environment.Generators.DataPackGenerator
                 RecentItemSearchPanel.Items.Add(new TextBlock() { Text = "未找到\"" + RecentItemTextBox.Text + "\"的结果", Foreground = searchResultIsNullBrush, FontSize = 12 });
             }
             else
+            {
+                RecentItemSearchPanel.ItemsSource = null;
+                RecentItemSearchPanel.Items.Clear();
                 RecentItemSearchPanel.ItemsSource = RecentItemSearchResults;
+            }
 
             //切换近期内容视图和搜索面板可见性
             RecentItemSearchPanelVisibility = Visibility.Visible;
@@ -600,7 +604,7 @@ namespace cbhk_environment.Generators.DataPackGenerator
             //如果在使用锚点则返回
             if (item.UsingThumbTack) return;
 
-            string CurrentContentFilePath = item.FilePath.Tag.ToString();
+            string CurrentContentFilePath = item.FilePath.Text;
 
             if (File.Exists(CurrentContentFilePath) && File.Exists(js_file))
             {

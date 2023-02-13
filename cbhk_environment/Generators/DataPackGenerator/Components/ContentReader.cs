@@ -218,9 +218,8 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                 int.TryParse(datapack_datacontext.JsonScript("getCurrentObjectLength('.filter.block');").ToString(), out int itemCount);
 
             //已确定简介为数组且有成员
-            if (descriptionCount > 0 || descriptionType.ToString() == "object")
+            if (descriptionCount > 0 || (descriptionType != null && descriptionType.ToString() == "object"))
             {
-
                 return result;
             }
 
@@ -260,37 +259,41 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                 case ContentType.DataPack:
                     //获取命名空间上级目录
                     string NameSpaceParentPath = CurrentNode.Uid + "\\data";
-                    //遍历能够执行逻辑的命名空间
-                    string[] suspectedTargetNameSpaceList = Directory.GetDirectories(NameSpaceParentPath);
-                    foreach (string suspectedTargetNameSpace in suspectedTargetNameSpaceList)
+
+                    if(Directory.Exists(NameSpaceParentPath))
                     {
-                        string folderName = Path.GetFileNameWithoutExtension(suspectedTargetNameSpace);
-                        List<string> matchDirectries = TargetFolderNameList.Where(TargetFolderName => Directory.Exists(suspectedTargetNameSpace + "\\" + TargetFolderName)).ToList();
-
-                        //检测到当前文件夹为命名空间
-                        if(matchDirectries.Count > 0)
+                        //遍历能够执行逻辑的命名空间
+                        string[] suspectedTargetNameSpaceList = Directory.GetDirectories(NameSpaceParentPath);
+                        foreach (string suspectedTargetNameSpace in suspectedTargetNameSpaceList)
                         {
-                            #region 新建内容节点
-                            ContentType newType = ContentType.FolderOrFile;
-                            ContentItems contentItems = new ContentItems(suspectedTargetNameSpace, newType);
-                            RichTreeViewItems SubNode = new RichTreeViewItems()
-                            {
-                                Header = contentItems,
-                                Tag = newType,
-                                Uid = suspectedTargetNameSpace
-                            };
-                            CurrentNode.Items.Add(SubNode);
+                            string folderName = Path.GetFileNameWithoutExtension(suspectedTargetNameSpace);
+                            List<string> matchDirectries = TargetFolderNameList.Where(TargetFolderName => Directory.Exists(suspectedTargetNameSpace + "\\" + TargetFolderName)).ToList();
 
-                            int SubDirectoriesCount = Directory.GetDirectories(suspectedTargetNameSpace).Count();
-                            int SubFilesCount = Directory.GetFiles(suspectedTargetNameSpace).Count();
-
-                            //如果拥有子级内容则添加一个空子级并订阅展开事件
-                            if (SubDirectoriesCount + SubFilesCount > 0)
+                            //检测到当前文件夹为命名空间
+                            if (matchDirectries.Count > 0)
                             {
-                                SubNode.Expanded += GetCurrentSubContent;
-                                SubNode.Items.Add("");
+                                #region 新建内容节点
+                                ContentType newType = ContentType.FolderOrFile;
+                                ContentItems contentItems = new ContentItems(suspectedTargetNameSpace, newType);
+                                RichTreeViewItems SubNode = new RichTreeViewItems()
+                                {
+                                    Header = contentItems,
+                                    Tag = newType,
+                                    Uid = suspectedTargetNameSpace
+                                };
+                                CurrentNode.Items.Add(SubNode);
+
+                                int SubDirectoriesCount = Directory.GetDirectories(suspectedTargetNameSpace).Count();
+                                int SubFilesCount = Directory.GetFiles(suspectedTargetNameSpace).Count();
+
+                                //如果拥有子级内容则添加一个空子级并订阅展开事件
+                                if (SubDirectoriesCount + SubFilesCount > 0)
+                                {
+                                    SubNode.Expanded += GetCurrentSubContent;
+                                    SubNode.Items.Add("");
+                                }
+                                #endregion
                             }
-                            #endregion
                         }
                     }
                     break;
@@ -301,7 +304,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
 
                     foreach (string SubDirectory in SubDirectories)
                     {
-                        ContentItems contentItems = new ContentItems(SubDirectory,type);
+                        ContentItems contentItems = new ContentItems(SubDirectory, type);
 
                         RichTreeViewItems SubNode = new RichTreeViewItems()
                         {
@@ -322,14 +325,14 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                             SubNode.Items.Add("");
                         }
                     }
-                    ContentType fileType = ContentType.File;
+
                     foreach (string SubFile in SubFiles)
                     {
-                        ContentItems contentItems = new ContentItems(SubFile, fileType);
+                        ContentItems contentItems = new ContentItems(SubFile, ContentType.File);
                         RichTreeViewItems subItem = new RichTreeViewItems()
                         {
                             Header = contentItems,
-                            Tag = fileType,
+                            Tag = type,
                             Uid = SubFile
                         };
                         subItem.MouseDoubleClick += ClickToModifyTheFile;
@@ -369,20 +372,19 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                 if(extension == ".mcfunction")
                 {
                     TabControl fileZone = EditDataContext.FileModifyZone;
-                    ScrollViewer scrollViewer = new ScrollViewer();
-                    scrollViewer.SetValue(FrameworkElement.StyleProperty, Application.Current.Resources["DefaultScrollViewer"]);
                     RichTextBox richTextBox = new RichTextBox()
                     {
                         Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#A8A8A8")),
                         Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1A1A1A")),
                         BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3D3D3D")),
-                        BorderThickness = new Thickness(1),
+                        BorderThickness = new Thickness(0),
                         FontFamily = new FontFamily("Minecraft"),
                         FontWeight = FontWeights.Normal,
                         FontSize = 20,
                         CaretBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"))
                     };
-                    scrollViewer.Content = richTextBox;
+                    ScrollViewer.SetVerticalScrollBarVisibility(richTextBox,ScrollBarVisibility.Auto);
+                    ScrollViewer.SetHorizontalScrollBarVisibility(richTextBox,ScrollBarVisibility.Disabled);
                     //文本内容更新时通知标签页显示未保存标记
                     richTextBox.TextChanged += RichTextBoxTextChanged;
                     //执行保存操作时通知标签页隐藏未保存标记
@@ -406,7 +408,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                         Padding = new Thickness(10,2,0,0),
                         Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")),
                         Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#323232")),
-                        Content = scrollViewer,
+                        Content = richTextBox,
                         IsContentSaved = true
                     };
                     richTabItems.SetValue(FrameworkElement.StyleProperty, Application.Current.Resources["RichTabItemStyle"]);
@@ -420,6 +422,11 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
             }
         }
 
+        /// <summary>
+        /// Ctrl+S保存当前文档
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private static void RichTextBoxKeyDown(object sender, KeyEventArgs e)
         {
             if(e.KeyboardDevice.Modifiers == ModifierKeys.Control && e.Key == Key.S)
@@ -430,6 +437,11 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
             }
         }
 
+        /// <summary>
+        /// 文档更新后显示更新标记
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private static void RichTextBoxTextChanged(object sender, TextChangedEventArgs e)
         {
             RichTabItems CurrentItem = (sender as RichTextBox).FindParent<RichTabItems>();

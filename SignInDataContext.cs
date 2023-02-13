@@ -118,7 +118,7 @@ namespace cbhk_signin
         #endregion
 
         //忘记密码
-        RelayCommand ForgotPassword { get; set; }
+        public RelayCommand ForgotPassword { get; set; }
 
         //载入前台窗体引用
         Window FrontWindow = null;

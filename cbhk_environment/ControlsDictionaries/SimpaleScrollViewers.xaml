@@ -37,7 +37,7 @@
         <Grid
             x:Name="HorizontalRoot"
             Width="{TemplateBinding Width}"
-            Margin="0,-10,0,0"
+            Margin="0,0,0,0"
             Background="Transparent">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -65,7 +65,7 @@
                     x:Name="HorizontalSmallDecrease"
                     Width="8"
                     Height="18"
-                    Margin="0,3,0,0"
+                    Margin="0,-2,0,0"
                     Background="Transparent"
                     BorderThickness="0"
                     Command="ScrollBar.LineLeftCommand"
@@ -96,7 +96,7 @@
                 <Track.Thumb>
                     <Thumb
                         Height="15"
-                        Margin="0,6,0,0"
+                        Margin="0,0.5,0,0"
                         Template="{StaticResource ThumbTemplate}" />
                 </Track.Thumb>
                 <!--  右滑块  -->
@@ -120,7 +120,7 @@
                 <RepeatButton
                     Width="10"
                     Height="18"
-                    Margin="0,3,0,0"
+                    Margin="0,-3,0,0"
                     Background="Transparent"
                     BorderThickness="0"
                     Command="ScrollBar.LineRightCommand"
@@ -291,6 +291,9 @@
                             Minimum="0"
                             Template="{StaticResource VerticalScrollBar}"
                             ViewportSize="{TemplateBinding ViewportHeight}"
+                            VirtualizingPanel.IsVirtualizing="True"
+                            VirtualizingPanel.ScrollUnit="Pixel"
+                            VirtualizingPanel.VirtualizationMode="Recycling"
                             Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
                             Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" />
                         <!--  水平底部滚动条  -->
@@ -305,6 +308,9 @@
                             Orientation="Horizontal"
                             Template="{StaticResource HorizontalScrollBar}"
                             ViewportSize="{TemplateBinding ViewportWidth}"
+                            VirtualizingPanel.IsVirtualizing="True"
+                            VirtualizingPanel.ScrollUnit="Pixel"
+                            VirtualizingPanel.VirtualizationMode="Recycling"
                             Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"
                             Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" />
                     </Grid>

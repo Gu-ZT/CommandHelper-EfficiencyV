@@ -45,7 +45,7 @@
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center">
                                 <TextBlock
-                                    Margin="5,0,0,0"
+                                    Margin="5,0"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     Background="Transparent"
@@ -54,9 +54,9 @@
                                     TextAlignment="Center" />
                                 <CustomControls:IconTextButtons
                                     Width="Auto"
-                                    Height="20"
-                                    Margin="2.5,0"
-                                    Padding="5,2"
+                                    Height="Auto"
+                                    Margin="0,0,5,0"
+                                    Padding="10"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     Background="{StaticResource OrangeButtonNormal}"
@@ -75,9 +75,9 @@
                                     Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=CustomControls:Accordion}, Path=ModifyVisibility}" />
                                 <CustomControls:IconTextButtons
                                     Width="Auto"
-                                    Height="20"
-                                    Margin="2.5,0"
-                                    Padding="5,2"
+                                    Height="Auto"
+                                    Margin="0,0,5,0"
+                                    Padding="10"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     Background="{StaticResource OrangeButtonNormal}"

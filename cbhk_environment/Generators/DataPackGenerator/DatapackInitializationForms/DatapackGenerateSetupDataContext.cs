@@ -11,7 +11,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
-using Windows.Gaming.Input.ForceFeedback;
 using WK.Libraries.BetterFolderBrowserNS;
 
 namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationForms
@@ -74,7 +73,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         #endregion
 
         #region 存储数据包的保存路径
-        private static string selectedDatapackPath = "";
+        private string selectedDatapackPath = "";
         public string SelectedDatapackPath
         {
             get { return selectedDatapackPath; }
@@ -150,6 +149,17 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
             {
                 selectedDatapackDescriptionType = value;
                 OnPropertyChanged();
+
+                #region 同步设置不同数据类型的控件可见性
+                foreach (FrameworkElement item in DescriptionContainer.Children)
+                {
+                    if (item.Uid == selectedDatapackDescriptionType || item.Uid.Contains(selectedDatapackDescriptionType))
+                        item.Visibility = Visibility.Visible;
+                    else
+                        if (item.Uid != "")
+                        item.Visibility = Visibility.Collapsed;
+                }
+                #endregion
             }
         }
         #endregion
@@ -169,7 +179,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
 
         #region 存储数据包JSON组件类型的描述数据
         private string jsonObjectDescription = "";
-        private string JsonObjectDescription
+        public string JsonObjectDescription
         {
             get { return jsonObjectDescription; }
             set
@@ -209,19 +219,8 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         #endregion
 
         #region 版本、生成路径、描述等数据
-        private ObservableCollection<string> generatorPathList = new ObservableCollection<string> { };
-        public ObservableCollection<string> GeneratorPathList
-        {
-            get
-            {
-                return generatorPathList;
-            }
-            set
-            {
-                generatorPathList = value;
-                OnPropertyChanged();
-            }
-        }
+        public ObservableCollection<string> VersionList { get; set; } = new ObservableCollection<string> { };
+        public ObservableCollection<string> GeneratorPathList { get; set; } = new ObservableCollection<string> { };
 
         string DatapackGeneratorFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\DataPack\\data\\generatorPathes.ini";
 
@@ -232,7 +231,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         string DatapackDescriptionTypeFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\DataPack\\data\\descriptionTypeList.ini";
 
         //数据包所对应游戏版本数据库
-        Dictionary<string, string> DatapackVersionDatabase = new Dictionary<string, string> { };
+        public static Dictionary<string, string> DatapackVersionDatabase = new Dictionary<string, string> { };
 
         //用于显示数据包简介的文档对象
         List<EnabledFlowDocument> DescriptionDisplayDocument = null;
@@ -262,13 +261,11 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         /// <param name="e"></param>
         public void DatapackGeneratorPathLoaded(object sender, RoutedEventArgs e)
         {
-            ComboBox comboBox = sender as ComboBox;
-            string[] files = Directory.GetFiles(DatapackGeneratorFilePath);
+            string[] files = File.ReadAllLines(DatapackGeneratorFilePath);
             foreach (string item in files)
             {
                 GeneratorPathList.Add(item);
             }
-            comboBox.ItemsSource = GeneratorPathList;
         }
 
         /// <summary>
@@ -303,14 +300,9 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         /// <param name="e"></param>
         public void DatapackVersionLoaded(object sender, RoutedEventArgs e)
         {
-            ComboBox VersionBox = sender as ComboBox;
-
             if (File.Exists(DatapackVersionFilePath) && DatapackVersionDatabase.Count == 0)
             {
-                ObservableCollection<string> versionList = new ObservableCollection<string> { };
-                VersionBox.ItemsSource = versionList;
-
-                #region 解析版本配置文件
+                #region 解析并设置版本配置文件
                 string VersionFile = File.ReadAllText(DatapackVersionFilePath);
                 string[] versionStringList = VersionFile.Replace("{", "").Replace("}", "").Replace("\"", "").Split(',');
 
@@ -319,13 +311,12 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
                     string[] itemData = versionItem.Split(':');
                     string display = itemData[0].Trim();
                     string value = itemData[1].Trim();
-                    versionList.Add(display);
+                    VersionList.Add(display);
                     DatapackVersionDatabase.Add(display, value);
                 }
+                if (VersionList.Count > 0)
+                    SelectedDatapackVersion = VersionList[0];
                 #endregion
-
-                if (versionList.Count > 0)
-                    SelectedDatapackVersion = versionList[0];
             }
         }
 
@@ -374,25 +365,6 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
                     templateTypeTag.Margin = new Thickness(0);
                 IsFirst = false;
                 container.Children.Add(templateTypeTag);
-            }
-        }
-
-        /// <summary>
-        /// 同步设置不同数据类型的控件可见性
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void DescriptionTypeSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            string CurrentItem = DescriptionTypeSwitcher.SelectedItem as string;
-            string CurrentValue = CurrentItem;
-            foreach (FrameworkElement item in DescriptionContainer.Children)
-            {
-                if (item.Uid == CurrentValue || item.Uid.Contains(CurrentValue))
-                    item.Visibility = Visibility.Visible;
-                else
-                    if (item.Uid != "")
-                    item.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -449,18 +421,23 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
 
             if (folderBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                if (Directory.Exists(folderBrowser.SelectedFolder))
+                if (Directory.Exists(folderBrowser.SelectedPath))
                 {
-                    string selectedPath = folderBrowser.SelectedFolder;
-                    if (GeneratorPathList.Where(item => item == selectedPath).Count() == 0)
+                    string selectedPath = folderBrowser.SelectedPath;
+                    if (GeneratorPathList.Count > 0)
                     {
-                        GeneratorPathList.Prepend(selectedPath);
-                        if (GeneratorPathList.Count > 100)
-                            GeneratorPathList.Remove(GeneratorPathList.Last());
+                        if (GeneratorPathList.Where(item => item == selectedPath).Count() == 0)
+                        {
+                            GeneratorPathList.Insert(0,selectedPath);
+                            if (GeneratorPathList.Count > 100)
+                                GeneratorPathList.Remove(GeneratorPathList.Last());
+                        }
                     }
-
-                    if (SelectedDatapackPath == "")
-                        SelectedDatapackPath = GeneratorPathList[0];
+                    else
+                    {
+                        GeneratorPathList.Insert(0,selectedPath);
+                    }
+                    SelectedDatapackPath = selectedPath;
                 }
             }
         }
@@ -558,7 +535,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
                     string FilePath = TemplateSelectDataContext.TemplateDataFilePath + "\\" + SelectedDatapackVersionString + "\\" + selectedTemplateItem.TemplateID + "." + fileType;
 
                     //整合目标路径
-                    string targetPath = SelectedDatapackPathString + "\\" + DatapackName + "\\data\\" + DatapackMainNameSpace + "\\" + selectedTemplateItem.FileNameSpace + "\\" + selectedTemplateItem.TemplateID + "." + fileType;
+                    string targetPath = SelectedDatapackPathString /*+ "\\"*/ + DatapackName + "\\data\\" + DatapackMainNameSpace + "\\" + selectedTemplateItem.FileNameSpace + "\\" + selectedTemplateItem.TemplateID + "." + fileType;
 
                     string targetFolderPath = Path.GetDirectoryName(targetPath);
                     Directory.CreateDirectory(targetFolderPath);
@@ -570,7 +547,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
                     //写入历史模板目录中
                     File.WriteAllText(WriteFilePath, templateJSON);
                     //复制到数据包生成路径中(生成路径+数据包名+数据包主命名空间+模板所属命名空间+模板ID+已选择的文件类型)
-                    File.Copy(FilePath, targetPath);
+                    File.Copy(FilePath, targetPath,true);
                 }
             }
             //处理完毕后清空已选择模板列表成员

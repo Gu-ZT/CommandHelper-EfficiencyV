@@ -153,8 +153,7 @@ namespace cbhk_environment.Generators.OnlyOneCommandGenerator
             {
                 if(tab.Uid == "")
                 {
-                    ScrollViewer scrollViewer = tab.Content as ScrollViewer;
-                    RichTextBox richTextBox = scrollViewer.Content as RichTextBox;
+                    RichTextBox richTextBox = tab.Content as RichTextBox;
                     foreach (Paragraph para in richTextBox.Document.Blocks)
                     {
                         TextRange content = new TextRange(para.ContentStart, para.ContentEnd);

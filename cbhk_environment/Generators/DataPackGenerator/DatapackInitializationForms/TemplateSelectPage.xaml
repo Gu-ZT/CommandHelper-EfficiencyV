@@ -8,6 +8,7 @@
     xmlns:ity="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:local="clr-namespace:cbhk_environment.Generators.DataPackGenerator.DatapackInitializationForms"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:templateDatacontext="clr-namespace:cbhk_environment.Generators.DataPackGenerator"
     Title="TemplateSelectPage"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -16,6 +17,7 @@
     <Page.Resources>
         <ImageBrush x:Key="ButtonNormal" ImageSource="/cbhk_environment;component/resources/common/images/ButtonNormal.png" />
         <ImageBrush x:Key="ButtonPressed" ImageSource="/cbhk_environment;component/resources/common/images/ButtonPressed.png" />
+        <templateDatacontext:datapack_datacontext x:Key="templateDatacontext" />
     </Page.Resources>
 
     <Grid Width="1080" Height="571">
@@ -95,12 +97,8 @@
                     BorderBrush="#424242"
                     CaretBrush="White"
                     FontSize="25"
-                    Foreground="White">
-                    <ity:Interaction.Triggers>
-                        <ity:EventTrigger EventName="TextChanged">
-                            <itn:CallMethodAction MethodName="SearchBoxTextChanged" TargetObject="{Binding}" />
-                        </ity:EventTrigger>
-                    </ity:Interaction.Triggers>
+                    Foreground="White"
+                    Text="{Binding SearchText, Mode=TwoWay}">
                     <TextBox.Resources>
                         <VisualBrush
                             x:Key="BackgroundBrush"
@@ -138,7 +136,7 @@
                     Background="Transparent"
                     Command="{Binding ClearAllSelectParameters}"
                     Style="{DynamicResource TextButtonsStyle}"
-                    Visibility="{Binding ClearAllParametersVisibility}">
+                    Visibility="{Binding ClearAllParametersVisibility, Mode=OneWay}">
                     <TextBlock Foreground="#54A6EB" Text="清除全部筛选">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
@@ -163,18 +161,9 @@
                     Background="#1F1F1F"
                     FontSize="20"
                     ItemsSource="{Binding VersionList, Mode=OneWay}"
-                    SelectedIndex="0"
-                    SelectedItem="{Binding SelectedVersion, Mode=OneWayToSource}"
-                    Style="{DynamicResource TextComboBoxStyle}">
-                    <ity:Interaction.Triggers>
-                        <ity:EventTrigger EventName="SelectionChanged">
-                            <itn:CallMethodAction MethodName="TemplateVersionChanged" TargetObject="{Binding}" />
-                        </ity:EventTrigger>
-                        <ity:EventTrigger EventName="Loaded">
-                            <itn:CallMethodAction MethodName="VersionSelectorLoaded" TargetObject="{Binding}" />
-                        </ity:EventTrigger>
-                    </ity:Interaction.Triggers>
-                </ComboBox>
+                    SelectedIndex="{Binding SelectedVersionIndex, Mode=TwoWay}"
+                    SelectedItem="{Binding SelectedVersion, Mode=TwoWay}"
+                    Style="{DynamicResource TextComboBoxStyle}" />
                 <ComboBox
                     Width="140"
                     Height="30"
@@ -185,20 +174,11 @@
                     FontSize="20"
                     Foreground="White"
                     ItemsSource="{Binding FileTypeList, Mode=OneWay}"
-                    SelectedIndex="0"
-                    SelectedItem="{Binding SelectedFileType, Mode=OneWayToSource}"
-                    Style="{DynamicResource TextComboBoxStyle}">
-                    <ity:Interaction.Triggers>
-                        <ity:EventTrigger EventName="SelectionChanged">
-                            <itn:CallMethodAction MethodName="TemplateFileTypeChanged" TargetObject="{Binding}" />
-                        </ity:EventTrigger>
-                        <ity:EventTrigger EventName="Loaded">
-                            <itn:CallMethodAction MethodName="FileTypeSelectorLoaded" TargetObject="{Binding}" />
-                        </ity:EventTrigger>
-                    </ity:Interaction.Triggers>
-                </ComboBox>
+                    SelectedIndex="{Binding SelectedFileTypeIndex, Mode=TwoWay}"
+                    SelectedItem="{Binding SelectedFileType, Mode=TwoWay}"
+                    Style="{DynamicResource TextComboBoxStyle}" />
                 <ComboBox
-                    Width="140"
+                    Width="150"
                     Height="30"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
@@ -206,49 +186,34 @@
                     FontSize="20"
                     Foreground="White"
                     ItemsSource="{Binding FunctionTypeList, Mode=OneWay}"
-                    SelectedIndex="0"
-                    Style="{DynamicResource TextComboBoxStyle}">
-                    <ity:Interaction.Triggers>
-                        <ity:EventTrigger EventName="SelectionChanged">
-                            <itn:CallMethodAction MethodName="TemplateFunctionTypeChanged" TargetObject="{Binding}" />
-                        </ity:EventTrigger>
-                        <ity:EventTrigger EventName="Loaded">
-                            <itn:CallMethodAction MethodName="FunctionSelectorLoaded" TargetObject="{Binding}" />
-                        </ity:EventTrigger>
-                    </ity:Interaction.Triggers>
-                </ComboBox>
+                    SelectedIndex="{Binding SelectedFunctionTypeIndex, Mode=TwoWay}"
+                    SelectedItem="{Binding SelectedFunctionType, Mode=TwoWay}"
+                    Style="{DynamicResource TextComboBoxStyle}" />
             </DockPanel>
             <DockPanel Margin="0,0,0,10">
                 <CustomControls:TextCheckBoxs
                     Margin="0,0,10,0"
+                    Command="{Binding SelectAllTemplates}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"
                     Foreground="White"
                     HeaderHeight="20"
                     HeaderText="全选"
                     HeaderWidth="20"
-                    Style="{DynamicResource TextCheckBox}">
-                    <ity:Interaction.Triggers>
-                        <ity:EventTrigger EventName="Click">
-                            <itn:CallMethodAction MethodName="SelectAllTemplatesClick" TargetObject="{Binding}" />
-                        </ity:EventTrigger>
-                    </ity:Interaction.Triggers>
-                </CustomControls:TextCheckBoxs>
+                    Style="{DynamicResource TextCheckBox}" />
                 <CustomControls:TextCheckBoxs
+                    Command="{Binding ReverseAllTemplates}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"
                     Foreground="White"
                     HeaderHeight="20"
                     HeaderText="反选"
                     HeaderWidth="20"
-                    Style="{DynamicResource TextCheckBox}">
-                    <ity:Interaction.Triggers>
-                        <ity:EventTrigger EventName="Click">
-                            <itn:CallMethodAction MethodName="ReverseSelectAllTemplatesClick" TargetObject="{Binding}" />
-                        </ity:EventTrigger>
-                    </ity:Interaction.Triggers>
-                </CustomControls:TextCheckBoxs>
+                    Style="{DynamicResource TextCheckBox}" />
             </DockPanel>
             <ScrollViewer
                 Height="450"
                 MaxHeight="340"
                 Margin="0,0,10,0"
+                DataContext="{StaticResource templateDatacontext}"
                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                 ScrollViewer.VerticalScrollBarVisibility="Auto"
                 Style="{DynamicResource DefaultScrollViewer}">

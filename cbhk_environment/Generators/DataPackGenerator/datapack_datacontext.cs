@@ -1,4 +1,5 @@
 ﻿using cbhk_environment.CustomControls;
+using cbhk_environment.GeneralTools.ScrollViewerHelper;
 using cbhk_environment.Generators.DataPackGenerator.Components;
 using cbhk_environment.Generators.DataPackGenerator.DatapackInitializationForms;
 using cbhk_environment.WindowDictionaries;
@@ -16,6 +17,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Windows.AI.MachineLearning;
 using WK.Libraries.BetterFolderBrowserNS;
 
 namespace cbhk_environment.Generators.DataPackGenerator
@@ -55,6 +57,39 @@ namespace cbhk_environment.Generators.DataPackGenerator
 
         //获取近期内容搜索框引用
         TextBox RecentItemTextBox = null;
+
+        //数据包所对应游戏版本数据库
+        public static Dictionary<string, string> DatapackVersionDatabase = new Dictionary<string, string> { };
+        //数据包所对应游戏版本配置文件路径
+        public static string DatapackVersionFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\datapackVersion.json";
+
+        #region 存储所有类型的模板标签
+        public static List<string> SelectedTemplateTypeTagList = new List<string> { };
+        #endregion
+
+        /// <summary>
+        /// 模板元数据存放路径
+        /// </summary>
+        public static string TemplateMetaDataFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\DataPack\\data\\templates\\introductions";
+
+        /// <summary>
+        /// 存放文件类型列表
+        /// </summary>
+        public static ObservableCollection<string> FileTypeList { get; set; } = new ObservableCollection<string> { };
+
+        /// <summary>
+        /// 存放功能类型列表
+        /// </summary>
+        public static ObservableCollection<string> FunctionTypeList { get; set; } = new ObservableCollection<string> { };
+
+        #region 模板图标文件路径
+        public static string TemplateIconFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\DataPack\\images";
+        #endregion
+
+        /// <summary>
+        /// 模板成员集合
+        /// </summary>
+        public static ObservableCollection<TemplateItems> TemplateList { get; set; } = new ObservableCollection<TemplateItems>();
 
         //未搜索到结果文本的前景色
         SolidColorBrush searchResultIsNullBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
@@ -245,6 +280,24 @@ namespace cbhk_environment.Generators.DataPackGenerator
                 IconDictionary = Application.LoadComponent(new Uri("/cbhk_environment;component/Generators/DataPackGenerator/Dictionaries/Icons.xaml",
                                             UriKind.RelativeOrAbsolute)) as ResourceDictionary;
             #endregion
+
+            #region 读取并设置版本映射关系
+            if (File.Exists(DatapackVersionFilePath) && DatapackVersionDatabase.Count == 0)
+            {
+                #region 解析并设置版本配置文件
+                string VersionFile = File.ReadAllText(DatapackVersionFilePath);
+                string[] versionStringList = VersionFile.Replace("{", "").Replace("}", "").Replace("\"", "").Split(',');
+
+                foreach (string versionItem in versionStringList)
+                {
+                    string[] itemData = versionItem.Split(':');
+                    string display = itemData[0].Trim();
+                    string value = itemData[1].Trim();
+                    DatapackVersionDatabase.Add(display, value);
+                }
+                #endregion
+            }
+            #endregion
         }
 
         public DatapackGenerateSetupPage GetDatapackGenerateSetupPage()
@@ -294,7 +347,11 @@ namespace cbhk_environment.Generators.DataPackGenerator
                 foreach (string FileName in fileBrowser.FileNames)
                 {
                     contentType = ContentReader.ContentType.File;
-                    RichTreeViewItems contentNodes = ContentReader.ReadTargetContent(FileName, contentType);
+                    //解析mcmeta文件数据
+                    ContentReader.DataPackMetaStruct metaStruct = new ContentReader.DataPackMetaStruct()
+                    {
+                    };
+                    RichTreeViewItems contentNodes = ContentReader.ReadTargetContent(FileName, contentType, metaStruct);
 
                     if (contentNodes != null)
                     {
@@ -316,7 +373,7 @@ namespace cbhk_environment.Generators.DataPackGenerator
         }
 
         /// <summary>
-        /// 创造本地数据包
+        ///  创建本地数据包
         /// </summary>
         /// <exception cref="NotImplementedException"></exception>
         private void CreateLocalDataPackCommand()
@@ -347,7 +404,11 @@ namespace cbhk_environment.Generators.DataPackGenerator
                 foreach (string FilePath in betterFolderBrowser.SelectedPaths)
                 {
                     contentType = ContentReader.ContentType.Folder;
-                    RichTreeViewItems contentNodes = ContentReader.ReadTargetContent(FilePath, contentType);
+                    //解析mcmeta文件数据
+                    ContentReader.DataPackMetaStruct metaStruct = new ContentReader.DataPackMetaStruct()
+                    {
+                    };
+                    RichTreeViewItems contentNodes = ContentReader.ReadTargetContent(FilePath, contentType,metaStruct);
 
                     if (contentNodes != null)
                     {
@@ -386,7 +447,11 @@ namespace cbhk_environment.Generators.DataPackGenerator
                 foreach (string FilePath in betterFolderBrowser.SelectedPaths)
                 {
                     contentType = ContentReader.ContentType.DataPack;
-                    RichTreeViewItems contentNodes = ContentReader.ReadTargetContent(FilePath, contentType);
+                    //解析mcmeta文件数据
+                    ContentReader.DataPackMetaStruct metaStruct = new ContentReader.DataPackMetaStruct()
+                    {
+                    };
+                    RichTreeViewItems contentNodes = ContentReader.ReadTargetContent(FilePath, contentType, metaStruct);
 
                     if (contentNodes != null)
                     {
@@ -425,6 +490,185 @@ namespace cbhk_environment.Generators.DataPackGenerator
         public void RichTreeViewItemStyleLoaded(object sender, RoutedEventArgs e)
         {
             RichTreeViewItemStyle = (sender as RichTreeViewItems).Style;
+        }
+
+        /// <summary>
+        /// 获取模板容器引用
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void TemplateListViewerLoaded(object sender, RoutedEventArgs e)
+        {
+            SelectedTemplateTypeTagList.Clear();
+
+            #region 文件类型、功能类型的默认选中项
+            if (FileTypeList.Count == 0)
+                FileTypeList.Add("所有文件类型");
+            if (FunctionTypeList.Count == 0)
+                FunctionTypeList.Add("所有功能类型");
+            #endregion
+
+            if (Directory.Exists(TemplateMetaDataFilePath) && File.Exists(js_file) && TemplateList.Count == 0)
+            {
+                string js_file = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js");
+                List<string> templateList = Directory.GetFiles(TemplateMetaDataFilePath).ToList();
+                JsonScript(js_file);
+                //白色刷子
+                SolidColorBrush whiteBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+                foreach (string template in templateList)
+                {
+                    string templateData = File.ReadAllText(template);
+                    JsonScript("var data =" + templateData);
+
+                    string FileName = Path.GetFileNameWithoutExtension(template);
+                    string Description = JsonScript("data.Description").ToString();
+                    string TemplateName = JsonScript("data.Name").ToString();
+                    string FileType = JsonScript("data.FileType").ToString();
+                    string FunctionType = JsonScript("data.FunctionType").ToString();
+                    string fileNameSpace = JsonScript("data.NameSpace").ToString();
+
+                    #region 载入文件类型和功能类型
+                    if (!FileTypeList.Contains(FileType))
+                    {
+                        FileTypeList.Add(FileType);
+                    }
+                    if (!FunctionTypeList.Contains(FunctionType))
+                    {
+                        FunctionTypeList.Add(FunctionType);
+
+                        #region 处理新建文件窗体的左侧类型树
+                        RichTreeViewItems richTreeViewItems = new RichTreeViewItems()
+                        {
+                            Header = FunctionType,
+                            Foreground = whiteBrush
+                        };
+                        if (EditDataContext.TemplateTypeItemList.Count == 0)
+                        {
+                            RichTreeViewItems FirstRichTreeViewItems = new RichTreeViewItems()
+                            {
+                                Header = FunctionType,
+                                Foreground = whiteBrush
+                            };
+                            FirstRichTreeViewItems.Header = "全部";
+                            FirstRichTreeViewItems.PreviewMouseLeftButtonDown += SwitchNewFileFunctionType;
+                            EditDataContext.TemplateTypeItemList.Add(FirstRichTreeViewItems);
+                        }
+                        richTreeViewItems.PreviewMouseLeftButtonDown += SwitchNewFileFunctionType;
+                        EditDataContext.TemplateTypeItemList.Add(richTreeViewItems);
+                        #endregion
+                    }
+                    #endregion
+
+                    #region 实例化模板成员
+                    TemplateItems templateItem = new TemplateItems
+                    {
+                        TemplateID = FileName,
+                        FileType = FileType,
+                        FunctionType = FunctionType,
+                        FileNameSpace = fileNameSpace
+                    };
+                    templateItem.MouseLeftButtonDown += UpdateNewFileFormData;
+
+                    if (TemplateName != null)
+                        templateItem.TemplateName.Text = TemplateName;
+                    if (Description != null)
+                        templateItem.TemplateDescription.Text = Description;
+
+                    //判断获取的文件名是否有对应的图标文件
+                    if (FileName != null && File.Exists(TemplateIconFilePath + "\\" + FileName + ".png"))
+                        templateItem.TemplateImage.Source = new BitmapImage(
+                            new Uri(TemplateIconFilePath + "\\" + FileName + ".png", UriKind.Absolute));
+
+                    //添加文件类型和功能类型标签
+                    if (FileType != null)
+                        templateItem.TemplateTypeTagPanel.Children.Add(new TemplateTypeTag(FileType));
+                    if (FunctionType != null)
+                        templateItem.TemplateTypeTagPanel.Children.Add(new TemplateTypeTag(FunctionType));
+                    TemplateList.Add(templateItem);
+                    #endregion
+                }
+            }
+
+            #region 设置版本、文件类型、功能类型默认选中项
+            Page page = (sender as ScrollViewer).FindParent<Page>();
+            TemplateSelectDataContext templateSelectDataContext = null;
+            //模板选择页
+            if (page != null)
+            {
+                TemplateList.All(item =>
+                {
+                    item.TemplateDescription.Visibility = Visibility.Visible;
+                    return true;
+                });
+                templateSelectDataContext = page.DataContext as TemplateSelectDataContext;
+                templateSelectDataContext.DefaultFileType = FileTypeList[1];
+                templateSelectDataContext.SelectedFunctionType = FunctionTypeList.First();
+            }
+            else//新建文件窗体内更新右侧数据
+            {
+                TemplateList.All(item =>
+                {
+                    item.TemplateDescription.Visibility = Visibility.Collapsed;
+                    return true;
+                });
+            }
+            #endregion
+        }
+
+        /// <summary>
+        /// 更新新建文件窗体数据
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UpdateNewFileFormData(object sender, MouseButtonEventArgs e)
+        {
+            TemplateItems templateItems = sender as TemplateItems;
+
+            #region 只允许选中一个模板
+            if (EditDataContext.LastSelectedItems != null && EditDataContext.LastSelectedItems != templateItems)
+                EditDataContext.LastSelectedItems.TemplateSelector.IsChecked = false;
+            EditDataContext.LastSelectedItems = templateItems;
+            #endregion
+
+            #region 切换新建文件窗体右侧文件类型与描述
+            EditDataContext editDataContext = Window.GetWindow(templateItems).DataContext as EditDataContext;
+            if (templateItems != null && editDataContext != null)
+            {
+                editDataContext.RightSideFileType = templateItems.FileType;
+                editDataContext.RightSideFileDescription = templateItems.TemplateDescription.Text;
+            }
+            #endregion
+
+            #region 更新新建文件窗体下方的文件名
+            editDataContext.NewFileName = templateItems.TemplateID + templateItems.FileType;
+            #endregion
+        }
+
+        /// <summary>
+        /// 新建文件窗体左侧树视图点击事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SwitchNewFileFunctionType(object sender, MouseButtonEventArgs e)
+        {
+            RichTreeViewItems richTreeViewItems = sender as RichTreeViewItems;
+            if(richTreeViewItems != null)
+            {
+                if (richTreeViewItems.Header.ToString() == "全部")
+                    TemplateList.All(item =>
+                    {
+                        item.Visibility = Visibility.Visible;
+                        return true;
+                    });
+                else
+                    foreach (var item in TemplateList)
+                    {
+                        if (item.FunctionType != richTreeViewItems.Header.ToString())
+                            item.Visibility = Visibility.Collapsed;
+                        else
+                            item.Visibility = Visibility.Visible;
+                    }
+            }
         }
 
         /// <summary>
@@ -613,7 +857,9 @@ namespace cbhk_environment.Generators.DataPackGenerator
 
                 //近期内容类型为未知
                 contentType = ContentReader.GetTargetContentType(FilePath);
-                RichTreeViewItems contentItem = ContentReader.ReadTargetContent(FilePath,contentType);
+                //解析mcmeta文件数据
+                ContentReader.DataPackMetaStruct metaStruct = ContentReader.McmetaParser(item.FilePath.Text);
+                RichTreeViewItems contentItem = ContentReader.ReadTargetContent(FilePath,contentType, metaStruct);
 
                 if(contentItem != null)
                 {

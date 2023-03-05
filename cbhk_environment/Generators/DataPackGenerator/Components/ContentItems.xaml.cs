@@ -17,7 +17,21 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
         /// </summary>
         private string originalName = "";
 
+        /// <summary>
+        /// 文件类型
+        /// </summary>
         public ContentReader.ContentType FileType { get; set; } = ContentReader.ContentType.UnKnown;
+
+        /// <summary>
+        /// 是否为数据包
+        /// </summary>
+        public bool IsDataPack = false;
+
+        /// <summary>
+        /// 存储该节点的数据包父节点
+        /// </summary>
+        public RichTreeViewItems DataPackItemReference = null;
+        public ContentReader.DataPackMetaStruct DataPackMetaInfo = new ContentReader.DataPackMetaStruct();
 
         public ContentItems(string FilePath, ContentReader.ContentType type)
         {

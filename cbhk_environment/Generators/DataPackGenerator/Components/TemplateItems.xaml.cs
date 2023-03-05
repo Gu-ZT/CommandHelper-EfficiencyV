@@ -53,9 +53,6 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
         private void TemplateItemMouseEnter(object sender, MouseEventArgs e)
         {
             Background = SelectedColor;
-
-            foreach (TemplateTypeTag item in TemplateTypeTagPanel.Children)
-                item.border.BorderThickness = new System.Windows.Thickness(1);
         }
 
         /// <summary>
@@ -67,9 +64,6 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
         {
             if(!TemplateSelector.IsChecked.Value)
             Background = UnSelectColor;
-
-            foreach (TemplateTypeTag item in TemplateTypeTagPanel.Children)
-                item.border.BorderThickness = new Thickness(0);
         }
 
         /// <summary>

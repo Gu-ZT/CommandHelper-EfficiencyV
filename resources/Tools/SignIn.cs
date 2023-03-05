@@ -102,7 +102,10 @@ namespace cbhk_signin.resources.Tools
 		}
 		public static string GetDataByPost(string url, string account, string password)
 		{
-			string content = "account=" + account + "&password=" + password + "&key=d984e4ac-191a-4fe6-a2df-31ee226402f3";
+			//0e805eb9ea5b2d7a266f29af992704c9
+			//d984e4ac-191a-4fe6-a2df-31ee226402f3
+			//string content = "account=" + account + "&password=" + password + "&key=d984e4ac-191a-4fe6-a2df-31ee226402f3";
+			string content = "https://mc.metamo.cn/api/market/open/buyerQuery?token=0e805eb9ea5b2d7a266f29af992704c9&email="+account;
 
 			using (WebClient webClient = new WebClient())
 			{
@@ -215,13 +218,5 @@ namespace cbhk_signin.resources.Tools
 			//}
 			return "success";
 		}
-
-		//private static void update_download_processbar(object sender,DownloadProgressChangedEventArgs e)
-		//      {
-		//	download_progressbar.Value = e.ProgressPercentage;
-		//	progress_display.Text = string.Format("{0:f2}",(e.BytesReceived / e.TotalBytesToReceive).ToString()) + "%";
-		//	progress_speed.Text = string.Format("{0}MB/s", (e.BytesReceived / 1024.0 / 1024.0 / download_speed_tester.Elapsed.TotalSeconds).ToString("0.00"));
-		//	Application.DoEvents();
-		//}
 	}
 }

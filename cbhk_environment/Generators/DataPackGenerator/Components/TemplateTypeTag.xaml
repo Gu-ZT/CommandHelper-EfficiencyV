@@ -16,7 +16,8 @@
         Height="Auto"
         Padding="5"
         Background="#3D3D3D"
-        BorderBrush="#242424"
+        BorderBrush="Transparent"
+        BorderThickness="1"
         CornerRadius="5">
         <TextBlock
             x:Name="Text"

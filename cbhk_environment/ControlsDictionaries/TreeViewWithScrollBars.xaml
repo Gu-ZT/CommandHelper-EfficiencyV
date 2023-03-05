@@ -13,8 +13,8 @@
             <!--  设置为treeViewItem的背景色  -->
             <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#3D3D3D" />
             <!--  SelectedItem without focus  -->
-            <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="Transparent" />
-            <SolidColorBrush x:Key="{x:Static SystemColors.HotTrackColorKey}" Color="Red" />
+            <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#3D3D3D" />
+            <SolidColorBrush x:Key="{x:Static SystemColors.HotTrackColorKey}" Color="#3D3D3D" />
         </Style.Resources>
     </Style>
 

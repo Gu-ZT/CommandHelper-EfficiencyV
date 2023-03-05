@@ -15,6 +15,32 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
 {
     public class ContentReader
     {
+        #region 数据包元数据的数据结构
+        public struct DataPackMetaStruct
+        {
+            /// <summary>
+            /// 版本
+            /// </summary>
+            public string Version;
+            /// <summary>
+            /// 字符描述
+            /// </summary>
+            public string Description;
+            /// <summary>
+            /// 对象或数组描述
+            /// </summary>
+            public RichParagraph DescriptionObjectOrArray;
+            /// <summary>
+            /// 描述的类型
+            /// </summary>
+            public string DescriptionType;
+            /// <summary>
+            /// 过滤器
+            /// </summary>
+            public RichParagraph Filter;
+        };
+        #endregion
+
         //目标类型目录配置文件路径
         static string TargetFolderNameListFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\DataPack\\data\\targetFolderNameList.ini";
         //能够读取的文件类型配置文件路径
@@ -33,7 +59,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
         /// </summary>
         /// <param name="folderPath"></param>
         /// <returns></returns>
-        public static RichTreeViewItems ReadTargetContent(string folderPath,ContentType type)
+        public static RichTreeViewItems ReadTargetContent(string folderPath,ContentType type,DataPackMetaStruct metaStruct)
         {
             RichTreeViewItems result = null;
 
@@ -59,25 +85,11 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                             //拥有pack.mcmeta文件和data文件夹,证实确实是数据包文件夹
                             if (Directory.Exists(folderPath + "\\data") && File.Exists(folderPath + "\\pack.mcmeta"))
                             {
-                                ContentItems contentItems = new ContentItems(folderPath, type);
-
-                                #region 解析pack.mcmeta文件
-                                if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js") &&
-                                    contentItems.Tag == null)
+                                ContentItems contentItems = new ContentItems(folderPath, type)
                                 {
-                                    string js_file = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\json_reader.js");
-                                    datapack_datacontext.JsonScript(js_file);
-                                    string content = File.ReadAllText(folderPath + "\\pack.mcmeta");
-                                    datapack_datacontext.JsonScript("var data="+content);
-                                    int.TryParse(datapack_datacontext.JsonScript("data.pack.pack_format").ToString(),out int packFormat);
-
-                                    object descriptionObject = DescriptionParser();
-                                    string nameSpace = "";
-                                    string path = "";
-                                    int FilterBlockLength = 0;
-
-                                }
-                                #endregion
+                                    IsDataPack = true,
+                                    DataPackMetaInfo = metaStruct
+                                };
 
                                 RichTreeViewItems CurrentNode = new RichTreeViewItems()
                                 {
@@ -188,52 +200,224 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
         }
 
         /// <summary>
-        /// 解析简介内容,生成数据
+        /// 解析pack.mcmeta文件
         /// </summary>
-        private static object DescriptionParser()
+        /// <returns>返回meta文件数据</returns>
+        public static DataPackMetaStruct McmetaParser(string path)
         {
-            //"enjoy undertale in Minecraft!(Make by honghuangtaichu)"
-            object result = null;
-            object descriptionType = null;
-            bool descriptionIsArray;
-            int descriptionCount = -1;
+            string content;
+            string jsonData = "";
+            using (StreamReader streamReader = new StreamReader(path))
+            {
+                content = streamReader.ReadToEnd();
+                ContentType contentType = GetTargetContentType(content);
+                if(contentType == ContentType.DataPack)
+                using (StreamReader streamReader1 = new StreamReader(content + "\\pack.mcmeta"))
+                {
+                    jsonData = streamReader1.ReadToEnd();
+                }
+            }
+            DataPackMetaStruct result = new DataPackMetaStruct();
+            //描述的段落对象
+            RichParagraph descriptionParagraph = new RichParagraph();
+            //判断描述是否为数组
+            bool descriptionIsArray = false;
+            //描述数组长度
+            int descriptionCount = 0;
+            //过滤器长度
+            int blockCount = 0;
+            //过滤器对象
+            RichParagraph filterParagraph = new RichParagraph();
+            //载入目标路径的元数据文件
+            //string jsonData = File.ReadAllText(content,System.Text.Encoding.UTF8);
+            datapack_datacontext.JsonScript("var data =" + jsonData);
 
-            #region 判断该包是否有简介和过滤器
-            bool.TryParse(datapack_datacontext.JsonScript("hasPath('.pack.description');").ToString(),out bool HasDescription);
-            bool.TryParse(datapack_datacontext.JsonScript("hasPath('.filter');").ToString(),out bool HasFilter);
-            bool.TryParse(datapack_datacontext.JsonScript("hasPath('.filter.block');").ToString(),out bool HasBlock);
+            #region 提取版本数据
+            object VersionObj = datapack_datacontext.JsonScript("data.pack.pack_format");
             #endregion
 
-            //检查简介内容
-            if (HasDescription)
+            #region 判断该包是否有简介和过滤器
+            object DescriptionObj = datapack_datacontext.JsonScript("data.pack.description");
+            object FilterObj = datapack_datacontext.JsonScript("data.filter");
+            object BlockObj = datapack_datacontext.JsonScript("data.filter.block");
+            #endregion
+
+            //把数字版本号转为游戏版本号(该参数为必要参数)
+            if (VersionObj != null)
             {
-                descriptionType = datapack_datacontext.JsonScript("getPathObjType('.pack.description');");
-                descriptionIsArray = bool.Parse(datapack_datacontext.JsonScript("CurrentIsArray('.pack.description');").ToString());
+                VersionObj = datapack_datacontext.DatapackVersionDatabase.Where(item => item.Value == VersionObj.ToString()).Select(item => item.Key).First();
+
+                //检查简介内容
+                if (DescriptionObj != null)
+                {
+                    bool.TryParse(datapack_datacontext.JsonScript("CurrentIsArray('.pack.description');").ToString(),out descriptionIsArray);
+                    if (descriptionIsArray)
+                        descriptionCount = int.Parse(datapack_datacontext.JsonScript("data.pack.description.length").ToString());
+                }
+
+                //检查过滤器是否有成员
+                if (FilterObj != null && BlockObj != null)
+                    int.TryParse(datapack_datacontext.JsonScript("data.filter.block.length").ToString(), out blockCount);
+
+                string action = "";
+                string value = "";
+                object actionObj = null;
+                object valueObj = null;
+                string component = "";
+
+                #region 处理描述
                 if (descriptionIsArray)
-                    descriptionCount = int.Parse(datapack_datacontext.JsonScript("getCurrentObjectLength('.pack.description');").ToString());
-            }
+                {
+                    result.DescriptionType = "Array";
+                    for (int i = 0; i < descriptionCount; i++)
+                    {
+                        #region 处理文本组件的各种属性
+                        object textObj = datapack_datacontext.JsonScript("data.pack.description[" + i + "].text");
+                        string text = textObj != null ? "\"text\":\"" + textObj.ToString() +"\"," :"";
+                        object colorObj = datapack_datacontext.JsonScript("data.pack.description[" + i + "].color");
+                        string color = colorObj != null ? "\"color\":\"" + colorObj.ToString() + "\"," : "";
 
-            //检查过滤器是否有成员
-            if (HasFilter && HasBlock)
-                int.TryParse(datapack_datacontext.JsonScript("getCurrentObjectLength('.filter.block');").ToString(), out int itemCount);
+                        object HaveBold = datapack_datacontext.JsonScript("data.pack.description[" + i + "].bold");
+                        string Bold = HaveBold != null ? "\"bold\":"+HaveBold.ToString()+"," : "";
+                        object HaveItalic = datapack_datacontext.JsonScript("data.pack.description[" + i + "].italic");
+                        string Italic = HaveItalic != null ? "\"italic\":"+HaveItalic.ToString()+"," : "";
+                        object HaveUnderlined = datapack_datacontext.JsonScript("data.pack.description[" + i + "].underlined");
+                        string Underlined = HaveUnderlined != null ? "\"underlined\":" + HaveUnderlined.ToString() + "," : "";
+                        object HaveStrikethrough = datapack_datacontext.JsonScript("data.pack.description[" + i + "].strikethrough");
+                        string Strikethrough = HaveStrikethrough != null ? "\"strikethrough\":" + HaveUnderlined.ToString() + "," : "";
+                        object HaveObfuscated = datapack_datacontext.JsonScript("data.pack.description[" + i + "].obfuscated");
+                        string Obfuscated = HaveObfuscated != null ? "\"obfuscated\":" + HaveObfuscated.ToString() + "," : "";
 
-            //已确定简介为数组且有成员
-            if (descriptionCount > 0 || (descriptionType != null && descriptionType.ToString() == "object"))
-            {
+                        string ClickEvent = "";
+                        object HaveClickEvent = datapack_datacontext.JsonScript("data.pack.description[" + i + "].clickEvent");
+                        if(HaveClickEvent != null)
+                        {
+                            actionObj = datapack_datacontext.JsonScript("data.pack.description[" + i + "].clickEvent.action");
+                            valueObj = datapack_datacontext.JsonScript("data.pack.description[" + i + "].clickEvent.value");
+                            if(actionObj != null)
+                                action = "\"action\":\""+ actionObj.ToString()+"\",";
+                            if(valueObj != null)
+                                value = "\"value\":\""+valueObj.ToString()+"\"";
+                            ClickEvent = "\"clickEvent\":{" + action + value + "},";
+                        }
+                        string HoverEvent = "";
+                        object HaveHoverEvent = datapack_datacontext.JsonScript("data.pack.description[" + i + "].hoverEvent");
+                        if(HaveHoverEvent != null)
+                        {
+                            actionObj = datapack_datacontext.JsonScript("data.pack.description[" + i + "].hoverEvent.action");
+                            valueObj = datapack_datacontext.JsonScript("data.pack.description[" + i + "].hoverEvent.value");
+                            if (actionObj != null)
+                                action = "\"action\":\"" + actionObj.ToString() + "\",";
+                            if (valueObj != null)
+                                value = "\"value\":\"" + valueObj.ToString() + "\"";
+                            HoverEvent = "\"hoverEvent\":" + HaveHoverEvent.ToString() + ",";
+                        }
+
+                        object HaveInsertion = datapack_datacontext.JsonScript("data.pack.description[" + i + "].insertion");
+                        string Insertion = HaveInsertion != null ? "\"insertion\":" + HaveInsertion.ToString() + "," : "";
+                        #endregion
+
+                        component = text + color + Bold + Italic + Underlined + Strikethrough + Obfuscated + ClickEvent + HoverEvent + Insertion;
+                        descriptionParagraph.Inlines.Add(new RichRun()
+                        {
+                            Text = "{" + component.Trim() + "}"
+                        });
+                    }
+                }
+                else
+                if (DescriptionObj != null)//描述类型为对象
+                {
+                    result.DescriptionType = "Object";
+                    #region 处理文本组件的各种属性
+                    object textObj = datapack_datacontext.JsonScript("data.pack.description.text");
+                    string text = textObj != null ? "\"text\":\"" + textObj.ToString() + "\"," : "";
+                    object colorObj = datapack_datacontext.JsonScript("data.pack.description.color");
+                    string color = colorObj != null ? "\"color\":\"" + colorObj.ToString() + "\"," : "";
+
+                    object HaveBold = datapack_datacontext.JsonScript("data.pack.description.bold");
+                    string Bold = HaveBold != null ? "\"bold\":" + HaveBold.ToString() + "," : "";
+                    object HaveItalic = datapack_datacontext.JsonScript("data.pack.description.italic");
+                    string Italic = HaveItalic != null ? "\"italic\":" + HaveItalic.ToString() + "," : "";
+                    object HaveUnderlined = datapack_datacontext.JsonScript("data.pack.description.underlined");
+                    string Underlined = HaveUnderlined != null ? "\"underlined\":" + HaveUnderlined.ToString() + "," : "";
+                    object HaveStrikethrough = datapack_datacontext.JsonScript("data.pack.description.strikethrough");
+                    string Strikethrough = HaveStrikethrough != null ? "\"strikethrough\":" + HaveUnderlined.ToString() + "," : "";
+                    object HaveObfuscated = datapack_datacontext.JsonScript("data.pack.description.obfuscated");
+                    string Obfuscated = HaveObfuscated != null ? "\"obfuscated\":" + HaveObfuscated.ToString() + "," : "";
+
+                    string ClickEvent = "";
+                    object HaveClickEvent = datapack_datacontext.JsonScript("data.pack.description.clickEvent");
+                    if (HaveClickEvent != null)
+                    {
+                        actionObj = datapack_datacontext.JsonScript("data.pack.description.clickEvent.action");
+                        valueObj = datapack_datacontext.JsonScript("data.pack.description.clickEvent.value");
+                        if (actionObj != null)
+                            action = "\"action\":\"" + actionObj.ToString() + "\",";
+                        if (valueObj != null)
+                            value = "\"value\":\"" + valueObj.ToString() + "\"";
+                        ClickEvent = "\"clickEvent\":{" + action + value + "},";
+                    }
+                    string HoverEvent = "";
+                    object HaveHoverEvent = datapack_datacontext.JsonScript("data.pack.description.hoverEvent");
+                    if (HaveHoverEvent != null)
+                    {
+                        actionObj = datapack_datacontext.JsonScript("data.pack.description.hoverEvent.action");
+                        valueObj = datapack_datacontext.JsonScript("data.pack.description.hoverEvent.value");
+                        if (actionObj != null)
+                            action = "\"action\":\"" + actionObj.ToString() + "\",";
+                        if (valueObj != null)
+                            value = "\"value\":\"" + valueObj.ToString() + "\"";
+                        HoverEvent = "\"hoverEvent\":" + HaveHoverEvent.ToString() + ",";
+                    }
+
+                    object HaveInsertion = datapack_datacontext.JsonScript("data.pack.description.insertion");
+                    string Insertion = HaveInsertion != null ? "\"insertion\":" + HaveInsertion.ToString() + "," : "";
+                    #endregion
+
+                    component = text + color + Bold + Italic + Underlined + Strikethrough + Obfuscated + ClickEvent + HoverEvent + Insertion;
+                    DescriptionObj = new RichRun()
+                    {
+                        Text = "{" + component.Trim() + "}"
+                    };
+                }
+                else//描述类型为字符串，数值或布尔
+                {
+                    result.DescriptionType = "String";
+                    bool.TryParse(datapack_datacontext.JsonScript("data.pack.description").ToString(),out bool IsBool);
+                    int.TryParse(datapack_datacontext.JsonScript("data.pack.description").ToString(), out int IsInt);
+                    if (IsBool)
+                        result.DescriptionType = "Bool";
+                    else
+                        if (IsInt > 0)
+                        result.DescriptionType = "Int";
+                    DescriptionObj = datapack_datacontext.JsonScript("data.pack.description").ToString();
+                }
+                #endregion
+
+                #region 处理过滤器
+                for (int i = 0; i < blockCount; i++)
+                {
+                    object filterNameSpace = datapack_datacontext.JsonScript("data.pack.filter.block[" + i + "].namespace");
+                    object filterPath = datapack_datacontext.JsonScript("data.pack.filter.block[" + i + "].path");
+                    string filterItem = filterNameSpace != null?"{\"namespace\":\""+filterNameSpace.ToString()+(filterPath != null? "\",\"path\":\"" + filterPath + "\"":"")+"},":"";
+                    filterParagraph.Inlines.Add(new RichRun()
+                    {
+                        Text = filterItem.TrimEnd(',')
+                    });
+                }
+                #endregion
+
+                #region 处理完毕后设置返回对象的属性
+                result.Version = VersionObj.ToString();
+                result.Description = DescriptionObj.ToString();
+                result.DescriptionObjectOrArray = descriptionParagraph;
+                result.Filter = filterParagraph;
+                #endregion
+
                 return result;
             }
-
-            if(HasDescription)
-            switch (descriptionType.ToString())
-            {
-                case "string":
-                    break;
-                case "number":
-                    break;
-                case "boolean":
-                    break;
-            }
-            return result;
+            else
+                return new DataPackMetaStruct();
         }
 
         /// <summary>
@@ -274,7 +458,10 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                             {
                                 #region 新建内容节点
                                 ContentType newType = ContentType.FolderOrFile;
-                                ContentItems contentItems = new ContentItems(suspectedTargetNameSpace, newType);
+                                ContentItems contentItems = new ContentItems(suspectedTargetNameSpace, newType)
+                                {
+                                    DataPackItemReference = CurrentNode
+                                };
                                 RichTreeViewItems SubNode = new RichTreeViewItems()
                                 {
                                     Header = contentItems,
@@ -298,6 +485,11 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                     }
                     break;
                 case ContentType.FolderOrFile:
+                    #region 确认父节点数据
+                    RichTreeViewItems parentItem = (sender as RichTreeViewItems).Parent as RichTreeViewItems;
+                    ContentItems parentContentItem = parentItem.Header as ContentItems;
+                    #endregion
+
                     #region 获取所有子级内容并新建内容节点
                     string[] SubDirectories = Directory.GetDirectories(currentPath);
                     string[] SubFiles = Directory.GetFiles(currentPath);
@@ -305,6 +497,10 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                     foreach (string SubDirectory in SubDirectories)
                     {
                         ContentItems contentItems = new ContentItems(SubDirectory, type);
+                        if (parentContentItem.IsDataPack)
+                            contentItems.DataPackItemReference = parentItem;
+                        else
+                            contentItems.DataPackItemReference = parentContentItem.DataPackItemReference;
 
                         RichTreeViewItems SubNode = new RichTreeViewItems()
                         {
@@ -411,6 +607,10 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
                         Content = richTextBox,
                         IsContentSaved = true
                     };
+                    if(currentItem != null)
+                        richTabItems.mappingItem = currentItem as RichTreeViewItems;
+                    if (currentItem.Parent != null)
+                        richTabItems.mappingParentItem = currentItem.Parent as RichTreeViewItems;
                     richTabItems.SetValue(FrameworkElement.StyleProperty, Application.Current.Resources["RichTabItemStyle"]);
                     fileZone.Items.Add(richTabItems);
                 }
@@ -431,9 +631,26 @@ namespace cbhk_environment.Generators.DataPackGenerator.Components
         {
             if(e.KeyboardDevice.Modifiers == ModifierKeys.Control && e.Key == Key.S)
             {
-                RichTabItems CurrentItem = (sender as RichTextBox).FindParent<RichTabItems>();
+                RichTextBox richTextBox = sender as RichTextBox;
+                RichTabItems CurrentItem = richTextBox.FindParent<RichTabItems>();
                 if(CurrentItem != null)
                 CurrentItem.IsContentSaved = true;
+                TextRange textRange = new TextRange(richTextBox.Document.ContentStart,richTextBox.Document.ContentEnd);
+                //覆盖数据
+                File.WriteAllText(CurrentItem.Uid, textRange.Text);
+                if(!CurrentItem.mappingParentItem.Items.Contains(CurrentItem.mappingItem))
+                {
+                    string path = CurrentItem.mappingParentItem.Uid + "\\" + CurrentItem.Header.ToString();
+                    ContentType contentType = GetTargetContentType(path);
+                    ContentItems contentItems = new ContentItems(path,contentType);
+                    RichTreeViewItems richTreeViewItems = new RichTreeViewItems()
+                    {
+                        Uid = path,
+                        Tag = contentType,
+                        Header = contentItems
+                    };
+                    CurrentItem.mappingParentItem.Items.Add(richTreeViewItems);
+                }
             }
         }
 

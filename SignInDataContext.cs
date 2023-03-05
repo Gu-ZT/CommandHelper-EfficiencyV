@@ -291,7 +291,7 @@ namespace cbhk_signin
             }
             if (result["code"].ToString() == "200")
             {
-                if (bool.Parse(result["data"]["cbhk_buy"].ToString()))
+                if (result["data"]["DESC"].ToString().Contains("购买了"))
                 {
                     if (result["data"]["avatar"].ToString() != null && result["data"]["avatar"].ToString().Contains("?") && !File.Exists(AppDomain.CurrentDomain.BaseDirectory + "resources\\user_head.png"))
                         await Task.Run(() => { resources.Tools.SignIn.DownLoadUserHead(result["data"]["avatar"].ToString(), AppDomain.CurrentDomain.BaseDirectory + "resources\\user_head.png"); });

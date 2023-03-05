@@ -85,6 +85,14 @@ namespace cbhk_environment.CustomControls
         static RichTabItems current_item = null;
         static RichTabItems select_item = null;
         static bool Draging = false;
+        /// <summary>
+        /// 对应某个树视图的节点，用于快速得知当前标签页对应的项目文件是否被包括
+        /// </summary>
+        public RichTreeViewItems mappingItem = null;
+        /// <summary>
+        /// 对应某个树视图的节点的父级，用于快速得知当前标签页对应的项目文件是否被包括
+        /// </summary>
+        public RichTreeViewItems mappingParentItem = null;
 
         public RichTabItems()
         {

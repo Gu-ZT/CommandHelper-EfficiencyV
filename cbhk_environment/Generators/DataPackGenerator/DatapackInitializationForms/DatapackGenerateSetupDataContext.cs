@@ -224,14 +224,8 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
 
         string DatapackGeneratorFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\DataPack\\data\\generatorPathes.ini";
 
-        //数据包所对应游戏版本配置文件路径
-        string DatapackVersionFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\data_sources\\datapackVersion.json";
-
         //数据包简介数据类型配置文件路径
         string DatapackDescriptionTypeFilePath = AppDomain.CurrentDomain.BaseDirectory + "resources\\configs\\DataPack\\data\\descriptionTypeList.ini";
-
-        //数据包所对应游戏版本数据库
-        public static Dictionary<string, string> DatapackVersionDatabase = new Dictionary<string, string> { };
 
         //用于显示数据包简介的文档对象
         List<EnabledFlowDocument> DescriptionDisplayDocument = null;
@@ -300,19 +294,12 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
         /// <param name="e"></param>
         public void DatapackVersionLoaded(object sender, RoutedEventArgs e)
         {
-            if (File.Exists(DatapackVersionFilePath) && DatapackVersionDatabase.Count == 0)
+            if (VersionList.Count == 0)
             {
-                #region 解析并设置版本配置文件
-                string VersionFile = File.ReadAllText(DatapackVersionFilePath);
-                string[] versionStringList = VersionFile.Replace("{", "").Replace("}", "").Replace("\"", "").Split(',');
-
-                foreach (string versionItem in versionStringList)
+                #region 设置版本配置文件
+                foreach (var versionItem in datapack_datacontext.DatapackVersionDatabase)
                 {
-                    string[] itemData = versionItem.Split(':');
-                    string display = itemData[0].Trim();
-                    string value = itemData[1].Trim();
-                    VersionList.Add(display);
-                    DatapackVersionDatabase.Add(display, value);
+                    VersionList.Add(versionItem.Key);
                 }
                 if (VersionList.Count > 0)
                     SelectedDatapackVersion = VersionList[0];
@@ -477,7 +464,7 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
             if (DatapackFilterSource.Count > 0)
                 DatapackFilter = ",\"filter\":{\"block\":[" + string.Join("", DatapackFilterSource.Select(item => item.FilterBlock)).TrimEnd(',') + "]}";
             //搜索对应的数据包版本号
-            foreach (var item in DatapackVersionDatabase)
+            foreach (var item in datapack_datacontext.DatapackVersionDatabase)
             {
                 if (item.Key == SelectedDatapackVersion)
                 {
@@ -525,23 +512,23 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
                     SelectedDatapackVersionString = leftVersionValue > rightVersionValue ? twoVersion[0] : twoVersion[1];
                 }
 
-                if (File.Exists(TemplateSelectDataContext.TemplateDataFilePath + "\\" + SelectedDatapackVersionString + "\\" + selectedTemplateItem.TemplateID + "." + fileType))
+                if (File.Exists(TemplateSelectDataContext.TemplateDataFilePath + "\\" + SelectedDatapackVersionString + "\\" + selectedTemplateItem.TemplateID + fileType))
                 {
                     #region 整合路径与模板数据
                     //写入当前的历史模板
                     string WriteFilePath = TemplateSelectDataContext.RecentTemplateDataFilePath + "\\" + SelectedDatapackVersionString + "\\" + selectedTemplateItem.TemplateID + ".json";
 
                     //整合模板文件路径
-                    string FilePath = TemplateSelectDataContext.TemplateDataFilePath + "\\" + SelectedDatapackVersionString + "\\" + selectedTemplateItem.TemplateID + "." + fileType;
+                    string FilePath = TemplateSelectDataContext.TemplateDataFilePath + "\\" + SelectedDatapackVersionString + "\\" + selectedTemplateItem.TemplateID + fileType;
 
                     //整合目标路径
-                    string targetPath = SelectedDatapackPathString /*+ "\\"*/ + DatapackName + "\\data\\" + DatapackMainNameSpace + "\\" + selectedTemplateItem.FileNameSpace + "\\" + selectedTemplateItem.TemplateID + "." + fileType;
+                    string targetPath = SelectedDatapackPathString + DatapackName + "\\data\\" + DatapackMainNameSpace + "\\" + selectedTemplateItem.FileNameSpace + "\\" + selectedTemplateItem.TemplateID + fileType;
 
                     string targetFolderPath = Path.GetDirectoryName(targetPath);
                     Directory.CreateDirectory(targetFolderPath);
 
                     //整合历史模板的json数据
-                    string templateJSON = "{\"TemplateName\":\"" + selectedTemplateItem.TemplateName.Text + "\",\"FileType\":\"" + fileType + "\",\"FileNameSpace\":\"" + selectedTemplateItem.FileNameSpace + "\",\"FilePath\":\"" + FilePath.Replace("\\", "\\\\") + "\",\"IconPath\":\"" + TemplateSelectDataContext.TemplateIconFilePath.Replace("\\", "\\\\") + "\\\\" + selectedTemplateItem.TemplateID + ".png" + "\"}";
+                    string templateJSON = "{\"TemplateName\":\"" + selectedTemplateItem.TemplateName.Text + "\",\"FileType\":\"" + fileType + "\",\"FileNameSpace\":\"" + selectedTemplateItem.FileNameSpace + "\",\"FilePath\":\"" + FilePath.Replace("\\", "\\\\") + "\",\"IconPath\":\"" + datapack_datacontext.TemplateIconFilePath.Replace("\\", "\\\\") + "\\\\" + selectedTemplateItem.TemplateID + ".png" + "\"}";
                     #endregion
 
                     //写入历史模板目录中
@@ -555,9 +542,15 @@ namespace cbhk_environment.Generators.DataPackGenerator.DatapackInitializationFo
             #endregion
 
             #region 属性设置窗体任务完成，跳转到编辑页
+            ContentReader.DataPackMetaStruct metaStruct = new ContentReader.DataPackMetaStruct()
+            {
+                Description = SelectedDatapackDescription,
+                //Filter = DatapackFilter,
+                Version = SelectedDatapackVersion
+            };
             datapack_datacontext datapackDatacontext = Window.GetWindow(page).DataContext as datapack_datacontext;
             EditPage editPage = datapackDatacontext.GetEditPage();
-            RichTreeViewItems contentNodes = ContentReader.ReadTargetContent(SelectedDatapackPathString + "\\" + DatapackName, ContentReader.ContentType.DataPack);
+            RichTreeViewItems contentNodes = ContentReader.ReadTargetContent(SelectedDatapackPathString + "\\" + DatapackName, ContentReader.ContentType.DataPack, metaStruct);
             datapack_datacontext.newTreeViewItems.Add(contentNodes);
             editPage = new EditPage
             {
